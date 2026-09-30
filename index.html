@@ -1073,6 +1073,71 @@
     #jamBarTabsRow { flex-wrap: wrap; }
     .jam-bar-tab { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; min-width: 64px; }
     .jam-tab-chord { font-size: 0.68rem; opacity: 0.85; font-weight: 600; }
+    #jamBarTabsRow.many { max-height: 190px; overflow-y: auto; padding: 4px 2px; }
+    #jamBarTabsRow.many .jam-bar-tab { min-width: 52px; padding: 4px 6px; font-size: 0.78rem; }
+    .jam-part-chip { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; color: #111; align-self: center; }
+    .jam-part-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; }
+    #strumRoot .strum-kind { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+    .strum-grid-wrap { overflow-x:auto; margin:14px 0 6px; padding-bottom:4px; }
+    .strum-grid { display:grid; gap:3px; min-width:max-content; }
+    .strum-cell { min-width:34px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:7px; border:1px solid var(--card-border); font-weight:700; font-size:1.25rem; background:var(--card-bg); color:var(--text-color); transition:background .06s; }
+    .strum-cell.cnt { height:24px; font-size:0.78rem; border:none; background:transparent; color:var(--text-muted); }
+    .strum-cell.cnt.beat { color:var(--text-color); font-weight:800; }
+    .strum-cell.lbl { min-width:30px; border:none; background:transparent; font-size:0.8rem; color:var(--text-muted); justify-content:flex-end; padding-right:4px; }
+    .strum-cell.acc { color:var(--accent-color); font-size:1.5rem; font-weight:900; }
+    .strum-cell.rest { color:var(--text-muted); font-weight:400; }
+    .strum-cell.small { font-size:0.85rem; }
+    .strum-cell.pick { height:30px; font-size:0.95rem; }
+    .strum-cell.pick.hit { background:var(--accent-color); color:#fff; border-color:var(--accent-color); }
+    .strum-cell.beatstart { border-left:2px solid var(--text-muted); }
+    .strum-cell.now { outline:3px solid #22d3ee; outline-offset:-2px; background:rgba(34,211,238,0.18); }
+    .strum-cell.pick.hit.now { background:#0891b2; }
+    .strum-notation { color: var(--text-color); background: var(--card-bg); border-radius: 10px; display:block; }
+    .strum-notation .sn-line { stroke: currentColor; stroke-width: 1; opacity: 0.75; }
+    .strum-notation .sn-stem { stroke: currentColor; stroke-width: 1.4; }
+    .strum-notation .sn-stroke { stroke: currentColor; stroke-width: 1.6; fill: none; }
+    .strum-notation .sn-fill { fill: currentColor; }
+    .strum-notation .sn-open { fill: none; stroke: currentColor; stroke-width: 1.6; }
+    .strum-notation .sn-bg { fill: var(--card-bg); }
+    .strum-notation text { fill: currentColor; text-anchor: middle; font-family: Georgia, 'Times New Roman', serif; }
+    .strum-notation .sn-clef-p { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
+    .strum-notation .sn-ts { font-size: 21px; font-weight: 900; }
+    .strum-notation .sn-tab { font-size: 13px; font-weight: 900; }
+    .strum-notation .sn-fret { font-size: 13px; font-weight: 700; font-family: sans-serif; }
+    .strum-notation .sn-acc { font-size: 15px; }
+    .strum-notation .sn-fing { font-size: 13px; font-style: italic; font-weight: 700; fill: var(--accent-color); }
+    .strum-notation .sn-cnt { font-size: 12px; font-family: sans-serif; opacity: 0.6; }
+    .strum-notation .sn-cnt.b { opacity: 1; font-weight: 800; }
+    .strum-notation .sn-lbl { font-size: 11px; font-family: sans-serif; text-anchor: start; opacity: 0.6; }
+    .strum-notation .sn-trip { font-size: 12px; font-style: italic; }
+    .strum-notation .strum-col { fill: transparent; }
+    .strum-notation .strum-col.now { fill: rgba(34,211,238,0.22); }
+    .strum-now { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+    .strum-now .big { font-size:2rem; font-weight:800; }
+    .strum-chip { padding:4px 10px; border-radius:14px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text-color); cursor:pointer; font-size:0.82rem; }
+    body.home-mode .container > *:not(header):not(#homeScreen) { display: none !important; }
+    body.home-mode #homeBtn { display: none; }
+    #homeScreen { display: none; }
+    body.home-mode #homeScreen { display: block; }
+    .home-today { border: 1px solid var(--card-border); border-radius: 14px; padding: 14px 16px; margin: 14px 0 6px; background: var(--card-bg, transparent); }
+    .home-today h2 { font-size: 1.05rem; margin: 0 0 8px; }
+    .home-today-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--card-border); font-size: 0.92rem; }
+    .home-today-row:first-of-type { border-top: none; }
+    .home-today-row .name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .home-today-row.done .name { opacity: 0.6; }
+    .home-group-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin: 18px 2px 8px; }
+    .home-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .home-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 104px; padding: 14px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card-bg, transparent); color: var(--text-color); text-align: left; cursor: pointer; font: inherit; transition: transform .08s, border-color .15s; }
+    .home-tile:active { transform: scale(0.97); }
+    .home-tile:hover { border-color: var(--accent-color); }
+    .home-tile .ic { font-size: 1.9rem; line-height: 1; }
+    .home-tile .nm { font-weight: 700; font-size: 0.95rem; line-height: 1.2; }
+    .home-tile .no { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+    .home-tile.last { border: 2px solid var(--accent-color); }
+    .home-settings { margin: 20px 2px 6px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .jam-plan-banner { border: 2px solid var(--accent-color); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.88rem; }
+    .jam-plan-banner .row { margin-top: 8px; gap: 8px; flex-wrap: wrap; }
+    .planner-practice-btn { margin-left: 6px; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap; }
     .jam-subbox { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: #020617; }
     .circle-of-fifths {
       position: relative;
@@ -1257,7 +1322,8 @@
 <div class="container">
   <header>
     <h1>Gitarren Griffbrett Trainer Pro</h1>
-    <button class="btn btn-secondary" id="backupBtn" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:auto; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
+    <button class="btn btn-secondary" id="homeBtn" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
+    <button class="btn btn-secondary" id="backupBtn" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:8px; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
     <button class="btn btn-secondary" id="fontSizeBtn" title="Schriftgröße ändern" style="padding:8px 10px; font-size:1rem; line-height:1; font-weight:800;">A+</button>
     <button class="btn btn-secondary" id="themeToggleBtn" title="Hell/Dunkel umschalten" style="padding:8px 12px; font-size:1.1rem; line-height:1;">🌙</button>
     <div class="timer-container" id="timerContainer" style="display:none;">
@@ -1269,6 +1335,8 @@
     </div>
   </header>
 
+  <section id="homeScreen" aria-label="Startseite"></section>
+
   <div class="speech-banner" id="speechBanner">
     📖 Wähle oben ein Modul aus, um zu beginnen.
   </div>
@@ -1278,8 +1346,8 @@
       <label for="moduleSelect" style="font-size:0.85rem; font-weight:600;">Modul:</label>
       <select id="moduleSelect" class="module-select">
         <option value="0">1. Anleitung zur Bedienung</option>
-        <option value="1">2. Theorie zu: Alle Töne des Griffbretts lernen</option>
-        <option value="2">3. Musiktheorie für Gitarristen</option>
+        <option value="2">2. Musiktheorie für Gitarristen</option>
+        <option value="1">3. Theorie zu: Alle Töne des Griffbretts lernen</option>
         <option value="3">4. Alle Töne des Griffbretts lernen</option>
         <option value="4">5. Spiel: Töne erraten</option>
         <option value="5">6. Notenlesen - Griffbrettfinder</option>
@@ -1287,8 +1355,9 @@
         <option value="7">8. Tonleitern & Pentatoniken</option>
         <option value="8">9. Akkord- & Noten-Labor (Interaktiv)</option>
         <option value="9">10. Beat- & Jam-Modul</option>
-        <option value="10">11. Interaktiver Wochen-Übungsplan</option>
+        <option value="12">11. Anschlag &amp; Zupfen</option>
         <option value="11">12. Stimmgerät</option>
+        <option value="10">13. Interaktiver Wochen-Übungsplan</option>
       </select>
     </div>
 
@@ -1400,6 +1469,7 @@
 
   <div id="jamModuleRoot" style="display:none;"></div>
   <div id="tunerRoot" style="display:none;"></div>
+  <div id="strumRoot" style="display:none;"></div>
 
   <div class="theory-box" id="instructionBox">
     <h2>1. Chronologische Anleitung zur Bedienung des Trainers</h2>
@@ -1412,6 +1482,7 @@
       </div>
       <p>Diese Seite gibt dir einen schnellen Überblick über alle im Programm enthaltenen Module, deren Zwecke und Steuerungselemente.</p>
       <ul>
+        <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben siehst du deine Übungen für heute aus dem Wochenplan (mit „▶ Üben“) und „Weiter mit“ für das zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
         <li><strong>💾 Datensicherung (oben rechts):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
         <li><strong>A+ (Schriftgröße):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
         <li><strong>🌙 / ☀️:</strong> Hell- oder Dunkel-Modus.</li>
@@ -1421,14 +1492,6 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">2</span>
-        <h3>Theorie zu: Alle Töne des Griffbretts lernen</h3>
-      </div>
-      <p>Hier findest du die musiktheoretischen Grundlagen (C-Dur-Tonleiter, Ganz- und Halbtöne, Vorzeichen #/b) sowie das genaue System des 4-Wochen-Übeplans mit Tageszeiten und Regeln, die Grundlage für das Modul „Alle Töne des Griffbretts lernen".</p>
-    </div>
-
-    <div class="module-block">
-      <div class="module-block-header">
-        <span class="module-number-badge">3</span>
         <h3>Musiktheorie für Gitarristen</h3>
       </div>
       <p>Intervalllehre, Dreiklänge und Septakkorde, Tonleitern und Pentatoniken, Quintenzirkel sowie Kadenzen und Transponieren. Die Inhalte sind direkt mit dem Griffbrett verknüpft und können in kleinen interaktiven Beispielen erkundet werden.</p>
@@ -1439,6 +1502,14 @@
         <li><strong>Akkord-Baukasten &amp; Umkehrungen:</strong> 14 Akkordtypen mit Tönen und Stufenformel, dazu alle Umkehrungen zum Anhören.</li>
         <li><strong>Griffbrett-Karte:</strong> Einen Ton antippen und sehen, wo Terzen, Quarten, Quinten und Oktaven liegen, oder alle Oktav-Muster anzeigen lassen.</li>
       </ul>
+    </div>
+
+    <div class="module-block">
+      <div class="module-block-header">
+        <span class="module-number-badge">3</span>
+        <h3>Theorie zu: Alle Töne des Griffbretts lernen</h3>
+      </div>
+      <p>Hier findest du die musiktheoretischen Grundlagen (C-Dur-Tonleiter, Ganz- und Halbtöne, Vorzeichen #/b) sowie das genaue System des 4-Wochen-Übeplans mit Tageszeiten und Regeln, die Grundlage für das Modul „Alle Töne des Griffbretts lernen".</p>
     </div>
 
     <div class="module-block">
@@ -1517,7 +1588,7 @@
         <span class="module-number-badge">10</span>
         <h3>Beat- & Jam-Modul</h3>
       </div>
-      <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4, 8, 12 oder 16 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus Modul 8.</p>
+      <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus Modul 8.</p>
       <ul>
         <li><strong>Oben:</strong> Start/Stop, Tempo, Taktart, Rhythmus-Stil und Loop-Bereich. Die weiteren Funktionen stecken in einklappbaren Bereichen (▸ antippen).</li>
         <li><strong>✏️ Akkord malen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
@@ -1532,8 +1603,10 @@
       <ul>
         <li><strong>Taktart:</strong> Wählbar sind 2/4, 3/4, 4/4, 5/4, 6/4, 7/4, 5/8, 6/8, 7/8, 9/8 und 12/8. Beim Wechsel wird automatisch ein zur neuen Taktart passender, fertiger Rhythmus in alle Takte eingesetzt, den du danach beliebig weiter anpassen kannst.</li>
         <li><strong>Step-Sequenzer:</strong> Nummerierte Sechzehntel-Schritte pro Takt. Kästchen antippen schaltet den Schritt ein oder aus.</li>
-        <li><strong>Takte:</strong> Über „Takte“ wählst du 4, 8, 12 oder 16 Takte (z.B. 12 für den kompletten Blues). Neue Takte übernehmen zunächst Muster und Akkorde der vorhandenen. Über die Reiter wechselst du zwischen den Takten, jeder Reiter zeigt seinen Akkord. Beim Abspielen laufen die Takte im Loop-Bereich hintereinander durch.</li>
+        <li><strong>Takte:</strong> Über „Takte“ wählst du 4, 8, 12, 16, 24, 32, 48 oder 64 Takte (z.B. 12 für den kompletten Blues). Neue Takte übernehmen zunächst Muster und Akkorde der vorhandenen. Über die Reiter wechselst du zwischen den Takten, jeder Reiter zeigt seinen Akkord. Beim Abspielen laufen die Takte im Loop-Bereich hintereinander durch.</li>
         <li><strong>Loop-Bereich wählen:</strong> Legt fest, welcher Taktbereich in Dauerschleife läuft.</li>
+        <li><strong>🧩 Song-Teile:</strong> Freiwillig. Gib Abschnitten Namen (Intro, Strophe, Refrain, Bridge …). Sie erscheinen als farbige Streifen über den Takten. „📋 Nochmal ans Ende“ kopiert einen Teil (z. B. den Refrain), „🔁 Nur diesen Teil üben“ wiederholt nur diesen Abschnitt. Bei vielen Takten scrollt der Takt-Kasten beim Abspielen mit.</li>
+        <li><strong>💬 Freundliche Hinweise:</strong> Ab und zu ein netter Tipp (z. B. Pause nach längerem Spielen). Unter „⏱️ Timing &amp; Feeling“ abschaltbar.</li>
         <li><strong>Akkord & Bass:</strong> Für jeden Takt einzeln wählst du einen Akkord. Die Bass-Spur spielt automatisch den Grundton.</li>
         <li><strong>Arpeggiator-Lead:</strong> Programmierbarer Arpeggiator für die Töne des Takt-Akkords.</li>
         <li><strong>Pad-Fläche:</strong> Spielt bei „An" den vollen Akkord als gehaltenen Flächenklang.</li>
@@ -1544,15 +1617,18 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">11</span>
-        <h3>Interaktiver Wochen-Übungsplan</h3>
+        <h3>Anschlag &amp; Zupfen</h3>
       </div>
-      <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
+      <p>Lerne Anschlag- und Zupfmuster – vom einfachen Grundschlag bis Travis-Picking, Bossa Nova und ungeraden Taktarten (3/4, 6/8, 12/8, 5/4, 7/8).</p>
       <ul>
-        <li><strong>Wochen-Navigation:</strong> Wechsle zwischen den Kalenderwochen vor und zurück oder springe direkt zur aktuellen Woche.</li>
-        <li><strong>Automatische Übernahme:</strong> Wechselst du in eine neue, bisher leere Woche, werden die Übungstitel aus der vorherigen Woche automatisch übernommen.</li>
-        <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern.</li>
-        <li><strong>Daten exportieren / importieren:</strong> Sichere deine Pläne als JSON-Datei auf deinem Gerät oder lade gesicherte Pläne wieder hoch.</li>
-        <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
+        <li><strong>Anschlagen / Zupfen:</strong> Oben umschalten, dann ein Muster wählen. ⭐ = einfach, ⭐⭐ = mittel, ⭐⭐⭐ = fortgeschritten.</li>
+        <li><strong>Anzeige Anschlag:</strong> ↓ = Abschlag, ↑ = Aufschlag, fett = betont, ✕ = gedämpfter Schlag (Hand liegt auf den Saiten), B¹ = nur Basston (Grundton), B² = Wechselbass, · = Pause (Hand bewegt sich trotzdem weiter).</li>
+        <li><strong>Anzeige Zupfen:</strong> Die sechs Zeilen sind die Saiten (oben hohe e-Saite). Die Buchstaben sind die Finger der Anschlagshand: p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger. Die Saiten passen sich automatisch dem Akkord an.</li>
+        <li><strong>Zählzeiten:</strong> Die obere Zeile zeigt, wie gezählt wird („1 + 2 +“ bzw. „1 e + e“ bei Sechzehnteln).</li>
+        <li><strong>Akkorde:</strong> Einfach eintippen, z. B. „Am F C G“, oder einen Vorschlag antippen. „Takte pro Akkord“ legt fest, wie lange jeder Akkord bleibt.</li>
+        <li><strong>Abspielen:</strong> ▶ spielt das Muster mit Gitarrenklang, auf Wunsch mit Metronom-Klick und Einzähler. Die gerade gespielte Stelle leuchtet. Tipp: erst langsam, Tempo nur erhöhen, wenn es sich locker anfühlt.</li>
+        <li><strong>✏️ Eigene Muster:</strong> „✏️ Eigenes Muster“ öffnet den Editor: Name, Taktart, Raster (Achtel, Sechzehntel, Triolen) und Tempo wählen, dann Kästchen antippen. Beim Anschlag wechselt jedes Antippen das Zeichen (· ↓ ↑ ✕ B¹ B²), beim Zupfen setzt es einen Punkt (Bass, Wechselbass, G-, H-, e-Saite) – mit Vorschau in Noten und Tabulatur. ▶ spielt schon während der Eingabe. Gespeicherte Muster stehen unter „✏️ Meine Muster“ und lassen sich bearbeiten oder löschen. „📋 Als Vorlage kopieren“ macht aus einem fertigen Muster ein eigenes zum Abwandeln. Deine Muster sind in der 💾-Sicherung enthalten.</li>
+        <li><strong>🥁 Im Beat-Modul üben:</strong> Übernimmt Akkorde, Tempo und Taktart ins Beat-Modul. Dort spielt dann das Schlagzeug, und du spielst das Muster auf der Gitarre dazu.</li>
       </ul>
     </div>
 
@@ -1568,6 +1644,22 @@
         <li><strong>Nadel:</strong> links = zu tief (Saite spannen), rechts = zu hoch (lockern). Im grünen Bereich (±5 Cent) ist die Saite gestimmt – der Saiten-Knopf wird dann grün.</li>
         <li><strong>Stimmung &amp; Kammerton:</strong> Standard, Drop D, DADGAD oder Open G; der Kammerton a ist normalerweise 440 Hz.</li>
         <li><strong>Tipp:</strong> Einzelne Saite kräftig anzupfen und ausklingen lassen, andere Saiten abdämpfen. In leiser Umgebung klappt es am besten.</li>
+      </ul>
+    </div>
+
+    <div class="module-block">
+      <div class="module-block-header">
+        <span class="module-number-badge">13</span>
+        <h3>Interaktiver Wochen-Übungsplan</h3>
+      </div>
+      <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
+      <ul>
+        <li><strong>Wochen-Navigation:</strong> Wechsle zwischen den Kalenderwochen vor und zurück oder springe direkt zur aktuellen Woche.</li>
+        <li><strong>Automatische Übernahme:</strong> Wechselst du in eine neue, bisher leere Woche, werden die Übungstitel aus der vorherigen Woche automatisch übernommen.</li>
+        <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern.</li>
+        <li><strong>▶ Üben:</strong> Neben jeder Übung. Öffnet das Beat-Modul: Ein verknüpfter Beat wird geladen. Besteht der Name aus Akkorden (z. B. „Am F C G“), werden sie eingestellt, sonst wird ein passendes Song-Preset gesucht. Mit „🔗 Mit Übung verknüpfen“ merkt sich die App deinen Beat, mit „✓ Heute geübt“ wird der heutige Tag abgehakt. Es gibt keinen Timer.</li>
+        <li><strong>Daten exportieren / importieren:</strong> Sichere deine Pläne als JSON-Datei auf deinem Gerät oder lade gesicherte Pläne wieder hoch.</li>
+        <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
       </ul>
     </div>
   </div>
@@ -2026,7 +2118,8 @@
     { name: "Akkord- & Noten-Labor", stringIdx: -1, time: 0, type: "chordlab" },
     { name: "Beat- & Jam-Modul", stringIdx: -1, time: 0, type: "jam" },
     { name: "Interaktiver Wochen-Übungsplan", stringIdx: -1, time: 0, type: "planner" },
-    { name: "Stimmgerät", stringIdx: -1, time: 0, type: "tuner" }
+    { name: "Stimmgerät", stringIdx: -1, time: 0, type: "tuner" },
+    { name: "Anschlag & Zupfen", stringIdx: -1, time: 0, type: "strum" }
   ];
 
   const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "H"];
@@ -2069,12 +2162,13 @@
   }
 
   const JAM_BARS = 4;                       // Standard beim ersten Start
-  const JAM_BAR_COUNTS = [4, 8, 12, 16];    // wählbare Taktanzahl
+  const JAM_BAR_COUNTS = [4, 8, 12, 16, 24, 32, 48, 64];    // wählbare Taktanzahl
+  const JAM_MAX_BARS = 64;
 
   // Taktanzahl ändern: neue Takte wiederholen die vorhandenen (Muster + Akkord), beim Verkürzen fallen die letzten weg
   function setJamBarCount(n) {
     const jam = state.jam;
-    n = JAM_BAR_COUNTS.includes(n) ? n : JAM_BARS;
+    n = Number.isInteger(n) && n >= 1 && n <= JAM_MAX_BARS ? n : JAM_BARS;
     const old = jam.bars.length;
     if (n === old) return;
     const wasFullLoop = jam.loopStart === 0 && jam.loopEnd === old - 1;
@@ -2089,6 +2183,8 @@
     jam.loopStart = Math.min(jam.loopStart, jam.loopEnd);
     jam.activeBar = Math.min(jam.activeBar, n - 1);
     if (jam.playingBar > jam.loopEnd || jam.playingBar < jam.loopStart) jam.playingBar = jam.loopStart;
+    // Song-Teile, die jetzt hinter dem Ende liegen, kürzen bzw. entfernen
+    jam.parts = (jam.parts || []).filter(p => p.start < n).map(p => ({ ...p, end: Math.min(p.end, n - 1) }));
   }
   const JAM_TIME_SIG_GROUPS = {
     '2/4':  [4, 4],
@@ -2474,7 +2570,8 @@
       reverb: 0.25,      // Hall-Anteil 0–1
       kit: 'standard',   // Sound-Kit: standard | acoustic | 808 | lofi
       crackle: 0.5,      // Lo-Fi-Knistern 0–1
-      stereo: true       // Instrumente links/rechts verteilen
+      stereo: true,      // Instrumente links/rechts verteilen
+      parts: []          // Song-Teile [{name, start, end}]
     };
 
     try {
@@ -3239,7 +3336,9 @@
     setTimeout(() => {
       moduleSelectEl.value = String(state.currentModule);
       updateModule();
+      if (homeStartSetting() === 'home') showHome();
     }, 50);
+    document.getElementById('homeBtn').addEventListener('click', showHome);
 
     window.addEventListener('pageshow', () => {
       if (moduleSelectEl.value !== String(state.currentModule)) {
@@ -3423,7 +3522,7 @@
     notePickerEl.innerHTML = '';
     const modType = MODULES[state.currentModule].type;
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam') {
+    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -4153,11 +4252,11 @@
       scaleViewLabelSelect.value = 'note';
     }
 
-    // Merksatz + Link zur Theorie (Modul 3)
+    // Merksatz + Link zur Theorie (Modul 2)
     const hint = document.getElementById('scaleViewTheoryHint');
     if (hint) {
       const m3 = TH_M8_TO_M3[state.scaleViewType] || 'dur';
-      hint.innerHTML = `<span>💡 ${TH_SCALE_TIPS[m3] || ''}</span><button type="button" class="theory-chip" id="scaleViewTheoryBtn">📖 Theorie dazu (Modul 3)</button>`;
+      hint.innerHTML = `<span>💡 ${TH_SCALE_TIPS[m3] || ''}</span><button type="button" class="theory-chip" id="scaleViewTheoryBtn">📖 Theorie dazu (Modul 2)</button>`;
       const btn = document.getElementById('scaleViewTheoryBtn');
       if (btn) btn.onclick = () => {
         const idx = MODULES.findIndex(m => m.type === 'theoryPro');
@@ -4318,10 +4417,12 @@
     '2|sus4':[-1,-1,0,2,3,3], '9|sus4':[-1,0,2,2,3,0], '2|sus2':[-1,-1,0,2,3,0], '9|sus2':[-1,0,2,2,0,0]
   };
   // Verschiebbare Barré-Formen: Abstand zum Barré-Bund (E-Form: Grundton auf tiefer E-Saite, A-Form: auf A-Saite)
-  const JAM_SHAPES_E = { dur:[0,2,2,1,0,0], moll:[0,2,2,0,0,0], dom7:[0,2,0,1,0,0], min7:[0,2,0,0,0,0], maj7:[0,-1,1,1,0,-1], five:[0,2,2,-1,-1,-1] };
+  const JAM_SHAPES_E = { dur:[0,2,2,1,0,0], moll:[0,2,2,0,0,0], dom7:[0,2,0,1,0,0], min7:[0,2,0,0,0,0], maj7:[0,-1,1,1,0,-1], five:[0,2,2,-1,-1,-1],
+    min11:[0,0,0,0,0,0], dom7sus4:[0,2,0,2,0,0], dom7b9:[0,-1,0,1,0,1], dom7s9:[0,-1,0,1,-1,3] };
   const JAM_SHAPES_A = { dur:[-1,0,2,2,2,0], moll:[-1,0,2,2,1,0], dom7:[-1,0,2,0,2,0], min7:[-1,0,2,0,1,0], maj7:[-1,0,2,1,2,0],
     m7b5:[-1,0,1,0,1,-1], dim:[-1,0,1,2,1,-1], dim7:[-1,0,1,-1,1,-1], sus4:[-1,0,2,2,3,0], sus2:[-1,0,2,2,0,0],
-    maj6:[-1,0,2,2,2,2], min6:[-1,0,2,2,1,2], aug:[-1,0,-1,-2,-2,-1], five:[-1,0,2,2,-1,-1] };
+    maj6:[-1,0,2,2,2,2], min6:[-1,0,2,2,1,2], aug:[-1,0,-1,-2,-2,-1], five:[-1,0,2,2,-1,-1],
+    dom11:[-1,0,0,0,0,0], dom7b5:[-1,0,1,0,2,-1], dom7s5:[-1,0,3,0,2,1] };
   // Erweiterte Akkorde vereinfacht darstellen
   const JAM_DIAGRAM_SIMPLIFY = { dom9:'dom7', dom13:'dom7', maj9:'maj7', min9:'min7', add9:'dur', madd9:'moll' };
 
@@ -4565,6 +4666,7 @@
     jam.bpm = p.bpm;
     jam.swing = p.swing;
     jam.chordMode = 'free';
+    jam.parts = [];
     setJamBarCount(JAM_BAR_COUNTS.includes(p.chords.length) ? p.chords.length : JAM_BARS);
     jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1;
     jam.bars.forEach((bar, i) => {
@@ -4580,6 +4682,250 @@
   }
 
   let jamToolsMsg = '';
+
+  // =================== Song-Teile ===================
+  const JAM_PART_NAMES = ['Intro', 'Strophe', 'Überleitung', 'Refrain', 'Bridge', 'Solo', 'Outro'];
+  const JAM_PART_COLORS = { 'Intro': '#a5b4fc', 'Strophe': '#86efac', 'Überleitung': '#fde68a', 'Refrain': '#fca5a5', 'Bridge': '#c4b5fd', 'Solo': '#fdba74', 'Outro': '#93c5fd' };
+  let jamPartsMsg = '';
+  function escapeJamHtml(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function jamPartColor(name) {
+    const base = String(name).replace(/\s*\d+$/, '');
+    return JAM_PART_COLORS[base] || '#d1d5db';
+  }
+  function jamPartAt(i) { return (state.jam.parts || []).find(p => i >= p.start && i <= p.end) || null; }
+  function renderJamPartsBody() {
+    const jam = state.jam;
+    const parts = (jam.parts || []).slice().sort((a, b) => a.start - b.start);
+    const sel = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; padding:3px 4px;';
+    const barOpts = (v) => jam.bars.map((_, i) => `<option value="${i}" ${i === v ? 'selected' : ''}>Takt ${i + 1}</option>`).join('');
+    let h = '';
+    if (!parts.length) h += `<div class="jam-hint" style="margin-top:0;">Noch keine Teile. Du brauchst keine – aber bei längeren Songs helfen sie beim Überblick und beim gezielten Üben.</div>`;
+    parts.forEach(p => {
+      const idx = jam.parts.indexOf(p);
+      const len = p.end - p.start + 1;
+      const isLoop = jam.loopStart === p.start && jam.loopEnd === p.end;
+      h += `<div class="jam-part-row">
+        <span class="jam-part-chip" style="background:${jamPartColor(p.name)};">${escapeJamHtml(p.name)}</span>
+        <span>Takt ${p.start + 1}${len > 1 ? '–' + (p.end + 1) : ''} <span style="color:var(--text-muted);">(${len} Takt${len > 1 ? 'e' : ''})</span></span>
+        <button type="button" class="btn ${isLoop ? '' : 'btn-secondary'}" data-part-loop="${idx}">🔁 ${isLoop ? 'Wird geübt' : 'Nur diesen Teil üben'}</button>
+        <button type="button" class="btn btn-secondary" data-part-copy="${idx}" ${jam.bars.length + len > JAM_MAX_BARS ? 'disabled title="Maximal 64 Takte"' : ''}>📋 Nochmal ans Ende</button>
+        <button type="button" class="btn btn-secondary" data-part-del="${idx}" title="Teil entfernen (die Takte bleiben)">✕</button>
+      </div>`;
+    });
+    const s0 = jam.loopStart, e0 = jam.loopEnd;
+    h += `<div class="row" style="flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; font-size:0.85rem;">
+      <span style="font-weight:700;">Neuer Teil:</span>
+      <select id="jamPartName" style="${sel}">${JAM_PART_NAMES.map(n => `<option>${n}</option>`).join('')}</select>
+      <span>von</span><select id="jamPartFrom" style="${sel}">${barOpts(s0)}</select>
+      <span>bis</span><select id="jamPartTo" style="${sel}">${barOpts(e0)}</select>
+      <button type="button" class="btn" id="jamPartAddBtn">＋ Anlegen</button>
+    </div>
+    <div class="row" style="flex-wrap:wrap; gap:8px; margin-top:8px;">
+      <button type="button" class="btn btn-secondary" id="jamPartWholeBtn">🔁 Ganzen Song abspielen</button>
+      ${jam.bars.length < JAM_MAX_BARS ? `<button type="button" class="btn btn-secondary" id="jamPartExtendBtn">➕ 4 leere Takte anhängen</button>` : ''}
+    </div>
+    <div class="jam-hint">So baust du einen Song: Takte einstellen → Teil anlegen (z. B. Strophe Takt 1–8) → mit „📋 Nochmal ans Ende“ wiederholen. Mit „🔁 Nur diesen Teil üben“ spielt nur dieser Abschnitt in Schleife. Bis zu ${JAM_MAX_BARS} Takte.</div>
+    <div class="jam-hint" id="jamPartsMsg" style="color:var(--text-color);">${jamPartsMsg}</div>`;
+    return h;
+  }
+  function jamUniquePartName(base) {
+    const names = new Set((state.jam.parts || []).map(p => p.name));
+    if (!names.has(base)) return base;
+    let k = 2; while (names.has(base + ' ' + k)) k++;
+    return base + ' ' + k;
+  }
+  function bindJamPartsEvents() {
+    const jam = state.jam;
+    const body = document.getElementById('jamPartsBody');
+    if (!body) return;
+    const done = (msg) => { jamPartsMsg = msg || ''; scheduleJamAutosave(); renderJamModule(); };
+    body.querySelectorAll('[data-part-loop]').forEach(b => b.addEventListener('click', () => {
+      const p = jam.parts[+b.dataset.partLoop]; if (!p) return;
+      jam.loopStart = p.start; jam.loopEnd = p.end; jam.activeBar = p.start;
+      if (jam.playing) jam.playingBar = Math.min(Math.max(jam.playingBar, p.start), p.end);
+      done(`🔁 Jetzt wird nur „${p.name}“ wiederholt.`);
+    }));
+    body.querySelectorAll('[data-part-copy]').forEach(b => b.addEventListener('click', () => {
+      const p = jam.parts[+b.dataset.partCopy]; if (!p) return;
+      const len = p.end - p.start + 1;
+      if (jam.bars.length + len > JAM_MAX_BARS) { done('Das würde mehr als 64 Takte ergeben.'); return; }
+      const wasFull = jam.loopStart === 0 && jam.loopEnd === jam.bars.length - 1;
+      const start = jam.bars.length;
+      for (let i = p.start; i <= p.end; i++) jam.bars.push(JSON.parse(JSON.stringify(jam.bars[i])));
+      const base = p.name.replace(/\s*\d+$/, '');
+      jam.parts.push({ name: jamUniquePartName(base), start, end: start + len - 1 });
+      if (wasFull) jam.loopEnd = jam.bars.length - 1;
+      done(`📋 „${p.name}“ wurde ans Ende kopiert (Takt ${start + 1}–${start + len}). Der Song hat jetzt ${jam.bars.length} Takte.`);
+    }));
+    body.querySelectorAll('[data-part-del]').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.partDel; const p = jam.parts[i]; if (!p) return;
+      jam.parts.splice(i, 1);
+      done(`Teil „${p.name}“ entfernt – die Takte selbst sind noch da.`);
+    }));
+    const add = document.getElementById('jamPartAddBtn');
+    if (add) add.addEventListener('click', () => {
+      let a = +document.getElementById('jamPartFrom').value, e = +document.getElementById('jamPartTo').value;
+      if (e < a) [a, e] = [e, a];
+      const before = jam.parts.length;
+      jam.parts = jam.parts.filter(p => p.end < a || p.start > e);
+      const name = jamUniquePartName(document.getElementById('jamPartName').value);
+      jam.parts.push({ name, start: a, end: e });
+      done(`✅ Teil „${name}“ angelegt (Takt ${a + 1}–${e + 1}).${jam.parts.length - 1 < before ? ' Überlappende Teile wurden dabei ersetzt.' : ''}`);
+    });
+    const whole = document.getElementById('jamPartWholeBtn');
+    if (whole) whole.addEventListener('click', () => { jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; done('🔁 Der ganze Song wird abgespielt.'); });
+    const ext = document.getElementById('jamPartExtendBtn');
+    if (ext) ext.addEventListener('click', () => {
+      const wasFull = jam.loopStart === 0 && jam.loopEnd === jam.bars.length - 1;
+      const add4 = Math.min(4, JAM_MAX_BARS - jam.bars.length);
+      const last = jam.bars[jam.bars.length - 1];
+      for (let k = 0; k < add4; k++) { const nb = JSON.parse(JSON.stringify(last)); jam.bars.push(nb); }
+      if (wasFull) jam.loopEnd = jam.bars.length - 1;
+      done(`➕ ${add4} Takte angehängt (Muster und Akkord vom letzten Takt übernommen). Jetzt ${jam.bars.length} Takte.`);
+    });
+  }
+
+  // =================== Wochenplan ↔ Beat ===================
+  let jamPlanCtx = null;   // { name, weekKey, rowIdx, msg }
+  function plannerBeatLinks() {
+    const d = plannerState.plannerData;
+    if (!d._beats || typeof d._beats !== 'object' || Array.isArray(d._beats)) d._beats = {};
+    return d._beats;
+  }
+  // Akkordnamen aus einem Übungsnamen lesen, z. B. „Dmj7 Bm11 Em7 A7“ (alle Wörter müssen Akkorde sein)
+  const PLAN_CHORD_SUFFIX = { '': 'dur', 'm': 'moll', 'min': 'moll', '-': 'moll', '7': 'dom7', 'm7': 'min7', 'min7': 'min7', '-7': 'min7',
+    'maj7': 'maj7', 'mj7': 'maj7', 'j7': 'maj7', 'M7': 'maj7', 'Δ': 'maj7', 'Δ7': 'maj7', 'm7b5': 'm7b5', 'ø': 'm7b5', 'dim': 'dim', '°': 'dim', 'dim7': 'dim7', '°7': 'dim7',
+    'aug': 'aug', '+': 'aug', '6': 'maj6', 'm6': 'min6', 'add9': 'add9', 'madd9': 'madd9', '5': 'five', 'sus2': 'sus2', 'sus4': 'sus4', 'sus': 'sus4', '7sus4': 'dom7sus4',
+    '9': 'dom9', 'maj9': 'maj9', 'mj9': 'maj9', 'm9': 'min9', '11': 'dom11', 'm11': 'min11', '13': 'dom13', '7b9': 'dom7b9', '7#9': 'dom7s9', '7b5': 'dom7b5', '7#5': 'dom7s5' };
+  function parsePlanChords(name) {
+    const words = String(name || '').replace(/[,;|]+/g, ' ').replace(/\s[-–]\s/g, ' ').trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return null;
+    const LET = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11, H: 11 };
+    const out = [];
+    for (const w0 of words) {
+      const w = w0.replace(/♯/g, '#').replace(/♭/g, 'b');
+      const m = w.match(/^([A-H])(#|b)?(.*)$/);
+      if (!m) return null;
+      let pc = LET[m[1]];
+      if (m[2] === '#') pc++; else if (m[2] === 'b') pc--;
+      let suf = m[3];
+      if (m[1] === 'B' && !m[2] && suf === '') { /* B = H (englisch) */ }
+      const type = PLAN_CHORD_SUFFIX[suf] ?? PLAN_CHORD_SUFFIX[suf.toLowerCase()];
+      if (!type || !JAM_CHORD_INTERVALS[type]) return null;
+      out.push([(pc + 12) % 12, type]);
+    }
+    return out;
+  }
+  function findPresetForPlanName(name) {
+    const words = plannerNormName(name).split(/\s+/).filter(w => w.length >= 2);
+    if (!words.length) return null;
+    return JAM_SONG_PRESETS.find(p => { const l = p.label.toLowerCase(); return words.every(w => l.split(/[^a-z0-9äöüß♯♭#]+/).includes(w)); }) || null;
+  }
+  function startPracticeFromPlan(weekKey, rowIdx) {
+    const row = (plannerState.plannerData[weekKey] || [])[rowIdx];
+    if (!row) return;
+    const name = String(row.name || '').trim() || 'Übung';
+    switchToModule(9);
+    if (!state.jam) initJamState();
+    const jam = state.jam;
+    let msg;
+    const link = plannerBeatLinks()[plannerNormName(name)];
+    const saved = getSavedJamPatterns();
+    const savedKey = Object.keys(saved).find(k => plannerNormName(k) === plannerNormName(name));
+    const chords = parsePlanChords(name);
+    const preset = !chords && findPresetForPlanName(name);
+    jamPlanCtx = { name, weekKey, rowIdx, msg: '' };
+    if (link && Array.isArray(link.bars)) {
+      applyJamImportData(link);
+      msg = 'Dein verknüpfter Beat ist geladen. Viel Spaß! 🎸';
+    } else if (savedKey) {
+      applyJamImportData(saved[savedKey]);
+      msg = `Dein gespeicherter Beat „${escapeJamHtml(savedKey)}“ ist geladen.`;
+    } else if (chords && chords.length) {
+      stopJamPlayback();
+      jam.chordMode = 'free';
+      setJamBarCount(Math.min(JAM_MAX_BARS, chords.length));
+      jam.bars.forEach((b, i) => { const c = chords[i % chords.length]; b.chordRoot = c[0]; b.chordType = c[1]; });
+      jam.parts = [];
+      jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
+      scheduleJamAutosave();
+      msg = `Die Akkorde aus dem Namen sind eingestellt (${jam.bars.map(jamChordShort).join(' – ')}), ein Takt pro Akkord. Tempo und Stil kannst du frei wählen.`;
+    } else if (preset) {
+      msg = applyJamSongPreset(preset.id);
+    } else {
+      msg = 'Für diese Übung ist noch kein Beat hinterlegt. Stell dir einfach einen ein und tippe dann auf „🔗 Mit Übung verknüpfen“ – beim nächsten Mal ist er sofort da.';
+    }
+    jamPlanCtx.msg = msg;
+    renderJamModule();
+    window.scrollTo(0, 0);
+  }
+  function renderJamPlanBanner() {
+    const c = jamPlanCtx;
+    const linked = !!plannerBeatLinks()[plannerNormName(c.name)];
+    return `<div class="jam-plan-banner" id="jamPlanBanner">
+      <div>📋 <b>Aus dem Wochenplan:</b> ${escapeJamHtml(c.name)}</div>
+      <div class="jam-hint" style="color:var(--text-color);">${c.msg}</div>
+      <div class="row">
+        <button type="button" class="btn" id="jamPlanDoneBtn">✓ Heute geübt – zurück zum Plan</button>
+        <button type="button" class="btn btn-secondary" id="jamPlanLinkBtn">🔗 ${linked ? 'Verknüpften Beat aktualisieren' : 'Mit Übung verknüpfen'}</button>
+        <button type="button" class="btn btn-secondary" id="jamPlanBackBtn">↩ Zurück ohne Haken</button>
+        <button type="button" class="btn btn-secondary" id="jamPlanCloseBtn" title="Hinweis ausblenden">✕</button>
+      </div>
+      <div class="jam-hint">Kein Zeitdruck – übe so lange, wie es dir guttut.</div>
+    </div>`;
+  }
+  function jamPlanMarkToday() {
+    const c = jamPlanCtx; if (!c) return;
+    const d = plannerState.plannerData;
+    const monday = getMonday(new Date());
+    const wk = getWeekKey(monday);
+    const dayIdx = (new Date().getDay() + 6) % 7;
+    if (!d[wk]) d[wk] = [];
+    let row = d[wk].find(r => plannerNormName(r.name) === plannerNormName(c.name));
+    if (!row) { row = { name: c.name, checks: [false, false, false, false, false, false, false] }; d[wk].push(row); }
+    if (!Array.isArray(row.checks)) row.checks = [false, false, false, false, false, false, false];
+    row.checks[dayIdx] = true;
+    savePlannerToLocalStorage();
+  }
+  function jamPlanReturn(markDone) {
+    if (markDone) jamPlanMarkToday();
+    stopJamPlayback();
+    jamPlanCtx = null;
+    switchToModule(10);
+    try { plannerState.currentDate = new Date(); renderPlanner(); } catch (e) {}
+    if (markDone) showToast('Eingetragen ✔ Schön, dass du geübt hast!');
+  }
+  function bindJamPlanBannerEvents() {
+    const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+    on('jamPlanDoneBtn', () => jamPlanReturn(true));
+    on('jamPlanBackBtn', () => jamPlanReturn(false));
+    on('jamPlanCloseBtn', () => { jamPlanCtx = null; renderJamModule(); });
+    on('jamPlanLinkBtn', () => {
+      if (!jamPlanCtx) return;
+      const data = getJamExportData(); data.name = jamPlanCtx.name;
+      plannerBeatLinks()[plannerNormName(jamPlanCtx.name)] = data;
+      savePlannerToLocalStorage();
+      jamPlanCtx.msg = '🔗 Verknüpft! Beim nächsten „▶ Üben“ im Wochenplan wird genau dieser Beat geladen.';
+      renderJamModule();
+    });
+  }
+
+  // =================== Freundliche Hinweise (abschaltbar) ===================
+  const HINTS_KEY = 'guitartrainer_hints';
+  function jamHintsOn() { try { return localStorage.getItem(HINTS_KEY) !== '0'; } catch (e) { return true; } }
+  let jamPlayStartedAt = 0, jamHintBreakShown = 0, jamHintTempoShown = false, jamLoopsAtBpm = 0, jamLastBpmSeen = 0;
+  const JAM_BREAK_MSGS = ['Du spielst schon eine Weile – gönn dir ruhig eine kurze Pause 🙂', 'Kleiner Tipp: Hände lockern, Schultern entspannen, einmal tief durchatmen 🌿', 'Schön dabei! Ein Schluck Wasser zwischendurch tut gut 💧'];
+  function jamHintOnLoop() {
+    if (!jamHintsOn() || !state.jam || !state.jam.playing) return;
+    const j = state.jam;
+    const mins = (Date.now() - jamPlayStartedAt) / 60000;
+    if (mins >= 25 * (jamHintBreakShown + 1)) { showToast(JAM_BREAK_MSGS[jamHintBreakShown % JAM_BREAK_MSGS.length]); jamHintBreakShown++; return; }
+    if (j.bpm === jamLastBpmSeen) jamLoopsAtBpm++; else { jamLastBpmSeen = j.bpm; jamLoopsAtBpm = 1; }
+    if (!jamHintTempoShown && !j.trainerOn && jamLoopsAtBpm >= 16 && j.bpm <= 150) {
+      jamHintTempoShown = true;
+      showToast('Läuft gut! Wenn du magst, probier mal 5 BPM schneller – oder bleib einfach dabei 🙂');
+    }
+  }
 
   function renderJamModule() {
     const jam = state.jam;
@@ -4614,7 +4960,7 @@
       </select></div>`;
     html += `<div class="toggle-group"><label style="font-weight:600;">Takte:</label>
       <select id="jamBarCountSelect" style="${sel}">
-        ${JAM_BAR_COUNTS.map(n => `<option value="${n}" ${n === jam.bars.length ? 'selected' : ''}>${n}</option>`).join('')}
+        ${[...new Set([...JAM_BAR_COUNTS, jam.bars.length])].sort((a, b) => a - b).map(n => `<option value="${n}" ${n === jam.bars.length ? 'selected' : ''}>${n}</option>`).join('')}
       </select></div>`;
     html += `</div>`;
 
@@ -4646,15 +4992,19 @@
       </select></div>`;
     html += `</div>`;
 
-    html += `<div class="row" id="jamBarTabsRow" style="gap:6px; margin-top:12px;">`;
+    if (jamPlanCtx) html = renderJamPlanBanner() + html;
+    html += `<div class="row ${jam.bars.length > 16 ? 'many' : ''}" id="jamBarTabsRow" style="gap:6px; margin-top:12px;">`;
     for (let i = 0; i < jam.bars.length; i++) {
       const isActive = i === jam.activeBar;
       const isPlaying = jam.playing && i === jam.playingBar;
       const inLoop = i >= jam.loopStart && i <= jam.loopEnd;
-      html += `<button type="button" class="btn ${isActive ? '' : 'btn-secondary'} jam-bar-tab" data-bar="${i}" style="${isPlaying ? 'box-shadow: 0 0 0 2px #22d3ee inset;' : ''} ${inLoop ? '' : 'opacity:0.45;'}">${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(jam.bars[i])}</small></button>`;
+      const part = jamPartAt(i);
+      if (part && part.start === i) html += `<span class="jam-part-chip" style="background:${jamPartColor(part.name)};">${escapeJamHtml(part.name)}</span>`;
+      html += `<button type="button" class="btn ${isActive ? '' : 'btn-secondary'} jam-bar-tab" data-bar="${i}" style="${isPlaying ? 'box-shadow: 0 0 0 2px #22d3ee inset;' : ''} ${inLoop ? '' : 'opacity:0.45;'} ${part ? `border-top:4px solid ${jamPartColor(part.name)};` : ''}">${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(jam.bars[i])}</small></button>`;
     }
     html += `</div>`;
     html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>`;
+    html += `<details class="jam-section" data-sec="parts" ${ui.parts ? 'open' : ''}><summary>🧩 Song-Teile${(jam.parts || []).length ? ` (${jam.parts.length})` : ''}</summary><div id="jamPartsBody">${renderJamPartsBody()}</div></details>`;
 
     html += `<div class="row" style="gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px;">`;
     if (jam.chordMode === 'free') {
@@ -4710,6 +5060,8 @@
         </div>
         <div class="jam-hint" id="jamTrainerStatus">${jam.trainerOn ? `Aktuell ${jam.bpm} BPM, Ziel ${jam.trainerTarget} BPM` : 'Aus'}</div>
       </div>
+      <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; margin-top:10px;">
+        <input type="checkbox" id="jamHintsCheckbox" ${jamHintsOn() ? 'checked' : ''}> 💬 Freundliche Hinweise (z. B. Pausen-Tipp nach längerem Spielen)</label>
       <div class="jam-hint">Swing 0 % = gerade, 100 % = Triolen-Shuffle (Blues/Jazz). Tap-Tempo: mindestens 2-mal im Takt tippen. Humanize: kleine Schwankungen, damit der Beat weniger nach Maschine klingt.</div>
     </details>`;
     html += `<details class="jam-section" data-sec="tools" ${ui.tools ? 'open' : ''}><summary>🛠️ Werkzeuge</summary>
@@ -4873,6 +5225,8 @@
     jamModuleRoot.innerHTML = html;
     bindJamModuleEvents();
     bindJamExtraEvents();
+    bindJamPartsEvents();
+    bindJamPlanBannerEvents();
     renderJamSavedList();
     updateJamImprovPanel();
   }
@@ -5136,6 +5490,8 @@
       updateJamReverbLive();
       scheduleJamAutosave();
     });
+    const hc = document.getElementById('jamHintsCheckbox');
+    if (hc) hc.addEventListener('change', (e) => { try { localStorage.setItem(HINTS_KEY, e.target.checked ? '1' : '0'); } catch (err) {} });
     const bc = document.getElementById('jamBarCountSelect');
     if (bc) bc.addEventListener('change', (e) => { setJamBarCount(parseInt(e.target.value, 10)); scheduleJamAutosave(); renderJamModule(); });
     const hum = document.getElementById('jamHumanizeRange');
@@ -5420,6 +5776,14 @@
       const isPlaying = state.jam.playing && i === state.jam.playingBar;
       btn.style.boxShadow = isPlaying ? '0 0 0 2px #22d3ee inset' : '';
       btn.innerHTML = `${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(state.jam.bars[i])}</small>`;
+      // Bei vielen Takten: nur im Takt-Kasten mitscrollen (die Seite selbst bleibt ruhig)
+      if (isPlaying) {
+        const box = btn.parentElement;
+        if (box && box.classList.contains('many')) {
+          const top = btn.offsetTop - box.offsetTop;
+          if (top < box.scrollTop || top + btn.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = Math.max(0, top - 8);
+        }
+      }
     });
   }
 
@@ -6256,6 +6620,7 @@
         if (wasFill) jamCrashNext = true;
         if (wraps) {
           jamLoopCount++;
+          setTimeout(jamHintOnLoop, Math.max(0, delay));
           // Tempo-Trainer: nach jeweils N Durchläufen um X BPM schneller, bis zum Ziel
           const j = state.jam;
           if (j.trainerOn && jamLoopCount % (j.trainerEvery || 2) === 0 && j.bpm < j.trainerTarget) {
@@ -6278,6 +6643,7 @@
       jamArpIndex = 0;
       jamLoopCount = 0;
       jamCrashNext = false;
+      if (!jamPlayStartedAt || Date.now() - jamPlayStartedAt > 30 * 60000) { jamPlayStartedAt = Date.now(); jamHintBreakShown = 0; }
       state.jam.playingBar = state.jam.loopStart;
       jamNextNoteTime = audioCtx.currentTime + 0.05;
       // Einzähler: ein Takt Klicks auf den Zählzeiten, danach startet der Beat
@@ -6662,6 +7028,7 @@
       kit: state.jam.kit || 'standard',
       crackle: state.jam.crackle ?? 0.5,
       stereo: state.jam.stereo !== false,
+      parts: JSON.parse(JSON.stringify(state.jam.parts || [])),
       bars: JSON.parse(JSON.stringify(state.jam.bars))
     };
   }
@@ -6707,11 +7074,15 @@
     updateJamReverbLive();
 
     // Ältere Stände haben immer 4 Takte; neuere 4/8/12/16
-    if (Array.isArray(data.bars) && data.bars.length >= 1 && data.bars.length <= 16 && data.bars.every(b => b && b.pattern)) {
+    if (Array.isArray(data.bars) && data.bars.length >= 1 && data.bars.length <= JAM_MAX_BARS && data.bars.every(b => b && b.pattern)) {
       state.jam.bars = JSON.parse(JSON.stringify(data.bars));
     }
     state.jam.loopEnd = Math.max(0, Math.min(state.jam.loopEnd, state.jam.bars.length - 1));
     state.jam.loopStart = Math.max(0, Math.min(state.jam.loopStart, state.jam.loopEnd));
+    const nb = state.jam.bars.length;
+    state.jam.parts = Array.isArray(data.parts) ? data.parts
+      .filter(p => p && typeof p.name === 'string' && Number.isInteger(p.start) && Number.isInteger(p.end) && p.start >= 0 && p.start < nb && p.end >= p.start)
+      .map(p => ({ name: p.name.slice(0, 30), start: p.start, end: Math.min(p.end, nb - 1) })) : [];
 
     const currentSteps = getJamStepsCount();
     state.jam.bars.forEach(bar => {
@@ -7859,6 +8230,7 @@
     stopTimer();
     stopJamPlayback();
     stopTuner();
+    stopStrum();
     state.userGrid = {};
     state.gameTarget = null;
     state.guessedGameNotes = {};
@@ -7881,6 +8253,7 @@
     scaleViewGrid.style.display = 'none';
     jamModuleRoot.style.display = 'none';
     document.getElementById('tunerRoot').style.display = 'none';
+    document.getElementById('strumRoot').style.display = 'none';
     chordInfoBox.style.display = 'none';
     standardControls.style.display = 'flex';
 
@@ -7936,7 +8309,7 @@
       staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "🥁 Baue dir einen Beat über 4 bis 16 Takte, wähle Akkorde für Bass & Pad und improvisiere dazu, z.B. mit der passenden Pentatonik aus Modul 8!";
+      speechBannerEl.textContent = "🥁 Baue dir einen Beat über 4 bis 64 Takte, wähle Akkorde für Bass & Pad und improvisiere dazu, z.B. mit der passenden Pentatonik aus Modul 8!";
       jamModuleRoot.style.display = 'block';
       if (!state.jam) initJamState();
       renderJamModule();
@@ -7948,6 +8321,14 @@
       gameScoreEl.textContent = `Punkte: ${state.gameScore}`;
       speechBannerEl.textContent = "🎮 Spielmodus: Errate den hervogehobenen Ton auf dem Griffbrett!";
       nextGameQuestion();
+    } else if (mod.type === 'strum') {
+      fretboardWrapper.style.display = 'none';
+      staffContainer.style.display = 'none';
+      timerContainerEl.style.display = 'none';
+      standardControls.style.display = 'none';
+      speechBannerEl.textContent = "🪕 Anschlag & Zupfen: Muster wählen, Akkorde eintragen, ▶ drücken und mitspielen – ganz ohne Zeitdruck.";
+      document.getElementById('strumRoot').style.display = 'block';
+      renderStrum();
     } else if (mod.type === 'tuner') {
       fretboardWrapper.style.display = 'none';
       staffContainer.style.display = 'none';
@@ -8016,6 +8397,777 @@
     const s = (state.timerSeconds % 60).toString().padStart(2, '0');
     timerDisplayEl.textContent = `${m}:${s}`;
   }
+
+  // =================== Anschlag & Zupfen ===================
+  // Anschlag-Zeichen: D/d = Abschlag (groß = betont), U/u = Aufschlag, x = gedämpft, b = Bass, B = Wechselbass, - = Pause
+  // Zupfen: "p:B+i:3" = Daumen auf Bass-Saite + Zeigefinger auf Saite 3 (1 = hohe e … 6 = tiefe E; B = Grundton-Bass, B2 = Wechselbass)
+  const STRUM_PATTERNS = [
+    // ---- Anschlagen ----
+    { id:'s_quarter', kind:'strum', level:1, name:'Grundschlag in Vierteln', sig:'4/4', unit:2, bpm:70, steps:'D-d-d-d-', tip:'Nur Abschläge auf 1, 2, 3, 4. Die Hand bewegt sich zwischendurch locker nach oben, ohne die Saiten zu treffen.' },
+    { id:'s_eighth', kind:'strum', level:1, name:'Achtel: ab – auf', sig:'4/4', unit:2, bpm:70, steps:'DuduDudu', tip:'Die Hand pendelt gleichmäßig: ab auf der Zahl, auf auf dem „+“. Das ist die Basis für fast alle Muster.' },
+    { id:'s_waltz', kind:'strum', level:1, name:'Walzer', sig:'3/4', unit:2, bpm:80, steps:'D-d-d-', tip:'Drei Abschläge, die Eins etwas kräftiger: EINS zwei drei.' },
+    { id:'s_waltz_bass', kind:'strum', level:1, name:'Walzer mit Bass', sig:'3/4', unit:2, bpm:80, steps:'b-d-d-', tip:'Auf der Eins nur den Basston (Grundton) anschlagen, dann zweimal die hohen Saiten.' },
+    { id:'s_pop', kind:'strum', level:2, name:'Pop-/Lagerfeuer-Muster', sig:'4/4', unit:2, bpm:80, steps:'D-du-udu', tip:'Der Klassiker: ab – ab auf – auf ab auf. Auf der 3 wird ausgelassen, die Hand geht trotzdem nach unten (Luftschlag).' },
+    { id:'s_rockpop', kind:'strum', level:2, name:'Rock-Pop', sig:'4/4', unit:2, bpm:90, steps:'D-duD-du', tip:'Zweimal „ab – ab auf“. Schön kräftig auf 1 und 3.' },
+    { id:'s_country', kind:'strum', level:2, name:'Country mit Wechselbass', sig:'4/4', unit:2, bpm:90, steps:'b-duB-du', tip:'Bass (Grundton) – Schlag auf – Wechselbass – Schlag auf. Der Bass wechselt zwischen zwei Saiten.' },
+    { id:'s_reggae', kind:'strum', level:2, name:'Reggae / Ska (Offbeat)', sig:'4/4', unit:2, bpm:80, steps:'-U-U-U-U', tip:'Nur auf dem „+“ kurz nach oben anschlagen. Auf den Zahlen bewegt sich die Hand leer nach unten.' },
+    { id:'s_68', kind:'strum', level:2, name:'6/8-Ballade', sig:'6/8', unit:3, bpm:50, steps:'D-duDu', count:['1','2','3','4','5','6'], tip:'Gezählt wird 1 2 3 4 5 6, betont auf 1 und 4. Wiegt sich wie ein langsamer Walzer in zwei Gruppen.' },
+    { id:'s_128', kind:'strum', level:2, name:'12/8 Slow Blues', sig:'12/8', unit:3, bpm:50, steps:'D-uD-uD-uD-u', count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'Vier Gruppen zu drei (EINS zwei drei). Der Aufschlag kommt immer auf die dritte Achtel jeder Gruppe.' },
+    { id:'s_shuffle', kind:'strum', level:3, name:'Blues-Shuffle mit Dämpfer', sig:'4/4', unit:3, bpm:80, steps:'D-ux-uD-ux-u', tip:'Triolen-Gefühl („lang – kurz“). Auf 2 und 4 ein gedämpfter Schlag (✕): Handballen kurz auf die Saiten legen.' },
+    { id:'s_gallop', kind:'strum', level:3, name:'Galopp (Sechzehntel)', sig:'4/4', unit:4, bpm:70, steps:'D-duD-duD-duD-du', tip:'Lang – kurz kurz, wie ein galoppierendes Pferd. Die Hand pendelt in Sechzehnteln weiter.' },
+    { id:'s_funk', kind:'strum', level:3, name:'Funk mit Dämpfern', sig:'4/4', unit:4, bpm:80, steps:'D-xudux-D-xudux-', tip:'Locker aus dem Handgelenk in Sechzehnteln. Die ✕ sind perkussive, gedämpfte Schläge.' },
+    { id:'s_54', kind:'strum', level:3, name:'5/4 („Take Five“-Gefühl)', sig:'5/4', unit:2, bpm:90, steps:'D-duD-D-u-', tip:'Fünf Schläge, gefühlt als 3 + 2: EINS zwei drei VIER fünf.' },
+    { id:'s_78', kind:'strum', level:3, name:'7/8 (2 + 2 + 3)', sig:'7/8', unit:2, bpm:90, steps:'D-D-D-u', count:['1','2','1','2','1','2','3'], tip:'Gezählt: 1 2 – 1 2 – 1 2 3. Die letzte Gruppe ist eine Achtel länger. Typisch für Balkan-Musik.' },
+    // ---- Zupfen ----
+    { id:'p_arp', kind:'pick', level:1, name:'Arpeggio aufwärts (p i m a)', sig:'4/4', unit:2, bpm:70, steps:['p:B','i:3','m:2','a:1','m:2','i:3','m:2','i:3'], tip:'Daumen auf den Basston, dann Zeige-, Mittel- und Ringfinger nacheinander auf G-, H- und e-Saite.' },
+    { id:'p_thumb', kind:'pick', level:1, name:'Daumen-Wechselbass', sig:'4/4', unit:2, bpm:70, steps:['p:B+i:3+m:2+a:1','-','p:B2','-','p:B+i:3+m:2+a:1','-','p:B2','-'], tip:'Auf 1 und 3 Daumen und drei Finger gleichzeitig („zupfen wie greifen“), auf 2 und 4 nur der Daumen auf dem Wechselbass.' },
+    { id:'p_waltz', kind:'pick', level:1, name:'Walzer gezupft', sig:'3/4', unit:2, bpm:80, steps:['p:B','-','i:3+m:2+a:1','-','i:3+m:2+a:1','-'], tip:'Bass – Akkord – Akkord. Die drei Finger zupfen gleichzeitig.' },
+    { id:'p_68', kind:'pick', level:1, name:'6/8-Arpeggio', sig:'6/8', unit:3, bpm:50, steps:['p:B','i:3','m:2','a:1','m:2','i:3'], count:['1','2','3','4','5','6'], tip:'Hoch und wieder runter: p i m a m i. Wirkt ruhig und fließend, gut für Balladen.' },
+    { id:'p_travis', kind:'pick', level:2, name:'Travis-Picking', sig:'4/4', unit:2, bpm:70, steps:['p:B+m:1','i:2','p:B2','m:1','p:B','i:2','p:B2','m:1'], tip:'Der Daumen spielt gleichmäßig Viertel (Bass – Wechselbass), die Finger zupfen dazwischen. Erst nur den Daumen üben, dann die Finger dazunehmen.' },
+    { id:'p_pinch', kind:'pick', level:2, name:'Folk mit „Pinch“', sig:'4/4', unit:2, bpm:70, steps:['p:B+a:1','i:3','m:2','i:3','p:B2+a:1','i:3','m:2','i:3'], tip:'Auf 1 und 3 Daumen und Ringfinger gleichzeitig („kneifen“), dazwischen i m i.' },
+    { id:'p_ballad34', kind:'pick', level:2, name:'Ballade in 3/4', sig:'3/4', unit:2, bpm:70, steps:['p:B','i:3','m:2','a:1','m:2','i:3'], tip:'p i m a m i: einmal hoch und wieder runter pro Takt.' },
+    { id:'p_bossa', kind:'pick', level:2, name:'Bossa Nova', sig:'4/4', unit:4, bpm:60, steps:['p:B+i:3+m:2+a:1','-','-','i:3+m:2+a:1','p:B2','-','i:3+m:2+a:1','-','p:B','-','i:3+m:2+a:1','-','p:B2','i:3+m:2+a:1','-','-'], tip:'Der Daumen spielt gleichmäßig Viertel (Bass – Wechselbass). Die Finger zupfen den Akkord leicht versetzt dazu – das gibt den typischen Bossa-Schwung.' },
+    { id:'p_rolling', kind:'pick', level:3, name:'Fließende Sechzehntel (Estas-Tonne-Stil)', sig:'4/4', unit:4, bpm:60, steps:['p:B','i:3','m:2','a:1','m:2','i:3','p:B2','i:3','m:2','a:1','m:2','i:3','p:B','i:3','a:1','m:2'], tip:'Gleichmäßig rollende Sechzehntel. Ganz langsam anfangen – der Fluss ist wichtiger als das Tempo.' },
+    { id:'p_128', kind:'pick', level:3, name:'12/8-Arpeggio', sig:'12/8', unit:3, bpm:45, steps:['p:B','i:3','m:2','a:1','m:2','i:3','p:B2','i:3','m:2','a:1','m:2','i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'Zwei Wellen p i m a m i pro Takt, beim zweiten Mal mit Wechselbass.' },
+    { id:'p_54', kind:'pick', level:3, name:'5/4-Arpeggio', sig:'5/4', unit:2, bpm:80, steps:['p:B','i:3','m:2','i:3','a:1','i:3','p:B2','i:3','m:2','i:3'], tip:'Als 3 + 2 fühlen: der Wechselbass kommt auf die VIER.' },
+    { id:'p_78', kind:'pick', level:3, name:'7/8 gezupft (2 + 2 + 3)', sig:'7/8', unit:2, bpm:90, steps:['p:B','i:3','p:B2','m:2','p:B','i:3','m:2'], count:['1','2','1','2','1','2','3'], tip:'Der Daumen markiert jede Gruppe: 1 2 – 1 2 – 1 2 3.' }
+  ];
+  const STRUM_CHORD_SUGGESTIONS = ['C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G', 'Em C G D', 'Am Dm E Am', 'A D E A', 'Dmaj7 Hm7 Em7 A7'];
+  const STRUM_KEY = 'guitartrainer_strum';
+  const STRUM_STRINGS = ['E', 'A', 'D', 'G', 'H', 'e'];
+  const STRUM_OPEN = [40, 45, 50, 55, 59, 64];
+  let strumState = null;
+  let strumPlaying = false, strumTimer = null, strumNext = 0, strumStep = 0, strumBar = 0, strumVoices = [], strumOut = null, strumOutCtx = null;
+
+  function loadStrumState() {
+    const d = { kind: 'strum', id: 's_pop', chords: 'C Am F G', bpc: 1, bpm: null, click: true, countIn: true };
+    try { Object.assign(d, JSON.parse(localStorage.getItem(STRUM_KEY) || '{}')); } catch (e) {}
+    if (!strumAllPatterns().find(p => p.id === d.id)) d.id = 's_pop';
+    return d;
+  }
+  function saveStrumState() { try { localStorage.setItem(STRUM_KEY, JSON.stringify(strumState)); } catch (e) {} }
+  function strumPattern() { if (strumEdit) return strumEdit.draft; return strumAllPatterns().find(p => p.id === strumState.id) || STRUM_PATTERNS[0]; }
+
+  // ---------- Eigene Muster ----------
+  const STRUM_CUSTOM_KEY = 'guitartrainer_strum_custom';
+  const STRUM_EDIT_SIGS = ['2/4', '3/4', '4/4', '5/4', '6/8', '7/8', '9/8', '12/8'];
+  const STRUM_CYCLE = ['-', 'd', 'D', 'u', 'U', 'x', 'b', 'B'];
+  const STRUM_PICK_ROWS = [
+    { key: '1', f: 'a', label: 'e-Saite (a)' }, { key: '2', f: 'm', label: 'H-Saite (m)' }, { key: '3', f: 'i', label: 'G-Saite (i)' },
+    { key: 'B2', f: 'p', label: 'Wechselbass (p)' }, { key: 'B', f: 'p', label: 'Bass (p)' }
+  ];
+  let strumEdit = null;   // { draft, editingId }
+  function strumCustomList() {
+    try {
+      const a = JSON.parse(localStorage.getItem(STRUM_CUSTOM_KEY) || '[]');
+      return Array.isArray(a) ? a.filter(p => p && p.id && (p.kind === 'strum' || p.kind === 'pick') && p.steps && p.sig) : [];
+    } catch (e) { return []; }
+  }
+  function strumSaveCustomList(list) { try { localStorage.setItem(STRUM_CUSTOM_KEY, JSON.stringify(list)); } catch (e) { showToast('Speichern nicht möglich (Speicher voll?)'); } }
+  function strumAllPatterns() { return [...strumCustomList().map(p => ({ ...p, level: 0, custom: true, tip: p.tip || 'Eigenes Muster' })), ...STRUM_PATTERNS]; }
+  // Taktart + Raster → unit, Schrittzahl, Zählweise
+  function strumGeom(sig, raster) {
+    const [num, den] = sig.split('/').map(Number);
+    if (den === 8) {
+      if (sig === '7/8') return { unit: 2, n: 7, count: ['1', '2', '1', '2', '1', '2', '3'] };
+      if (sig === '5/8') return { unit: 2, n: 5, count: ['1', '2', '1', '2', '3'] };
+      return { unit: 3, n: num, count: Array.from({ length: num }, (_, i) => String(i + 1)) };
+    }
+    const unit = raster === '16' ? 4 : raster === '3' ? 3 : 2;
+    return { unit, n: num * unit, count: null };
+  }
+  function strumDraftRaster(d) { return /\/8$/.test(d.sig) ? '8' : (d.unit === 4 ? '16' : d.unit === 3 ? '3' : '8'); }
+  function strumApplyGeom(d, sig, raster) {
+    const g = strumGeom(sig, raster);
+    const old = Array.isArray(d.steps) ? d.steps.slice() : d.steps.split('');
+    const steps = Array.from({ length: g.n }, (_, i) => old[i] || '-');
+    d.sig = sig; d.unit = g.unit;
+    if (g.count) d.count = g.count; else delete d.count;
+    d.steps = d.kind === 'strum' ? steps.join('') : steps;
+  }
+  function strumNewDraft(kind) {
+    const d = { id: 'c_' + Date.now().toString(36), kind, name: '', sig: '4/4', unit: 2, bpm: 70, steps: kind === 'strum' ? 'D-------' : ['p:B', '-', '-', '-', '-', '-', '-', '-'], level: 0, custom: true, tip: 'Eigenes Muster' };
+    return d;
+  }
+  function strumStartEdit(draft, editingId) {
+    const was = strumPlaying; stopStrum();
+    strumEdit = { draft: JSON.parse(JSON.stringify(draft)), editingId: editingId || null };
+    strumState.bpm = draft.bpm || null;
+    strumState.kind = draft.kind;
+    renderStrum();
+    if (was) startStrum();
+  }
+  function strumEditorHtml() {
+    const d = strumEdit.draft;
+    const sel = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.9rem; padding:5px 6px;';
+    const r = strumDraftRaster(d), is8 = /\/8$/.test(d.sig);
+    let h = `<div class="jam-subbox" style="border:2px solid var(--accent-color); border-radius:12px; padding:12px; margin:10px 0;">
+      <div style="font-weight:800; margin-bottom:8px;">✏️ ${strumEdit.editingId ? 'Muster bearbeiten' : 'Eigenes Muster'} – ${d.kind === 'strum' ? 'Anschlagen' : 'Zupfen'}</div>
+      <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
+        <label style="font-weight:600;">Name:</label>
+        <input type="text" id="strumEdName" maxlength="40" value="${homeEsc(d.name)}" placeholder="z. B. Für Silke – Strophe" style="flex:1; min-width:160px; ${sel}">
+      </div>
+      <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px;">
+        <label style="font-weight:600;">Taktart:</label>
+        <select id="strumEdSig" style="${sel}">${STRUM_EDIT_SIGS.map(x => `<option ${x === d.sig ? 'selected' : ''}>${x}</option>`).join('')}</select>
+        <label style="font-weight:600;">Raster:</label>
+        <select id="strumEdRaster" style="${sel}" ${is8 ? 'disabled' : ''}>
+          <option value="8" ${r === '8' ? 'selected' : ''}>Achtel</option>
+          <option value="16" ${r === '16' ? 'selected' : ''}>Sechzehntel</option>
+          <option value="3" ${r === '3' ? 'selected' : ''}>Triolen (Shuffle)</option>
+        </select>
+        <label style="font-weight:600;">Tempo:</label>
+        <input type="number" id="strumEdBpm" min="30" max="180" value="${d.bpm}" style="width:64px; ${sel}"> <span style="font-size:0.85rem;">BPM</span>
+      </div>
+      <div class="strum-grid-wrap" id="strumEditGrid">${strumEditGridHtml()}</div>
+      <div class="jam-hint">${d.kind === 'strum' ? 'Kästchen antippen wechselt: · → ↓ → <b>↓</b> betont → ↑ → <b>↑</b> betont → ✕ gedämpft → B¹ Bass → B² Wechselbass → ·' : 'Antippen setzt oder entfernt einen Punkt. Punkte übereinander werden gleichzeitig gezupft. Unten siehst du die Vorschau in Noten und Tabulatur.'}</div>
+      <div class="row" style="flex-wrap:wrap; gap:8px; margin-top:10px;">
+        <button type="button" class="btn" id="strumEdSave">💾 Speichern</button>
+        <button type="button" class="btn btn-secondary" id="strumEdClear">Leeren</button>
+        <button type="button" class="btn btn-secondary" id="strumEdCancel">Abbrechen</button>
+      </div>
+      <div class="jam-hint">Zum Anhören einfach unten ▶ drücken – Änderungen hörst du sofort.</div>
+    </div>`;
+    return h;
+  }
+  function strumEditGridHtml() {
+    const d = strumEdit.draft, steps = strumSteps(d), labels = strumCountLabels(d), n = steps.length;
+    const bs = i => i > 0 && strumIsBeat(d, i) ? 'beatstart' : '';
+    const lw = d.kind === 'pick' ? 118 : 34;
+    let h = `<div class="strum-grid" style="grid-template-columns: ${lw}px repeat(${n}, minmax(34px, 1fr));"><div class="strum-cell lbl"></div>`;
+    labels.forEach((l, i) => { h += `<div class="strum-cell cnt ${strumIsBeat(d, i) ? 'beat' : ''}">${l}</div>`; });
+    if (d.kind === 'strum') {
+      h += `<div class="strum-cell lbl">✋</div>`;
+      steps.forEach((t, i) => {
+        const sym = { D: '↓', d: '↓', U: '↑', u: '↑', x: '✕', b: 'B¹', B: 'B²', '-': '·' }[t] || '·';
+        const cls = (t === 'D' || t === 'U') ? 'acc' : (t === '-' ? 'rest' : (t === 'b' || t === 'B' ? 'small' : ''));
+        h += `<button type="button" class="strum-cell ${cls} ${bs(i)}" data-ecell="${i}" data-sstep="${i}" style="cursor:pointer;">${sym}</button>`;
+      });
+    } else {
+      STRUM_PICK_ROWS.forEach(row => {
+        h += `<div class="strum-cell lbl" style="font-size:0.72rem;">${row.label}</div>`;
+        steps.forEach((t, i) => {
+          const on = strumParsePick(t).some(x => x.s === row.key);
+          h += `<button type="button" class="strum-cell pick ${on ? 'hit' : ''} ${bs(i)}" data-erow="${row.key}" data-ecol="${i}" data-sstep="${i}" style="cursor:pointer;">${on ? row.f : ''}</button>`;
+        });
+      });
+    }
+    return h + `</div>`;
+  }
+  function strumEditRefresh() {
+    const eg = document.getElementById('strumEditGrid');
+    if (eg) eg.innerHTML = strumEditGridHtml();
+    const gw = document.getElementById('strumGridWrap');
+    if (gw) gw.innerHTML = strumEdit.draft.kind === 'pick' ? renderStrumGrid((strumChords() || [[0, 'dur']])[0]) : '';
+    bindStrumEditGrid();
+  }
+  function bindStrumEditGrid() {
+    const d = strumEdit.draft;
+    document.querySelectorAll('#strumEditGrid [data-ecell]').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.ecell, arr = d.steps.split('');
+      arr[i] = STRUM_CYCLE[(STRUM_CYCLE.indexOf(arr[i]) + 1) % STRUM_CYCLE.length];
+      d.steps = arr.join(''); strumEditRefresh();
+    }));
+    document.querySelectorAll('#strumEditGrid [data-erow]').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.ecol, key = b.dataset.erow, row = STRUM_PICK_ROWS.find(r => r.key === key);
+      let hits = strumParsePick(d.steps[i]);
+      if (hits.some(x => x.s === key)) hits = hits.filter(x => x.s !== key); else hits.push({ f: row.f, s: key });
+      const order = ['B', 'B2', '3', '2', '1'];
+      hits.sort((a, c) => order.indexOf(a.s) - order.indexOf(c.s));
+      d.steps[i] = hits.length ? hits.map(x => x.f + ':' + x.s).join('+') : '-';
+      strumEditRefresh();
+    }));
+  }
+  function bindStrumEditorEvents() {
+    const d = strumEdit.draft;
+    bindStrumEditGrid();
+    document.getElementById('strumEdName').addEventListener('input', e => { d.name = e.target.value; });
+    const geom = () => { strumApplyGeom(d, document.getElementById('strumEdSig').value, document.getElementById('strumEdRaster').value); document.getElementById('strumEdRaster').disabled = /\/8$/.test(d.sig); if (/\/8$/.test(d.sig)) document.getElementById('strumEdRaster').value = '8'; strumEditRefresh(); };
+    document.getElementById('strumEdSig').addEventListener('change', geom);
+    document.getElementById('strumEdRaster').addEventListener('change', geom);
+    document.getElementById('strumEdBpm').addEventListener('change', e => {
+      d.bpm = Math.max(30, Math.min(180, parseInt(e.target.value, 10) || 70)); e.target.value = d.bpm;
+      strumState.bpm = d.bpm; const t = document.getElementById('strumTempo'); if (t) t.value = d.bpm; const l = document.getElementById('strumTempoLabel'); if (l) l.textContent = d.bpm + ' BPM';
+    });
+    document.getElementById('strumEdClear').addEventListener('click', () => { const n = strumSteps(d).length; d.steps = d.kind === 'strum' ? '-'.repeat(n) : Array(n).fill('-'); strumEditRefresh(); });
+    document.getElementById('strumEdCancel').addEventListener('click', () => { stopStrum(); strumEdit = null; renderStrum(); });
+    document.getElementById('strumEdSave').addEventListener('click', () => {
+      const has = strumSteps(d).some(t => t !== '-');
+      if (!has) { showToast('Das Muster ist noch leer – tippe ein paar Kästchen an.'); return; }
+      d.name = (d.name || '').trim() || (d.kind === 'strum' ? 'Mein Schlagmuster' : 'Mein Zupfmuster');
+      const list = strumCustomList();
+      const clean = { id: d.id, kind: d.kind, name: d.name, sig: d.sig, unit: d.unit, bpm: d.bpm, steps: d.steps, tip: 'Eigenes Muster' };
+      if (d.count) clean.count = d.count;
+      const idx = list.findIndex(p => p.id === d.id);
+      if (idx >= 0) list[idx] = clean; else list.unshift(clean);
+      strumSaveCustomList(list);
+      stopStrum();
+      strumEdit = null; strumState.id = clean.id; strumState.kind = clean.kind; strumState.bpm = clean.bpm; saveStrumState();
+      renderStrum();
+      showToast(`„${clean.name}“ gespeichert ✔ – zu finden unter „⭐ Meine Muster“.`);
+    });
+  }
+  function strumDeleteCustom(id) {
+    const list = strumCustomList(), p = list.find(x => x.id === id);
+    if (!p || !confirm(`Muster „${p.name}“ wirklich löschen?`)) return;
+    stopStrum();
+    strumSaveCustomList(list.filter(x => x.id !== id));
+    strumState.id = (STRUM_PATTERNS.find(x => x.kind === strumState.kind) || STRUM_PATTERNS[0]).id; strumState.bpm = null; saveStrumState();
+    renderStrum();
+    showToast('Muster gelöscht.');
+  }
+  function strumSteps(p) { return Array.isArray(p.steps) ? p.steps : p.steps.split(''); }
+  function strumBpm() { const p = strumPattern(); return Math.max(30, Math.min(180, strumState.bpm || p.bpm)); }
+  function strumChords() {
+    const c = parsePlanChords(strumState.chords);
+    return c && c.length ? c : null;
+  }
+  function strumCountLabels(p) {
+    const n = strumSteps(p).length;
+    if (p.count) return p.count;
+    const sub = { 1: [''], 2: ['', '+'], 3: ['', '+', 'a'], 4: ['', 'e', '+', 'e'] }[p.unit] || [''];
+    return Array.from({ length: n }, (_, i) => (i % p.unit === 0 ? String(Math.floor(i / p.unit) + 1) : sub[i % p.unit]));
+  }
+  function strumIsBeat(p, i) { return /^\d+$/.test(strumCountLabels(p)[i]); }
+  function strumFingering(c) { const f = getJamChordFingering(c[0], c[1]); return f ? f.frets : [0, 0, 0, 0, 0, 0]; }
+  function strumBassIdx(frets) { const i = frets.findIndex(f => f >= 0); return i < 0 ? 0 : i; }
+  function strumAltBassIdx(frets) {
+    const b = strumBassIdx(frets);
+    const cands = b === 0 ? [2, 1] : [b + 1, b - 1, b + 2];
+    for (const c of cands) if (c >= 0 && c <= 3 && frets[c] >= 0 && c !== b) return c;
+    return b;
+  }
+  // Saiten-Index (0 = tiefe E … 5 = hohe e) für ein Zupf-Ziel
+  function strumResolveString(target, frets) {
+    if (target === 'B') return strumBassIdx(frets);
+    if (target === 'B2') return strumAltBassIdx(frets);
+    const idx = 6 - parseInt(target, 10);
+    if (frets[idx] >= 0) return idx;
+    for (let k = idx + 1; k <= 5; k++) if (frets[k] >= 0) return k;
+    return -1;
+  }
+  function strumParsePick(tok) {
+    if (!tok || tok === '-') return [];
+    return tok.split('+').map(x => { const [f, s] = x.split(':'); return { f, s }; });
+  }
+  function strumChordAt(chords, bar) { return chords[Math.floor(bar / (strumState.bpc || 1)) % chords.length]; }
+
+  // ---------- Klang ----------
+  function strumGetOut(ctx) {
+    if (strumOut && strumOutCtx === ctx) return strumOut;
+    const g = ctx.createGain(); g.gain.value = 0.55;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -14; comp.ratio.value = 4;
+    g.connect(comp); comp.connect(ctx.destination);
+    strumOut = g; strumOutCtx = ctx;
+    return g;
+  }
+  function strumDamp(ctx, t, onlyString) {
+    strumVoices = strumVoices.filter(v => {
+      if (v.end < ctx.currentTime) return false;
+      if (onlyString === undefined || v.s === onlyString) {
+        try { const tt = Math.max(t, ctx.currentTime); v.damp.gain.setValueAtTime(1, tt); v.damp.gain.linearRampToValueAtTime(0, tt + 0.04); } catch (e) {}
+        return false;
+      }
+      return true;
+    });
+  }
+  function strumPluck(ctx, midi, t, vel, s, dur) {
+    const out = strumGetOut(ctx);
+    const f = 440 * Math.pow(2, (midi - 69) / 12);
+    const env = ctx.createGain(), damp = ctx.createGain(), lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(Math.min(9000, 900 + f * 7 * vel), t);
+    lp.frequency.exponentialRampToValueAtTime(Math.max(300, f * 1.6), t + 0.35);
+    env.gain.setValueAtTime(0.0001, t);
+    env.gain.linearRampToValueAtTime(0.22 * vel, t + 0.004);
+    env.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+    const o1 = ctx.createOscillator(); o1.type = 'sawtooth'; o1.frequency.setValueAtTime(f, t);
+    o1.connect(lp);
+    let o2 = null;
+    if (!jamLowPerf()) { o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.setValueAtTime(f * 1.002, t); o2.connect(lp); }
+    lp.connect(env); env.connect(damp); damp.connect(out);
+    o1.start(t); o1.stop(t + dur + 0.05);
+    if (o2) { o2.start(t); o2.stop(t + dur + 0.05); }
+    strumVoices.push({ damp, s, end: t + dur });
+  }
+  function strumChuck(ctx, t, vel) {
+    const out = strumGetOut(ctx);
+    const len = Math.floor(ctx.sampleRate * 0.05);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = 0.9;
+    const g = ctx.createGain(); g.gain.value = 0.5 * vel;
+    src.connect(bp); bp.connect(g); g.connect(out);
+    src.start(t);
+  }
+  function strumClick(ctx, t, accent) {
+    const out = strumGetOut(ctx);
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(accent ? 1500 : 1000, t);
+    g.gain.setValueAtTime(accent ? 0.22 : 0.13, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t + 0.07);
+  }
+  function strumPlayStep(ctx, p, chord, stepIdx, t) {
+    const tok = strumSteps(p)[stepIdx];
+    const frets = strumFingering(chord);
+    const pitch = i => STRUM_OPEN[i] + frets[i];
+    const first = stepIdx === 0;
+    if (p.kind === 'strum') {
+      if (tok === '-') return;
+      if (tok === 'x') { strumDamp(ctx, t); strumChuck(ctx, t, 0.8); return; }
+      if (tok === 'b' || tok === 'B') {
+        const s = tok === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets);
+        strumDamp(ctx, t, s); strumPluck(ctx, pitch(s), t, first ? 1 : 0.85, s, 1.8); return;
+      }
+      const down = tok === 'D' || tok === 'd';
+      const vel = (tok === 'D' || tok === 'U' ? 1 : 0.68) * (first ? 1.08 : 1);
+      let strs = [0, 1, 2, 3, 4, 5].filter(i => frets[i] >= 0);
+      if (!down) strs = strs.filter(i => i >= 2).reverse();
+      const gap = jamLowPerf() ? 0.016 : 0.011;
+      strs.forEach((si, k) => { strumDamp(ctx, t + k * gap, si); strumPluck(ctx, pitch(si), t + k * gap, vel * (down ? 1 : 0.85), si, 1.5); });
+    } else {
+      strumParsePick(tok).forEach(h => {
+        const si = strumResolveString(h.s, frets);
+        if (si < 0) return;
+        strumDamp(ctx, t, si);
+        strumPluck(ctx, pitch(si), t, (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1), si, 2.0);
+      });
+    }
+  }
+
+  // ---------- Ablauf ----------
+  function strumTick() {
+    if (!strumPlaying || !audioCtx) return;
+    const p = strumPattern(), steps = strumSteps(p), chords = strumChords() || [[0, 'dur']];
+    const sd = 60 / strumBpm() / p.unit;
+    if (strumStep >= steps.length) strumStep = 0;
+    if (strumNext < audioCtx.currentTime - 0.05) {       // nach Hänger nicht alles nachholen
+      const missed = Math.ceil((audioCtx.currentTime - strumNext) / sd);
+      strumNext += missed * sd;
+      strumStep += missed;
+      strumBar += Math.floor(strumStep / steps.length);
+      strumStep %= steps.length;
+    }
+    const look = jamLowPerf() ? 0.25 : 0.12;
+    while (strumNext < audioCtx.currentTime + look) {
+      const chord = strumChordAt(chords, strumBar);
+      strumPlayStep(audioCtx, p, chord, strumStep, strumNext);
+      if (strumState.click && strumIsBeat(p, strumStep)) strumClick(audioCtx, strumNext, strumStep === 0);
+      const st = strumStep, bar = strumBar, delay = Math.max(0, (strumNext - audioCtx.currentTime) * 1000);
+      setTimeout(() => { if (strumPlaying) strumShowStep(st, bar); }, delay);
+      strumNext += sd;
+      strumStep++;
+      if (strumStep >= steps.length) { strumStep = 0; strumBar++; }
+    }
+    strumTimer = setTimeout(strumTick, 25);
+  }
+  function startStrum() {
+    initAudio();
+    if (!audioCtx) { showToast('Dieser Browser kann keinen Ton abspielen.'); return; }
+    if (!strumChords()) { showToast('Bitte gültige Akkorde eintragen, z. B. „Am F C G“.'); return; }
+    const p = strumPattern();
+    strumPlaying = true; strumStep = 0; strumBar = 0;
+    strumNext = audioCtx.currentTime + 0.08;
+    if (strumState.countIn) {
+      const sd = 60 / strumBpm() / p.unit;
+      const n = strumSteps(p).length;
+      for (let i = 0; i < n; i++) if (strumIsBeat(p, i)) strumClick(audioCtx, strumNext + i * sd, i === 0);
+      strumNext += n * sd;
+    }
+    strumTick();
+    updateStrumPlayBtn();
+  }
+  function stopStrum() {
+    if (!strumPlaying) return;
+    strumPlaying = false;
+    clearTimeout(strumTimer);
+    if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime);
+    strumShowStep(-1, 0);
+    updateStrumPlayBtn();
+  }
+  function updateStrumPlayBtn() {
+    const b = document.getElementById('strumPlayBtn');
+    if (b) b.textContent = strumPlaying ? '⏸ Stop' : '▶ Abspielen';
+  }
+  let strumShownBar = -1;
+  function strumShowStep(step, bar) {
+    document.querySelectorAll('#strumRoot .now').forEach(el => el.classList.remove('now'));
+    if (step < 0) { strumShownBar = -1; return; }
+    if (bar !== strumShownBar) { strumShownBar = bar; renderStrumNow(bar); }
+    document.querySelectorAll(`#strumRoot [data-sstep="${step}"]`).forEach(el => el.classList.add('now'));
+  }
+
+  // ---------- Anzeige ----------
+  // ---------- Klassische Darstellung für Zupfmuster: Noten + Tabulatur ----------
+  function renderPickNotation(chord, p) {
+    const steps = strumSteps(p), labels = strumCountLabels(p), n = steps.length;
+    const frets = strumFingering(chord);
+    const rootName = jamRootName(chord[0], chord[1]);
+    const useFlats = rootName.includes('♭') || (chord[0] === 5 && !/^m|moll|dim/.test(chord[1]));
+    const LET_S = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6], ACC_S = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
+    const LET_F = [0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6], ACC_F = [0, -1, 0, -1, 0, 0, -1, 0, -1, 0, -1, 0];
+    // Ereignisse je Schritt
+    const ev = steps.map(tok => {
+      const hits = [];
+      strumParsePick(tok).forEach(h => { const si = strumResolveString(h.s, frets); if (si >= 0 && !hits.some(x => x.si === si)) hits.push({ si, f: h.f, fret: frets[si], midi: STRUM_OPEN[si] + frets[si] }); });
+      return hits;
+    });
+    // Gruppen (Zählzeiten) für Balken
+    const multi1 = p.count && p.count.filter(c => c === '1').length > 1;
+    const starts = []; for (let i = 0; i < n; i++) if (multi1 ? labels[i] === '1' : i % p.unit === 0) starts.push(i);
+    const groups = starts.map((st, k) => [st, k + 1 < starts.length ? starts[k + 1] : n]);
+    const s16 = p.unit === 4 ? 1 : 2;                       // Länge eines Schritts in Sechzehnteln
+    const triplet = p.unit === 3 && /\/4$/.test(p.sig);
+    // Geometrie
+    const L = 92, colW = 38, W = L + n * colW + 26;
+    const st0 = 34, gap = 10, yBot = st0 + 4 * gap;           // Notensystem
+    const tab0 = yBot + 78, tgap = 13;                      // Tabulatur
+    const fingY = tab0 + 5 * tgap + 22, cntY = fingY + 20, H = cntY + 12;
+    const x = i => L + i * colW + colW / 2;
+    const noteY = midi => {
+      const w = midi + 12, pc = w % 12, oct = Math.floor(w / 12) - 1;
+      const li = useFlats ? LET_F[pc] : LET_S[pc], acc = useFlats ? ACC_F[pc] : ACC_S[pc];
+      const di = oct * 7 + li;
+      return { y: yBot - (di - 30) * (gap / 2), di, acc };
+    };
+    let g = '';
+    // Spalten zum Hervorheben
+    for (let i = 0; i < n; i++) g += `<rect class="strum-col" data-sstep="${i}" x="${L + i * colW + 1}" y="4" width="${colW - 2}" height="${H - 8}" rx="6"></rect>`;
+    // Notenlinien + Schlüssel + Taktart
+    for (let k = 0; k < 5; k++) g += `<line x1="8" x2="${W - 8}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="sn-line"/>`;
+    // Violinschlüssel als Linie gezeichnet (keine Schriftart nötig)
+    const cy0 = st0, gl = st0 + 3 * gap;
+    g += `<path class="sn-clef-p" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
+    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="sn-fill"/><path class="sn-clef-p" d="M25 ${yBot + 19} C27 ${yBot + 22}, 29 ${yBot + 22}, 29 ${yBot + 20}"/>`;
+    const [num, den] = p.sig.split('/');
+    g += `<text x="68" y="${st0 + 18}" class="sn-ts">${num}</text><text x="68" y="${st0 + 38}" class="sn-ts">${den}</text>`;
+    // Wiederholungszeichen
+    const rep = (xx, start) => {
+      const thick = start ? xx : xx + 5, thin = start ? xx + 6 : xx;
+      let r = `<rect x="${thick - 2}" y="${st0}" width="4" height="${4 * gap}" class="sn-fill"/><line x1="${thin}" x2="${thin}" y1="${st0}" y2="${yBot}" class="sn-line"/>`;
+      const dx = start ? xx + 12 : xx - 6;
+      r += `<circle cx="${dx}" cy="${st0 + 1.5 * gap}" r="2.2" class="sn-fill"/><circle cx="${dx}" cy="${st0 + 2.5 * gap}" r="2.2" class="sn-fill"/>`;
+      return r;
+    };
+    g += rep(L - 10, true) + rep(W - 16, false);
+    // Tabulatur
+    for (let k = 0; k < 6; k++) g += `<line x1="8" x2="${W - 8}" y1="${tab0 + k * tgap}" y2="${tab0 + k * tgap}" class="sn-line"/>`;
+    g += `<text x="16" y="${tab0 + 1.6 * tgap}" class="sn-tab">T</text><text x="16" y="${tab0 + 3 * tgap}" class="sn-tab">A</text><text x="16" y="${tab0 + 4.4 * tgap}" class="sn-tab">B</text>`;
+    g += `<line x1="8" x2="8" y1="${tab0}" y2="${tab0 + 5 * tgap}" class="sn-line"/><line x1="${W - 8}" x2="${W - 8}" y1="${tab0}" y2="${tab0 + 5 * tgap}" class="sn-line"/>`;
+    // Pausen-Zeichen
+    const rest = (xx, len) => {
+      const cy = st0 + 2 * gap;
+      if (len >= 4) {
+        let r = `<path d="M${xx - 2} ${cy - 14} l6 7 l-5 6 l6 7 c-5 -2 -9 1 -4 6 c-8 -3 -6 -10 1 -7 l-6 -7 l5 -5 z" class="sn-fill"/>`;
+        if (len === 6) r += `<circle cx="${xx + 9}" cy="${cy - 3}" r="2" class="sn-fill"/>`;
+        return r;
+      }
+      let r = `<circle cx="${xx - 2}" cy="${cy - 4}" r="2.6" class="sn-fill"/><path d="M${xx - 2} ${cy - 3} q4 1 7 -3 l-6 17" class="sn-stroke"/>`;
+      if (len <= 1) r += `<circle cx="${xx - 4}" cy="${cy + 4}" r="2.6" class="sn-fill"/><path d="M${xx - 4} ${cy + 5} q4 1 7 -3" class="sn-stroke"/>`;
+      if (len === 3) r += `<circle cx="${xx + 9}" cy="${cy - 3}" r="2" class="sn-fill"/>`;
+      return r;
+    };
+    groups.forEach(([a, b]) => {
+      const notes = [];
+      let firstNote = -1;
+      for (let i = a; i < b; i++) if (ev[i].length) { firstNote = i; break; }
+      if (firstNote < 0) { g += rest(x(a), (b - a) * s16); return; }
+      if (firstNote > a) g += rest(x(a), (firstNote - a) * s16);
+      for (let i = firstNote; i < b; i++) {
+        if (!ev[i].length) continue;
+        let j = i + 1; while (j < b && !ev[j].length) j++;
+        notes.push({ i, len: (j - i) * s16 });
+      }
+      // Köpfe, Hilfslinien, Vorzeichen, Tab
+      notes.forEach(nt => {
+        const cx = x(nt.i);
+        const heads = ev[nt.i].map(h => ({ ...h, ...noteY(h.midi) })).sort((u, v) => v.di - u.di);
+        let prevDi = null, shift = 0;
+        heads.sort((u, v) => u.di - v.di).forEach(h => {
+          shift = (prevDi !== null && h.di - prevDi === 1 && shift === 0) ? 11 : 0; prevDi = h.di;
+          const hx = cx + shift;
+          for (let ly = yBot + gap; ly <= h.y + 0.1; ly += gap) g += `<line x1="${hx - 9}" x2="${hx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
+          for (let ly = st0 - gap; ly >= h.y - 0.1; ly -= gap) g += `<line x1="${hx - 9}" x2="${hx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
+          const open = nt.len >= 8;
+          g += `<ellipse cx="${hx}" cy="${h.y}" rx="6" ry="4.3" transform="rotate(-20 ${hx} ${h.y})" class="${open ? 'sn-open' : 'sn-fill'}"/>`;
+          if (h.acc) g += `<text x="${cx - 17}" y="${h.y + 5}" class="sn-acc">${h.acc > 0 ? '♯' : '♭'}</text>`;
+          if (nt.len === 3 || nt.len === 6) g += `<circle cx="${hx + 10}" cy="${h.y - 2}" r="1.9" class="sn-fill"/>`;
+          const ty = tab0 + (5 - h.si) * tgap;
+          g += `<rect x="${cx - 7}" y="${ty - 7}" width="14" height="14" class="sn-bg"/><text x="${cx}" y="${ty + 5}" class="sn-fret">${h.fret}</text>`;
+        });
+        nt.top = Math.min(...heads.map(h => h.y)); nt.bottom = Math.max(...heads.map(h => h.y));
+        const fing = ev[nt.i].map(h => h.f).sort((u, v) => 'pima'.indexOf(u) - 'pima'.indexOf(v)).join(' ');
+        g += `<text x="${cx}" y="${fingY}" class="sn-fing">${fing}</text>`;
+      });
+      // Hälse, Balken, Fähnchen
+      const beamed = notes.filter(nt => nt.len < 4);
+      const stemX = nt => x(nt.i) + 5.5;
+      if (beamed.length >= 2) {
+        const by = Math.min(...beamed.map(nt => nt.top)) - 32;
+        const beamYs = Math.min(by, st0 - 4);
+        notes.forEach(nt => { g += `<line x1="${stemX(nt)}" x2="${stemX(nt)}" y1="${nt.bottom}" y2="${nt.len < 4 ? beamYs : nt.top - 32}" class="sn-stem"/>`; });
+        const x1 = stemX(beamed[0]), x2 = stemX(beamed[beamed.length - 1]);
+        g += `<rect x="${x1}" y="${beamYs}" width="${x2 - x1 + 1.2}" height="5" class="sn-fill"/>`;
+        beamed.forEach((nt, k) => {
+          if (nt.len !== 1) return;
+          const nb = beamed[k + 1], pb = beamed[k - 1];
+          if (nb && nb.len === 1) g += `<rect x="${stemX(nt)}" y="${beamYs + 8}" width="${stemX(nb) - stemX(nt) + 1.2}" height="5" class="sn-fill"/>`;
+          else if (!(pb && pb.len === 1)) g += nb ? `<rect x="${stemX(nt)}" y="${beamYs + 8}" width="10" height="5" class="sn-fill"/>` : `<rect x="${stemX(nt) - 10}" y="${beamYs + 8}" width="10" height="5" class="sn-fill"/>`;
+        });
+        if (triplet) g += `<text x="${(x1 + x2) / 2}" y="${beamYs - 5}" class="sn-trip">3</text>`;
+      } else {
+        notes.forEach(nt => {
+          const top = Math.min(nt.top - 32, st0 + gap);
+          g += `<line x1="${stemX(nt)}" x2="${stemX(nt)}" y1="${nt.bottom}" y2="${top}" class="sn-stem"/>`;
+          const flags = nt.len <= 1 ? 2 : (nt.len < 4 ? 1 : 0);
+          for (let f = 0; f < flags; f++) g += `<path d="M${stemX(nt)} ${top + f * 8} q3 8 10 12 q-5 -3 -10 -5" class="sn-fill"/>`;
+        });
+      }
+    });
+    // Zählzeiten
+    labels.forEach((l, i) => { g += `<text x="${x(i)}" y="${cntY}" class="sn-cnt ${strumIsBeat(p, i) ? 'b' : ''}">${l}</text>`; });
+    g += `<text x="12" y="${fingY}" class="sn-lbl">Finger</text>`;
+    return `<svg id="strumGrid" class="strum-notation" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Zupfmuster in Noten und Tabulatur">${g}</svg>`;
+  }
+
+  function renderStrumGrid(chord) {
+    const p = strumPattern(), steps = strumSteps(p), labels = strumCountLabels(p);
+    if (p.kind === 'pick') return renderPickNotation(chord, p);
+    const n = steps.length;
+    const beatStart = i => i > 0 && strumIsBeat(p, i);
+    let h = `<div class="strum-grid" id="strumGrid" style="grid-template-columns: 34px repeat(${n}, minmax(34px, 1fr));">`;
+    h += `<div class="strum-cell lbl"></div>`;
+    labels.forEach((l, i) => { h += `<div class="strum-cell cnt ${strumIsBeat(p, i) ? 'beat' : ''}">${l}</div>`; });
+    if (p.kind === 'strum') {
+      h += `<div class="strum-cell lbl">✋</div>`;
+      steps.forEach((t, i) => {
+        const sym = { D: '↓', d: '↓', U: '↑', u: '↑', x: '✕', b: 'B¹', B: 'B²', '-': '·' }[t] || '·';
+        const cls = (t === 'D' || t === 'U') ? 'acc' : (t === '-' ? 'rest' : (t === 'b' || t === 'B' ? 'small' : ''));
+        const title = { D: 'Abschlag (betont)', d: 'Abschlag', U: 'Aufschlag (betont)', u: 'Aufschlag', x: 'gedämpfter Schlag', b: 'Basston (Grundton)', B: 'Wechselbass', '-': 'Pause – Hand bewegt sich weiter' }[t] || '';
+        h += `<div class="strum-cell ${cls} ${beatStart(i) ? 'beatstart' : ''}" data-sstep="${i}" title="${title}">${sym}</div>`;
+      });
+    } else {
+      const frets = strumFingering(chord);
+      const map = steps.map(tok => { const m = {}; strumParsePick(tok).forEach(hh => { const si = strumResolveString(hh.s, frets); if (si >= 0) m[si] = hh.f; }); return m; });
+      for (let si = 5; si >= 0; si--) {
+        h += `<div class="strum-cell lbl">${STRUM_STRINGS[si]}${frets[si] < 0 ? ' ✕' : ''}</div>`;
+        map.forEach((m, i) => { h += `<div class="strum-cell pick ${m[si] ? 'hit' : ''} ${beatStart(i) ? 'beatstart' : ''}" data-sstep="${i}">${m[si] || ''}</div>`; });
+      }
+    }
+    h += `</div>`;
+    return h;
+  }
+  function renderStrumNow(bar) {
+    const box = document.getElementById('strumNow');
+    if (!box) return;
+    const chords = strumChords();
+    if (!chords) { box.innerHTML = '<div class="jam-hint">Akkorde nicht erkannt. Beispiel: „Am F C G“ (Leerzeichen dazwischen; B oder H = H, Bb = B♭).</div>'; return; }
+    const cur = strumChordAt(chords, bar), nxt = strumChordAt(chords, bar + (strumState.bpc || 1));
+    const nm = c => jamChordShort({ chordRoot: c[0], chordType: c[1] });
+    box.innerHTML = `<div>${renderJamChordDiagramSvg(strumFingering(cur))}</div>
+      <div><div class="jam-hint" style="margin:0;">Jetzt</div><div class="big">${nm(cur)}</div>
+      ${chords.length > 1 ? `<div class="jam-hint">danach: <b>${nm(nxt)}</b></div>` : ''}</div>`;
+    if (strumPattern().kind === 'pick') {
+      const wrap = document.getElementById('strumGridWrap');
+      if (wrap) { wrap.innerHTML = renderStrumGrid(cur); }
+    }
+  }
+  function renderStrum() {
+    if (!strumState) strumState = loadStrumState();
+    const root = document.getElementById('strumRoot');
+    const p = strumPattern();
+    const sel = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.9rem; padding:5px 6px;';
+    const list = strumAllPatterns().filter(x => x.kind === strumState.kind);
+    const stars = l => '⭐'.repeat(l);
+    let h = `<div style="padding:14px; border:1px solid var(--card-border); border-radius:14px; background:var(--card-bg);">`;
+    h += `<div class="strum-kind">
+      <button type="button" class="btn ${strumState.kind === 'strum' ? '' : 'btn-secondary'}" data-skind="strum">↕ Anschlagen</button>
+      <button type="button" class="btn ${strumState.kind === 'pick' ? '' : 'btn-secondary'}" data-skind="pick">✋ Zupfen</button></div>`;
+    h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
+      <label style="font-weight:600;">Muster:</label>
+      <select id="strumPatternSelect" style="${sel} max-width:100%;">
+        ${list.some(x => x.level === 0) ? `<optgroup label="✏️ Meine Muster">${list.filter(x => x.level === 0).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
+        ${[1, 2, 3].map(l => `<optgroup label="${stars(l)} ${['', 'Einfach', 'Mittel', 'Fortgeschritten'][l]}">${list.filter(x => x.level === l).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${x.name} (${x.sig})</option>`).join('')}</optgroup>`).join('')}
+      </select></div>`;
+    if (strumEdit) {
+      h = h.replace('id="strumPatternSelect"', 'id="strumPatternSelect" disabled');
+      h += strumEditorHtml();
+      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? renderStrumGrid((strumChords() || [[0, 'dur']])[0]) : ''}</div>`;
+    } else {
+      h += `<div class="row" style="flex-wrap:wrap; gap:8px; margin-top:8px;">
+        <button type="button" class="btn btn-secondary" id="strumNewBtn">✏️ Eigenes Muster</button>
+        <button type="button" class="btn btn-secondary" id="strumCopyBtn">📋 Als Vorlage kopieren</button>
+        ${p.custom ? `<button type="button" class="btn btn-secondary" id="strumEditBtn">✎ Bearbeiten</button><button type="button" class="btn btn-secondary" id="strumDelBtn">🗑 Löschen</button>` : ''}
+      </div>`;
+      h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : stars(p.level)} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
+      h += `<div class="strum-grid-wrap" id="strumGridWrap">${renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
+    }
+    h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
+    h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
+      <button type="button" class="btn" id="strumPlayBtn">${strumPlaying ? '⏸ Stop' : '▶ Abspielen'}</button>
+      <div class="toggle-group"><label style="font-weight:600;">Tempo:</label>
+        <input type="range" id="strumTempo" min="30" max="180" step="1" value="${strumBpm()}" style="width:130px;">
+        <span id="strumTempoLabel" style="font-size:0.85rem; min-width:62px;">${strumBpm()} BPM</span></div>
+      <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
+      <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
+    </div>`;
+    h += `<div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:12px;">
+      <label style="font-weight:600;">Akkorde:</label>
+      <input type="text" id="strumChordsInput" value="${homeEsc(strumState.chords)}" placeholder="z. B. Am F C G" style="flex:1; min-width:150px; ${sel}">
+      <label style="font-size:0.88rem;">Takte pro Akkord:</label>
+      <select id="strumBpc" style="${sel}">${[1, 2, 4].map(n => `<option value="${n}" ${n === (strumState.bpc || 1) ? 'selected' : ''}>${n}</option>`).join('')}</select>
+    </div>
+    <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
+    h += `<div class="strum-now" id="strumNow"></div>`;
+    h += `<div class="row" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
+      <button type="button" class="btn btn-secondary" id="strumToBeatBtn">🥁 Im Beat-Modul üben</button>
+      <span class="jam-hint" style="margin:0;">übernimmt Akkorde, Tempo und Taktart – du spielst das Muster auf der Gitarre dazu.</span></div>`;
+    h += `<div class="jam-hint" style="margin-top:10px;">Tipp: Erst ohne Ton nur die Handbewegung, dann langsam mit Akkord. Schneller erst, wenn es sich locker anfühlt – ganz ohne Eile. 🙂</div>`;
+    h += `</div>`;
+    root.innerHTML = h;
+    renderStrumNow(0);
+    bindStrumEvents();
+    if (strumEdit) bindStrumEditorEvents();
+    else {
+      const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+      on('strumNewBtn', () => strumStartEdit(strumNewDraft(strumState.kind)));
+      on('strumCopyBtn', () => { const p0 = strumPattern(); const d = JSON.parse(JSON.stringify(p0)); d.id = 'c_' + Date.now().toString(36); d.name = p0.name + ' (Kopie)'; d.bpm = strumBpm(); d.custom = true; d.level = 0; d.tip = 'Eigenes Muster'; strumStartEdit(d); });
+      on('strumEditBtn', () => strumStartEdit(strumPattern(), strumPattern().id));
+      on('strumDelBtn', () => strumDeleteCustom(strumPattern().id));
+    }
+  }
+  function bindStrumEvents() {
+    const root = document.getElementById('strumRoot');
+    const restart = () => { if (strumPlaying) { stopStrum(); startStrum(); } };
+    root.querySelectorAll('[data-skind]').forEach(b => b.addEventListener('click', () => {
+      stopStrum();
+      strumEdit = null;
+      strumState.kind = b.dataset.skind;
+      const first = STRUM_PATTERNS.find(x => x.kind === strumState.kind);
+      strumState.id = first.id; strumState.bpm = null;
+      saveStrumState(); renderStrum();
+    }));
+    document.getElementById('strumPatternSelect').addEventListener('change', e => {
+      const was = strumPlaying; stopStrum();
+      strumState.id = e.target.value; strumState.bpm = null; saveStrumState(); renderStrum();
+      if (was) startStrum();
+    });
+    document.getElementById('strumPlayBtn').addEventListener('click', () => { strumPlaying ? stopStrum() : startStrum(); });
+    document.getElementById('strumTempo').addEventListener('input', e => {
+      strumState.bpm = parseInt(e.target.value, 10);
+      document.getElementById('strumTempoLabel').textContent = `${strumState.bpm} BPM`;
+      saveStrumState();
+    });
+    document.getElementById('strumClick').addEventListener('change', e => { strumState.click = e.target.checked; saveStrumState(); });
+    document.getElementById('strumCountIn').addEventListener('change', e => { strumState.countIn = e.target.checked; saveStrumState(); });
+    const ci = document.getElementById('strumChordsInput');
+    const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = renderStrumGrid(c[0]); } restart(); };
+    ci.addEventListener('change', applyChords);
+    root.querySelectorAll('[data-schords]').forEach(b => b.addEventListener('click', () => { ci.value = b.dataset.schords; applyChords(); }));
+    document.getElementById('strumBpc').addEventListener('change', e => { strumState.bpc = parseInt(e.target.value, 10); saveStrumState(); restart(); });
+    document.getElementById('strumToBeatBtn').addEventListener('click', strumSendToBeat);
+  }
+  function strumSendToBeat() {
+    const chords = strumChords();
+    if (!chords) { showToast('Bitte zuerst gültige Akkorde eintragen.'); return; }
+    stopStrum();
+    const p = strumPattern();
+    if (!state.jam) initJamState();
+    const jam = state.jam;
+    stopJamPlayback();
+    const sig = JAM_TIME_SIGS[p.sig] ? p.sig : '4/4';
+    jam.timeSig = sig;
+    jam.chordMode = 'free';
+    jam.parts = [];
+    const bpc = strumState.bpc || 1;
+    setJamBarCount(Math.min(JAM_MAX_BARS, chords.length * bpc));
+    jam.bars.forEach((b, i) => {
+      const c = chords[Math.floor(i / bpc) % chords.length];
+      b.chordRoot = c[0]; b.chordType = c[1];
+      b.pattern = getPatternForStyle(jam.rhythmStyle, sig);
+    });
+    // Tempo umrechnen: bei 6/8, 9/8, 12/8 zählt hier die punktierte Viertel, im Beat-Modul die Viertel
+    const factor = (p.unit === 3 && /\/8$/.test(p.sig)) ? 1.5 : 1;
+    jam.bpm = Math.max(60, Math.min(160, Math.round(strumBpm() * factor)));
+    jam.swing = (p.unit === 3 && p.sig === '4/4') ? 1 : 0;
+    jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
+    scheduleJamAutosave();
+    switchToModule(9);
+    renderJamModule();
+    window.scrollTo(0, 0);
+    showToast(`„${p.name}“: Akkorde, Tempo und Taktart übernommen – viel Spaß beim Mitspielen! 🎸`);
+  }
+
+  // =================== Startseite mit Kacheln ===================
+  const HOME_START_KEY = 'guitartrainer_start';
+  const HOME_GROUPS = [
+    { title: 'Lernen', items: [[0, '📘', 'Anleitung'], [2, '🎼', 'Musiktheorie'], [1, '🧭', 'Griffbrett-Theorie']] },
+    { title: 'Üben', items: [[3, '🎸', 'Alle Töne des Griffbretts'], [4, '🎯', 'Töne erraten'], [5, '🎶', 'Notenlesen'], [6, '👂', 'Gehörbildung'], [7, '🪜', 'Tonleitern & Pentatoniken'], [8, '🧪', 'Akkord-Labor']] },
+    { title: 'Spielen & Planen', items: [[9, '🥁', 'Beat & Jam'], [12, '🪕', 'Anschlag & Zupfen'], [11, '🎚️', 'Stimmgerät'], [10, '📅', 'Wochenplan']] }
+  ];
+  function homeStartSetting() { try { return localStorage.getItem(HOME_START_KEY) === 'last' ? 'last' : 'home'; } catch (e) { return 'home'; } }
+  function homeModuleNo(v) { const o = [...moduleSelectEl.options].find(x => x.value === String(v)); return o ? parseInt(o.text, 10) : ''; }
+  function homeModuleInfo(v) { for (const g of HOME_GROUPS) for (const it of g.items) if (it[0] === v) return it; return null; }
+  function homeEsc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function renderHome() {
+    const box = document.getElementById('homeScreen');
+    if (!box) return;
+    const d = plannerState.plannerData || {};
+    const wk = getWeekKey(getMonday(new Date()));
+    const dayIdx = (new Date().getDay() + 6) % 7;
+    const rows = Array.isArray(d[wk]) ? d[wk] : [];
+    const last = state.currentModule;
+    const li = homeModuleInfo(last);
+    const hr = new Date().getHours();
+    const greet = hr < 11 ? 'Guten Morgen' : hr < 18 ? 'Hallo' : 'Guten Abend';
+    let h = `<div class="home-today"><h2>${greet}! 🎸 Heute</h2>`;
+    const named = rows.map((r, i) => ({ r, i })).filter(x => String(x.r.name || '').trim());
+    if (named.length) {
+      named.forEach(({ r, i }) => {
+        const done = Array.isArray(r.checks) && r.checks[dayIdx];
+        h += `<div class="home-today-row ${done ? 'done' : ''}"><span>${done ? '✅' : '▫️'}</span><span class="name">${homeEsc(r.name)}</span>
+          <button type="button" class="btn btn-secondary" data-home-practice="${i}">▶ Üben</button></div>`;
+      });
+      const n = named.filter(x => x.r.checks && x.r.checks[dayIdx]).length;
+      if (n) h += `<div class="jam-hint">Heute schon ${n}× geübt – schön! 🙂</div>`;
+    } else {
+      h += `<div class="jam-hint" style="font-size:0.9rem;">Noch nichts geplant – such dir einfach etwas aus 🙂</div>`;
+    }
+    if (li && last !== 0) h += `<div class="row" style="margin-top:10px;"><button type="button" class="btn" data-home-open="${last}">↪ Weiter mit: ${li[1]} ${homeEsc(li[2])}</button></div>`;
+    h += `</div>`;
+    HOME_GROUPS.forEach(g => {
+      h += `<div class="home-group-title">${g.title}</div><div class="home-tiles">`;
+      g.items.forEach(([v, ic, nm]) => {
+        h += `<button type="button" class="home-tile ${v === last && last !== 0 ? 'last' : ''}" data-home-open="${v}"><span class="ic">${ic}</span><span class="no">Modul ${homeModuleNo(v)}</span><span class="nm">${homeEsc(nm)}</span></button>`;
+      });
+      h += `</div>`;
+    });
+    const st = homeStartSetting();
+    h += `<div class="home-settings"><label for="homeStartSelect">Beim Öffnen der App:</label>
+      <select id="homeStartSelect" class="module-select" style="max-width:260px;">
+        <option value="home" ${st === 'home' ? 'selected' : ''}>Startseite zeigen</option>
+        <option value="last" ${st === 'last' ? 'selected' : ''}>Zuletzt benutztes Modul</option>
+      </select></div>`;
+    box.innerHTML = h;
+    box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
+    box.querySelectorAll('[data-home-practice]').forEach(b => b.addEventListener('click', () => { hideHome(); startPracticeFromPlan(wk, parseInt(b.dataset.homePractice, 10)); }));
+    const ss = document.getElementById('homeStartSelect');
+    if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
+  }
+  function showHome() {
+    try { stopJamPlayback(); } catch (e) {}
+    try { stopTuner(); } catch (e) {}
+    try { stopStrum(); } catch (e) {}
+    try { stopTimer(); } catch (e) {}
+    renderHome();
+    document.body.classList.add('home-mode');
+    window.scrollTo(0, 0);
+  }
+  function hideHome() { document.body.classList.remove('home-mode'); }
 
   function showToast(msg) {
     feedbackToast.textContent = msg;
@@ -8186,6 +9338,16 @@
         renderPlannerStats();
       });
       tdName.appendChild(inputName);
+      const practiceBtn = document.createElement('button');
+      practiceBtn.type = 'button';
+      practiceBtn.className = 'btn btn-secondary planner-practice-btn';
+      const hasLink = !!(plannerState.plannerData._beats && plannerState.plannerData._beats[plannerNormName(row.name)]);
+      practiceBtn.textContent = hasLink ? '▶ Üben 🔗' : '▶ Üben';
+      practiceBtn.title = 'Im Beat-Modul üben (ohne Zeitdruck)';
+      practiceBtn.addEventListener('click', () => startPracticeFromPlan(weekKey, rowIdx));
+      tdName.style.whiteSpace = 'nowrap';
+      inputName.style.width = 'calc(100% - 90px)';
+      tdName.appendChild(practiceBtn);
       tr.appendChild(tdName);
 
       days.forEach((day, dayIdx) => {
@@ -9081,5 +10243,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a43456e8c85ad3a4',t:'MTc5MDc4Mjk2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a434c5442882bd78',t:'MTc5MDc4NzQ4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
