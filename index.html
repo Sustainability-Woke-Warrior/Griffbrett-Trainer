@@ -1090,6 +1090,13 @@
     .strum-cell.pick { height:30px; font-size:0.95rem; }
     .strum-cell.pick.hit { background:var(--accent-color); color:#fff; border-color:var(--accent-color); }
     .strum-cell.beatstart { border-left:2px solid var(--text-muted); }
+    .strum-grid + .strum-grid, .strum-notation + .strum-notation { margin-top:10px; }
+    .strum-compact .strum-cell { min-width:0; font-size:1rem; border-radius:5px; }
+    .strum-compact .strum-cell.acc { font-size:1.15rem; }
+    .strum-compact .strum-cell.lbl { min-width:0; padding-right:2px; font-size:.72rem; }
+    .strum-compact .strum-cell.cnt { font-size:.7rem; }
+    .strum-compact .strum-cell.small { font-size:.7rem; }
+    .strum-compact .strum-cell.pick { font-size:.8rem; }
     .strum-cell.now { outline:3px solid #22d3ee; outline-offset:-2px; background:rgba(34,211,238,0.18); }
     .strum-cell.pick.hit.now { background:#0891b2; }
     .strum-notation { color: var(--text-color); background: var(--card-bg); border-radius: 10px; display:block; }
@@ -1331,6 +1338,15 @@
     #ptBtn.pt-on { background: var(--primary-color, #3b82f6); color: #fff; font-variant-numeric: tabular-nums; }
     .pt-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
     .pt-overlay.open { display: flex; }
+    .dy-entry { border:1px solid var(--card-border); border-radius:10px; padding:8px 10px; margin:6px 0; }
+    .dy-entry .dy-top { display:flex; gap:8px; align-items:center; font-weight:700; }
+    .dy-entry .dy-top span { flex:1; }
+    .dy-entry .dy-top button { background:none; border:none; color:var(--text-color); font-size:1rem; cursor:pointer; padding:2px 6px; }
+    .dy-month { margin:14px 0 4px; font-weight:800; opacity:.8; }
+    .dy-items label { display:flex; gap:8px; align-items:center; margin:4px 0; }
+    .dy-mood button { font-size:1.5rem; background:none; border:2px solid transparent; border-radius:10px; padding:2px 6px; cursor:pointer; }
+    .dy-mood button.on { border-color: var(--accent-color, #3b82f6); }
+    .dy-panel textarea, .dy-panel input[type=number], .dy-panel input[type=text] { width:100%; box-sizing:border-box; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px; font-size:0.95rem; }
     .pt-panel { background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 16px 16px 22px; box-shadow: 0 -6px 24px rgba(0,0,0,.3); }
     .pt-head { display: flex; align-items: center; gap: 8px; }
     .pt-head h3 { margin: 0; flex: 1; }
@@ -1369,6 +1385,7 @@
     <h1>Gitarren Griffbrett Trainer Pro</h1>
     <button class="btn btn-secondary" id="homeBtn" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
     <button class="btn btn-secondary" id="ptBtn" title="Übungs-Timer" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⏱</button>
+    <button class="btn btn-secondary" id="diaryBtn" title="Übungs-Tagebuch" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">📓</button>
     <button class="btn btn-secondary" id="backupBtn" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:8px; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
     <button class="btn btn-secondary" id="fontSizeBtn" title="Schriftgröße ändern" style="padding:8px 10px; font-size:1rem; line-height:1; font-weight:800;">A+</button>
     <button class="btn btn-secondary" id="themeToggleBtn" title="Hell/Dunkel umschalten" style="padding:8px 12px; font-size:1.1rem; line-height:1;">🌙</button>
@@ -3337,7 +3354,7 @@
   function hideBackupBanner() { const b = document.getElementById('backupBanner'); if (b) b.remove(); }
   function maybeShowBackupReminder() {
     try {
-      const hasData = !!(localStorage.getItem('guitartrainer_planner') || localStorage.getItem(JAM_STORAGE_KEY));
+      const hasData = !!(localStorage.getItem('guitartrainer_planner') || localStorage.getItem(JAM_STORAGE_KEY) || localStorage.getItem('guitartrainer_strum_custom') || localStorage.getItem('guitartrainer_diary') || /"favs":\["|"tempos":\{"/.test(localStorage.getItem('guitartrainer_strum') || ''));
       if (!hasData) return;
       const snooze = localStorage.getItem('guitartrainer_backup_snooze');
       if (snooze && Date.now() < new Date(snooze).getTime()) return;
@@ -8276,6 +8293,7 @@
 
   function updateModule() {
     state.currentModule = parseInt(moduleSelectEl.value);
+    try { const mi = homeModuleInfo(state.currentModule); if (mi && state.currentModule !== 0) diaryNote(mi[2]); } catch (e) {}
     try { localStorage.setItem('guitartrainer_last_module', String(state.currentModule)); } catch {}
     const mod = MODULES[state.currentModule];
     
@@ -8536,7 +8554,53 @@
     { id:'b_57', kind:'pick', level:3, name:'Muster 57', sig:'12/8', unit:3, bpm:45, steps:['p:B+a:1', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2', 'p:B+a:1', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pa) i m a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
     { id:'b_58', kind:'pick', level:3, name:'Muster 58', sig:'12/8', unit:3, bpm:45, steps:['p:B+a:1', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3', 'p:B+a:1', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pa) m i a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
     { id:'b_59', kind:'pick', level:3, name:'Muster 59', sig:'12/8', unit:3, bpm:45, steps:['p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'i:3', 'm:2', 'a:1', 'p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pia) m (ia) i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
-    { id:'b_60', kind:'pick', level:3, name:'Muster 60', sig:'12/8', unit:3, bpm:45, steps:['p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2', 'p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pima) i m (ima) i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' }
+    { id:'b_60', kind:'pick', level:3, name:'Muster 60', sig:'12/8', unit:3, bpm:45, steps:['p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2', 'p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pima) i m (ima) i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'st_1', kind:'strum', level:4, name:'Afro-Cuban-Jazz-Rock', sig:'4/4', unit:4, bpm:70, steps:'D-xuD--uD-xuD-u-', chords:'Gm C', tip:'Typische Akkordfolge: Gm C – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_2', kind:'strum', level:4, name:'Beguine', sig:'4/4', unit:2, bpm:90, steps:'Du-u-u-u', chords:'F Fdim Gm7 C7', tip:'Typische Akkordfolge: F Fdim Gm7 C7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_3', kind:'strum', level:4, name:'Blues', sig:'4/4', unit:2, bpm:80, steps:'D-D-D-D-', chords:'E E13 A A13 H7 A7 E', tip:'Typische Akkordfolge: E E13 A A13 H7 A7 E – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_4', kind:'strum', level:4, name:'Bolero', sig:'4/4', unit:4, bpm:70, steps:'D-duD-u--u---u--', chords:'Cm F Bb G', tip:'Typische Akkordfolge: Cm F Bb G – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_5', kind:'strum', level:4, name:'Bossa Nova', sig:'4/4', unit:2, bpm:90, steps:'Du-uD-Du', chords:'Cmaj7 Fmaj7', tip:'Typische Akkordfolge: Cmaj7 Fmaj7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_6', kind:'strum', level:4, name:'Bounce', sig:'4/4', unit:2, bpm:100, steps:'D-D-D-D-', chords:'Gm7 C9 Fmaj7 D7', tip:'Typische Akkordfolge: Gm7 C9 Fmaj7 D7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_7', kind:'strum', level:4, name:'Cake Walk', sig:'2/4', unit:4, bpm:70, steps:'Du-uD--u', chords:'G13 Hm7 Em7 Am7', tip:'Typische Akkordfolge: G13 Hm7 Em7 Am7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_8', kind:'strum', level:4, name:'Calypso', sig:'4/4', unit:4, bpm:90, steps:'DuduD---DuduD-d-', chords:'Dm7 G7 C7 Am7', tip:'Typische Akkordfolge: Dm7 G7 C7 Am7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_9', kind:'strum', level:4, name:'Cha-Cha-Cha', sig:'4/4', unit:2, bpm:100, steps:'D-D-DuD-', chords:'Am7 D7 Am7 D7 G Hm7 Em Gdim', tip:'Typische Akkordfolge: Am7 D7 Am7 D7 G Hm7 Em Gdim – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_10', kind:'strum', level:4, name:'Double Samba', sig:'4/4', unit:2, bpm:100, steps:'D-D-D-Du', chords:'C F G7 C', tip:'Typische Akkordfolge: C F G7 C – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_11', kind:'strum', level:4, name:'Fast Disco', sig:'4/4', unit:4, bpm:100, steps:'DuduD-du-u-u-udu', chords:'Em7 A7', tip:'Typische Akkordfolge: Em7 A7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_12', kind:'strum', level:4, name:'Foxtrott', sig:'4/4', unit:4, bpm:80, steps:'D---D--uD---D---', chords:'F Fdim', tip:'Typische Akkordfolge: F Fdim – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_13', kind:'strum', level:4, name:'Funk Ballad', sig:'4/4', unit:4, bpm:70, steps:'D--dD-u-x-x-D---', chords:'Hm7 Em7 A7 Dmaj7', tip:'Typische Akkordfolge: Hm7 Em7 A7 Dmaj7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_14', kind:'strum', level:4, name:'Guaracha', sig:'4/4', unit:2, bpm:100, steps:'DuDuDuD-', chords:'A D9 A E9', tip:'Typische Akkordfolge: A D9 A E9 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_15', kind:'strum', level:4, name:'Hard Pop', sig:'4/4', unit:4, bpm:95, steps:'D-x-D-x--uduDux-', chords:'E G A G E G C H7', tip:'Typische Akkordfolge: E G A G E G C H7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_16', kind:'strum', level:4, name:'Hard Rock', sig:'4/4', unit:4, bpm:90, steps:'D-d-D--uD-d-D--u', chords:'E7#9 G A7 H7sus4 H7', tip:'Typische Akkordfolge: E7#9 G A7 H7sus4 H7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_17', kind:'strum', level:4, name:'Jazz Rock', sig:'4/4', unit:4, bpm:70, steps:'DuduD-duDuduD-du', chords:'Amaj7 Gmaj7', tip:'Typische Akkordfolge: Amaj7 Gmaj7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_18', kind:'strum', level:4, name:'Mambo', sig:'4/4', unit:2, bpm:100, steps:'D-Du-uD-', chords:'G G#dim G7 G', tip:'Typische Akkordfolge: G G#dim G7 G – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_19', kind:'strum', level:4, name:'Medium Rock', sig:'4/4', unit:2, bpm:90, steps:'D-DuD-D-', chords:'Bb Dm Bbdim Cm7 F7', tip:'Typische Akkordfolge: Bb Dm Bbdim Cm7 F7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_20', kind:'strum', level:4, name:'Merengue', sig:'4/4', unit:2, bpm:110, steps:'Du-u-u-u', chords:'Dm7 G7 Cmaj7 Am7', tip:'Typische Akkordfolge: Dm7 G7 Cmaj7 Am7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_21', kind:'strum', level:4, name:'New Wave', sig:'4/4', unit:2, bpm:120, steps:'DdDdDdDd', chords:'G D', tip:'Typische Akkordfolge: G D – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_22', kind:'strum', level:4, name:'One Step', sig:'6/8', unit:3, bpm:60, steps:'D-dDud', count:['1','2','3','4','5','6'], chords:'C G F C', tip:'Typische Akkordfolge: C G F C – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_23', kind:'strum', level:4, name:'Paso Doble', sig:'4/4', unit:4, bpm:90, steps:'D-duD-duD-duD-du', chords:'E F G F E', tip:'Typische Akkordfolge: E F G F E – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_24', kind:'strum', level:4, name:'Ragtime', sig:'4/4', unit:2, bpm:90, steps:'D--dD--d', chords:'C E7 A A7', tip:'Typische Akkordfolge: C E7 A A7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_25', kind:'strum', level:4, name:'Reggae', sig:'4/4', unit:2, bpm:75, steps:'--DuxxD-', chords:'G D7 C D7', tip:'Typische Akkordfolge: G D7 C D7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_26', kind:'strum', level:4, name:'Rhythm & Blues', sig:'4/4', unit:4, bpm:70, steps:'D--dD--dD--dD--d', chords:'F F7 Bb Bb7', tip:'Typische Akkordfolge: F F7 Bb Bb7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_27', kind:'strum', level:4, name:'Rock Ballad', sig:'4/4', unit:2, bpm:70, steps:'D--uD-Du', chords:'Cmaj7 Fmaj7 G7 Fmaj7', tip:'Typische Akkordfolge: Cmaj7 Fmaj7 G7 Fmaj7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_28', kind:'strum', level:4, name:'3/4-Rock Ballad', sig:'3/4', unit:2, bpm:70, steps:'D--uD-', chords:'Am7 Hm7', tip:'Typische Akkordfolge: Am7 Hm7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_29', kind:'strum', level:4, name:"Rock'n Roll", sig:'4/4', unit:3, bpm:110, steps:'D-dDudD-dDud', chords:'G Bb C G', tip:'Typische Akkordfolge: G Bb C G – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_30', kind:'strum', level:4, name:'Rumba', sig:'4/4', unit:4, bpm:90, steps:'D-duDud-D-d-D-du', chords:'A A6 Amaj7 A6', tip:'Typische Akkordfolge: A A6 Amaj7 A6 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_31', kind:'strum', level:4, name:'Samba Disco', sig:'4/4', unit:4, bpm:95, steps:'D--ux-u----uD-u-', chords:'Gm C', tip:'Typische Akkordfolge: Gm C – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_32', kind:'strum', level:4, name:'Samba Lenta', sig:'4/4', unit:2, bpm:90, steps:'Du-u-u-u', chords:'Fmaj7 Am7b5 D7b9 Gm7 C9 Fmaj7 Bbmaj7', tip:'Typische Akkordfolge: Fmaj7 Am7b5 D7b9 Gm7 C9 Fmaj7 Bbmaj7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_33', kind:'strum', level:4, name:'Samba Tipica', sig:'4/4', unit:2, bpm:100, steps:'D-D-D--u', chords:'A G A G', tip:'Typische Akkordfolge: A G A G – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_34', kind:'strum', level:4, name:'Slow Rock', sig:'4/4', unit:3, bpm:60, steps:'D--DudD--D--', chords:'C Am F G7', tip:'Typische Akkordfolge: C Am F G7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_35', kind:'strum', level:4, name:'Soul Rock', sig:'4/4', unit:2, bpm:90, steps:'D-x-Duxu', chords:'C D Hm Em', tip:'Typische Akkordfolge: C D Hm Em – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_36', kind:'strum', level:4, name:'Straight Funk', sig:'4/4', unit:4, bpm:80, steps:'D-duDxdxD-du--du', chords:'E9 Hm9 Hm7 E9', tip:'Typische Akkordfolge: E9 Hm9 Hm7 E9 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_37', kind:'strum', level:4, name:'Straight Rock', sig:'4/4', unit:2, bpm:100, steps:'b-D-DuDu', chords:'E F#m7 A H7sus4 H7', tip:'Typische Akkordfolge: E F#m7 A H7sus4 H7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_38', kind:'strum', level:4, name:'Swing', sig:'4/4', unit:2, bpm:110, steps:'D-D-D-D-', chords:'E7 A7 D7 G7', tip:'Typische Akkordfolge: E7 A7 D7 G7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_39', kind:'strum', level:4, name:'Swing Ballad', sig:'4/4', unit:3, bpm:70, steps:'D----uD--D-u', chords:'E A6 H13 E', tip:'Typische Akkordfolge: E A6 H13 E – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_40', kind:'strum', level:4, name:'Syncopated Funk', sig:'4/4', unit:4, bpm:80, steps:'D-d--u-u-u-uD-d-', chords:'Gm D7#9 D7b9 Gm', tip:'Typische Akkordfolge: Gm D7#9 D7b9 Gm – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_41', kind:'strum', level:4, name:'Tango', sig:'2/4', unit:4, bpm:60, steps:'D-d-D-du', chords:'D7 C#7 D7 Gm', tip:'Typische Akkordfolge: D7 C#7 D7 Gm – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_42', kind:'strum', level:4, name:'Tango Argentino', sig:'2/4', unit:4, bpm:60, steps:'Du-uDudu', chords:'Em Am H7 Em', tip:'Typische Akkordfolge: Em Am H7 Em – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_43', kind:'strum', level:4, name:'Twist', sig:'4/4', unit:2, bpm:110, steps:'DuDuDuDu', chords:'E E6', tip:'Typische Akkordfolge: E E6 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_44', kind:'strum', level:4, name:'Valse Creole', sig:'3/4', unit:4, bpm:70, steps:'D--u----U-d-', chords:'Ebm7 Abm7', tip:'Typische Akkordfolge: Ebm7 Abm7 – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_45', kind:'strum', level:4, name:'West-Coast-Country-Rock', sig:'4/4', unit:2, bpm:90, steps:'D--u---u', chords:'E D A', tip:'Typische Akkordfolge: E D A – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' },
+    { id:'st_46', kind:'strum', level:4, name:'West-Coast-Pop', sig:'4/4', unit:2, bpm:100, steps:'DuD-Du-u', chords:'A D', tip:'Typische Akkordfolge: A D – tippe auf „🎸 Akkorde übernehmen“, um sie einzusetzen.' }
   ];
   const STRUM_CHORD_SUGGESTIONS = ['C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G', 'Em C G D', 'Am Dm E Am', 'A D E A', 'Dmaj7 Hm7 Em7 A7'];
   const STRUM_KEY = 'guitartrainer_strum';
@@ -8723,7 +8787,7 @@
     showToast('Muster gelöscht.');
   }
   function strumSteps(p) { return Array.isArray(p.steps) ? p.steps : p.steps.split(''); }
-  function strumBpm() { const p = strumPattern(); return Math.max(30, Math.min(180, strumState.bpm || p.bpm)); }
+  function strumBpm() { const p = strumPattern(); const m = (!strumEdit && strumState.tempos) ? strumState.tempos[p.id] : 0; return Math.max(30, Math.min(180, strumState.bpm || m || p.bpm)); }
   function strumChords() {
     const c = parsePlanChords(strumState.chords);
     return c && c.length ? c : null;
@@ -8756,6 +8820,9 @@
     if (!tok || tok === '-') return [];
     return tok.split('+').map(x => { const [f, s] = x.split(':'); return { f, s }; });
   }
+  let strumPreview = false;
+  function strumIsFav(id) { return !!(strumState && strumState.favs && strumState.favs.includes(id)); }
+  function on2(id, fn) { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
   function strumChordAt(chords, bar) { return chords[Math.floor(bar / (strumState.bpc || 1)) % chords.length]; }
 
   // ---------- Klang ----------
@@ -8778,8 +8845,43 @@
       return true;
     });
   }
+  const strumPluckCache = new Map();
+  function strumPluckBuffer(ctx, midi) {
+    const key = ctx.sampleRate + ':' + midi;
+    if (strumPluckCache.has(key)) return strumPluckCache.get(key);
+    const sr = ctx.sampleRate, f = 440 * Math.pow(2, (midi - 69) / 12);
+    const len = Math.floor(sr * 2.2), buf = ctx.createBuffer(1, len, sr), y = buf.getChannelData(0);
+    const D = sr / f - 0.5, N = Math.floor(D), fr = D - N;
+    const g = Math.pow(0.004, 1 / (f * (midi < 52 ? 2.4 : 1.9)));   // Abklingen pro Periode
+    let lp = 0;
+    for (let i = 0; i <= N + 1 && i < len; i++) { lp = lp * 0.45 + (Math.random() * 2 - 1) * 0.55; y[i] = lp; }
+    for (let i = N + 2; i < len; i++) {
+      const a = (1 - fr) * y[i - N] + fr * y[i - N - 1];
+      const b = (1 - fr) * y[i - N - 1] + fr * y[i - N - 2];
+      y[i] = g * 0.5 * (a + b);
+    }
+    let pk = 0; for (let i = 0; i < len; i++) pk = Math.max(pk, Math.abs(y[i]));
+    const nrm = pk > 0 ? 1 / pk : 1, fade = Math.floor(sr * 0.05);
+    for (let i = 0; i < len; i++) y[i] *= nrm * (i > len - fade ? (len - i) / fade : 1);
+    strumPluckCache.set(key, buf);
+    return buf;
+  }
   function strumPluck(ctx, midi, t, vel, s, dur) {
     const out = strumGetOut(ctx);
+    if (ctx.createBufferSource) {
+      try {
+        const src = ctx.createBufferSource(); src.buffer = strumPluckBuffer(ctx, midi);
+        const env = ctx.createGain(), damp = ctx.createGain();
+        const v = 0.3 * vel;
+        env.gain.setValueAtTime(v, t);
+        env.gain.setValueAtTime(v, t + Math.max(0.01, dur - 0.12));
+        env.gain.linearRampToValueAtTime(0, t + dur);
+        src.connect(env); env.connect(damp); damp.connect(out);
+        src.start(t); src.stop(t + dur + 0.02);
+        strumVoices.push({ damp, s, end: t + dur });
+        return;
+      } catch (e) {}
+    }
     const f = 440 * Math.pow(2, (midi - 69) / 12);
     const env = ctx.createGain(), damp = ctx.createGain(), lp = ctx.createBiquadFilter();
     lp.type = 'lowpass';
@@ -8860,7 +8962,12 @@
     }
     const look = jamLowPerf() ? 0.25 : 0.12;
     while (strumNext < audioCtx.currentTime + look) {
-      const chord = strumChordAt(chords, strumBar);
+      if (strumPreview && strumBar >= 2) {
+        const left = Math.max(0, (strumNext - audioCtx.currentTime) * 1000);
+        setTimeout(() => { if (strumPreview) stopStrum(); }, left + 700);
+        return;
+      }
+      const chord = strumPreview ? chords[0] : strumChordAt(chords, strumBar);
       strumPlayStep(audioCtx, p, chord, strumStep, strumNext);
       if (strumState.click && strumIsBeat(p, strumStep)) strumClick(audioCtx, strumNext, strumStep === 0);
       const st = strumStep, bar = strumBar, delay = Math.max(0, (strumNext - audioCtx.currentTime) * 1000);
@@ -8871,14 +8978,15 @@
     }
     strumTimer = setTimeout(strumTick, 25);
   }
-  function startStrum() {
+  function startStrum(preview) {
     initAudio();
     if (!audioCtx) { showToast('Dieser Browser kann keinen Ton abspielen.'); return; }
     if (!strumChords()) { showToast('Bitte gültige Akkorde eintragen, z. B. „Am F C G“.'); return; }
     const p = strumPattern();
-    strumPlaying = true; strumStep = 0; strumBar = 0;
+    strumPlaying = true; strumStep = 0; strumBar = 0; strumPreview = !!preview;
     strumNext = audioCtx.currentTime + 0.08;
-    if (strumState.countIn) {
+    diaryNote('Anschlag & Zupfen: ' + p.name + ', ' + strumBpm() + ' BPM');
+    if (strumState.countIn && !preview) {
       const sd = 60 / strumBpm() / p.unit;
       const n = strumSteps(p).length;
       for (let i = 0; i < n; i++) if (strumIsBeat(p, i)) strumClick(audioCtx, strumNext + i * sd, i === 0);
@@ -8889,7 +8997,7 @@
   }
   function stopStrum() {
     if (!strumPlaying) return;
-    strumPlaying = false;
+    strumPlaying = false; strumPreview = false;
     clearTimeout(strumTimer);
     if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime);
     strumShowStep(-1, 0);
@@ -8897,15 +9005,41 @@
   }
   function updateStrumPlayBtn() {
     const b = document.getElementById('strumPlayBtn');
-    if (b) b.textContent = strumPlaying ? '⏸ Stop' : '▶ Abspielen';
+    if (b) b.textContent = strumPlaying && !strumPreview ? '⏸ Stop' : '▶ Abspielen';
+    const pb = document.getElementById('strumPreviewBtn'); if (pb) pb.textContent = strumPreview ? '⏹ Stopp' : '👂 Anhören';
   }
   let strumShownBar = -1;
   function strumShowStep(step, bar) {
     document.querySelectorAll('#strumRoot .now').forEach(el => el.classList.remove('now'));
     if (step < 0) { strumShownBar = -1; return; }
     if (bar !== strumShownBar) { strumShownBar = bar; renderStrumNow(bar); }
-    document.querySelectorAll(`#strumRoot [data-sstep="${step}"]`).forEach(el => el.classList.add('now'));
+    const els = document.querySelectorAll(`#strumRoot [data-sstep="${step}"]`);
+    els.forEach(el => el.classList.add('now'));
+    // Sicherheitsnetz: falls etwas übersteht, mitscrollen, damit der aktuelle Schritt sichtbar bleibt
+    try {
+      const wrap = document.getElementById('strumGridWrap');
+      if (wrap && els[0] && wrap.scrollWidth > wrap.clientWidth + 2) {
+        const r = els[0].getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+        if (r.left < wr.left + 10 || r.right > wr.right - 10) wrap.scrollLeft += (r.left - wr.left) - wr.width / 3;
+      }
+    } catch (e) {}
   }
+  // Bildschirm gedreht / Größe geändert → Taktanzeige neu einpassen
+  let strumResizeT = null, strumLastW = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(strumResizeT);
+    strumResizeT = setTimeout(() => {
+      const w = window.innerWidth; if (Math.abs(w - strumLastW) < 30) return; strumLastW = w;
+      const wrap = document.getElementById('strumGridWrap');
+      if (!wrap || !wrap.offsetParent || (typeof strumEdit !== 'undefined' && strumEdit)) return;
+      try {
+        const chords = strumChords() || [[0, 'dur']];
+        const p = strumPattern();
+        if (p.kind === 'pick') wrap.innerHTML = renderStrumGrid(strumChordAt(chords, Math.max(0, strumShownBar)));
+        else wrap.innerHTML = renderStrumGrid(chords[0]);
+      } catch (e) {}
+    }, 250);
+  });
 
   // ---------- Anzeige ----------
   // ---------- Klassische Darstellung für Zupfmuster: Noten + Tabulatur ----------
@@ -9040,32 +9174,82 @@
     return `<svg id="strumGrid" class="strum-notation" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Zupfmuster in Noten und Tabulatur">${g}</svg>`;
   }
 
+  // Verfügbare Breite für die Taktanzeige (Handy im Hochformat: schmal)
+  function strumAvailW() {
+    const w = document.getElementById('strumGridWrap');
+    const cw = w && w.clientWidth;
+    return Math.max(240, cw || ((window.innerWidth || 1024) - 48));
+  }
+  // Takt an Zählzeit-Grenzen in r möglichst gleich große Zeilen teilen
+  function strumSplitRows(p, n, r) {
+    if (r <= 1) return [[0, n]];
+    const starts = []; for (let i = 1; i < n; i++) if (strumIsBeat(p, i)) starts.push(i);
+    const cuts = [];
+    for (let k = 1; k < r; k++) {
+      const target = n * k / r;
+      let best = null; starts.forEach(s => { if (!cuts.includes(s) && (cuts.length === 0 || s > cuts[cuts.length - 1]) && (best === null || Math.abs(s - target) < Math.abs(best - target))) best = s; });
+      if (best === null) best = Math.round(target);
+      if (!cuts.includes(best) && best > 0 && best < n) cuts.push(best);
+    }
+    cuts.sort((a, b) => a - b);
+    const b = [0, ...cuts, n]; const out = [];
+    for (let i = 0; i < b.length - 1; i++) out.push([b[i], b[i + 1]]);
+    return out;
+  }
   function renderStrumGrid(chord) {
     const p = strumPattern(), steps = strumSteps(p), labels = strumCountLabels(p);
-    if (p.kind === 'pick') return renderPickNotation(chord, p);
+    if (p.kind === 'pick') return renderPickResponsive(chord, p);
     const n = steps.length;
     const beatStart = i => i > 0 && strumIsBeat(p, i);
-    let h = `<div class="strum-grid" id="strumGrid" style="grid-template-columns: 34px repeat(${n}, minmax(34px, 1fr));">`;
+    const avail = strumAvailW();
+    const compact = avail < 34 + n * 37;
+    const lw = compact ? 24 : 34;
+    let rows = 1;
+    if (compact) { while (rows < 4 && (avail - lw) / Math.ceil(n / rows) - 3 < 22) rows++; }
+    const ranges = strumSplitRows(p, n, rows);
+    const cellMin = compact ? 18 : 34;
+    let h = compact ? '<div class="strum-compact">' : '';
+    ranges.forEach(([a, b], ri) => {
+    const m = b - a;
+    h += `<div class="strum-grid" ${ri === 0 ? 'id="strumGrid"' : ''} style="grid-template-columns: ${lw}px repeat(${m}, minmax(${cellMin}px, 1fr));${compact ? ' min-width:0;' : ''}">`;
     h += `<div class="strum-cell lbl"></div>`;
-    labels.forEach((l, i) => { h += `<div class="strum-cell cnt ${strumIsBeat(p, i) ? 'beat' : ''}">${l}</div>`; });
+    labels.slice(a, b).forEach((l, j) => { const i = a + j; h += `<div class="strum-cell cnt ${strumIsBeat(p, i) ? 'beat' : ''}">${l}</div>`; });
     if (p.kind === 'strum') {
       h += `<div class="strum-cell lbl">✋</div>`;
-      steps.forEach((t, i) => {
+      steps.slice(a, b).forEach((t, j) => { const i = a + j;
         const sym = { D: '↓', d: '↓', U: '↑', u: '↑', x: '✕', b: 'B¹', B: 'B²', '-': '·' }[t] || '·';
         const cls = (t === 'D' || t === 'U') ? 'acc' : (t === '-' ? 'rest' : (t === 'b' || t === 'B' ? 'small' : ''));
         const title = { D: 'Abschlag (betont)', d: 'Abschlag', U: 'Aufschlag (betont)', u: 'Aufschlag', x: 'gedämpfter Schlag', b: 'Basston (Grundton)', B: 'Wechselbass', '-': 'Pause – Hand bewegt sich weiter' }[t] || '';
-        h += `<div class="strum-cell ${cls} ${beatStart(i) ? 'beatstart' : ''}" data-sstep="${i}" title="${title}">${sym}</div>`;
+        h += `<div class="strum-cell ${cls} ${beatStart(i) && i !== a ? 'beatstart' : ''}" data-sstep="${i}" title="${title}">${sym}</div>`;
       });
     } else {
       const frets = strumFingering(chord);
-      const map = steps.map(tok => { const m = {}; strumParsePick(tok).forEach(hh => { const si = strumResolveString(hh.s, frets); if (si >= 0) m[si] = hh.f; }); return m; });
+      const map = steps.slice(a, b).map(tok => { const m = {}; strumParsePick(tok).forEach(hh => { const si = strumResolveString(hh.s, frets); if (si >= 0) m[si] = hh.f; }); return m; });
       for (let si = 5; si >= 0; si--) {
         h += `<div class="strum-cell lbl">${STRUM_STRINGS[si]}${frets[si] < 0 ? ' ✕' : ''}</div>`;
-        map.forEach((m, i) => { h += `<div class="strum-cell pick ${m[si] ? 'hit' : ''} ${beatStart(i) ? 'beatstart' : ''}" data-sstep="${i}">${m[si] || ''}</div>`; });
+        map.forEach((m, j) => { const i = a + j; h += `<div class="strum-cell pick ${m[si] ? 'hit' : ''} ${beatStart(i) && i !== a ? 'beatstart' : ''}" data-sstep="${i}">${m[si] || ''}</div>`; });
       }
     }
     h += `</div>`;
+    });
+    if (compact) h += '</div>';
     return h;
+  }
+  // Noten + Tabulatur: auf Bildschirmbreite skalieren, bei Bedarf auf mehrere Zeilen verteilen
+  function renderPickResponsive(chord, p) {
+    const steps = strumSteps(p), labels = strumCountLabels(p), n = steps.length;
+    const avail = strumAvailW();
+    const fullW = 92 + n * 38 + 26;
+    const fit = svg => svg.replace(/ width="(\d+(?:\.\d+)?)" height="(\d+(?:\.\d+)?)"/, (m0, w) => ` style="width:100%; max-width:${w}px; height:auto;"`);
+    let rows = 1;
+    while (rows < 4 && avail / (92 + Math.ceil(n / rows) * 38 + 26) < 0.62) rows++;
+    if (rows === 1) return avail < fullW ? fit(renderPickNotation(chord, p)) : renderPickNotation(chord, p);
+    return strumSplitRows(p, n, rows).map(([a, b], ri) => {
+      const q = Object.assign({}, p, { steps: steps.slice(a, b), count: labels.slice(a, b) });
+      let svg = renderPickNotation(chord, q).replace(/data-sstep="(\d+)"/g, (m0, i) => `data-sstep="${+i + a}"`);
+      if (ri > 0) svg = svg.replace('id="strumGrid" ', '');
+      return fit(svg);
+    }).join('');
   }
   function renderStrumNow(bar) {
     const box = document.getElementById('strumNow');
@@ -9096,9 +9280,13 @@
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
       <label style="font-weight:600;">Muster:</label>
       <select id="strumPatternSelect" style="${sel} max-width:100%;">
+        ${list.some(x => strumIsFav(x.id)) ? `<optgroup label="★ Favoriten">${list.filter(x => strumIsFav(x.id)).map(x => `<option value="${x.id}">${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
         ${list.some(x => x.level === 0) ? `<optgroup label="✏️ Meine Muster">${list.filter(x => x.level === 0).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
         ${[1, 2, 3].map(l => `<optgroup label="${stars(l)} ${['', 'Einfach', 'Mittel', 'Fortgeschritten'][l]}">${list.filter(x => x.level === l).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${x.name} (${x.sig})</option>`).join('')}</optgroup>`).join('')}
-      </select></div>`;
+        ${list.some(x => x.level === 4) ? `<optgroup label="🎵 Stile mit Akkordfolgen">${list.filter(x => x.level === 4).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
+      </select>
+      ${strumEdit ? '' : `<button type="button" class="strum-chip" id="strumFavBtn" title="Als Favorit merken" style="font-size:1.1rem;">${strumIsFav(p.id) ? '★' : '☆'}</button>
+      <button type="button" class="strum-chip" id="strumPreviewBtn" title="Zwei Takte vorspielen">${strumPreview ? '⏹ Stopp' : '👂 Anhören'}</button>`}</div>`;
     if (strumEdit) {
       h = h.replace('id="strumPatternSelect"', 'id="strumPatternSelect" disabled');
       h += strumEditorHtml();
@@ -9107,9 +9295,10 @@
       h += `<div class="row" style="flex-wrap:wrap; gap:8px; margin-top:8px;">
         <button type="button" class="btn btn-secondary" id="strumNewBtn">✏️ Eigenes Muster</button>
         <button type="button" class="btn btn-secondary" id="strumCopyBtn">📋 Als Vorlage kopieren</button>
+        ${p.chords ? `<button type="button" class="btn" id="strumStyleChordsBtn">🎸 Akkorde übernehmen</button>` : ''}
         ${p.custom ? `<button type="button" class="btn btn-secondary" id="strumEditBtn">✎ Bearbeiten</button><button type="button" class="btn btn-secondary" id="strumDelBtn">🗑 Löschen</button>` : ''}
       </div>`;
-      h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : stars(p.level)} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
+      h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
       h += `<div class="strum-grid-wrap" id="strumGridWrap">${renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
     }
     h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
@@ -9117,7 +9306,8 @@
       <button type="button" class="btn" id="strumPlayBtn">${strumPlaying ? '⏸ Stop' : '▶ Abspielen'}</button>
       <div class="toggle-group"><label style="font-weight:600;">Tempo:</label>
         <input type="range" id="strumTempo" min="30" max="180" step="1" value="${strumBpm()}" style="width:130px;">
-        <span id="strumTempoLabel" style="font-size:0.85rem; min-width:62px;">${strumBpm()} BPM</span></div>
+        <span id="strumTempoLabel" style="font-size:0.85rem; min-width:62px;">${strumBpm()} BPM</span>
+        <button type="button" class="strum-chip" id="strumTempoReset" title="Zurück auf das normale Tempo (${p.bpm} BPM)" style="visibility:${!strumEdit && strumBpm() !== p.bpm ? 'visible' : 'hidden'};">↺</button></div>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
     </div>`;
@@ -9157,14 +9347,19 @@
       strumState.id = first.id; strumState.bpm = null;
       saveStrumState(); renderStrum();
     }));
+    { const ps = document.getElementById('strumPatternSelect'); ps.value = strumPattern().id; }
+    on2('strumFavBtn', () => { const id = strumPattern().id; const f = strumState.favs = strumState.favs || []; const i = f.indexOf(id); if (i >= 0) f.splice(i, 1); else f.push(id); saveStrumState(); renderStrum(); showToast(i >= 0 ? 'Aus Favoriten entfernt' : '★ Zu Favoriten hinzugefügt'); });
+    on2('strumPreviewBtn', () => { if (strumPreview) { stopStrum(); return; } stopStrum(); startStrum(true); });
+    on2('strumTempoReset', () => { const p0 = strumPattern(); if (strumState.tempos) delete strumState.tempos[p0.id]; strumState.bpm = null; saveStrumState(); const was = strumPlaying; stopStrum(); renderStrum(); if (was) startStrum(); });
     document.getElementById('strumPatternSelect').addEventListener('change', e => {
       const was = strumPlaying; stopStrum();
       strumState.id = e.target.value; strumState.bpm = null; saveStrumState(); renderStrum();
       if (was) startStrum();
     });
-    document.getElementById('strumPlayBtn').addEventListener('click', () => { strumPlaying ? stopStrum() : startStrum(); });
+    document.getElementById('strumPlayBtn').addEventListener('click', () => { if (strumPlaying && !strumPreview) stopStrum(); else { stopStrum(); startStrum(); } });
     document.getElementById('strumTempo').addEventListener('input', e => {
       strumState.bpm = parseInt(e.target.value, 10);
+      if (!strumEdit) { strumState.tempos = strumState.tempos || {}; strumState.tempos[strumPattern().id] = strumState.bpm; const rb = document.getElementById('strumTempoReset'); if (rb) rb.style.visibility = strumState.bpm !== strumPattern().bpm ? 'visible' : 'hidden'; }
       document.getElementById('strumTempoLabel').textContent = `${strumState.bpm} BPM`;
       saveStrumState();
     });
@@ -9173,6 +9368,7 @@
     const ci = document.getElementById('strumChordsInput');
     const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = renderStrumGrid(c[0]); } restart(); };
     ci.addEventListener('change', applyChords);
+    { const sb = document.getElementById('strumStyleChordsBtn'); if (sb) sb.addEventListener('click', () => { ci.value = strumPattern().chords; applyChords(); }); }
     root.querySelectorAll('[data-schords]').forEach(b => b.addEventListener('click', () => { ci.value = b.dataset.schords; applyChords(); }));
     document.getElementById('strumBpc').addEventListener('change', e => { strumState.bpc = parseInt(e.target.value, 10); saveStrumState(); restart(); });
     document.getElementById('strumToBeatBtn').addEventListener('click', strumSendToBeat);
@@ -9237,6 +9433,7 @@
       <div class="tip">💡 ${homeEsc(homeTipOfDay())}</div>
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
+    { const L = diaryLoad(); const e = L[0]; h += `<button type="button" class="home-pt" id="homeDiaryBtn"><b>📓</b><span><strong>Übungs-Tagebuch</strong><br>${e ? 'Zuletzt: ' + diaryDateTxt(e.date) + (e.note ? ' · ' + homeEsc(e.note.slice(0, 40)) + (e.note.length > 40 ? '…' : '') : '') : 'Noch keine Einträge'}</span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`; }
     HOME_GROUPS.forEach(g => {
       h += `<div class="home-group home-c-${g.color}"><span class="dot"></span><h3>${homeEsc(g.title)}</h3><span class="line"></span></div><div class="home-tiles">`;
       g.items.forEach(([v, icon, nm, desc]) => {
@@ -9252,6 +9449,7 @@
       </select></div>`;
     box.innerHTML = h;
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
+    const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
     const ss = document.getElementById('homeStartSelect');
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
@@ -10565,8 +10763,89 @@
     ptUpdateLive();
   }
 
+  // =================== Übungs-Tagebuch ===================
+  const DIARY_KEY = 'guitartrainer_diary';
+  const diarySeen = [];            // was in dieser Sitzung geöffnet/gespielt wurde
+  let diaryEditId = null, diaryDraft = null;
+  function diaryNote(txt) {
+    if (!txt) return;
+    const base = txt.split(':')[0];
+    const i = diarySeen.findIndex(x => x === txt || (txt.includes(':') && x.startsWith(base + ':')) || x === base);
+    if (i >= 0) diarySeen.splice(i, 1);
+    diarySeen.push(txt);
+    if (diarySeen.length > 12) diarySeen.shift();
+  }
+  function diaryLoad() { try { const a = JSON.parse(localStorage.getItem(DIARY_KEY) || '[]'); return Array.isArray(a) ? a.sort((x, y) => (y.date > x.date ? 1 : -1)) : []; } catch (e) { return []; } }
+  function diarySave(a) { try { localStorage.setItem(DIARY_KEY, JSON.stringify(a)); } catch (e) { showToast('Speichern nicht möglich.'); } }
+  function diaryDateTxt(iso) { const d = new Date(iso); return d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' }); }
+  function diaryOpen() { diaryEditId = null; diaryDraft = null; diaryRender(); document.getElementById('diaryOverlay').classList.add('open'); }
+  function diaryClose() { document.getElementById('diaryOverlay').classList.remove('open'); diaryDraft = null; try { if (state.currentModule === 0 || document.getElementById('homeScreen')) renderHome(); } catch (e) {} }
+  function diaryNew() {
+    let min = '';
+    try { const t = Math.floor(ptStats().today / 60); const done = diaryLoad().filter(e => e.date.slice(0, 10) === new Date().toISOString().slice(0, 10)).reduce((s, e) => s + (+e.min || 0), 0); if (t - done > 0) min = t - done; } catch (e) {}
+    diaryDraft = { id: 'd_' + Date.now().toString(36), date: new Date().toISOString(), min, items: [], note: '', mood: '', offer: diarySeen.slice().reverse() };
+    diaryEditId = null; diaryRender();
+  }
+  function diaryEdit(id) { const e = diaryLoad().find(x => x.id === id); if (!e) return; diaryDraft = { ...e, items: [...(e.items || [])], offer: [...(e.items || [])] }; diaryEditId = id; diaryRender(); }
+  function diaryRender() {
+    const box = document.getElementById('diaryPanel'); if (!box) return;
+    let h = `<div class="pt-head"><h3>📓 Übungs-Tagebuch</h3><button type="button" class="btn btn-secondary" id="diaryCloseBtn">✕</button></div>`;
+    if (diaryDraft) {
+      const d = diaryDraft, offer = [...new Set([...(d.offer || []), ...d.items])];
+      h += `<div class="dy-panel"><p style="opacity:.8; margin:8px 0;">${diaryEditId ? 'Eintrag bearbeiten' : 'Neuer Eintrag'} · ${diaryDateTxt(d.date)}</p>
+        <label style="font-weight:600;">Dauer (Minuten)</label><input type="number" id="dyMin" min="0" max="600" value="${d.min}" placeholder="z. B. 20">
+        <div style="font-weight:600; margin-top:10px;">Was hast du geübt?</div>
+        <div class="dy-items">${offer.length ? offer.map((o, i) => `<label><input type="checkbox" data-dyitem="${i}" ${d.items.includes(o) ? 'checked' : ''}> ${homeEsc(o)}</label>`).join('') : '<div style="opacity:.7; font-size:.9rem;">Noch nichts geöffnet.</div>'}</div>
+        <input type="text" id="dyExtra" placeholder="Weiteres, z. B. „Lied: Knockin' on Heaven's Door“" style="margin-top:6px;">
+        <label style="font-weight:600; display:block; margin-top:10px;">Notiz</label><textarea id="dyNote" rows="3" placeholder="z. B. Wechsel C→F noch hakelig">${homeEsc(d.note || '')}</textarea>
+        <div style="font-weight:600; margin-top:10px;">Wie war's?</div>
+        <div class="dy-mood">${['🙂', '😐', '🙁'].map(m => `<button type="button" data-dymood="${m}" class="${d.mood === m ? 'on' : ''}">${m}</button>`).join('')}</div>
+        <div class="row" style="gap:8px; margin-top:12px; flex-wrap:wrap;"><button type="button" class="btn" id="dySave">💾 Speichern</button><button type="button" class="btn btn-secondary" id="dyCancel">Abbrechen</button></div></div>`;
+      box.innerHTML = h; diaryBindForm(offer); return;
+    }
+    const L = diaryLoad();
+    h += `<div class="row" style="margin:10px 0;"><button type="button" class="btn" id="dyNewBtn">＋ Eintrag</button></div>`;
+    if (!L.length) h += `<p style="opacity:.8;">Noch keine Einträge. Tipp auf „＋ Eintrag“.</p>`;
+    let mon = '';
+    L.forEach(e => {
+      const m = new Date(e.date).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+      if (m !== mon) { mon = m; h += `<div class="dy-month">${m}</div>`; }
+      h += `<div class="dy-entry"><div class="dy-top"><span>${diaryDateTxt(e.date)}${e.min ? ' · ' + e.min + ' Min.' : ''} ${e.mood || ''}</span><button type="button" data-dyedit="${e.id}" title="Bearbeiten">✎</button><button type="button" data-dydel="${e.id}" title="Löschen">🗑</button></div>
+        ${e.items && e.items.length ? `<div style="font-size:.9rem; margin-top:4px;">${e.items.map(homeEsc).join(' · ')}</div>` : ''}${e.note ? `<div style="font-size:.9rem; margin-top:4px; white-space:pre-wrap; opacity:.9;">${homeEsc(e.note)}</div>` : ''}</div>`;
+    });
+    box.innerHTML = h;
+    document.getElementById('diaryCloseBtn').addEventListener('click', diaryClose);
+    document.getElementById('dyNewBtn').addEventListener('click', diaryNew);
+    box.querySelectorAll('[data-dyedit]').forEach(b => b.addEventListener('click', () => diaryEdit(b.dataset.dyedit)));
+    box.querySelectorAll('[data-dydel]').forEach(b => b.addEventListener('click', () => { if (!confirm('Diesen Eintrag löschen?')) return; diarySave(diaryLoad().filter(x => x.id !== b.dataset.dydel)); diaryRender(); }));
+  }
+  function diaryBindForm(offer) {
+    const box = document.getElementById('diaryPanel'), d = diaryDraft;
+    document.getElementById('diaryCloseBtn').addEventListener('click', diaryClose);
+    box.querySelectorAll('[data-dymood]').forEach(b => b.addEventListener('click', () => { d.mood = d.mood === b.dataset.dymood ? '' : b.dataset.dymood; box.querySelectorAll('[data-dymood]').forEach(x => x.classList.toggle('on', x.dataset.dymood === d.mood)); }));
+    document.getElementById('dyCancel').addEventListener('click', () => { diaryDraft = null; diaryEditId = null; diaryRender(); });
+    document.getElementById('dySave').addEventListener('click', () => {
+      const items = offer.filter((o, i) => { const c = box.querySelector(`[data-dyitem="${i}"]`); return c && c.checked; });
+      const ex = document.getElementById('dyExtra').value.trim(); if (ex) items.push(ex);
+      const min = Math.max(0, Math.min(600, Math.round(+document.getElementById('dyMin').value || 0)));
+      const note = document.getElementById('dyNote').value.trim();
+      if (!items.length && !note && !min) { showToast('Trag etwas ein – oder tipp auf „Abbrechen“.'); return; }
+      const e = { id: d.id, date: d.date, min: min || '', items, note, mood: d.mood || '' };
+      const L = diaryLoad().filter(x => x.id !== e.id); L.push(e); diarySave(L);
+      diaryDraft = null; diaryEditId = null; diaryRender(); showToast('📓 Gespeichert');
+    });
+  }
+  function diaryInit() {
+    if (document.getElementById('diaryOverlay')) return;
+    const o = document.createElement('div'); o.id = 'diaryOverlay'; o.className = 'pt-overlay';
+    o.innerHTML = '<div class="pt-panel" id="diaryPanel"></div>';
+    o.addEventListener('click', e => { if (e.target === o) diaryClose(); });
+    document.body.appendChild(o);
+    const b = document.getElementById('diaryBtn'); if (b) b.addEventListener('click', diaryOpen);
+  }
+
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-4';
+  const APP_VERSION = '2026-10-03-9';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -10598,7 +10877,7 @@
     setTimeout(() => appCheckUpdate(true), 3000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) appCheckUpdate(false); });
   }
-  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
+  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
 
   window.addEventListener('load', init);
 
@@ -10618,5 +10897,5 @@
     });
   }
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44cab371d098c4f',t:'MTc5MTAzODA3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
