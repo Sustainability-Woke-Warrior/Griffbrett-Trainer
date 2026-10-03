@@ -1119,22 +1119,31 @@
     body.home-mode #homeBtn { display: none; }
     #homeScreen { display: none; }
     body.home-mode #homeScreen { display: block; }
-    .home-today { border: 1px solid var(--card-border); border-radius: 14px; padding: 14px 16px; margin: 14px 0 6px; background: var(--card-bg, transparent); }
-    .home-today h2 { font-size: 1.05rem; margin: 0 0 8px; }
-    .home-today-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--card-border); font-size: 0.92rem; }
-    .home-today-row:first-of-type { border-top: none; }
-    .home-today-row .name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-    .home-today-row.done .name { opacity: 0.6; }
-    .home-group-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin: 18px 2px 8px; }
-    .home-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-    .home-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 104px; padding: 14px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card-bg, transparent); color: var(--text-color); text-align: left; cursor: pointer; font: inherit; transition: transform .08s, border-color .15s; }
-    .home-tile:active { transform: scale(0.97); }
-    .home-tile:hover { border-color: var(--accent-color); }
-    .home-tile .ic { font-size: 1.9rem; line-height: 1; }
-    .home-tile .nm { font-weight: 700; font-size: 0.95rem; line-height: 1.2; }
-    .home-tile .no { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
-    .home-tile.last { border: 2px solid var(--accent-color); }
-    .home-settings { margin: 20px 2px 6px; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .home-hero { position:relative; overflow:hidden; border-radius:22px; padding:26px 24px 22px; margin:14px 0 8px; background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 45%,#ec4899 100%); color:#fff; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+    .home-hero .gtr { position:absolute; right:10px; top:-8px; height:200px; width:auto; opacity:.9; pointer-events:none; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
+    .home-hero .hi { font-size:.95rem; opacity:.92; font-weight:600; position:relative; }
+    .home-hero h2 { margin:4px 0 14px; font-size:1.7rem; line-height:1.15; color:#fff; position:relative; }
+    .home-hero .cont { position:relative; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); color:#fff; border-radius:999px; padding:9px 16px; font-size:.95rem; font-weight:700; cursor:pointer; font-family:inherit; }
+    .home-hero .cont:active { transform:scale(.97); }
+    .home-group { margin:22px 0 10px; display:flex; align-items:center; gap:10px; }
+    .home-group .dot { width:10px; height:10px; border-radius:50%; background:var(--c1); }
+    .home-group h3 { margin:0; font-size:.82rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); font-weight:800; }
+    .home-group .line { flex:1; height:1px; background:var(--card-border); }
+    .home-tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .home-tile { position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:8px; text-align:left; padding:16px; min-height:150px; border-radius:18px; border:1px solid var(--card-border); cursor:pointer; font:inherit; color:var(--text-color); background:linear-gradient(160deg, color-mix(in srgb, var(--c1) 14%, var(--card-bg)) 0%, var(--card-bg) 70%); box-shadow:0 6px 18px rgba(0,0,0,.12); transition:transform .1s, border-color .15s; }
+    .home-tile:hover { border-color:var(--c1); }
+    .home-tile:active { transform:scale(.96); }
+    .home-tile .ic { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.7rem; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 4px 10px color-mix(in srgb, var(--c1) 40%, transparent); }
+    .home-tile .ic svg { height:40px; } .home-tile .ic img { height:46px; width:auto; filter:drop-shadow(0 1px 2px rgba(0,0,0,.3)); }
+    .home-tile .no { position:absolute; top:12px; right:14px; font-size:.72rem; font-weight:800; color:var(--c1); background:color-mix(in srgb, var(--c1) 14%, transparent); padding:2px 8px; border-radius:999px; }
+    .home-tile .nm { font-weight:800; font-size:1rem; line-height:1.2; }
+    .home-tile .desc { font-size:.8rem; color:var(--text-muted); line-height:1.3; }
+    .home-tile.last { border:2px solid var(--c1); }
+    .home-tile.last::before { content:"zuletzt"; position:absolute; bottom:10px; right:12px; font-size:.65rem; font-weight:800; color:var(--c1); text-transform:uppercase; letter-spacing:.05em; }
+    .home-c-blue { --c1:#3b82f6; --c2:#818cf8; } .home-c-green { --c1:#10b981; --c2:#34d399; } .home-c-orange { --c1:#f97316; --c2:#fbbf24; }
+    @media (max-width:520px) { .home-tiles { grid-template-columns:1fr 1fr; gap:10px; } .home-tile .desc { display:none; } .home-hero h2 { font-size:1.35rem; } }
+    .home-settings { margin:28px 0 10px; text-align:center; font-size:.8rem; color:var(--text-muted); display:flex; justify-content:center; flex-wrap:wrap; gap:8px; align-items:center; }
+    .home-settings select { background:transparent; color:var(--text-muted); border:1px solid var(--card-border); border-radius:8px; padding:3px 6px; font-size:.8rem; }
     .jam-plan-banner { border: 2px solid var(--accent-color); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.88rem; }
     .jam-plan-banner .row { margin-top: 8px; gap: 8px; flex-wrap: wrap; }
     .planner-practice-btn { margin-left: 6px; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap; }
@@ -1315,6 +1324,40 @@
     .backup-dialog .backup-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
     .backup-dialog .backup-list { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 8px 18px; padding: 0; }
     .backup-banner { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 9998; background: var(--card-bg, #1e293b); color: var(--text-color, #e2e8f0); border: 1px solid var(--accent-color, #3b82f6); border-radius: 12px; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; box-shadow: 0 6px 24px rgba(0,0,0,0.35); max-width: calc(100% - 24px); font-size: 0.9rem; }
+
+    /* ---------- Übungs-Timer & Update-Hinweis ---------- */
+    #ptBtn.pt-on { background: var(--primary-color, #3b82f6); color: #fff; font-variant-numeric: tabular-nums; }
+    .pt-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
+    .pt-overlay.open { display: flex; }
+    .pt-panel { background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 16px 16px 22px; box-shadow: 0 -6px 24px rgba(0,0,0,.3); }
+    .pt-head { display: flex; align-items: center; gap: 8px; }
+    .pt-head h3 { margin: 0; flex: 1; }
+    .pt-big { font-size: 3.2rem; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; margin: 8px 0 2px; }
+    .pt-sub { text-align: center; opacity: .8; min-height: 1.3em; margin-bottom: 8px; }
+    .pt-tabs, .pt-presets, .pt-ctrl { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 8px 0; }
+    .pt-tabs .btn, .pt-presets .btn { padding: 8px 12px; }
+    .pt-ctrl .btn { padding: 12px 18px; font-size: 1.1rem; }
+    .pt-box { border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
+    .pt-sec-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+    .pt-sec-row input[type=text] { flex: 1 1 120px; min-width: 0; }
+    .pt-sec-row input, .pt-sec-row select, .pt-box input[type=number] { padding: 8px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--bg-color, transparent); color: var(--text-color); font-size: 1rem; }
+    .pt-sec-row input[type=number] { width: 64px; }
+    .pt-sec-row.cur { outline: 2px solid var(--primary-color, #3b82f6); border-radius: 8px; }
+    .pt-week { display: flex; gap: 6px; align-items: flex-end; height: 70px; margin-top: 8px; }
+    .pt-week div { flex: 1; text-align: center; font-size: .75rem; }
+    .pt-week i { display: block; background: var(--primary-color, #3b82f6); border-radius: 4px 4px 0 0; margin: 0 auto 2px; width: 70%; min-height: 2px; }
+    .pt-week .today { font-weight: 800; }
+    .pt-banner { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 3100; background: var(--card-bg); color: var(--text-color); border: 2px solid var(--primary-color, #3b82f6); border-radius: 14px; padding: 12px 14px; box-shadow: 0 6px 24px rgba(0,0,0,.35); width: min(94vw, 520px); display: none; }
+    .pt-banner.open { display: block; }
+    .pt-banner .row2 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .home-pt { display: flex; width: 100%; align-items: center; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 1rem; text-align: left; cursor: pointer; }
+    .home-pt b { font-size: 1.4rem; }
+    .home-pt span { flex: 1; }
+    .app-upd { position: fixed; top: 0; left: 0; right: 0; z-index: 3200; background: #16a34a; color: #fff; padding: 10px 12px; display: none; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    .app-upd.open { display: flex; }
+    .app-upd button { border: 0; border-radius: 10px; padding: 8px 14px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .app-upd .go { background: #fff; color: #166534; }
+    .app-upd .later { background: rgba(255,255,255,.2); color: #fff; }
   </style>
 </head>
 <body>
@@ -1323,6 +1366,7 @@
   <header>
     <h1>Gitarren Griffbrett Trainer Pro</h1>
     <button class="btn btn-secondary" id="homeBtn" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
+    <button class="btn btn-secondary" id="ptBtn" title="Übungs-Timer" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⏱</button>
     <button class="btn btn-secondary" id="backupBtn" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:8px; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
     <button class="btn btn-secondary" id="fontSizeBtn" title="Schriftgröße ändern" style="padding:8px 10px; font-size:1rem; line-height:1; font-weight:800;">A+</button>
     <button class="btn btn-secondary" id="themeToggleBtn" title="Hell/Dunkel umschalten" style="padding:8px 12px; font-size:1.1rem; line-height:1;">🌙</button>
@@ -1482,7 +1526,9 @@
       </div>
       <p>Diese Seite gibt dir einen schnellen Überblick über alle im Programm enthaltenen Module, deren Zwecke und Steuerungselemente.</p>
       <ul>
-        <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben siehst du deine Übungen für heute aus dem Wochenplan (mit „▶ Üben“) und „Weiter mit“ für das zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
+        <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben bringt dich „↪ Weiter mit“ zurück ins zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
+        <li><strong>⏱ Übungs-Timer (oben rechts):</strong> Ganz freiwillig. <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App sammelt deine Übungsminuten (heute/Woche) – nur zur Freude. Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
+        <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Ein Tipp auf „Jetzt aktualisieren“ lädt sie – Cache löschen ist nicht mehr nötig. Deine Daten bleiben erhalten.</li>
         <li><strong>💾 Datensicherung (oben rechts):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
         <li><strong>A+ (Schriftgröße):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
         <li><strong>🌙 / ☀️:</strong> Hell- oder Dunkel-Modus.</li>
@@ -2028,7 +2074,11 @@
     try {
       const ua = navigator.userAgent || '';
       const small = Math.min(screen.width || 9999, screen.height || 9999) < 700;
-      return /Mobi|iPhone|iPod/i.test(ua) && small;
+      if (/Mobi|iPhone|iPod/i.test(ua) && small) return true;
+      // Tablets (Android, iPad – auch iPads, die sich als Mac ausgeben) ebenfalls sparsam
+      if (/Android|iPad|Tablet|Silk|Kindle/i.test(ua)) return true;
+      if (/Macintosh/i.test(ua) && (navigator.maxTouchPoints || 0) > 1) return true;
+      return false;
     } catch (e) { return false; }
   }
   function jamPerfSetting() {
@@ -5141,7 +5191,7 @@
           <span style="font-size:0.72rem; color:var(--text-muted);">(aus = besser für Tablet-Lautsprecher)</span></div>
         <div class="toggle-group"><label style="font-weight:600;">Leistung:</label>
           <select id="jamPerfSelect" style="${sel}">
-            <option value="auto" ${jamPerfSetting() === 'auto' ? 'selected' : ''}>Automatisch (${jamIsPhone() ? 'Handy erkannt → sparsam' : 'voll'})</option>
+            <option value="auto" ${jamPerfSetting() === 'auto' ? 'selected' : ''}>Automatisch (${jamIsPhone() ? 'Handy/Tablet erkannt → sparsam' : 'voll'})</option>
             <option value="high" ${jamPerfSetting() === 'high' ? 'selected' : ''}>Hohe Qualität</option>
             <option value="low" ${jamPerfSetting() === 'low' ? 'selected' : ''}>Sparsam (gegen Knacksen/Aussetzer)</option>
           </select></div>
@@ -5830,7 +5880,7 @@
     limiter.release.value = 0.25;
     const revIn = ctx.createGain();            // Hall-Send
     const conv = ctx.createConvolver();
-    conv.buffer = jamMakeReverbIR(ctx, jamLowPerf() ? 1.2 : 2);
+    conv.buffer = jamMakeReverbIR(ctx, jamLowPerf() ? 0.9 : 2);
     const revReturn = ctx.createGain();
     revReturn.gain.value = state.jam ? (state.jam.reverb ?? 0.25) : 0.25;
     // Klangfilter fürs Lo-Fi-Kit (sonst ganz offen)
@@ -8430,7 +8480,61 @@
     { id:'p_rolling', kind:'pick', level:3, name:'Fließende Sechzehntel (Estas-Tonne-Stil)', sig:'4/4', unit:4, bpm:60, steps:['p:B','i:3','m:2','a:1','m:2','i:3','p:B2','i:3','m:2','a:1','m:2','i:3','p:B','i:3','a:1','m:2'], tip:'Gleichmäßig rollende Sechzehntel. Ganz langsam anfangen – der Fluss ist wichtiger als das Tempo.' },
     { id:'p_128', kind:'pick', level:3, name:'12/8-Arpeggio', sig:'12/8', unit:3, bpm:45, steps:['p:B','i:3','m:2','a:1','m:2','i:3','p:B2','i:3','m:2','a:1','m:2','i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'Zwei Wellen p i m a m i pro Takt, beim zweiten Mal mit Wechselbass.' },
     { id:'p_54', kind:'pick', level:3, name:'5/4-Arpeggio', sig:'5/4', unit:2, bpm:80, steps:['p:B','i:3','m:2','i:3','a:1','i:3','p:B2','i:3','m:2','i:3'], tip:'Als 3 + 2 fühlen: der Wechselbass kommt auf die VIER.' },
-    { id:'p_78', kind:'pick', level:3, name:'7/8 gezupft (2 + 2 + 3)', sig:'7/8', unit:2, bpm:90, steps:['p:B','i:3','p:B2','m:2','p:B','i:3','m:2'], count:['1','2','1','2','1','2','3'], tip:'Der Daumen markiert jede Gruppe: 1 2 – 1 2 – 1 2 3.' }
+    { id:'p_78', kind:'pick', level:3, name:'7/8 gezupft (2 + 2 + 3)', sig:'7/8', unit:2, bpm:90, steps:['p:B','i:3','p:B2','m:2','p:B','i:3','m:2'], count:['1','2','1','2','1','2','3'], tip:'Der Daumen markiert jede Gruppe: 1 2 – 1 2 – 1 2 3.' },
+    { id:'b_7', kind:'pick', level:1, name:'Muster 7', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'i:3', 'm:2', 'a:1', 'p:B', 'i:3', 'm:2', 'a:1'], tip:'p i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_8', kind:'pick', level:1, name:'Muster 8', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'a:1', 'm:2', 'i:3', 'p:B', 'a:1', 'm:2', 'i:3'], tip:'p a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_9', kind:'pick', level:1, name:'Muster 9', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'i:3', 'a:1', 'm:2', 'p:B', 'i:3', 'a:1', 'm:2'], tip:'p i a m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_10', kind:'pick', level:1, name:'Muster 10', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'a:1', 'i:3', 'm:2', 'p:B', 'a:1', 'i:3', 'm:2'], tip:'p a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_11', kind:'pick', level:2, name:'Muster 11', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'i:3', 'm:2+a:1', 'i:3', 'p:B', 'i:3', 'm:2+a:1', 'i:3'], tip:'p i (ma) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_12', kind:'pick', level:2, name:'Muster 12', sig:'4/4', unit:2, bpm:70, steps:['p:B+m:1', 'i:2', 'm:1', 'i:2', 'p:B+m:1', 'i:2', 'm:1', 'i:2'], tip:'(pm) i m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_13', kind:'pick', level:2, name:'Muster 13', sig:'4/4', unit:2, bpm:70, steps:['p:B+m:2', 'i:3', 'm:2', 'i:3', 'p:B+m:2', 'i:3', 'm:2', 'i:3'], tip:'(pm) i m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_14', kind:'pick', level:2, name:'Muster 14', sig:'4/4', unit:2, bpm:70, steps:['p:B+i:3', 'm:2', 'i:3', 'm:2', 'p:B+i:3', 'm:2', 'i:3', 'm:2'], tip:'(pi) m i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_15', kind:'pick', level:2, name:'Muster 15', sig:'4/4', unit:2, bpm:70, steps:['p:B+i:3+m:2', 'a:1', 'i:3+m:2', 'a:1', 'p:B+i:3+m:2', 'a:1', 'i:3+m:2', 'a:1'], tip:'(pim) a (im) a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_16', kind:'pick', level:2, name:'Muster 16', sig:'4/4', unit:2, bpm:70, steps:['p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'm:2', 'p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'm:2'], tip:'(pia) m (ia) m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_17', kind:'pick', level:2, name:'Muster 17', sig:'4/4', unit:2, bpm:70, steps:['p:B+m:2+a:1', 'i:3', 'm:2+a:1', 'i:3', 'p:B+m:2+a:1', 'i:3', 'm:2+a:1', 'i:3'], tip:'(pma) i (ma) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_18', kind:'pick', level:2, name:'Muster 18', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'i:3', 'm:2', 'i:3', 'p:B', 'a:1', 'm:2', 'a:1'], tip:'p i m i p a m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_19', kind:'pick', level:1, name:'Muster 19', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'a:1', 'i:3', 'm:2', 'p:B', 'm:2', 'a:1', 'i:3'], tip:'p a i m p m a i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_20', kind:'pick', level:1, name:'Muster 20', sig:'4/4', unit:2, bpm:70, steps:['p:B', 'm:2', 'i:3', 'a:1', 'p:B', 'a:1', 'm:2', 'i:3'], tip:'p m i a p a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_31', kind:'pick', level:1, name:'Muster 31', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'i:3', '-', 'm:2', '-'], tip:'p · i · m · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_32', kind:'pick', level:1, name:'Muster 32', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'm:2', '-', 'i:3', '-'], tip:'p · m · i · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_33', kind:'pick', level:1, name:'Muster 33', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'a:1', '-', 'i:3', '-'], tip:'p · a · i · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_34', kind:'pick', level:2, name:'Muster 34', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'i:3', 'm:2', 'a:1', '-'], tip:'p · i m a · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_35', kind:'pick', level:2, name:'Muster 35', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'm:2', 'i:3', 'a:1', 'm:2'], tip:'p · m i a m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_36', kind:'pick', level:2, name:'Muster 36', sig:'3/4', unit:2, bpm:80, steps:['p:B+a:1', '-', 'i:3', 'm:2', 'a:1', 'i:3'], tip:'(pa) · i m a i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_37', kind:'pick', level:2, name:'Muster 37', sig:'3/4', unit:2, bpm:80, steps:['p:B+a:1', 'm:2', 'i:3', 'm:2', 'i:3+a:1', 'm:2'], tip:'(pa) m i m (ia) m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_38', kind:'pick', level:2, name:'Muster 38', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'i:3', '-', 'i:3+m:2+a:1', '-'], tip:'p · i · (ima) · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_39', kind:'pick', level:2, name:'Muster 39', sig:'3/4', unit:2, bpm:80, steps:['p:B', '-', 'i:3+m:2+a:1', '-', 'i:3+m:2+a:1', '-'], tip:'p · (ima) · (ima) · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_40', kind:'pick', level:2, name:'Muster 40', sig:'3/4', unit:2, bpm:80, steps:['p:B', 'i:3', 'm:2+a:1', 'i:3', 'm:2+a:1', 'i:3'], tip:'p i (ma) i (ma) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_41', kind:'pick', level:2, name:'Muster 41', sig:'2/4', unit:2, bpm:70, steps:['p:B+i:3+m:2+a:1', '-', 'p:B+i:3+m:2+a:1', '-'], tip:'(pima) · – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_42', kind:'pick', level:2, name:'Muster 42', sig:'2/4', unit:2, bpm:70, steps:['p:B', 'i:3', 'i:3+m:2+a:1', 'i:3+m:2+a:1'], tip:'p i (ima) (ima) – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_43', kind:'pick', level:2, name:'Muster 43', sig:'2/4', unit:2, bpm:70, steps:['p:B', 'i:3+m:2+a:1', 'i:3', 'i:3+m:2+a:1'], tip:'p (ima) i (ima) – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_44', kind:'pick', level:1, name:'Muster 44', sig:'2/4', unit:2, bpm:70, steps:['p:B+m:2', 'i:3', 'p:B+m:2', 'i:3'], tip:'(pm) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_45', kind:'pick', level:1, name:'Muster 45', sig:'2/4', unit:2, bpm:70, steps:['p:B+a:1', 'i:3', 'p:B+a:1', 'i:3'], tip:'(pa) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_46', kind:'pick', level:1, name:'Muster 46', sig:'2/4', unit:2, bpm:70, steps:['p:B+m:2', 'i:3', 'p:B+i:3', 'm:2'], tip:'(pm) i (pi) m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_47', kind:'pick', level:1, name:'Muster 47', sig:'2/4', unit:2, bpm:70, steps:['p:B+a:1', 'i:3', 'p:B+m:2', 'a:1'], tip:'(pa) i (pm) a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_48', kind:'pick', level:2, name:'Muster 48', sig:'2/4', unit:2, bpm:70, steps:['p:B+i:3+a:1', 'm:2', 'p:B+i:3+a:1', 'm:2'], tip:'(pia) m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_49', kind:'pick', level:2, name:'Muster 49', sig:'2/4', unit:2, bpm:70, steps:['p:B+i:3+m:2', 'a:1', 'p:B+m:2+a:1', 'i:3'], tip:'(pim) a (pma) i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_50', kind:'pick', level:3, name:'Muster 50', sig:'2/4', unit:4, bpm:70, steps:['p:B+a:1', 'i:3', 'm:2', 'a:1', 'p:B+m:2', 'a:1', 'i:3', 'm:2'], count:['1','e','+','e','2','e','+','e'], tip:'(pa) i m a (pm) a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_21', kind:'pick', level:1, name:'Muster 21', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'i:3', 'm:2', 'i:3', 'm:2', 'i:3'], count:['1','2','3','4','5','6'], tip:'p i m i m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_22', kind:'pick', level:1, name:'Muster 22', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'i:3', 'm:2', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6'], tip:'p i m i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_23', kind:'pick', level:1, name:'Muster 23', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'i:3', 'm:2', 'a:1', 'm:2', 'i:3'], count:['1','2','3','4','5','6'], tip:'p i m a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_24', kind:'pick', level:1, name:'Muster 24', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6'], tip:'p i m a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_25', kind:'pick', level:1, name:'Muster 25', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'a:1', 'm:2', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6'], tip:'p a m i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_26', kind:'pick', level:1, name:'Muster 26', sig:'6/8', unit:3, bpm:50, steps:['p:B', 'a:1', 'i:3', 'm:2', 'i:3', 'a:1'], count:['1','2','3','4','5','6'], tip:'p a i m i a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_27', kind:'pick', level:2, name:'Muster 27', sig:'6/8', unit:3, bpm:50, steps:['p:B+a:1', 'i:3', 'm:2', 'p:B+a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6'], tip:'(pa) i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_28', kind:'pick', level:2, name:'Muster 28', sig:'6/8', unit:3, bpm:50, steps:['p:B+m:2', 'i:3', 'a:1', 'p:B+m:2', 'i:3', 'a:1'], count:['1','2','3','4','5','6'], tip:'(pm) i a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_29', kind:'pick', level:3, name:'Muster 29', sig:'6/8', unit:3, bpm:50, steps:['p:B+m:2+a:1', 'i:3', 'm:2+a:1', 'p:B+m:2+a:1', 'i:3', 'm:2+a:1'], count:['1','2','3','4','5','6'], tip:'(pma) i (ma) – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_30', kind:'pick', level:2, name:'Muster 30', sig:'6/8', unit:3, bpm:50, steps:['p:B+i:3+a:1', 'm:2', 'a:1', 'p:B+i:3+a:1', 'm:2', 'a:1'], count:['1','2','3','4','5','6'], tip:'(pia) m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_51', kind:'pick', level:2, name:'Muster 51', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'i:3', 'm:2', 'a:1', 'm:2', 'a:1', 'p:B', 'i:3', 'm:2', 'a:1', 'm:2', 'a:1'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p i m a m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_52', kind:'pick', level:2, name:'Muster 52', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'i:3', 'm:2', 'i:3', 'm:2', 'a:1', 'p:B', 'i:3', 'm:2', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p i m i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_53', kind:'pick', level:2, name:'Muster 53', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3', 'p:B', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p m i a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_54', kind:'pick', level:2, name:'Muster 54', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'a:1', 'm:2', 'i:3', 'm:2', 'a:1', 'p:B', 'a:1', 'm:2', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p a m i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_55', kind:'pick', level:2, name:'Muster 55', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2', 'p:B', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p i m a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_56', kind:'pick', level:2, name:'Muster 56', sig:'12/8', unit:3, bpm:45, steps:['p:B', 'i:3', 'm:2', 'a:1', 'm:2', 'i:3', 'p:B', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'p i m a m i p m i a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_57', kind:'pick', level:3, name:'Muster 57', sig:'12/8', unit:3, bpm:45, steps:['p:B+a:1', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2', 'p:B+a:1', 'i:3', 'm:2', 'a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pa) i m a i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_58', kind:'pick', level:3, name:'Muster 58', sig:'12/8', unit:3, bpm:45, steps:['p:B+a:1', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3', 'p:B+a:1', 'm:2', 'i:3', 'a:1', 'm:2', 'i:3'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pa) m i a m i – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_59', kind:'pick', level:3, name:'Muster 59', sig:'12/8', unit:3, bpm:45, steps:['p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'i:3', 'm:2', 'a:1', 'p:B+i:3+a:1', 'm:2', 'i:3+a:1', 'i:3', 'm:2', 'a:1'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pia) m (ia) i m a – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' },
+    { id:'b_60', kind:'pick', level:3, name:'Muster 60', sig:'12/8', unit:3, bpm:45, steps:['p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2', 'p:B+i:3+m:2+a:1', 'i:3', 'm:2', 'i:3+m:2+a:1', 'i:3', 'm:2'], count:['1','2','3','4','5','6','7','8','9','10','11','12'], tip:'(pima) i m (ima) i m – p = Daumen, i = Zeige-, m = Mittel-, a = Ringfinger. Buchstaben in Klammern zupfst du gleichzeitig, · ist eine Pause.' }
   ];
   const STRUM_CHORD_SUGGESTIONS = ['C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G', 'Em C G D', 'Am Dm E Am', 'A D E A', 'Dmaj7 Hm7 Em7 A7'];
   const STRUM_KEY = 'guitartrainer_strum';
@@ -9104,10 +9208,12 @@
 
   // =================== Startseite mit Kacheln ===================
   const HOME_START_KEY = 'guitartrainer_start';
+  // Konzertgitarre (Foto, Hintergrund entfernt, eingebettet)
+  const HOME_GUITAR_SVG = '<img src="data:image/webp;base64,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" alt="" draggable="false">';
   const HOME_GROUPS = [
-    { title: 'Lernen', items: [[0, '📘', 'Anleitung'], [2, '🎼', 'Musiktheorie'], [1, '🧭', 'Griffbrett-Theorie']] },
-    { title: 'Üben', items: [[3, '🎸', 'Alle Töne des Griffbretts'], [4, '🎯', 'Töne erraten'], [5, '🎶', 'Notenlesen'], [6, '👂', 'Gehörbildung'], [7, '🪜', 'Tonleitern & Pentatoniken'], [8, '🧪', 'Akkord-Labor']] },
-    { title: 'Spielen & Planen', items: [[9, '🥁', 'Beat & Jam'], [12, '🪕', 'Anschlag & Zupfen'], [11, '🎚️', 'Stimmgerät'], [10, '📅', 'Wochenplan']] }
+    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
+    { title: 'Üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Notenlesen', 'Noten im Notensystem auf dem Griffbrett finden'], [6, '👂', 'Gehörbildung', 'Töne und Intervalle hören – ohne Zeitdruck'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen'], [8, '🧪', 'Akkord-Labor', 'Akkorde greifen, anhören und nachschlagen']] },
+    { title: 'Spielen & Planen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen'], [10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Statistik']] }
   ];
   function homeStartSetting() { try { return localStorage.getItem(HOME_START_KEY) === 'last' ? 'last' : 'home'; } catch (e) { return 'home'; } }
   function homeModuleNo(v) { const o = [...moduleSelectEl.options].find(x => x.value === String(v)); return o ? parseInt(o.text, 10) : ''; }
@@ -9116,45 +9222,31 @@
   function renderHome() {
     const box = document.getElementById('homeScreen');
     if (!box) return;
-    const d = plannerState.plannerData || {};
-    const wk = getWeekKey(getMonday(new Date()));
-    const dayIdx = (new Date().getDay() + 6) % 7;
-    const rows = Array.isArray(d[wk]) ? d[wk] : [];
     const last = state.currentModule;
     const li = homeModuleInfo(last);
     const hr = new Date().getHours();
     const greet = hr < 11 ? 'Guten Morgen' : hr < 18 ? 'Hallo' : 'Guten Abend';
-    let h = `<div class="home-today"><h2>${greet}! 🎸 Heute</h2>`;
-    const named = rows.map((r, i) => ({ r, i })).filter(x => String(x.r.name || '').trim());
-    if (named.length) {
-      named.forEach(({ r, i }) => {
-        const done = Array.isArray(r.checks) && r.checks[dayIdx];
-        h += `<div class="home-today-row ${done ? 'done' : ''}"><span>${done ? '✅' : '▫️'}</span><span class="name">${homeEsc(r.name)}</span>
-          <button type="button" class="btn btn-secondary" data-home-practice="${i}">▶ Üben</button></div>`;
-      });
-      const n = named.filter(x => x.r.checks && x.r.checks[dayIdx]).length;
-      if (n) h += `<div class="jam-hint">Heute schon ${n}× geübt – schön! 🙂</div>`;
-    } else {
-      h += `<div class="jam-hint" style="font-size:0.9rem;">Noch nichts geplant – such dir einfach etwas aus 🙂</div>`;
-    }
-    if (li && last !== 0) h += `<div class="row" style="margin-top:10px;"><button type="button" class="btn" data-home-open="${last}">↪ Weiter mit: ${li[1]} ${homeEsc(li[2])}</button></div>`;
-    h += `</div>`;
+    const ic = x => x === 'GTR' ? HOME_GUITAR_SVG : x;
+    let h = `<div class="home-hero">${HOME_GUITAR_SVG.replace('<img ', '<img class="gtr" aria-hidden="true" ')}
+      <div class="hi">${greet}! 👋</div><h2>Gitarren-Trainer</h2>
+      ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
+    { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     HOME_GROUPS.forEach(g => {
-      h += `<div class="home-group-title">${g.title}</div><div class="home-tiles">`;
-      g.items.forEach(([v, ic, nm]) => {
-        h += `<button type="button" class="home-tile ${v === last && last !== 0 ? 'last' : ''}" data-home-open="${v}"><span class="ic">${ic}</span><span class="no">Modul ${homeModuleNo(v)}</span><span class="nm">${homeEsc(nm)}</span></button>`;
+      h += `<div class="home-group home-c-${g.color}"><span class="dot"></span><h3>${homeEsc(g.title)}</h3><span class="line"></span></div><div class="home-tiles">`;
+      g.items.forEach(([v, icon, nm, desc]) => {
+        h += `<button type="button" class="home-tile home-c-${g.color} ${v === last && last !== 0 ? 'last' : ''}" data-home-open="${v}"><span class="no">${homeModuleNo(v)}</span><span class="ic">${ic(icon)}</span><span class="nm">${homeEsc(nm)}</span><span class="desc">${homeEsc(desc)}</span></button>`;
       });
       h += `</div>`;
     });
     const st = homeStartSetting();
     h += `<div class="home-settings"><label for="homeStartSelect">Beim Öffnen der App:</label>
-      <select id="homeStartSelect" class="module-select" style="max-width:260px;">
+      <select id="homeStartSelect">
         <option value="home" ${st === 'home' ? 'selected' : ''}>Startseite zeigen</option>
         <option value="last" ${st === 'last' ? 'selected' : ''}>Zuletzt benutztes Modul</option>
       </select></div>`;
     box.innerHTML = h;
+    const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
-    box.querySelectorAll('[data-home-practice]').forEach(b => b.addEventListener('click', () => { hideHome(); startPracticeFromPlan(wk, parseInt(b.dataset.homePractice, 10)); }));
     const ss = document.getElementById('homeStartSelect');
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
   }
@@ -9346,8 +9438,17 @@
       practiceBtn.title = 'Im Beat-Modul üben (ohne Zeitdruck)';
       practiceBtn.addEventListener('click', () => startPracticeFromPlan(weekKey, rowIdx));
       tdName.style.whiteSpace = 'nowrap';
-      inputName.style.width = 'calc(100% - 90px)';
+      inputName.style.width = 'calc(100% - 140px)';
       tdName.appendChild(practiceBtn);
+      const timerBtn = document.createElement('button');
+      timerBtn.type = 'button';
+      timerBtn.className = 'btn btn-secondary planner-timer-btn';
+      timerBtn.style.padding = '6px 10px';
+      timerBtn.textContent = '⏱';
+      timerBtn.title = 'Diese Übung mit Timer üben';
+      timerBtn.style.marginLeft = '4px';
+      timerBtn.addEventListener('click', () => ptOpenForPlan(row.name));
+      tdName.appendChild(timerBtn);
       tr.appendChild(tdName);
 
       days.forEach((day, dayIdx) => {
@@ -10225,6 +10326,274 @@
     });
   }
 
+  // =================== Übungs-Timer (freiwillig, ohne Druck) ===================
+  const PT_KEY = 'guitartrainer_practice';
+  const PT_DEFAULT_SECTIONS = [{ name: 'Aufwärmen', min: 5, mod: -1 }, { name: 'Akkordwechsel', min: 10, mod: 8 }, { name: 'Zupfen', min: 5, mod: 12 }];
+  function ptLoad() {
+    let d = null; try { d = JSON.parse(localStorage.getItem(PT_KEY) || 'null'); } catch (e) {}
+    if (!d || typeof d !== 'object') d = {};
+    if (!d.days || typeof d.days !== 'object') d.days = {};
+    d.set = Object.assign({ chime: true, brk: true, brkMin: 25, downMin: 10, mode: 'down' }, d.set || {});
+    if (!Array.isArray(d.sections) || !d.sections.length) d.sections = PT_DEFAULT_SECTIONS.map(s => ({ ...s }));
+    return d;
+  }
+  let ptData = ptLoad();
+  function ptSave() { try { localStorage.setItem(PT_KEY, JSON.stringify(ptData)); } catch (e) {} }
+  const pt = { running: false, paused: false, mode: ptData.set.mode, accum: 0, startedAt: 0, target: 0, secIdx: 0, lastTick: 0, sinceBreak: 0, plan: null, iv: null, saveCnt: 0 };
+  function ptDayKey(d) { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function ptStats() {
+    const now = new Date(), mon = new Date(now); mon.setHours(12, 0, 0, 0); mon.setDate(mon.getDate() - ((now.getDay() + 6) % 7));
+    const days = []; let week = 0;
+    for (let i = 0; i < 7; i++) { const d = new Date(mon); d.setDate(mon.getDate() + i); const k = ptDayKey(d); const v = ptData.days[k] || 0; days.push({ k, v, today: k === ptDayKey(now) }); week += v; }
+    return { today: ptData.days[ptDayKey(now)] || 0, week, days };
+  }
+  function ptFmtMin(sec) { const m = Math.floor(sec / 60); return m < 60 ? m + ' Min.' : Math.floor(m / 60) + ' Std. ' + (m % 60) + ' Min.'; }
+  function ptFmt(ms) { const s = Math.max(0, Math.round(ms / 1000)); const m = Math.floor(s / 60); return (m >= 60 ? Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') : m) + ':' + String(s % 60).padStart(2, '0'); }
+  function ptElapsed() { return pt.accum + (pt.running && !pt.paused ? Date.now() - pt.startedAt : 0); }
+  function ptCurTarget() {
+    if (pt.mode === 'down') return pt.target;
+    if (pt.mode === 'sec') { const s = ptData.sections[pt.secIdx]; return s ? Math.max(1, +s.min || 1) * 60000 : 0; }
+    return 0;
+  }
+  function ptHeaderText() { const t = ptCurTarget(); return t ? ptFmt(t - ptElapsed()) : ptFmt(ptElapsed()); }
+  function ptModName(v) { for (const g of HOME_GROUPS) for (const it of g.items) if (it[0] === v) return it[1] === 'GTR' ? '🎸 ' + it[2] : it[1] + ' ' + it[2]; return ''; }
+
+  function ptChime(kind) {
+    if (!ptData.set.chime) return;
+    try {
+      initAudio(); if (!audioCtx) return;
+      const t0 = audioCtx.currentTime + 0.05;
+      const notes = kind === 'end' ? [659.25, 783.99, 1046.5] : [783.99, 1046.5];
+      notes.forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = t0 + i * 0.18;
+        o.type = 'sine'; o.frequency.setValueAtTime(f, t);
+        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
+        o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 1.2);
+      });
+    } catch (e) {}
+  }
+  function ptBanner(html, buttons) {
+    let b = document.getElementById('ptBanner');
+    if (!b) return;
+    b.innerHTML = `<div style="display:flex; gap:8px; align-items:flex-start;"><div style="flex:1;">${html}</div><button type="button" class="btn btn-secondary" data-ptb="close" style="padding:4px 10px;">✕</button></div>` +
+      (buttons && buttons.length ? `<div class="row2">${buttons.map((x, i) => `<button type="button" class="btn ${i ? 'btn-secondary' : ''}" data-ptb="${i}">${x[0]}</button>`).join('')}</div>` : '');
+    b.classList.add('open');
+    b.querySelectorAll('[data-ptb]').forEach(el => el.addEventListener('click', () => {
+      b.classList.remove('open');
+      if (el.dataset.ptb !== 'close') { const f = buttons[+el.dataset.ptb][1]; if (f) f(); }
+    }));
+  }
+  function ptLogTick() {
+    const now = Date.now();
+    if (pt.running && !pt.paused && pt.lastTick) {
+      const dt = Math.min(60000, Math.max(0, now - pt.lastTick));
+      const k = ptDayKey();
+      ptData.days[k] = (ptData.days[k] || 0) + dt / 1000;
+      pt.sinceBreak += dt;
+      if (++pt.saveCnt >= 10) { pt.saveCnt = 0; ptSave(); }
+    }
+    pt.lastTick = now;
+  }
+  function ptTick() {
+    ptLogTick();
+    if (pt.running && !pt.paused) {
+      const t = ptCurTarget();
+      if (t && ptElapsed() >= t) {
+        if (pt.mode === 'sec' && pt.secIdx < ptData.sections.length - 1) {
+          const done = ptData.sections[pt.secIdx]; pt.secIdx++;
+          const nx = ptData.sections[pt.secIdx];
+          pt.accum = 0; pt.startedAt = Date.now();
+          ptChime('step');
+          const btns = [];
+          if (nx.mod >= 0) btns.push([`📂 ${ptModName(nx.mod)} öffnen`, () => ptGoModule(nx.mod)]);
+          btns.push(['👍 Alles klar']);
+          ptBanner(`<strong>✔ ${homeEsc(done.name || 'Abschnitt')} geschafft!</strong><br>Weiter zum nächsten Teil: <strong>${homeEsc(nx.name || 'Abschnitt')}</strong> (${nx.min} Min.)`, btns);
+        } else {
+          ptFinish();
+        }
+      } else if (ptData.set.brk && pt.sinceBreak >= Math.max(5, +ptData.set.brkMin || 25) * 60000) {
+        pt.sinceBreak = 0;
+        ptChime('step');
+        ptBanner('<strong>Kurz die Hände ausschütteln? 🙌</strong><br>Du übst schon eine Weile. Eine kleine Pause tut Fingern und Kopf gut – ganz wie du magst.', [['⏸ Pause machen', () => ptPause()], ['Weiterspielen']]);
+      }
+    }
+    ptUpdateLive();
+  }
+  function ptFinish() {
+    ptLogTick();
+    const plan = pt.plan;
+    pt.running = false; pt.paused = false; pt.accum = 0;
+    clearInterval(pt.iv); pt.iv = null; ptSave();
+    ptChime('end');
+    const btns = [];
+    if (plan) btns.push(['✔ Im Wochenplan abhaken', () => ptMarkPlan(plan)]);
+    btns.push(['⏱ Weiter üben (Stoppuhr)', () => { pt.mode = 'up'; ptStart(); }]);
+    btns.push(['Fertig']);
+    ptBanner(`<strong>Schön geübt! 🎸</strong><br>Heute zusammen: ${ptFmtMin(ptStats().today)}.${plan ? `<br>„${homeEsc(plan)}“ als erledigt markieren?` : ''} Du kannst natürlich einfach weiterspielen.`, btns);
+    if (!plan) pt.plan = null;
+    ptRender();
+  }
+  function ptMarkPlan(name) {
+    try {
+      const d = plannerState.plannerData, wk = getWeekKey(getMonday(new Date())), di = (new Date().getDay() + 6) % 7;
+      if (!d[wk]) d[wk] = [];
+      let row = d[wk].find(r => plannerNormName(r.name) === plannerNormName(name));
+      if (!row) { row = { name, checks: [false, false, false, false, false, false, false] }; d[wk].push(row); }
+      if (!Array.isArray(row.checks)) row.checks = [false, false, false, false, false, false, false];
+      row.checks[di] = true;
+      savePlannerToLocalStorage();
+      try { renderPlanner(); } catch (e) {}
+      showToast('Eingetragen ✔ Schön, dass du geübt hast!');
+    } catch (e) {}
+    pt.plan = null;
+  }
+  function ptGoModule(v) {
+    try { hideHome(); switchToModule(v); window.scrollTo(0, 0); } catch (e) {}
+    ptClose();
+  }
+  function ptStart() {
+    ptData.set.mode = pt.mode;
+    if (pt.mode === 'down') pt.target = Math.max(1, +ptData.set.downMin || 10) * 60000;
+    pt.secIdx = 0; pt.accum = 0; pt.startedAt = Date.now(); pt.lastTick = Date.now(); pt.sinceBreak = 0;
+    pt.running = true; pt.paused = false;
+    clearInterval(pt.iv); pt.iv = setInterval(ptTick, 1000);
+    ptSave();
+    if (pt.mode === 'sec') { const s = ptData.sections[0]; if (s && s.mod >= 0) { ptGoModule(s.mod); showToast(`⏱ ${s.name || 'Abschnitt'} – ${s.min} Min. Viel Spaß!`); } }
+    ptRender(); ptUpdateLive();
+  }
+  function ptPause() { if (!pt.running || pt.paused) return; ptLogTick(); pt.accum = ptElapsed(); pt.paused = true; ptSave(); ptRender(); ptUpdateLive(); }
+  function ptResume() { if (!pt.running || !pt.paused) return; pt.startedAt = Date.now(); pt.lastTick = Date.now(); pt.paused = false; ptRender(); ptUpdateLive(); }
+  function ptStop() {
+    ptLogTick();
+    pt.running = false; pt.paused = false; pt.accum = 0; pt.plan = null;
+    clearInterval(pt.iv); pt.iv = null; ptSave();
+    showToast(`Timer beendet. Heute geübt: ${ptFmtMin(ptStats().today)} 🎸`);
+    ptRender(); ptUpdateLive();
+  }
+  function ptUpdateLive() {
+    const b = document.getElementById('ptBtn');
+    if (b) { b.textContent = pt.running ? (pt.paused ? '⏸ ' : '⏱ ') + ptHeaderText() : '⏱'; b.classList.toggle('pt-on', pt.running); }
+    const big = document.getElementById('ptBig'); if (big) big.textContent = pt.running ? ptHeaderText() : (pt.mode === 'down' ? ptFmt(Math.max(1, +ptData.set.downMin || 10) * 60000) : pt.mode === 'sec' ? ptFmt(Math.max(1, +(ptData.sections[0] || {}).min || 1) * 60000) : '0:00');
+    const td = document.getElementById('ptToday'); if (td) { const s = ptStats(); td.textContent = `Heute: ${ptFmtMin(s.today)} · Diese Woche: ${ptFmtMin(s.week)}`; }
+  }
+  function ptOpen() { const o = document.getElementById('ptOverlay'); if (!o) return; ptRender(); o.classList.add('open'); }
+  function ptClose() { const o = document.getElementById('ptOverlay'); if (o) o.classList.remove('open'); }
+  function ptOpenForPlan(name) {
+    if (!pt.running) { pt.plan = String(name || '').trim() || 'Übung'; pt.mode = 'down'; }
+    else showToast('Der Timer läuft schon – beende ihn zuerst, um eine neue Übung zu starten.');
+    ptOpen();
+  }
+  function ptRender() {
+    const p = document.getElementById('ptPanel'); if (!p) return;
+    const r = pt.running, s = ptStats(), max = Math.max(60, ...s.days.map(d => d.v));
+    const modOpts = sel => `<option value="-1" ${sel < 0 ? 'selected' : ''}>– kein Modul –</option>` + HOME_GROUPS.map(g => g.items.map(it => `<option value="${it[0]}" ${it[0] === sel ? 'selected' : ''}>${homeEsc(ptModName(it[0]))}</option>`).join('')).join('');
+    let h = `<div class="pt-head"><h3>⏱ Übungs-Timer</h3><button type="button" class="btn btn-secondary" id="ptCloseBtn" style="padding:6px 12px;">✕</button></div>`;
+    if (pt.plan) h += `<div class="pt-sub" style="margin-top:6px;">Übung aus dem Wochenplan: <strong>${homeEsc(pt.plan)}</strong></div>`;
+    h += `<div class="pt-tabs">${[['down', '⏳ Countdown'], ['up', '⏱ Stoppuhr'], ['sec', '🧩 Abschnitte']].map(([m, l]) => `<button type="button" class="btn ${pt.mode === m ? '' : 'btn-secondary'}" data-ptmode="${m}" ${r ? 'disabled' : ''}>${l}</button>`).join('')}</div>`;
+    h += `<div class="pt-big" id="ptBig"></div>`;
+    let sub = '';
+    if (r && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; sub = `Teil ${pt.secIdx + 1} von ${ptData.sections.length}: ${homeEsc(c ? c.name : '')}`; }
+    else if (r && pt.mode === 'down') sub = 'noch übrig';
+    else if (r) sub = 'so lange übst du schon';
+    else sub = pt.mode === 'up' ? 'Zählt einfach mit – ohne Ziel.' : pt.mode === 'down' ? 'Am Ende kommt ein sanfter Ton.' : 'Mehrere Teile nacheinander.';
+    if (r && pt.paused) sub = '⏸ Pause – ' + sub;
+    h += `<div class="pt-sub">${sub}</div>`;
+    if (!r && pt.mode === 'down') {
+      h += `<div class="pt-presets">${[5, 10, 15, 20, 30].map(m => `<button type="button" class="btn ${+ptData.set.downMin === m ? '' : 'btn-secondary'}" data-ptmin="${m}">${m} Min.</button>`).join('')}</div>
+        <div style="text-align:center;"><label>Eigene Zeit: <input type="number" id="ptMinInput" min="1" max="180" value="${ptData.set.downMin}" style="width:70px; padding:8px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-color); font-size:1rem;"> Min.</label></div>`;
+    }
+    if (pt.mode === 'sec') {
+      h += `<div class="pt-box"><strong>Abschnitte</strong>${ptData.sections.map((x, i) => `<div class="pt-sec-row ${r && i === pt.secIdx ? 'cur' : ''}">
+          <span>${i + 1}.</span><input type="text" data-psec="${i}" data-pf="name" value="${homeEsc(x.name)}" placeholder="Name" ${r ? 'disabled' : ''}>
+          <input type="number" min="1" max="120" data-psec="${i}" data-pf="min" value="${x.min}" ${r ? 'disabled' : ''}><span>Min.</span>
+          <select data-psec="${i}" data-pf="mod" ${r ? 'disabled' : ''} title="Dieses Modul beim Start des Abschnitts öffnen">${modOpts(+x.mod)}</select>
+          ${r ? '' : `<button type="button" class="btn btn-secondary" data-psecdel="${i}" style="padding:6px 10px;" title="Abschnitt entfernen">✕</button>`}
+        </div>`).join('')}
+        ${r ? '' : `<button type="button" class="btn btn-secondary" id="ptSecAdd" style="margin-top:6px;">+ Abschnitt</button> <span style="opacity:.75; font-size:.9rem;">Zusammen: ${ptData.sections.reduce((a, x) => a + (+x.min || 0), 0)} Min.</span>`}
+        ${r && pt.secIdx < ptData.sections.length - 1 ? `<div style="margin-top:6px;"><button type="button" class="btn btn-secondary" id="ptSecSkip">⏭ Gleich zum nächsten Teil</button></div>` : ''}</div>`;
+    }
+    h += `<div class="pt-ctrl">` + (!r ? `<button type="button" class="btn" id="ptStartBtn">▶ Start</button>` :
+      (pt.paused ? `<button type="button" class="btn" id="ptResumeBtn">▶ Weiter</button>` : `<button type="button" class="btn" id="ptPauseBtn">⏸ Pause</button>`) + `<button type="button" class="btn btn-secondary" id="ptStopBtn">⏹ Beenden</button>`) + `</div>`;
+    if (r && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; if (c && c.mod >= 0) h += `<div style="text-align:center;"><button type="button" class="btn btn-secondary" id="ptOpenMod">📂 ${homeEsc(ptModName(+c.mod))} öffnen</button></div>`; }
+    h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div>
+      <div class="pt-week">${s.days.map((d, i) => `<div class="${d.today ? 'today' : ''}"><i style="height:${Math.round(48 * d.v / max)}px"></i>${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][i]}<br>${Math.floor(d.v / 60)}</div>`).join('')}</div>
+      <div style="font-size:.8rem; opacity:.7; margin-top:4px;">Minuten pro Tag, diese Woche. Nur zur Freude – kein Muss.</div></div>`;
+    h += `<div class="pt-box"><strong>Einstellungen</strong>
+      <div style="margin-top:6px;"><label><input type="checkbox" id="ptChime" ${ptData.set.chime ? 'checked' : ''}> Sanfter Ton am Ende</label></div>
+      <div style="margin-top:6px;"><label><input type="checkbox" id="ptBrk" ${ptData.set.brk ? 'checked' : ''}> Pausen-Erinnerung nach</label>
+        <input type="number" id="ptBrkMin" min="5" max="120" value="${ptData.set.brkMin}" style="width:60px;"> Min.</div></div>`;
+    p.innerHTML = h;
+    const on = (id, f, ev = 'click') => { const el = document.getElementById(id); if (el) el.addEventListener(ev, f); };
+    on('ptCloseBtn', ptClose);
+    p.querySelectorAll('[data-ptmode]').forEach(b => b.addEventListener('click', () => { pt.mode = b.dataset.ptmode; ptData.set.mode = pt.mode; ptSave(); ptRender(); }));
+    p.querySelectorAll('[data-ptmin]').forEach(b => b.addEventListener('click', () => { ptData.set.downMin = +b.dataset.ptmin; ptSave(); ptRender(); }));
+    on('ptMinInput', e => { const v = Math.round(+e.target.value); if (v >= 1 && v <= 180) { ptData.set.downMin = v; ptSave(); ptRender(); } }, 'change');
+    p.querySelectorAll('[data-psec]').forEach(el => el.addEventListener('change', () => {
+      const x = ptData.sections[+el.dataset.psec]; if (!x) return;
+      if (el.dataset.pf === 'name') x.name = el.value.slice(0, 40);
+      else if (el.dataset.pf === 'min') x.min = Math.min(120, Math.max(1, Math.round(+el.value) || 1));
+      else x.mod = parseInt(el.value, 10);
+      ptSave(); ptRender();
+    }));
+    p.querySelectorAll('[data-psecdel]').forEach(b => b.addEventListener('click', () => { if (ptData.sections.length > 1) { ptData.sections.splice(+b.dataset.psecdel, 1); ptSave(); ptRender(); } else showToast('Mindestens ein Abschnitt bleibt.'); }));
+    on('ptSecAdd', () => { if (ptData.sections.length < 10) { ptData.sections.push({ name: 'Abschnitt ' + (ptData.sections.length + 1), min: 5, mod: -1 }); ptSave(); ptRender(); } });
+    on('ptSecSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); });
+    on('ptOpenMod', () => { const c = ptData.sections[pt.secIdx]; if (c) ptGoModule(+c.mod); });
+    on('ptStartBtn', ptStart); on('ptPauseBtn', ptPause); on('ptResumeBtn', ptResume); on('ptStopBtn', ptStop);
+    on('ptChime', e => { ptData.set.chime = e.target.checked; ptSave(); }, 'change');
+    on('ptBrk', e => { ptData.set.brk = e.target.checked; ptSave(); }, 'change');
+    on('ptBrkMin', e => { const v = Math.round(+e.target.value); if (v >= 5 && v <= 120) { ptData.set.brkMin = v; ptSave(); } }, 'change');
+    ptUpdateLive();
+  }
+  function ptInit() {
+    if (document.getElementById('ptOverlay')) return;
+    const o = document.createElement('div'); o.id = 'ptOverlay'; o.className = 'pt-overlay';
+    o.innerHTML = '<div class="pt-panel" id="ptPanel"></div>';
+    o.addEventListener('click', e => { if (e.target === o) ptClose(); });
+    document.body.appendChild(o);
+    const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
+    const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
+    // Beim Schließen/Wechseln der App die Zeit sichern
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { ptLogTick(); ptSave(); } else if (pt.running && !pt.paused) { pt.lastTick = Date.now(); ptTick(); } });
+    window.addEventListener('pagehide', () => { ptLogTick(); ptSave(); });
+    ptUpdateLive();
+  }
+
+  // =================== Update-Hinweis: neue Version auf GitHub? ===================
+  const APP_VERSION = '2026-10-03-2';
+  let appUpdLastCheck = 0, appUpdDismissed = '';
+  function appCheckUpdate(force) {
+    if (!location.protocol.startsWith('http') || !window.fetch) return;
+    if (!force && Date.now() - appUpdLastCheck < 5 * 60000) return;
+    appUpdLastCheck = Date.now();
+    fetch('index.html?check=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.text() : '').then(txt => {
+      const m = txt && txt.match(new RegExp("APP_VER" + "SION = '([0-9A-Za-z.\\-]+)'"));
+      if (m && m[1] !== APP_VERSION && m[1] !== appUpdDismissed) appShowUpdate(m[1]);
+    }).catch(() => {});
+  }
+  function appShowUpdate(v) {
+    let bar = document.getElementById('appUpdBar');
+    if (!bar) { bar = document.createElement('div'); bar.id = 'appUpdBar'; bar.className = 'app-upd'; document.body.appendChild(bar); }
+    bar.innerHTML = `<span>✨ Neue Version der App verfügbar</span><button type="button" class="go" id="appUpdGo">Jetzt aktualisieren</button><button type="button" class="later" id="appUpdLater">Später</button>`;
+    bar.classList.add('open');
+    document.getElementById('appUpdGo').addEventListener('click', appDoUpdate);
+    document.getElementById('appUpdLater').addEventListener('click', () => { appUpdDismissed = v; bar.classList.remove('open'); });
+  }
+  async function appDoUpdate() {
+    const go = document.getElementById('appUpdGo'); if (go) { go.textContent = 'Wird geladen …'; go.disabled = true; }
+    try { ptLogTick(); ptSave(); } catch (e) {}
+    try { if (navigator.serviceWorker) { const regs = await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r => r.unregister())); } } catch (e) {}
+    try { if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch (e) {}
+    // Adresse mit Zeitstempel umgeht auch den Browser-Zwischenspeicher; danach wird sie wieder aufgeräumt
+    location.replace(location.pathname + '?v=' + Date.now() + location.hash);
+  }
+  function appUpdInit() {
+    try { if (/[?&]v=\d+/.test(location.search)) { history.replaceState(null, '', location.pathname + location.hash); setTimeout(() => showToast('App aktualisiert ✨ Viel Spaß mit der neuen Version!'), 800); } } catch (e) {}
+    setTimeout(() => appCheckUpdate(true), 3000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) appCheckUpdate(false); });
+  }
+  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
+
   window.addEventListener('load', init);
 
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
@@ -10243,5 +10612,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a434c5442882bd78',t:'MTc5MDc4NzQ4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44bd81299d1360a',t:'MTc5MTAyOTQzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
