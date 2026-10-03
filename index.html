@@ -1735,7 +1735,7 @@
         <li><strong>Start:</strong> „🎤 Mikrofon starten“ tippen und beim ersten Mal den Mikrofon-Zugriff erlauben. Es wird nichts aufgenommen oder gespeichert; beim Verlassen des Moduls geht das Mikrofon automatisch aus.</li>
         <li><strong>Auto oder Saite wählen:</strong> „Auto“ erkennt, welche Saite du zupfst. Tippst du auf eine Saite, stimmst du gezielt diese und hörst ihren Referenzton.</li>
         <li><strong>Nadel:</strong> links = zu tief (Saite spannen), rechts = zu hoch (lockern). Im grünen Bereich (±5 Cent) ist die Saite gestimmt – der Saiten-Knopf wird dann grün.</li>
-        <li><strong>Stimmung &amp; Kammerton:</strong> Standard, Drop D, DADGAD oder Open G; der Kammerton a ist normalerweise 440 Hz.</li>
+        <li><strong>Stimmung &amp; Kammerton:</strong> Standard, Drop D, DADGAD oder Open G; der Kammerton a ist normalerweise 440 Hz. Er gilt für die ganze App: Alle Töne, die die App spielt, richten sich danach. Du kannst ihn auch auf der Startseite oder im ⚙️-Menü ändern.</li>
         <li><strong>Tipp:</strong> Einzelne Saite kräftig anzupfen und ausklingen lassen, andere Saiten abdämpfen. In leiser Umgebung klappt es am besten.</li>
       </ul>
     </div>
@@ -3579,7 +3579,7 @@
     try {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      const freq = 440 * Math.pow(2, (pitch - 69) / 12);
+      const freq = appA4() * Math.pow(2, (pitch - 69) / 12);
       
       const startTime = audioCtx.currentTime + timeOffset;
 
@@ -6335,7 +6335,7 @@
     basePitch += intervalOffset;
 
     const filterFreq = 250 + tone * 3500;
-    const freq = 440 * Math.pow(2, (basePitch - 69) / 12);
+    const freq = appA4() * Math.pow(2, (basePitch - 69) / 12);
 
     if (jamIsNewSound()) {
       // Neu: Sinus-Fundament + zwei leicht verstimmte Sägezähne, Filter öffnet beim Anschlag, weiche Sättigung
@@ -6371,7 +6371,7 @@
     filter.type = 'lowpass';
     filter.frequency.value = filterFreq;
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(440 * Math.pow(2, (basePitch - 69) / 12), time);
+    osc.frequency.setValueAtTime(appA4() * Math.pow(2, (basePitch - 69) / 12), time);
     gain.gain.setValueAtTime(0.5 * vol, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
     osc.connect(filter).connect(gain).connect(jamOut(ctx, 0));
@@ -6435,7 +6435,7 @@
 
     const osc = ctx.createOscillator();
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(440 * Math.pow(2, (pitch - 69) / 12), time);
+    osc.frequency.setValueAtTime(appA4() * Math.pow(2, (pitch - 69) / 12), time);
 
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
@@ -6528,7 +6528,7 @@
       intervals.forEach(interval => {
         const osc = ctx.createOscillator();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(440 * Math.pow(2, (basePitch + interval - 69) / 12), time);
+        osc.frequency.setValueAtTime(appA4() * Math.pow(2, (basePitch + interval - 69) / 12), time);
         osc.connect(gainNode);
         osc.start(time);
         oscillators.push(osc);
@@ -6553,7 +6553,7 @@
         intervals.forEach(interval => {
           const osc = ctx.createOscillator();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(440 * Math.pow(2, (basePitch + interval - 69) / 12), time);
+          osc.frequency.setValueAtTime(appA4() * Math.pow(2, (basePitch + interval - 69) / 12), time);
           osc.detune.value = lane.det + (Math.random() - 0.5) * 4;
           osc.connect(laneGain);
           osc.start(time);
@@ -8168,9 +8168,7 @@
     document.getElementById('tunerStartBtn').addEventListener('click', () => { tuner.running ? stopTuner(true) : startTuner(); });
     document.getElementById('tunerTuningSelect').addEventListener('change', (e) => { tuner.tuningKey = e.target.value; tuner.target = 'auto'; tuner.tunedStrings = {}; renderTuner(); });
     document.getElementById('tunerA4Select').addEventListener('change', (e) => {
-      tuner.a4 = parseFloat(e.target.value) || 440;
-      try { localStorage.setItem('guitartrainer_tuner_a4', String(tuner.a4)); } catch (err) {}
-      tuner.tunedStrings = {};
+      appSetA4(parseFloat(e.target.value) || 440);
     });
     document.querySelectorAll('#tunerStrings .tuner-str').forEach(b => b.addEventListener('click', () => {
       tuner.target = b.dataset.t === 'auto' ? 'auto' : parseInt(b.dataset.t, 10);
@@ -8883,9 +8881,9 @@
   }
   const strumPluckCache = new Map();
   function strumPluckBuffer(ctx, midi) {
-    const key = ctx.sampleRate + ':' + midi;
+    const key = ctx.sampleRate + ':' + midi + ':' + appA4();
     if (strumPluckCache.has(key)) return strumPluckCache.get(key);
-    const sr = ctx.sampleRate, f = 440 * Math.pow(2, (midi - 69) / 12);
+    const sr = ctx.sampleRate, f = appA4() * Math.pow(2, (midi - 69) / 12);
     const len = Math.floor(sr * 2.2), buf = ctx.createBuffer(1, len, sr), y = buf.getChannelData(0);
     const D = sr / f - 0.5, N = Math.floor(D), fr = D - N;
     const g = Math.pow(0.004, 1 / (f * (midi < 52 ? 2.4 : 1.9)));   // Abklingen pro Periode
@@ -8918,7 +8916,7 @@
         return;
       } catch (e) {}
     }
-    const f = 440 * Math.pow(2, (midi - 69) / 12);
+    const f = appA4() * Math.pow(2, (midi - 69) / 12);
     const env = ctx.createGain(), damp = ctx.createGain(), lp = ctx.createBiquadFilter();
     lp.type = 'lowpass';
     lp.frequency.setValueAtTime(Math.min(9000, 900 + f * 7 * vel), t);
@@ -9484,9 +9482,12 @@
         <option value="home" ${st === 'home' ? 'selected' : ''}>Startseite zeigen</option>
         <option value="last" ${st === 'last' ? 'selected' : ''}>Zuletzt benutztes Modul</option>
       </select></div>`;
+    h += `<div class="home-settings"><label for="homeA4Select">Kammerton (für alle Töne und das Stimmgerät):</label>
+      <select id="homeA4Select">${APP_A4_LIST.map(v => `<option value="${v}" ${v === appA4() ? 'selected' : ''}>${v} Hz${v === 440 ? ' (normal)' : ''}</option>`).join('')}</select></div>`;
     h += `<div class="home-ver"><span>${appVersionText()}</span><button type="button" id="homeUpdBtn">🔄 Nach Updates suchen</button></div>`;
     box.innerHTML = h;
     { const ub = document.getElementById('homeUpdBtn'); if (ub) ub.addEventListener('click', appManualCheck); }
+    { const a = document.getElementById('homeA4Select'); if (a) a.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); }); }
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
     const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
@@ -10802,15 +10803,39 @@
     ptUpdateLive();
   }
 
+  // =================== Kammerton (gemeinsam mit dem Stimmgerät) ===================
+  const APP_A4_LIST = [430, 432, 435, 438, 439, 440, 441, 442, 443, 444, 445];
+  function appA4() { try { return tuner.a4 || 440; } catch (e) { return 440; } }
+  function appSetA4(v) {
+    if (!(v >= 425 && v <= 455)) return;
+    tuner.a4 = v; tuner.tunedStrings = {};
+    try { localStorage.setItem('guitartrainer_tuner_a4', String(v)); } catch (e) {}
+    try { strumPluckCache.clear(); } catch (e) {}
+    appA4Badge();
+    ['homeA4Select', 'setA4Select', 'tunerA4Select'].forEach(id => { const el = document.getElementById(id); if (el) el.value = String(v); });
+  }
+  function appA4Badge() {
+    const b = document.getElementById('settingsBtn'); if (!b) return;
+    b.textContent = appA4() === 440 ? '⚙️' : '⚙️ ' + appA4();
+    b.title = appA4() === 440 ? 'Einstellungen' : 'Einstellungen – Kammerton ' + appA4() + ' Hz';
+  }
+
   // =================== ⚙️-Menü (in den Modulen) ===================
   function setMenuInit() {
     const btn = document.getElementById('settingsBtn'); if (!btn || document.getElementById('setMenu')) return;
     const m = document.createElement('div'); m.id = 'setMenu'; m.className = 'set-menu';
-    m.innerHTML = `<button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>`;
+    m.innerHTML = `<button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>
+      <div style="padding:8px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;"><label for="setA4Select">🎵 Kammerton</label>
+      <select id="setA4Select" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px;">${APP_A4_LIST.map(v => `<option value="${v}">${v} Hz</option>`).join('')}</select></div>`;
+    const sa = m.querySelector('#setA4Select'); sa.value = String(appA4());
+    sa.addEventListener('click', e => e.stopPropagation());
+    sa.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); });
+    m.addEventListener('click', e => e.stopPropagation());
     document.body.appendChild(m);
     btn.addEventListener('click', e => {
       e.stopPropagation();
       if (m.classList.contains('open')) { m.classList.remove('open'); return; }
+      sa.value = String(appA4());
       const r = btn.getBoundingClientRect();
       m.style.top = (r.bottom + 6) + 'px'; m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
       m.classList.add('open');
@@ -11004,7 +11029,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-12';
+  const APP_VERSION = '2026-10-03-13';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11052,7 +11077,7 @@
     setTimeout(() => appCheckUpdate(true), 3000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) appCheckUpdate(false); });
   }
-  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
+  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
 
   window.addEventListener('load', init);
 
@@ -11072,5 +11097,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e3ae22997dbdc',t:'MTc5MTA1NDQ0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e62cab8c607ed',t:'MTc5MTA1NjA4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
