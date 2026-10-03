@@ -1120,8 +1120,10 @@
     #homeScreen { display: none; }
     body.home-mode #homeScreen { display: block; }
     .home-hero { position:relative; overflow:hidden; border-radius:22px; padding:26px 24px 22px; margin:14px 0 8px; background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 45%,#ec4899 100%); color:#fff; box-shadow:0 6px 18px rgba(0,0,0,.25); }
-    .home-hero .gtr { position:absolute; right:10px; top:-8px; height:200px; width:auto; opacity:.9; pointer-events:none; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
+    .home-hero { min-height:230px; } .home-hero .gtr { position:absolute; right:6px; top:-14px; height:270px; width:auto; opacity:.9; pointer-events:none; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
     .home-hero .hi { font-size:.95rem; opacity:.92; font-weight:600; position:relative; }
+    .home-hero .sub { position:relative; margin:-8px 0 10px; font-size:1rem; font-weight:600; opacity:.95; max-width:62%; }
+    .home-hero .tip { position:relative; margin:0 0 14px; font-size:.9rem; line-height:1.35; opacity:.92; max-width:62%; background:rgba(255,255,255,.14); border-radius:12px; padding:8px 10px; }
     .home-hero h2 { margin:4px 0 14px; font-size:1.7rem; line-height:1.15; color:#fff; position:relative; }
     .home-hero .cont { position:relative; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); color:#fff; border-radius:999px; padding:9px 16px; font-size:.95rem; font-weight:700; cursor:pointer; font-family:inherit; }
     .home-hero .cont:active { transform:scale(.97); }
@@ -1141,7 +1143,7 @@
     .home-tile.last { border:2px solid var(--c1); }
     .home-tile.last::before { content:"zuletzt"; position:absolute; bottom:10px; right:12px; font-size:.65rem; font-weight:800; color:var(--c1); text-transform:uppercase; letter-spacing:.05em; }
     .home-c-blue { --c1:#3b82f6; --c2:#818cf8; } .home-c-green { --c1:#10b981; --c2:#34d399; } .home-c-orange { --c1:#f97316; --c2:#fbbf24; }
-    @media (max-width:520px) { .home-tiles { grid-template-columns:1fr 1fr; gap:10px; } .home-tile .desc { display:none; } .home-hero h2 { font-size:1.35rem; } }
+    @media (max-width:520px) { .home-hero { min-height:190px; } .home-hero .sub, .home-hero .tip { max-width:68%; } .home-hero .gtr { height:200px; right:-6px; opacity:.85; } .home-tiles { grid-template-columns:1fr 1fr; gap:10px; } .home-tile .desc { display:none; } .home-hero h2 { font-size:1.35rem; } }
     .home-settings { margin:28px 0 10px; text-align:center; font-size:.8rem; color:var(--text-muted); display:flex; justify-content:center; flex-wrap:wrap; gap:8px; align-items:center; }
     .home-settings select { background:transparent; color:var(--text-muted); border:1px solid var(--card-border); border-radius:8px; padding:3px 6px; font-size:.8rem; }
     .jam-plan-banner { border: 2px solid var(--accent-color); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.88rem; }
@@ -1527,8 +1529,8 @@
       <p>Diese Seite gibt dir einen schnellen Überblick über alle im Programm enthaltenen Module, deren Zwecke und Steuerungselemente.</p>
       <ul>
         <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben bringt dich „↪ Weiter mit“ zurück ins zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
-        <li><strong>⏱ Übungs-Timer (oben rechts):</strong> Ganz freiwillig. <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App sammelt deine Übungsminuten (heute/Woche) – nur zur Freude. Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
-        <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Ein Tipp auf „Jetzt aktualisieren“ lädt sie – Cache löschen ist nicht mehr nötig. Deine Daten bleiben erhalten.</li>
+        <li><strong>⏱ Übungs-Timer (oben rechts):</strong> <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App sammelt deine Übungsminuten (heute/Woche). Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
+        <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Mit „Jetzt aktualisieren“ wird sie geladen. Deine Daten bleiben dabei erhalten.</li>
         <li><strong>💾 Datensicherung (oben rechts):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
         <li><strong>A+ (Schriftgröße):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
         <li><strong>🌙 / ☀️:</strong> Hell- oder Dunkel-Modus.</li>
@@ -9219,6 +9221,8 @@
   function homeModuleNo(v) { const o = [...moduleSelectEl.options].find(x => x.value === String(v)); return o ? parseInt(o.text, 10) : ''; }
   function homeModuleInfo(v) { for (const g of HOME_GROUPS) for (const it of g.items) if (it[0] === v) return it; return null; }
   function homeEsc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  const HOME_TIPS = ["Wer länger langsam übt, wird schneller schnell.", "Schon 10 Minuten täglich bringen mehr als 2 Stunden am Sonntag.", "Sag beim Greifen die Tonnamen laut mit – so merkst du sie dir schneller.", "Locker bleiben: Daumen hinter dem Hals, Schultern unten.", "Drück nur so fest, wie nötig – dicht hinter dem Bundstäbchen klingt es am saubersten.", "Erst sauber, dann schnell. Tempo kommt von ganz allein.", "Ein schwieriger Akkordwechsel? Übe nur diese zwei Griffe hin und her.", "Die Oktave eines Tons liegt zwei Saiten höher und zwei Bünde weiter.", "Ein Metronom ist kein Gegner, sondern ein Freund, der nie aus dem Takt kommt.", "Pausen gehören zur Musik – und zum Üben.", "Hör dir zu: Nimm dich ab und zu mit dem Handy auf.", "Fehler sind Wegweiser. Sie zeigen dir, was du als Nächstes üben kannst.", "Der Grundton ist dein Anker – such ihn zuerst.", "Dur klingt hell, Moll klingt weich. Der Unterschied ist nur ein Halbton.", "Zwischen H und C sowie zwischen E und F liegt nur ein Halbton.", "Die Pentatonik hat fünf Töne – und fast keine falschen.", "Übe lieber kurz und oft als lang und selten.", "Zupfen mit p i m a: Daumen für den Bass, Finger für die Melodie.", "Gleichmäßiger Rhythmus ist wichtiger als viele Töne.", "Wärme deine Finger ein paar Minuten auf, bevor es schwierig wird.", "Spiel ein Lied, das du magst – Freude ist der beste Lehrer.", "Am 12. Bund beginnt das Griffbrett von vorn – nur eine Oktave höher.", "Die Hand beim Schlagen weiter pendeln lassen, auch wenn du nicht triffst.", "Kleine Schritte sind auch Schritte.", "Zähl laut mit – dann sitzt der Rhythmus.", "Ein Akkord klingt schief? Spiel jede Saite einzeln und hör, welche stört.", "Die Fingerkuppen werden mit der Zeit härter. Dranbleiben lohnt sich.", "Musik lernt man mit den Ohren, nicht nur mit den Fingern.", "Wiederholung ist die Mutter des Könnens.", "Heute schon etwas Neues ausprobiert? Ein neues Zupfmuster vielleicht?", "Ein Quintenzirkel-Schritt im Uhrzeigersinn bringt ein ♯ dazu.", "Lass offene Saiten ruhig mitklingen – das macht den Klang voll.", "Stimm deine Gitarre vor dem Üben. Sauber klingt einfach schöner.", "Langsam ist nicht langweilig – langsam ist gründlich.", "Jeder Profi hat mal mit drei Akkorden angefangen.", "Atme ruhig weiter, auch bei schwierigen Stellen.", "Dein Gehör wird mit jedem Tag besser – auch wenn du es nicht sofort merkst.", "Ein Lied in Teile zerlegen: erst den Refrain, dann den Rest.", "Spiel mit Gefühl: mal leise, mal laut.", "Die Terz entscheidet, ob ein Akkord Dur oder Moll ist.", "Beim Barré hilft es, den Zeigefinger leicht zur Seite zu kippen.", "Übung macht nicht den Meister – gute Übung macht den Meister.", "Gönn dir Erfolgserlebnisse: Beende das Üben mit etwas, das du schon kannst.", "Der Weg ist das Ziel – genieß jeden Ton."];
+  function homeTipOfDay() { const d = new Date(), start = new Date(d.getFullYear(), 0, 0); const n = Math.floor((d - start) / 86400000); return HOME_TIPS[(n + d.getFullYear()) % HOME_TIPS.length]; }
   function renderHome() {
     const box = document.getElementById('homeScreen');
     if (!box) return;
@@ -9229,6 +9233,8 @@
     const ic = x => x === 'GTR' ? HOME_GUITAR_SVG : x;
     let h = `<div class="home-hero">${HOME_GUITAR_SVG.replace('<img ', '<img class="gtr" aria-hidden="true" ')}
       <div class="hi">${greet}! 👋</div><h2>Gitarren-Trainer</h2>
+      <div class="sub">Griffbrett, Akkorde, Rhythmus – Schritt für Schritt.</div>
+      <div class="tip">💡 ${homeEsc(homeTipOfDay())}</div>
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     HOME_GROUPS.forEach(g => {
@@ -10517,7 +10523,7 @@
     if (r && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; if (c && c.mod >= 0) h += `<div style="text-align:center;"><button type="button" class="btn btn-secondary" id="ptOpenMod">📂 ${homeEsc(ptModName(+c.mod))} öffnen</button></div>`; }
     h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div>
       <div class="pt-week">${s.days.map((d, i) => `<div class="${d.today ? 'today' : ''}"><i style="height:${Math.round(48 * d.v / max)}px"></i>${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][i]}<br>${Math.floor(d.v / 60)}</div>`).join('')}</div>
-      <div style="font-size:.8rem; opacity:.7; margin-top:4px;">Minuten pro Tag, diese Woche. Nur zur Freude – kein Muss.</div></div>`;
+      <div style="font-size:.8rem; opacity:.7; margin-top:4px;">Minuten pro Tag, diese Woche.</div></div>`;
     h += `<div class="pt-box"><strong>Einstellungen</strong>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptChime" ${ptData.set.chime ? 'checked' : ''}> Sanfter Ton am Ende</label></div>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptBrk" ${ptData.set.brk ? 'checked' : ''}> Pausen-Erinnerung nach</label>
@@ -10560,7 +10566,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-2';
+  const APP_VERSION = '2026-10-03-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -10612,5 +10618,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44bd81299d1360a',t:'MTc5MTAyOTQzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
