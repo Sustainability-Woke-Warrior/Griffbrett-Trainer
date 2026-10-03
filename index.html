@@ -4575,6 +4575,9 @@
   // ---------- Improvisieren-Panel (wird auch live beim Taktwechsel aktualisiert) ----------
   function jamChordName(bar) { return jamChordLabel(jamRootName(bar.chordRoot || 0, bar.chordType), bar.chordType); }
   // Kurzname für die Takt-Reiter (z.B. "Am", "E7", "B♭maj7")
+  // Eigener (gemalter) Griff – gilt nur, solange der Akkord derselbe ist
+  function jamOwnFrets(bar) { return bar && Array.isArray(bar.ownFrets) && bar.ownFretsFor === bar.chordRoot + ':' + bar.chordType ? bar.ownFrets : null; }
+  function jamBarFingering(bar) { const f = jamOwnFrets(bar); return f ? { frets: f.slice(), own: true } : getJamChordFingering(bar.chordRoot || 0, bar.chordType); }
   function jamChordShort(bar) {
     const r = jamRootName(bar.chordRoot || 0, bar.chordType);
     if (bar.chordType === 'dur') return r;
@@ -4600,7 +4603,7 @@
     const nextIdx = (curIdx + 1 > jam.loopEnd || curIdx < jam.loopStart) ? jam.loopStart : curIdx + 1;
     const cur = jam.bars[curIdx], next = jam.bars[nextIdx];
     if (!cur) return;
-    const fing = getJamChordFingering(cur.chordRoot, cur.chordType);
+    const fing = jamBarFingering(cur);
     const tones = jamChordToneNames(cur.chordRoot, cur.chordType);
     const sugg = getJamScaleSuggestions(cur.chordRoot, cur.chordType);
     let keyTip = '';
@@ -4615,7 +4618,7 @@
           <div class="jam-improv-tones">Akkordtöne: ${tones.join(' – ')}</div>
           <div class="jam-improv-next">als Nächstes: <strong>${next ? jamChordName(next) : '–'}</strong></div>
         </div>
-        <div class="jam-improv-diagram">${fing ? renderJamChordDiagramSvg(fing.frets) + (fing.simplified ? '<div class="jam-improv-small">vereinfacht</div>' : '') : '<div class="jam-improv-small">kein Griffbild</div>'}</div>
+        <div class="jam-improv-diagram">${fing ? renderJamChordDiagramSvg(fing.frets) + (fing.own ? '<div class="jam-improv-small">✏️ dein Griff</div>' : fing.simplified ? '<div class="jam-improv-small">vereinfacht</div>' : '') : '<div class="jam-improv-small">kein Griffbild</div>'}</div>
         <div class="jam-improv-scales">
           <div class="jam-improv-label">Passt dazu (antippen = in Modul 8 zeigen):</div>
           ${sugg.map(s => `<button type="button" class="theory-chip jam-scale-btn" data-m8="${s.m8}" data-root="${s.rootPc}">${jamRootName(s.rootPc, /Moll|Dorisch|Lokrisch|Phryg/.test(s.label) ? 'moll' : 'dur')} ${s.label}</button>`).join(' ')}
@@ -4641,7 +4644,7 @@
       : [ (jam.activeBar + 1) % jam.bars.length ];
     targets.forEach(i => {
       jam.bars[i].pattern = JSON.parse(JSON.stringify(src.pattern));
-      if (withChord) { jam.bars[i].chordRoot = src.chordRoot; jam.bars[i].chordType = src.chordType; jam.bars[i].padOn = src.padOn; }
+      if (withChord) { jam.bars[i].chordRoot = src.chordRoot; jam.bars[i].chordType = src.chordType; jam.bars[i].padOn = src.padOn; jam.bars[i].ownFrets = src.ownFrets ? src.ownFrets.slice() : undefined; jam.bars[i].ownFretsFor = src.ownFretsFor; }
     });
     jamLastCellChange = null;
     scheduleJamAutosave();
@@ -5099,7 +5102,7 @@
       const inLoop = i >= jam.loopStart && i <= jam.loopEnd;
       const part = jamPartAt(i);
       if (part && part.start === i) html += `<span class="jam-part-chip" style="background:${jamPartColor(part.name)};">${escapeJamHtml(part.name)}</span>`;
-      html += `<button type="button" class="btn ${isActive ? '' : 'btn-secondary'} jam-bar-tab" data-bar="${i}" style="${isPlaying ? 'box-shadow: 0 0 0 2px #22d3ee inset;' : ''} ${inLoop ? '' : 'opacity:0.45;'} ${part ? `border-top:4px solid ${jamPartColor(part.name)};` : ''}">${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(jam.bars[i])}</small></button>`;
+      html += `<button type="button" class="btn ${isActive ? '' : 'btn-secondary'} jam-bar-tab" data-bar="${i}" style="${isPlaying ? 'box-shadow: 0 0 0 2px #22d3ee inset;' : ''} ${inLoop ? '' : 'opacity:0.45;'} ${part ? `border-top:4px solid ${jamPartColor(part.name)};` : ''}">${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(jam.bars[i])}${jamOwnFrets(jam.bars[i]) ? ' ✏️' : ''}</small></button>`;
     }
     html += `</div>`;
     html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>`;
@@ -5474,7 +5477,7 @@
     if (load) load.addEventListener('click', () => {
       const b = jam.bars[jam.activeBar];
       if (!b) return;
-      const fing = getJamChordFingering(b.chordRoot || 0, b.chordType);
+      const fing = jamBarFingering(b);
       if (!fing) { showToast('Für diesen Akkord gibt es kein Griffbild – mal ihn einfach selbst.'); return; }
       P.frets = fing.frets.slice();
       const played = P.frets.filter(f => f > 0);
@@ -5495,6 +5498,7 @@
       }
       b.chordRoot = d.root;
       b.chordType = d.type;
+      b.ownFrets = P.frets.slice(); b.ownFretsFor = d.root + ':' + d.type;
       scheduleJamAutosave();
       showToast(`${jamChordShort(b)} in Takt ${jam.activeBar + 1} übernommen ✔`);
       renderJamModule();
@@ -5874,7 +5878,7 @@
       const i = parseInt(btn.dataset.bar, 10);
       const isPlaying = state.jam.playing && i === state.jam.playingBar;
       btn.style.boxShadow = isPlaying ? '0 0 0 2px #22d3ee inset' : '';
-      btn.innerHTML = `${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(state.jam.bars[i])}</small>`;
+      btn.innerHTML = `${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(state.jam.bars[i])}${jamOwnFrets(state.jam.bars[i]) ? ' ✏️' : ''}</small>`;
       // Bei vielen Takten: nur im Takt-Kasten mitscrollen (die Seite selbst bleibt ruhig)
       if (isPlaying) {
         const box = btn.parentElement;
@@ -11000,7 +11004,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-11';
+  const APP_VERSION = '2026-10-03-12';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11068,5 +11072,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44cfc8feaf955e7',t:'MTc5MTA0MTQxMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e3ae22997dbdc',t:'MTc5MTA1NDQ0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
