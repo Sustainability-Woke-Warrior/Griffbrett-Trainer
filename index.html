@@ -1338,6 +1338,12 @@
     #ptBtn.pt-on { background: var(--primary-color, #3b82f6); color: #fff; font-variant-numeric: tabular-nums; }
     .pt-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
     .pt-overlay.open { display: flex; }
+    .str-bar { height: 8px; border-radius: 6px; background: var(--card-border); overflow: hidden; margin-top: 6px; }
+    .str-bar > i { display: block; height: 100%; background: #22c55e; }
+    .str-bar.soon > i { background: #f59e0b; }
+    .str-bar.due > i { background: #ef4444; }
+    .str-form label { display: block; font-weight: 600; margin-top: 10px; }
+    .str-form select, .str-form input { width: 100%; box-sizing: border-box; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px; font-size: 0.95rem; }
     header { flex-wrap: wrap; gap: 6px; }
     header h1 { min-width: 0; }
     #settingsBtn { display: none; }
@@ -1737,6 +1743,20 @@
         <li><strong>Nadel:</strong> links = zu tief (Saite spannen), rechts = zu hoch (lockern). Im grünen Bereich (±5 Cent) ist die Saite gestimmt – der Saiten-Knopf wird dann grün.</li>
         <li><strong>Stimmung &amp; Kammerton:</strong> Standard, Drop D, DADGAD oder Open G; der Kammerton a ist normalerweise 440 Hz. Er gilt für die ganze App: Alle Töne, die die App spielt, richten sich danach. Du kannst ihn auch auf der Startseite oder im ⚙️-Menü ändern.</li>
         <li><strong>Tipp:</strong> Einzelne Saite kräftig anzupfen und ausklingen lassen, andere Saiten abdämpfen. In leiser Umgebung klappt es am besten.</li>
+      </ul>
+    </div>
+
+    <div class="module-block">
+      <div class="module-block-header">
+        <span class="module-number-badge">🎸</span>
+        <h3>Saitenwechsel im Blick</h3>
+      </div>
+      <p>Auf der Startseite zeigt die Kachel „🎸 Saiten“, wie lange deine Saiten schon drauf sind.</p>
+      <ul>
+        <li><strong>Einstellen:</strong> Kachel antippen, Saitenart wählen (Nylon, Stahl, Stahl beschichtet, E-Gitarre normal oder beschichtet) und das Datum des letzten Wechsels eintragen. Marke und Stärke kannst du dazuschreiben.</li>
+        <li><strong>Nach Wochen oder Spielstunden:</strong> Wähle, ob nach Kalender gezählt wird oder nach gespielter Zeit. Bei Spielstunden zählt die Zeit aus dem ⏱-Timer. An Tagen ohne Timer rechnet die App mit dem Wert „ca. Minuten pro Tag“ – trag 0 ein, wenn nur Timer-Zeit zählen soll.</li>
+        <li><strong>Anzeige:</strong> Der Balken füllt sich; kurz vor dem Ziel wird er orange, danach rot. Auch der Timer zeigt den Hinweis an.</li>
+        <li><strong>„✔ Saiten gewechselt“</strong> setzt alles zurück und trägt den Wechsel ins Übungs-Tagebuch ein.</li>
       </ul>
     </div>
 
@@ -3385,7 +3405,7 @@
   function hideBackupBanner() { const b = document.getElementById('backupBanner'); if (b) b.remove(); }
   function maybeShowBackupReminder() {
     try {
-      const hasData = !!(localStorage.getItem('guitartrainer_planner') || localStorage.getItem(JAM_STORAGE_KEY) || localStorage.getItem('guitartrainer_strum_custom') || localStorage.getItem('guitartrainer_diary') || /"favs":\["|"tempos":\{"/.test(localStorage.getItem('guitartrainer_strum') || ''));
+      const hasData = !!(localStorage.getItem('guitartrainer_planner') || localStorage.getItem(JAM_STORAGE_KEY) || localStorage.getItem('guitartrainer_strum_custom') || localStorage.getItem('guitartrainer_diary') || localStorage.getItem('guitartrainer_strings') || /"favs":\["|"tempos":\{"/.test(localStorage.getItem('guitartrainer_strum') || ''));
       if (!hasData) return;
       const snooze = localStorage.getItem('guitartrainer_backup_snooze');
       if (snooze && Date.now() < new Date(snooze).getTime()) return;
@@ -9472,6 +9492,7 @@
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     { const L = diaryLoad(); const e = L[0]; h += `<button type="button" class="home-pt" id="homeDiaryBtn"><b>📓</b><span><strong>Übungs-Tagebuch</strong><br>${e ? 'Zuletzt: ' + diaryDateTxt(e.date) + (e.note ? ' · ' + homeEsc(e.note.slice(0, 40)) + (e.note.length > 40 ? '…' : '') : '') : 'Noch keine Einträge'}</span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`; }
+    h += strHomeTile();
     HOME_GROUPS.forEach(g => {
       h += `<div class="home-group home-c-${g.color}"><span class="dot"></span><h3>${homeEsc(g.title)}</h3><span class="line"></span></div><div class="home-tiles">`;
       g.items.forEach(([v, icon, nm, desc]) => {
@@ -9492,6 +9513,7 @@
     { const ub = document.getElementById('homeUpdBtn'); if (ub) ub.addEventListener('click', appManualCheck); }
     { const a = document.getElementById('homeA4Select'); if (a) a.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); }); }
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
+    { const hs = document.getElementById('homeStrBtn'); if (hs) hs.addEventListener('click', () => strOpen()); }
     const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
     const ss = document.getElementById('homeStartSelect');
@@ -10680,7 +10702,8 @@
     if (plan) btns.push(['✔ Im Wochenplan abhaken', () => ptMarkPlan(plan)]);
     btns.push(['⏱ Weiter üben (Stoppuhr)', () => { pt.mode = 'up'; ptStart(); }]);
     btns.push(['Fertig']);
-    ptBanner(`<strong>Schön geübt! 🎸</strong><br>Heute zusammen: ${ptFmtMin(ptStats().today)}.${plan ? `<br>„${homeEsc(plan)}“ als erledigt markieren?` : ''} Du kannst natürlich einfach weiterspielen.`, btns);
+    const strSt = strStatus();
+    ptBanner(`<strong>Schön geübt! 🎸</strong><br>Heute zusammen: ${ptFmtMin(ptStats().today)}.${strSt && strSt.level === 'due' ? '<br>🎸 Deine Saiten sind fällig für einen Wechsel.' : ''}${plan ? `<br>„${homeEsc(plan)}“ als erledigt markieren?` : ''} Du kannst natürlich einfach weiterspielen.`, btns);
     if (!plan) pt.plan = null;
     ptRender();
   }
@@ -10738,7 +10761,9 @@
     const p = document.getElementById('ptPanel'); if (!p) return;
     const r = pt.running, s = ptStats(), max = Math.max(60, ...s.days.map(d => d.v));
     const modOpts = sel => `<option value="-1" ${sel < 0 ? 'selected' : ''}>– kein Modul –</option>` + HOME_GROUPS.map(g => g.items.map(it => `<option value="${it[0]}" ${it[0] === sel ? 'selected' : ''}>${homeEsc(ptModName(it[0]))}</option>`).join('')).join('');
+    setTimeout(() => { const b = document.getElementById('ptStrBtn'); if (b) b.onclick = () => { ptClose(); strOpen(); }; }, 0);
     let h = `<div class="pt-head"><h3>⏱ Übungs-Timer</h3><button type="button" class="btn btn-secondary" id="ptCloseBtn" style="padding:6px 12px;">✕</button></div>`;
+    { const st = strStatus(); if (st && st.level !== 'ok') h += `<div class="pt-sub" style="margin-top:6px;"><button type="button" class="strum-chip" id="ptStrBtn">🎸 ${st.level === 'due' ? 'Saitenwechsel fällig' : 'Saitenwechsel bald fällig'} · ${homeEsc(st.text)}</button></div>`; }
     if (pt.plan) h += `<div class="pt-sub" style="margin-top:6px;">Übung aus dem Wochenplan: <strong>${homeEsc(pt.plan)}</strong></div>`;
     h += `<div class="pt-tabs">${[['down', '⏳ Countdown'], ['up', '⏱ Stoppuhr'], ['sec', '🧩 Abschnitte']].map(([m, l]) => `<button type="button" class="btn ${pt.mode === m ? '' : 'btn-secondary'}" data-ptmode="${m}" ${r ? 'disabled' : ''}>${l}</button>`).join('')}</div>`;
     h += `<div class="pt-big" id="ptBig"></div>`;
@@ -10954,6 +10979,93 @@
     chgShow(0, -1);
   }
 
+  // =================== Saitenwechsel ===================
+  const STR_KEY = 'guitartrainer_strings';
+  const STR_TYPES = {
+    nylon: { name: 'Nylon (Konzertgitarre)', weeks: 10, hours: 80 },
+    steel: { name: 'Stahl, normal (Westerngitarre)', weeks: 8, hours: 60 },
+    steelc: { name: 'Stahl, beschichtet (z. B. Elixir)', weeks: 16, hours: 160 },
+    electric: { name: 'E-Gitarre, normal', weeks: 10, hours: 80 },
+    electricc: { name: 'E-Gitarre, beschichtet', weeks: 16, hours: 160 }
+  };
+  function strLoad() { try { const d = JSON.parse(localStorage.getItem(STR_KEY) || 'null'); return d && d.changed ? d : null; } catch (e) { return null; } }
+  function strSave(d) { try { localStorage.setItem(STR_KEY, JSON.stringify(d)); } catch (e) {} }
+  function strHoursSince(d) {
+    const start = new Date(d.changed + 'T12:00:00'), now = new Date(); now.setHours(12, 0, 0, 0);
+    let sec = 0; const days = (ptData && ptData.days) || {};
+    for (let t = new Date(start); t <= now; t.setDate(t.getDate() + 1)) {
+      const v = days[ptDayKey(t)] || 0;
+      sec += v > 0 ? v : (t < now ? (+d.minPerDay || 0) * 60 : 0);   // heute nur echte Timer-Zeit
+    }
+    return sec / 3600;
+  }
+  function strStatus() {
+    const d = strLoad(); if (!d) return null;
+    const days = Math.max(0, Math.floor((Date.now() - new Date(d.changed + 'T00:00:00').getTime()) / 86400000));
+    const wk = days / 7, hrs = strHoursSince(d);
+    const ratio = d.mode === 'hours' ? hrs / Math.max(1, d.hours) : wk / Math.max(1, d.weeks);
+    const since = days < 14 ? `seit ${days} ${days === 1 ? 'Tag' : 'Tagen'}` : `seit ${Math.floor(wk)} Wochen`;
+    const text = d.mode === 'hours' ? `${since} drauf · ca. ${Math.round(hrs)} von ${d.hours} Std.` : `${since} drauf · Ziel ${d.weeks} Wochen`;
+    return { d, ratio, level: ratio >= 1 ? 'due' : ratio >= 0.85 ? 'soon' : 'ok', text };
+  }
+  function strHomeTile() {
+    const st = strStatus();
+    if (!st) return `<button type="button" class="home-pt" id="homeStrBtn"><b>🎸</b><span><strong>Saiten</strong><br>Tipp hier, um deinen Saitenwechsel im Blick zu behalten.</span><span style="flex:0; white-space:nowrap; font-weight:700;">Einrichten ›</span></button>`;
+    const lab = st.level === 'due' ? 'Saitenwechsel fällig' : st.level === 'soon' ? 'Saitenwechsel bald fällig' : 'Saiten';
+    return `<button type="button" class="home-pt" id="homeStrBtn"><b>🎸</b><span style="flex:1;"><strong>${lab}</strong><br>${homeEsc(st.text)}<div class="str-bar ${st.level === 'ok' ? '' : st.level}"><i style="width:${Math.min(100, Math.round(st.ratio * 100))}%"></i></div></span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`;
+  }
+  function strOpen() {
+    let o = document.getElementById('strOverlay');
+    if (!o) {
+      o = document.createElement('div'); o.id = 'strOverlay'; o.className = 'pt-overlay';
+      o.innerHTML = '<div class="pt-panel" id="strPanel"></div>';
+      o.addEventListener('click', e => { if (e.target === o) strClose(); });
+      document.body.appendChild(o);
+    }
+    strRender(); o.classList.add('open');
+  }
+  function strClose() { const o = document.getElementById('strOverlay'); if (o) o.classList.remove('open'); try { if (document.body.classList.contains('home-mode')) renderHome(); } catch (e) {} }
+  function strRender() {
+    const box = document.getElementById('strPanel'); if (!box) return;
+    const cur = strLoad(), st = strStatus();
+    const d = cur || { type: 'nylon', mode: 'weeks', weeks: 10, hours: 80, minPerDay: 0, changed: ptDayKey(new Date()), brand: '' };
+    let h = `<div class="pt-head"><h3>🎸 Saiten</h3><button type="button" class="btn btn-secondary" id="strCloseBtn">✕</button></div>`;
+    if (st) h += `<div style="margin:10px 0;"><strong>${st.level === 'due' ? 'Wechsel fällig' : st.level === 'soon' ? 'Wechsel bald fällig' : 'Alles gut'}</strong> · ${homeEsc(st.text)}${d.brand ? ` · ${homeEsc(d.brand)}` : ''}
+        <div class="str-bar ${st.level === 'ok' ? '' : st.level}"><i style="width:${Math.min(100, Math.round(st.ratio * 100))}%"></i></div></div>
+        <button type="button" class="btn" id="strDoneBtn">✔ Saiten gewechselt</button>`;
+    h += `<div class="str-form">
+      <label for="strType">Saitenart</label><select id="strType">${Object.entries(STR_TYPES).map(([k, t]) => `<option value="${k}" ${k === d.type ? 'selected' : ''}>${t.name}</option>`).join('')}</select>
+      <label for="strChanged">Zuletzt gewechselt am</label><input type="date" id="strChanged" value="${d.changed}" max="${ptDayKey(new Date())}">
+      <label for="strMode">Zählen nach</label><select id="strMode"><option value="weeks" ${d.mode === 'weeks' ? 'selected' : ''}>Wochen (Kalender)</option><option value="hours" ${d.mode === 'hours' ? 'selected' : ''}>Spielstunden</option></select>
+      <div id="strWeeksRow"><label for="strWeeks">Wechseln nach … Wochen</label><input type="number" id="strWeeks" min="1" max="104" value="${d.weeks}"></div>
+      <div id="strHoursRow"><label for="strHours">Wechseln nach … Spielstunden</label><input type="number" id="strHours" min="5" max="1000" value="${d.hours}">
+        <label for="strMin">An Tagen ohne Timer: ca. Minuten pro Tag</label><input type="number" id="strMin" min="0" max="600" value="${d.minPerDay || 0}">
+        <div style="font-size:.85rem; opacity:.8; margin-top:4px;">Tage mit Timer zählen mit der gemessenen Zeit. 0 = nur Timer-Zeit zählt.</div></div>
+      <label for="strBrand">Marke / Stärke (freiwillig)</label><input type="text" id="strBrand" value="${homeEsc(d.brand || '')}" placeholder="z. B. Savarez 540R, normal tension">
+      <div class="row" style="gap:8px; margin-top:12px;"><button type="button" class="btn ${st ? 'btn-secondary' : ''}" id="strSaveBtn">💾 Speichern</button></div>
+      <details style="margin-top:14px;"><summary style="cursor:pointer; font-weight:600;">Woran erkenne ich alte Saiten?</summary>
+        <ul style="margin:6px 0 0 18px; font-size:.9rem;"><li>Der Klang ist dumpf, Töne klingen kurz.</li><li>Die Gitarre verstimmt sich schneller oder lässt sich schlecht sauber stimmen.</li><li>Die Saiten sind verfärbt oder fühlen sich rau an (bei Nylon: Basssaiten mit Riefen oder aufgerauter Umwicklung).</li><li>Akkorde weiter oben am Hals klingen schief, obwohl die Gitarre gestimmt ist.</li></ul></details>
+    </div>`;
+    box.innerHTML = h;
+    const $s = id => document.getElementById(id);
+    const sync = () => { const hrs = $s('strMode').value === 'hours'; $s('strWeeksRow').style.display = hrs ? 'none' : ''; $s('strHoursRow').style.display = hrs ? '' : 'none'; };
+    sync(); $s('strMode').addEventListener('change', sync);
+    $s('strType').addEventListener('change', e => { const t = STR_TYPES[e.target.value]; $s('strWeeks').value = t.weeks; $s('strHours').value = t.hours; });
+    $s('strCloseBtn').addEventListener('click', strClose);
+    $s('strSaveBtn').addEventListener('click', () => {
+      const nd = { type: $s('strType').value, mode: $s('strMode').value, weeks: Math.max(1, Math.min(104, Math.round(+$s('strWeeks').value || 8))), hours: Math.max(5, Math.min(1000, Math.round(+$s('strHours').value || 60))), minPerDay: Math.max(0, Math.min(600, Math.round(+$s('strMin').value || 0))), changed: $s('strChanged').value || ptDayKey(new Date()), brand: $s('strBrand').value.trim() };
+      if (nd.changed > ptDayKey(new Date())) nd.changed = ptDayKey(new Date());
+      strSave(nd); strRender(); showToast('🎸 Gespeichert');
+    });
+    const done = $s('strDoneBtn');
+    if (done) done.addEventListener('click', () => {
+      if (!confirm('Saiten heute gewechselt? Der Zähler beginnt dann von vorn.')) return;
+      const nd = { ...strLoad(), changed: ptDayKey(new Date()) }; strSave(nd);
+      try { const L = diaryLoad(); L.push({ id: 'd_' + Date.now().toString(36), date: new Date().toISOString(), min: '', items: ['🎸 Saiten gewechselt' + (nd.brand ? ' (' + nd.brand + ')' : '')], note: '', mood: '' }); diarySave(L); } catch (e) {}
+      strRender(); showToast('🎸 Neue Saiten – viel Spaß!');
+    });
+  }
+
   // =================== Übungs-Tagebuch ===================
   const DIARY_KEY = 'guitartrainer_diary';
   const diarySeen = [];            // was in dieser Sitzung geöffnet/gespielt wurde
@@ -11036,7 +11148,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-14';
+  const APP_VERSION = '2026-10-05-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11104,5 +11216,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45de74b4c8f7aef',t:'MTc5MTIxODc5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45e8a21194bd3a1',t:'MTc5MTIyNTQ2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
