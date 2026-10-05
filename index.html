@@ -2042,7 +2042,7 @@
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
         <button class="btn btn-secondary" id="exportDataBtn">Daten exportieren (JSON)</button>
         <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">Daten importieren</label>
-        <input type="file" id="importDataInput" accept=".json" style="display:none;">
+        <input type="file" id="importDataInput" style="display:none;">
         <button class="btn btn-secondary" id="resetWeekBtn">Woche zurücksetzen</button>
       </div>
     </div>
@@ -3365,7 +3365,7 @@
       <div class="backup-row">
         <button class="btn" id="backupSaveBtn">💾 Alles sichern</button>
         <label class="btn btn-secondary" for="backupRestoreInput" style="cursor:pointer;">📂 Alles wiederherstellen</label>
-        <input type="file" id="backupRestoreInput" accept=".json,application/json" style="display:none;">
+        <input type="file" id="backupRestoreInput" style="display:none;">
       </div>
       <div style="display:flex; justify-content:flex-end;"><button class="btn btn-secondary" id="backupCloseBtn">Schließen</button></div>
     </div>`;
@@ -3376,6 +3376,7 @@
     document.getElementById('backupRestoreInput').addEventListener('change', (e) => {
       const f = e.target.files && e.target.files[0];
       if (!f) return;
+      if (f.size > 20 * 1024 * 1024) { showToast('Diese Datei ist keine gültige Sicherung.'); return; }
       const r = new FileReader();
       r.onload = ev => { ov.remove(); restoreBackupFromText(ev.target.result, f.name); };
       r.readAsText(f);
@@ -5319,7 +5320,7 @@
         <div class="row" style="gap:8px;">
           <button class="btn btn-secondary" id="jamExportJsonBtn">📄 Als JSON exportieren</button>
           <button class="btn btn-secondary" id="jamImportJsonBtn">📂 JSON importieren</button>
-          <input type="file" id="jamImportJsonInput" accept=".json,application/json,text/plain,*/*" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none;">
+          <input type="file" id="jamImportJsonInput" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none;">
         </div>
       </div>
     </div></details>`;
@@ -7236,7 +7237,9 @@
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        
+        if (!data || typeof data !== 'object') throw new Error('Format');
+        if (data.app === 'gitarrentrainer') { restoreBackupFromText(e.target.result, file.name); return; }
+        if (!(data.savedPatterns && typeof data.savedPatterns === 'object') && !Array.isArray(data.bars)) { showToast('Diese Datei ist keine Beat-Datei.'); return; }
         if (data.savedPatterns && typeof data.savedPatterns === 'object') {
           localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(data.savedPatterns));
           if (data.currentBeat) {
@@ -7254,7 +7257,7 @@
         showToast("Alle Patterns erfolgreich geladen! 🎉");
       } catch (err) {
         console.error('JSON-Import fehlgeschlagen:', err);
-        showToast("Fehler beim Laden der JSON-Datei!");
+        showToast("Diese Datei ist keine Beat-Datei.");
       }
     };
     reader.onerror = () => {
@@ -10143,18 +10146,22 @@
 
     importDataInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
+      e.target.value = '';
       if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { showToast('Diese Datei ist kein Übungsplan.'); return; }
       const reader = new FileReader();
       reader.onload = function(evt) {
         try {
           const imported = JSON.parse(evt.target.result);
           if (!imported || typeof imported !== 'object' || Array.isArray(imported)) throw new Error('Format');
+          if (imported.app === 'gitarrentrainer' || imported.savedPatterns || Array.isArray(imported.bars)) { restoreBackupFromText(evt.target.result, file.name); return; }
+          if (!Object.keys(imported).some(k => /^\d{4}-\d{2}-\d{2}$/.test(k))) { showToast('Diese Datei ist kein Übungsplan.'); return; }
           plannerState.plannerData = imported;
           savePlannerToLocalStorage();
           renderPlanner();
           showToast("Übungsplan erfolgreich importiert! 🎉");
         } catch (err) {
-          showToast("Fehler beim Importieren der Datei!");
+          showToast("Diese Datei ist kein Übungsplan.");
         }
       };
       reader.readAsText(file);
@@ -11029,7 +11036,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-03-13';
+  const APP_VERSION = '2026-10-03-14';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11097,5 +11104,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44e62cab8c607ed',t:'MTc5MTA1NjA4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45de74b4c8f7aef',t:'MTc5MTIxODc5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
