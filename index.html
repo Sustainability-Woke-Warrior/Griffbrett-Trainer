@@ -1397,6 +1397,11 @@
     .pt-week div { flex: 1; text-align: center; font-size: .75rem; }
     .pt-week i { display: block; background: var(--primary-color, #3b82f6); border-radius: 4px 4px 0 0; margin: 0 auto 2px; width: 70%; min-height: 2px; }
     .pt-week .today { font-weight: 800; }
+    .pt-clock { border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 12px; margin: 8px 0; }
+    .pt-clock summary { cursor: pointer; font-weight: 700; }
+    .pt-clock .cw { display: flex; flex-direction: column; align-items: center; padding: 8px 0 2px; }
+    .pt-clock svg { width: 150px; height: 150px; color: var(--text-color); }
+    .pt-clock .dg { margin-top: 6px; font-size: 1.2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
     .pt-banner { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 3100; background: var(--card-bg); color: var(--text-color); border: 2px solid var(--primary-color, #3b82f6); border-radius: 14px; padding: 12px 14px; box-shadow: 0 6px 24px rgba(0,0,0,.35); width: min(94vw, 520px); display: none; }
     .pt-banner.open { display: block; }
     .pt-banner .row2 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
@@ -10750,13 +10755,41 @@
     const big = document.getElementById('ptBig'); if (big) big.textContent = pt.running ? ptHeaderText() : (pt.mode === 'down' ? ptFmt(Math.max(1, +ptData.set.downMin || 10) * 60000) : pt.mode === 'sec' ? ptFmt(Math.max(1, +(ptData.sections[0] || {}).min || 1) * 60000) : '0:00');
     const td = document.getElementById('ptToday'); if (td) { const s = ptStats(); td.textContent = `Heute: ${ptFmtMin(s.today)} · Diese Woche: ${ptFmtMin(s.week)}`; }
   }
-  function ptOpen() { const o = document.getElementById('ptOverlay'); if (!o) return; ptRender(); o.classList.add('open'); }
+  function ptOpen() { const o = document.getElementById('ptOverlay'); if (!o) return; ptRender(); o.classList.add('open'); ptClockTick(); }
   function ptClose() { const o = document.getElementById('ptOverlay'); if (o) o.classList.remove('open'); }
   function ptOpenForPlan(name) {
     if (!pt.running) { pt.plan = String(name || '').trim() || 'Übung'; pt.mode = 'down'; }
     else showToast('Der Timer läuft schon – beende ihn zuerst, um eine neue Übung zu starten.');
     ptOpen();
   }
+  const PT_CLOCK_KEY = 'guitartrainer_ptclock';
+  function ptClockHtml() {
+    let open = false; try { open = localStorage.getItem(PT_CLOCK_KEY) === '1'; } catch (e) {}
+    let ticks = '';
+    for (let i = 0; i < 60; i++) {
+      if (i % 15 === 0) continue;
+      const a = i * Math.PI / 30, big = i % 5 === 0, r1 = big ? 80 : 86, r2 = 90;
+      ticks += `<line x1="${(100 + r1 * Math.sin(a)).toFixed(1)}" y1="${(100 - r1 * Math.cos(a)).toFixed(1)}" x2="${(100 + r2 * Math.sin(a)).toFixed(1)}" y2="${(100 - r2 * Math.cos(a)).toFixed(1)}" stroke="currentColor" stroke-opacity="${big ? 0.8 : 0.35}" stroke-width="${big ? 3 : 1.2}"/>`;
+    }
+    return `<details class="pt-clock" id="ptClockDet" ${open ? 'open' : ''}><summary>🕐 Uhr</summary><div class="cw">
+      <svg viewBox="0 0 200 200" role="img" aria-label="Uhr">
+        <circle cx="100" cy="100" r="94" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="4"/>${ticks}
+        <g font-size="18" font-weight="700" fill="currentColor" text-anchor="middle" dominant-baseline="central"><text x="100" y="26">12</text><text x="174" y="100">3</text><text x="100" y="174">6</text><text x="26" y="100">9</text></g>
+        <line id="ptClkH" x1="100" y1="100" x2="100" y2="52" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+        <line id="ptClkM" x1="100" y1="100" x2="100" y2="30" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+        <line id="ptClkS" x1="100" y1="114" x2="100" y2="24" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="5" fill="#ef4444"/></svg>
+      <div class="dg" id="ptClkD"></div></div></details>`;
+  }
+  function ptClockTick() {
+    const det = document.getElementById('ptClockDet'), o = document.getElementById('ptOverlay');
+    if (!det || !det.open || !o || !o.classList.contains('open')) return;
+    const d = new Date(), sec = d.getSeconds(), m = d.getMinutes() + sec / 60, hr = (d.getHours() % 12) + m / 60;
+    const set = (id, deg) => { const el = document.getElementById(id); if (el) el.setAttribute('transform', `rotate(${deg.toFixed(2)} 100 100)`); };
+    set('ptClkH', hr * 30); set('ptClkM', m * 6); set('ptClkS', sec * 6);
+    const dg = document.getElementById('ptClkD'); if (dg) dg.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  setInterval(ptClockTick, 1000);
   function ptRender() {
     const p = document.getElementById('ptPanel'); if (!p) return;
     const r = pt.running, s = ptStats(), max = Math.max(60, ...s.days.map(d => d.v));
@@ -10774,6 +10807,7 @@
     else sub = pt.mode === 'up' ? 'Zählt einfach mit – ohne Ziel.' : pt.mode === 'down' ? 'Am Ende kommt ein sanfter Ton.' : 'Mehrere Teile nacheinander.';
     if (r && pt.paused) sub = '⏸ Pause – ' + sub;
     h += `<div class="pt-sub">${sub}</div>`;
+    h += ptClockHtml();
     if (!r && pt.mode === 'down') {
       h += `<div class="pt-presets">${[5, 10, 15, 20, 30].map(m => `<button type="button" class="btn ${+ptData.set.downMin === m ? '' : 'btn-secondary'}" data-ptmin="${m}">${m} Min.</button>`).join('')}</div>
         <div style="text-align:center;"><label>Eigene Zeit: <input type="number" id="ptMinInput" min="1" max="180" value="${ptData.set.downMin}" style="width:70px; padding:8px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-color); font-size:1rem;"> Min.</label></div>`;
@@ -10799,6 +10833,7 @@
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptBrk" ${ptData.set.brk ? 'checked' : ''}> Pausen-Erinnerung nach</label>
         <input type="number" id="ptBrkMin" min="5" max="120" value="${ptData.set.brkMin}" style="width:60px;"> Min.</div></div>`;
     p.innerHTML = h;
+    ptClockTick();
     const on = (id, f, ev = 'click') => { const el = document.getElementById(id); if (el) el.addEventListener(ev, f); };
     on('ptCloseBtn', ptClose);
     p.querySelectorAll('[data-ptmode]').forEach(b => b.addEventListener('click', () => { pt.mode = b.dataset.ptmode; ptData.set.mode = pt.mode; ptSave(); ptRender(); }));
@@ -10826,6 +10861,7 @@
     const o = document.createElement('div'); o.id = 'ptOverlay'; o.className = 'pt-overlay';
     o.innerHTML = '<div class="pt-panel" id="ptPanel"></div>';
     o.addEventListener('click', e => { if (e.target === o) ptClose(); });
+    o.addEventListener('toggle', e => { if (e.target && e.target.id === 'ptClockDet') { try { localStorage.setItem(PT_CLOCK_KEY, e.target.open ? '1' : '0'); } catch (err) {} ptClockTick(); } }, true);
     document.body.appendChild(o);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
@@ -11148,7 +11184,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-05-1';
+  const APP_VERSION = '2026-10-05-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11216,5 +11252,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45e8a21194bd3a1',t:'MTc5MTIyNTQ2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a46f1260abaf7c68',t:'MTc5MTM5ODgxOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
