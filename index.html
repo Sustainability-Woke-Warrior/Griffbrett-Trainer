@@ -1047,6 +1047,28 @@
     .jam-paint-name { font-size: 2rem; font-weight: 800; line-height: 1.1; }
     .jam-paint-sub { font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 10px; }
     .jam-paint-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .prog-box { width: 100%; max-width: 1100px; margin: 12px auto; background: rgba(30,41,59,0.6); border: 1px solid rgba(148,163,184,0.25); border-radius: 14px; padding: 10px 12px; box-sizing: border-box; }
+    .prog-box > summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; padding: 4px 0; }
+    .prog-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+    .prog-row input[type=text], .prog-row select { background: var(--bg-color); color: var(--text-color); border: 1px solid rgba(148,163,184,0.35); border-radius: 8px; padding: 6px 8px; font-size: 0.9rem; }
+    .prog-cards { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .prog-card { background: rgba(15,23,42,0.55); border: 1px solid rgba(148,163,184,0.25); border-radius: 12px; padding: 6px 8px 8px; width: 226px; box-sizing: border-box; }
+    .prog-card .jam-paint-grid { grid-template-columns: 20px repeat(6, 32px); }
+    .prog-card .jam-paint-cell { height: 32px; }
+    .prog-card .jam-paint-top { height: 26px; }
+    .prog-card .jam-paint-nut { margin: 0 16px; }
+    .prog-card .jam-paint-dot { width: 22px; height: 22px; font-size: 0.56rem; }
+    .prog-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); }
+    .prog-name { font-size: 1.35rem; font-weight: 800; margin-top: 4px; min-height: 1.6rem; }
+    .prog-roman { font-size: 0.85rem; color: #fbbf24; font-weight: 700; }
+    .prog-tones { font-size: 0.78rem; color: var(--text-muted); min-height: 1rem; }
+    .prog-mini { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .prog-mini button { background: rgba(148,163,184,0.12); border: 1px solid rgba(148,163,184,0.3); color: inherit; border-radius: 8px; padding: 3px 7px; font-size: 0.78rem; cursor: pointer; }
+    .prog-pick { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .prog-pick select { background: var(--bg-color); color: var(--text-color); border: 1px solid rgba(148,163,184,0.35); border-radius: 6px; font-size: 0.78rem; max-width: 100%; }
+    .prog-theory { margin-top: 12px; background: rgba(15,23,42,0.5); border-radius: 12px; padding: 10px 12px; font-size: 0.9rem; line-height: 1.45; }
+    .prog-theory h4 { margin: 8px 0 4px; font-size: 0.95rem; }
+    .prog-theory ul { margin: 4px 0; padding-left: 20px; }
     /* ===== Jam-Modul: einklappbare Bereiche, Mute/Solo, Improvisieren ===== */
     .jam-section { margin-top: 12px; border: 1px solid var(--card-border); border-radius: 10px; padding: 0 12px; background: var(--panel-overlay); }
     .jam-section > summary { cursor: pointer; font-weight: 700; padding: 10px 0; list-style: none; user-select: none; }
@@ -1696,7 +1718,7 @@
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus Modul 8.</p>
       <ul>
         <li><strong>Oben:</strong> Start/Stop, Tempo, Taktart, Rhythmus-Stil und Loop-Bereich. Die weiteren Funktionen stecken in einklappbaren Bereichen (▸ antippen).</li>
-        <li><strong>✏️ Akkord malen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
+        <li><strong>✏️ Griff eintragen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
         <li><strong>Leistung:</strong> Unter „🎚️ Lautstärke &amp; Klangfarbe“. „Automatisch“ rechnet auf Handys sparsamer, damit es nicht knackst oder aussetzt. Du kannst jederzeit von Hand „Sparsam“ oder „Hohe Qualität“ wählen – die Einstellung gilt nur für dieses Gerät.</li>
         <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie in Modul 8.</li>
         <li><strong>⏱️ Timing &amp; Feeling:</strong> Swing (bis Triolen-Shuffle), Einzähler, Tap-Tempo, Humanize und der Tempo-Trainer (wird nach einstellbar vielen Durchläufen automatisch schneller, bis zum Zieltempo).</li>
@@ -2046,6 +2068,8 @@
     <div class="chord-details-display" id="chordDetailsDisplay">Wähle Töne auf dem Griffbrett oder im Notenblatt aus.</div>
     <div class="chord-hint-display" id="chordHintDisplay" style="display:none;"></div>
   </div>
+
+  <details id="progBox" class="prog-box" style="display:none;"><summary>🎼 Akkordfolgen erstellen</summary><div id="progBody"></div></details>
 
   <div id="chgTrainer" style="display:none;"></div>
 
@@ -4981,6 +5005,384 @@
     });
   }
 
+
+  // =================== Akkordfolgen erstellen (Akkord-Labor) ===================
+  const PROG_KEY = 'guitartrainer_progressions';
+  let progState = null;
+  function progEmptyChord() { return { frets: [-1, -1, -1, -1, -1, -1], start: 1 }; }
+  function progLoad() {
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem(PROG_KEY) || 'null'); } catch (e) { d = null; }
+    if (!d || typeof d !== 'object') d = {};
+    if (!Array.isArray(d.saved)) d.saved = [];
+    if (!d.draft || !Array.isArray(d.draft.chords)) d.draft = { name: '', chords: [progEmptyChord(), progEmptyChord(), progEmptyChord(), progEmptyChord()] };
+    d.draft.chords = d.draft.chords.filter(c => c && Array.isArray(c.frets) && c.frets.length === 6).slice(0, 16);
+    if (!d.draft.chords.length) d.draft.chords = [progEmptyChord()];
+    return d;
+  }
+  function progSave() { try { localStorage.setItem(PROG_KEY, JSON.stringify(progState)); } catch (e) {} }
+  function progDetect(c) {
+    if (!c || !c.frets.some(f => f >= 0)) return null;
+    const d = jamDetectPaintedChord(c.frets);
+    return d && d.score >= 60 ? d : null;
+  }
+  function progChordShort(d) {
+    let n = jamChordShort({ chordRoot: d.root, chordType: d.type });
+    if (d.bassPc !== d.root) n += '/' + jamPcName(d.bassPc, d.root, d.type);
+    return n;
+  }
+  const PROG_MAJ = [0, 2, 4, 5, 7, 9, 11], PROG_MIN = [0, 2, 3, 5, 7, 8, 10];
+  const PROG_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  function progTriadQuality(type) {
+    const iv = JAM_CHORD_INTERVALS[type] || [0, 4, 7];
+    const pcs = iv.map(x => x % 12);
+    if (pcs.includes(3) && pcs.includes(6) && !pcs.includes(7)) return 'dim';
+    if (pcs.includes(4) && pcs.includes(8) && !pcs.includes(7)) return 'aug';
+    if (pcs.includes(3)) return 'min';
+    if (pcs.includes(4)) return 'maj';
+    return 'other'; // sus, 5
+  }
+  function progSuffix(type) {
+    const map = { dom7: '7', maj7: 'maj7', min7: '7', m7b5: 'ø7', dim7: '°7', maj6: '6', min6: '6', dom9: '9', min9: '9', maj9: 'maj9', sus2: 'sus2', sus4: 'sus4', dom7sus4: '7sus4', five: '5', add9: 'add9', madd9: 'add9', mmaj7: 'maj7', dom13: '13', min11: '11', dom11: '11' };
+    return map[type] || '';
+  }
+  // Tonart finden: Dur und Moll (natürlich + harmonisch für die Dominante)
+  function progFindKey(ds) {
+    const list = ds.filter(Boolean);
+    if (!list.length) return null;
+    let best = null;
+    for (let k = 0; k < 12; k++) {
+      ['dur', 'moll'].forEach(mode => {
+        const sc = new Set((mode === 'dur' ? PROG_MAJ : PROG_MIN).map(x => (k + x) % 12));
+        if (mode === 'moll') sc.add((k + 11) % 12); // Leitton (E-Dur in A-Moll)
+        let score = 0;
+        list.forEach(d => {
+          const pcs = (JAM_CHORD_INTERVALS[d.type] || []).map(x => (d.root + x) % 12);
+          const inside = pcs.filter(p => sc.has(p)).length;
+          score += inside === pcs.length ? 1 : inside / pcs.length * 0.4;
+        });
+        const tonicQ = mode === 'dur' ? 'maj' : 'min';
+        const first = list[0], last = list[list.length - 1];
+        if (first.root === k && progTriadQuality(first.type) === tonicQ) score += 0.7;
+        if (last.root === k && progTriadQuality(last.type) === tonicQ) score += 0.7;
+        if (list.some(d => d.root === k && progTriadQuality(d.type) === tonicQ)) score += 0.3;
+        if (mode === 'dur') score += 0.05;
+        if (!best || score > best.score) best = { root: k, mode, score };
+      });
+    }
+    best.fit = best.score;
+    return best;
+  }
+  function progRoman(d, key) {
+    const scale = key.mode === 'dur' ? PROG_MAJ : PROG_MIN;
+    const rel = (d.root - key.root + 12) % 12;
+    let deg = scale.indexOf(rel), acc = '';
+    if (deg < 0) {
+      // chromatisch: als ♭ der nächsthöheren Stufe schreiben (♭VII, ♭VI, ♭III) bzw. ♯IV
+      const up = scale.indexOf((rel + 1) % 12);
+      if (up >= 0) { deg = up; acc = '♭'; } else { deg = scale.indexOf((rel + 11) % 12); acc = '♯'; }
+    }
+    if (key.mode === 'moll' && rel === 11) { deg = 6; acc = ''; } // Leitton-Stufe vii°
+    const q = progTriadQuality(d.type);
+    let r = PROG_ROMAN[deg];
+    if (q === 'min' || q === 'dim') r = r.toLowerCase();
+    if (q === 'dim' && d.type !== 'm7b5' && d.type !== 'dim7') r += '°';
+    if (q === 'aug') r += '+';
+    return { text: acc + r + progSuffix(d.type), base: acc + (q === 'min' || q === 'dim' ? PROG_ROMAN[deg].toLowerCase() : PROG_ROMAN[deg]), deg, acc, rel, q };
+  }
+  function progFunction(rm, key) {
+    if (rm.acc || rm.outside) return 'kommt von außerhalb der Tonart (siehe Besonderheiten)';
+    if (key.mode === 'dur') return ({ 0: 'Tonika (Ruhe, Zuhause)', 1: 'Subdominant-Vertreter', 2: 'Tonika-Vertreter', 3: 'Subdominante (Bewegung, weg von Zuhause)', 4: 'Dominante (Spannung, will zurück)', 5: 'Tonika-Parallele (traurige Ruhe)', 6: 'Dominant-Vertreter (starke Spannung)' })[rm.deg] || '';
+    return ({ 0: 'Tonika (Ruhe, Zuhause)', 1: 'Subdominant-Vertreter', 2: 'Tonika-Parallele (Dur-Farbe)', 3: 'Subdominante (Bewegung)', 4: rm.q === 'maj' ? 'Dominante (starke Spannung, will zurück)' : 'Moll-Dominante (weiche Spannung)', 5: 'Subdominant-Farbe', 6: rm.q === 'dim' ? 'Leitton-Akkord (Spannung)' : 'Dur-Akkord auf der 7. Stufe' })[rm.deg] || '';
+  }
+  const PROG_PATTERNS = [
+    { seq: ['I','V','vi','IV'], name: 'Pop-Folge („Axis“)', info: 'Die wohl häufigste Folge der Popmusik – unzählige Hits nutzen genau diese vier Akkorde.' },
+    { seq: ['vi','IV','I','V'], name: 'Moll-Pop-Folge', info: 'Dieselben vier Akkorde wie die Pop-Folge, beginnt aber auf der vi – klingt dadurch melancholischer.' },
+    { seq: ['I','vi','IV','V'], name: '50er-Jahre-Folge (Doo-Wop)', info: 'Typisch für Balladen der 50er und 60er Jahre („Stand by Me“-Stil).' },
+    { seq: ['ii','V','I'], name: 'II–V–I', info: 'Die wichtigste Kadenz im Jazz: Subdominante → Dominante → Tonika.' },
+    { seq: ['I','IV','V','I'], name: 'Grundkadenz (I–IV–V–I)', info: 'Das klassische Grundgerüst: Ruhe → Bewegung → Spannung → Ruhe.' },
+    { seq: ['I','IV','V'], name: 'Drei-Akkorde-Folge (I–IV–V)', info: 'Die Basis von Blues, Rock’n’Roll, Country und Folk.' },
+    { seq: ['I','V','IV'], name: 'Rock-Folge (I–V–IV)', info: 'Sehr beliebt im Rock – die Dominante geht „rückwärts“ zur Subdominante.' },
+    { seq: ['IV','V','I'], name: 'Schlusskadenz (IV–V–I)', info: 'Führt ganz deutlich nach Hause zur Tonika.' },
+    { seq: ['I','♭VII','IV'], name: 'Mixolydische Rock-Folge', info: 'Der ♭VII-Akkord stammt nicht aus der Dur-Tonleiter – das gibt den typischen Rock-Sound.' },
+    { seq: ['i','VII','VI','V'], name: 'Andalusische Kadenz', info: 'Absteigende Moll-Folge, typisch für Flamenco und spanische Musik (z. B. Am–G–F–E).' },
+    { seq: ['i','VI','III','VII'], name: 'Epische Moll-Folge', info: 'Sehr beliebt in Pop und Filmmusik – klingt groß und dramatisch.' },
+    { seq: ['i','iv','v'], name: 'Moll-Kadenz (i–iv–v)', info: 'Grundgerüst in Moll mit weicher Moll-Dominante.' },
+    { seq: ['i','iv','V'], name: 'Moll-Kadenz mit Dur-Dominante', info: 'Die Dur-Dominante (aus harmonisch Moll) zieht stark zurück zur Tonika.' },
+    { seq: ['ii','V','i'], name: 'Moll-II–V–I', info: 'Die Jazz-Kadenz in Moll.' },
+    { seq: ['I','vi','ii','V'], name: 'Turnaround (I–vi–ii–V)', info: 'Klassische Jazz- und Swing-Wendung, die immer wieder zum Anfang zurückführt.' },
+    { seq: ['I','IV'], name: 'Pendel I–IV', info: 'Einfaches Hin und Her zwischen Ruhe und Bewegung – typisch für Gospel und Rock.' }
+  ];
+  function progAnalyze(ds) {
+    let key = progFindKey(ds);
+    if (!key) return null;
+    let blues = false;
+    const fl = ds.filter(Boolean);
+    if (fl.length === 12) {
+      const r0 = fl[0].root, rel = fl.map(d => (d.root - r0 + 12) % 12).join(',');
+      if (['0,0,0,0,5,5,0,0,7,5,0,7', '0,5,0,0,5,5,0,0,7,5,0,7', '0,0,0,0,5,5,0,0,7,5,0,0', '0,5,0,0,5,5,0,0,7,5,0,0'].includes(rel)) { key = { root: r0, mode: 'dur', score: 99 }; blues = true; }
+    }
+    const rms = ds.map(d => d ? progRoman(d, key) : null);
+    const out = { key, rms, notes: [], patterns: [], ending: '' };
+    // Fremde Akkorde erklären
+    const scale = new Set((key.mode === 'dur' ? PROG_MAJ : PROG_MIN).map(x => (key.root + x) % 12));
+    if (key.mode === 'moll') scale.add((key.root + 11) % 12);
+    ds.forEach((d, i) => { if (d && !(JAM_CHORD_INTERVALS[d.type] || []).every(x => scale.has((d.root + x) % 12))) rms[i].outside = true; });
+    if (blues) {
+      rms.forEach(r => { if (r) r.outside = false; });
+      out.notes.push('Im Blues sind <em>alle</em> Akkorde oft Septakkorde (I7, IV7, V7). Die kleine Septime gehört streng genommen nicht zur Dur-Tonart – genau das macht den typischen Blues-Klang aus.');
+    }
+    ds.forEach((d, i) => {
+      if (!d || blues) return;
+      const pcs = (JAM_CHORD_INTERVALS[d.type] || []).map(x => (d.root + x) % 12);
+      if (pcs.every(p => scale.has(p))) return;
+      const nm = progChordShort(d);
+      const q = progTriadQuality(d.type);
+      const target = (d.root + 5) % 12;
+      const next = ds[(i + 1) % ds.length];
+      if ((q === 'maj') && scale.has(target) && target !== key.root) {
+        const tName = jamRootName(target, 'dur');
+        const resolves = next && next.root === target;
+        out.notes.push(`<strong>${nm}</strong> ist eine <em>Zwischendominante</em>: die Dominante zu ${tName}${resolves ? ' – und sie löst sich auch genau dorthin auf 👍' : ''}. Sie leiht sich kurz Spannung von außerhalb der Tonart.`);
+      } else if (key.mode === 'dur' && pcs.every(p => new Set(PROG_MIN.map(x => (key.root + x) % 12)).has(p))) {
+        out.notes.push(`<strong>${nm}</strong> ist aus der gleichnamigen Moll-Tonart <em>geliehen</em> (${jamRootName(key.root, 'moll')}-Moll). Das gibt eine dunklere, oft sehnsüchtige Farbe.`);
+      } else {
+        out.notes.push(`<strong>${nm}</strong> gehört nicht zur Tonart – ein bewusster Farbtupfer.`);
+      }
+    });
+    // Bekannte Folgen (auch im Kreis gelesen)
+    const seq = rms.filter(Boolean).map(r => r.base);
+    const n = seq.length;
+    PROG_PATTERNS.forEach(p => {
+      if (p.seq.length > n) return;
+      for (let st = 0; st < n; st++) {
+        let ok = true;
+        for (let j = 0; j < p.seq.length; j++) if (seq[(st + j) % n] !== p.seq[j]) { ok = false; break; }
+        if (ok && (st + p.seq.length <= n || n >= 3)) { out.patterns.push(p); break; }
+      }
+    });
+    // 12-Takt-Blues
+    if (n === 12) {
+      const b = seq.map(x => x.toUpperCase()).join('-');
+      if (['I-I-I-I-IV-IV-I-I-V-IV-I-V', 'I-IV-I-I-IV-IV-I-I-V-IV-I-V', 'I-I-I-I-IV-IV-I-I-V-IV-I-I', 'I-IV-I-I-IV-IV-I-I-V-IV-I-I'].includes(b))
+        out.patterns.unshift({ name: '12-Takt-Blues', info: 'Das berühmte Blues-Schema über 12 Takte – Grundlage von Blues, Rock’n’Roll und vielem mehr.' });
+    }
+    // Schluss
+    const vals = rms.filter(Boolean);
+    if (vals.length >= 2) {
+      const a = vals[vals.length - 2], z = vals[vals.length - 1];
+      if (z.deg === 0 && !z.acc && a.deg === 4 && !a.acc) out.ending = 'Der Schluss V → I ist ein <strong>Ganzschluss</strong> (authentische Kadenz): klingt ganz abgeschlossen.';
+      else if (z.deg === 0 && !z.acc && a.deg === 3 && !a.acc) out.ending = 'Der Schluss IV → I ist ein <strong>plagaler Schluss</strong> („Amen-Schluss“): weich und feierlich.';
+      else if (z.deg === 4 && !z.acc) out.ending = 'Die Folge endet auf der V: ein <strong>Halbschluss</strong>. Klingt offen, als ginge es weiter – ideal zum Wiederholen.';
+      else if (a.deg === 4 && !a.acc && z.deg === 5 && !z.acc) out.ending = 'V → vi ist ein <strong>Trugschluss</strong>: Man erwartet die I, es kommt aber die vi – eine kleine Überraschung.';
+      else if (z.deg === 0 && !z.acc) out.ending = 'Die Folge endet auf der Tonika – sie kommt am Ende zur Ruhe.';
+    }
+    return out;
+  }
+  function progRender() {
+    const body = document.getElementById('progBody');
+    if (!body) return;
+    if (!progState) progState = progLoad();
+    const dr = progState.draft;
+    const ds = dr.chords.map(progDetect);
+    const an = progAnalyze(ds);
+    let h = `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Tippe deine Griffe in die Diagramme: Punkt antippen = setzen/entfernen, oben über den Saiten: ○ = leer, ✕ = nicht spielen. Die App erkennt Namen, Töne und die Theorie dazu.</div>`;
+    h += `<div class="prog-row">
+      <label>Anzahl Akkorde: <select id="progCount">${Array.from({ length: 16 }, (_, i) => `<option value="${i + 1}" ${i + 1 === dr.chords.length ? 'selected' : ''}>${i + 1}</option>`).join('')}</select></label>
+      <input type="text" id="progName" placeholder="Name der Folge, z. B. Mein Lied – Strophe" value="${homeEsc(dr.name || '')}" maxlength="60" style="flex:1 1 200px;">
+    </div>
+    <div class="prog-row">
+      <button type="button" class="btn btn-secondary" data-act="playall">▶ Folge anhören</button>
+      <button type="button" class="btn btn-secondary" data-act="save">💾 Speichern</button>
+      <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
+      <button type="button" class="btn btn-secondary" data-act="new">✨ Neue Folge</button>
+    </div>`;
+    if (progState.saved.length) {
+      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></label>
+        <button type="button" class="btn btn-secondary" data-act="open">📂 Öffnen</button>
+        <button type="button" class="btn btn-secondary" data-act="del">🗑️ Löschen</button></div>`;
+    }
+    h += `<div class="prog-cards">`;
+    dr.chords.forEach((c, ci) => {
+      const d = ds[ci];
+      const rm = an && d ? an.rms[ci] : null;
+      let g = `<div class="jam-paint-grid"><div></div>`;
+      for (let si = 0; si < 6; si++) { const f = c.frets[si]; g += `<button type="button" class="jam-paint-top ${f === 0 ? 'open' : (f === -1 ? 'mute' : '')}" data-c="${ci}" data-top="${si}">${f === 0 ? '○' : (f === -1 ? '✕' : '')}</button>`; }
+      g += `<div></div>`;
+      for (let si = 0; si < 6; si++) g += `<div class="jam-paint-strname">${JAM_PAINT_STRINGS[si]}</div>`;
+      g += `<div></div><div class="jam-paint-nut ${c.start > 1 ? 'hidden' : ''}"></div>`;
+      for (let r = 0; r < 5; r++) {
+        const fret = c.start + r;
+        g += `<div class="jam-paint-fretno">${fret}</div>`;
+        for (let si = 0; si < 6; si++) {
+          let dot = '';
+          if (c.frets[si] === fret) { const pc = (JAM_PAINT_OPEN[si] + fret) % 12; dot = `<span class="jam-paint-dot ${d && pc === d.root ? 'root' : ''}">${d ? jamPcName(pc, d.root, d.type) : SCALE_VIEW_ROOTS[pc]}</span>`; }
+          g += `<button type="button" class="jam-paint-cell ${si === 0 ? 'first-col' : ''} ${si === 5 ? 'last-col' : ''}" data-c="${ci}" data-s="${si}" data-f="${fret}">${dot}</button>`;
+        }
+      }
+      g += `</div>`;
+      const played = c.frets.map((f, si) => f >= 0 ? JAM_PAINT_OPEN[si] + f : null).filter(p => p !== null);
+      let tones = '';
+      if (d) tones = 'Töne: ' + jamChordToneNames(d.root, d.type).join(' – ');
+      else if (played.length) tones = 'Töne: ' + [...new Set(played.map(p => SCALE_VIEW_ROOTS[p % 12]))].join(' – ');
+      h += `<div class="prog-card">
+        <div class="prog-head"><span>Akkord ${ci + 1}</span><span>Bund <button type="button" class="prog-fretbtn" data-act="down" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">◀</button>${c.start}<button type="button" data-act="up" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">▶</button></span></div>
+        ${g}
+        <div class="prog-name">${d ? homeEsc(progChordShort(d)) : (played.length ? '?' : '–')}</div>
+        ${rm ? `<div class="prog-roman">Stufe ${rm.text}</div>` : ''}
+        <div class="prog-tones">${tones}${d && d.missing ? ' <span title="Ein Akkordton fehlt">(ohne Quinte)</span>' : ''}</div>
+        <div class="prog-mini">
+          <button type="button" data-act="play" data-c="${ci}">▶</button>
+          ${d ? `<button type="button" data-act="grip" data-c="${ci}">🔁 Griff</button>` : ''}
+          <button type="button" data-act="pick" data-c="${ci}">📖 aus Liste</button>
+          <button type="button" data-act="clear" data-c="${ci}">✕ leeren</button>
+        </div>
+        ${state.progPick === ci ? `<div class="prog-pick"><select id="progPickRoot">${SCALE_VIEW_ROOTS.map((n, i) => `<option value="${i}" ${d && d.root === i ? 'selected' : ''}>${jamRootName(i, 'dur')}</option>`).join('')}</select><select id="progPickType">${renderJamChordTypeOptionsHtml(d ? d.type : 'dur')}</select><button type="button" data-act="pickok" data-c="${ci}">übernehmen</button></div>` : ''}
+      </div>`;
+    });
+    h += `</div>`;
+    // Theorie
+    const named = ds.filter(Boolean);
+    h += `<div class="prog-theory">`;
+    if (!named.length) {
+      h += `<div style="color:var(--text-muted);">Sobald Akkorde erkannt sind, erscheint hier die Theorie zu deiner Folge.</div>`;
+    } else {
+      const kName = jamRootName(an.key.root, an.key.mode) + (an.key.mode === 'dur' ? '-Dur' : '-Moll');
+      h += `<div style="font-size:1rem;"><strong>Folge:</strong> ${ds.map(d => d ? homeEsc(progChordShort(d)) : '?').join(' – ')}</div>`;
+      h += `<div><strong>Tonart:</strong> passt am besten zu <strong>${kName}</strong>${an.notes.length ? ' (mit Akkorden von außerhalb, siehe unten)' : ''}.</div>`;
+      h += `<div><strong>Stufen:</strong> ${an.rms.map(r => r ? r.text : '?').join(' – ')}</div>`;
+      h += `<h4>Was die Akkorde tun</h4><ul>`;
+      const seen = new Set();
+      ds.forEach((d, i) => { if (!d) return; const nm = progChordShort(d); if (seen.has(nm)) return; seen.add(nm); const f = progFunction(an.rms[i], an.key); h += `<li><strong>${homeEsc(nm)}</strong> = Stufe ${an.rms[i].text}${f ? ': ' + f : ''}</li>`; });
+      h += `</ul>`;
+      if (an.patterns.length) {
+        h += `<h4>Bekannte Folge erkannt 🎉</h4><ul>` + an.patterns.slice(0, 3).map(p => `<li><strong>${p.name}</strong> – ${p.info}</li>`).join('') + `</ul>`;
+      }
+      if (an.notes.length) h += `<h4>Besonderheiten</h4><ul>` + an.notes.map(x => `<li>${x}</li>`).join('') + `</ul>`;
+      if (an.ending) h += `<h4>Schluss</h4><div>${an.ending}</div>`;
+      const m8 = an.key.mode === 'dur' ? 'dur' : 'moll', pen = an.key.mode === 'dur' ? 'durPenta' : 'mollPenta';
+      h += `<h4>Improvisieren</h4><div>Über die ganze Folge passt die Tonleiter der Tonart: <button type="button" class="theory-chip" data-act="scale" data-m8="${m8}" data-root="${an.key.root}">${kName}</button> <button type="button" class="theory-chip" data-act="scale" data-m8="${pen}" data-root="${an.key.root}">${jamRootName(an.key.root, an.key.mode)}-${an.key.mode === 'dur' ? 'Dur' : 'Moll'}-Pentatonik</button></div>`;
+    }
+    h += `</div>`;
+    body.innerHTML = h;
+  }
+  function progPlayChord(c, t0) {
+    c.frets.forEach((f, si) => { if (f >= 0) playPitch(JAM_PAINT_OPEN[si] + f, t0 + si * 0.04); });
+  }
+  function progToBeat() {
+    const dr = progState.draft;
+    const items = dr.chords.map(c => ({ c, d: progDetect(c) })).filter(x => x.d);
+    if (!items.length) { showToast('Trage zuerst mindestens einen Akkord ein.'); return; }
+    const idx = MODULES.findIndex(m => m.type === 'jam');
+    if (idx < 0) return;
+    moduleSelectEl.value = String(idx); updateModule();
+    const jam = state.jam;
+    if (!jam) return;
+    stopJamPlayback();
+    jam.chordMode = 'free';
+    setJamBarCount(Math.min(JAM_MAX_BARS, items.length));
+    jam.bars.forEach((b, i) => {
+      const { c, d } = items[i % items.length];
+      b.chordRoot = d.root; b.chordType = d.type;
+      b.ownFrets = c.frets.slice(); b.ownFretsFor = d.root + ':' + d.type;
+    });
+    jam.parts = [];
+    jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
+    scheduleJamAutosave();
+    renderJamModule();
+    window.scrollTo(0, 0);
+    showToast(`${dr.name ? '„' + dr.name + '“' : 'Deine Folge'} ist im Beat: ${items.map(x => progChordShort(x.d)).join(' – ')} (ein Takt pro Akkord) ✔`);
+  }
+  document.addEventListener('click', e => {
+    const body = document.getElementById('progBody');
+    if (!body || !body.contains(e.target)) return;
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (!progState) progState = progLoad();
+    const dr = progState.draft;
+    const ci = t.dataset.c !== undefined ? parseInt(t.dataset.c, 10) : -1;
+    const c = dr.chords[ci];
+    if (t.dataset.top !== undefined && c) {
+      const si = +t.dataset.top; const f = c.frets[si];
+      c.frets[si] = f === 0 ? -1 : (f === -1 ? 0 : 0);
+      if (f > 0) c.frets[si] = 0;
+    } else if (t.dataset.s !== undefined && c) {
+      const si = +t.dataset.s, f = +t.dataset.f;
+      c.frets[si] = c.frets[si] === f ? -1 : f;
+      try { initAudio(); playPitch(JAM_PAINT_OPEN[si] + f); } catch (er) {}
+    } else {
+      const act = t.dataset.act;
+      if (!act) return;
+      if (act === 'up' && c) c.start = Math.min(12, c.start + 1);
+      else if (act === 'down' && c) c.start = Math.max(1, c.start - 1);
+      else if (act === 'clear' && c) dr.chords[ci] = progEmptyChord();
+      else if (act === 'play' && c) { try { initAudio(); progPlayChord(c, 0); } catch (er) {} return; }
+      else if (act === 'playall') { try { initAudio(); let k = 0; dr.chords.forEach(ch => { if (ch.frets.some(f => f >= 0)) { progPlayChord(ch, k * 1.4); k++; } }); } catch (er) {} return; }
+      else if (act === 'grip' && c) {
+        const d = progDetect(c); if (!d) return;
+        const vars = jamGripVariants(d.root, d.type);
+        if (!vars.length) { showToast('Für diesen Akkord gibt es keinen weiteren Griff.'); return; }
+        const i = vars.findIndex(f => f.join() === c.frets.join());
+        c.frets = vars[(i + 1) % vars.length].slice();
+        const pl = c.frets.filter(f => f > 0); const mx = pl.length ? Math.max(...pl) : 0;
+        c.start = mx <= 5 ? 1 : Math.min(12, Math.min(...pl));
+      }
+      else if (act === 'pick') state.progPick = state.progPick === ci ? null : ci;
+      else if (act === 'pickok' && c) {
+        const r = parseInt(document.getElementById('progPickRoot').value, 10), ty = document.getElementById('progPickType').value;
+        const vars = jamGripVariants(r, ty);
+        const fing = vars[0] || (getJamChordFingering(r, ty) || {}).frets;
+        if (!fing) { showToast('Für diesen Akkord gibt es kein Griffbild – trag ihn einfach selbst ein.'); return; }
+        c.frets = fing.slice();
+        const pl = c.frets.filter(f => f > 0); const mx = pl.length ? Math.max(...pl) : 0;
+        c.start = mx <= 5 ? 1 : Math.min(12, Math.min(...pl));
+        state.progPick = null;
+      }
+      else if (act === 'save') {
+        const name = (dr.name || '').trim();
+        if (!name) { showToast('Gib der Folge zuerst einen Namen.'); document.getElementById('progName').focus(); return; }
+        const copy = JSON.parse(JSON.stringify(dr)); copy.name = name;
+        const i = progState.saved.findIndex(p => p.name === name);
+        if (i >= 0) progState.saved[i] = copy; else progState.saved.push(copy);
+        showToast(`„${name}“ gespeichert ✔`);
+      }
+      else if (act === 'open') {
+        const i = parseInt(document.getElementById('progSavedSel').value, 10);
+        if (progState.saved[i]) { progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
+      }
+      else if (act === 'del') {
+        const i = parseInt(document.getElementById('progSavedSel').value, 10);
+        const p = progState.saved[i];
+        if (p && confirm(`„${p.name}“ wirklich löschen?`)) progState.saved.splice(i, 1);
+      }
+      else if (act === 'new') { progState.draft = { name: '', chords: [progEmptyChord(), progEmptyChord(), progEmptyChord(), progEmptyChord()] }; }
+      else if (act === 'beat') { progSave(); progToBeat(); return; }
+      else if (act === 'scale') {
+        const m8 = t.dataset.m8; if (!SCALE_VIEW_TYPES[m8]) return;
+        state.scaleViewRoot = parseInt(t.dataset.root, 10) || 0; state.scaleViewType = m8;
+        const idx = MODULES.findIndex(m => m.type === 'scaleview');
+        if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); }
+        return;
+      }
+      else return;
+    }
+    progSave();
+    progRender();
+  });
+  document.addEventListener('change', e => {
+    if (!e.target || !progState) return;
+    if (e.target.id === 'progCount') {
+      const n = parseInt(e.target.value, 10) || 4;
+      const ch = progState.draft.chords;
+      while (ch.length < n) ch.push(progEmptyChord());
+      ch.length = n;
+      progSave(); progRender();
+    }
+  });
+  document.addEventListener('input', e => {
+    if (e.target && e.target.id === 'progName' && progState) { progState.draft.name = e.target.value; progSave(); }
+  });
+
   // =================== Wochenplan ↔ Beat ===================
   let jamPlanCtx = null;   // { name, weekKey, rowIdx, msg }
   function plannerBeatLinks() {
@@ -5230,7 +5632,7 @@
     // ---- Einklappbare Bereiche (standardmäßig zu, damit es übersichtlich bleibt) ----
     html += `<details class="jam-section" data-sec="improv" ${ui.improv ? 'open' : ''}><summary>🎸 Improvisieren</summary>
       <div id="jamImprovBody"></div></details>`;
-    html += `<details class="jam-section" data-sec="paint" ${ui.paint ? 'open' : ''}><summary>✏️ Akkord malen</summary>
+    html += `<details class="jam-section" data-sec="paint" ${ui.paint ? 'open' : ''}><summary>✏️ Griff eintragen</summary>
       <div id="jamPaintBody"></div></details>`;
     html += `<details class="jam-section" data-sec="timing" ${ui.timing ? 'open' : ''}><summary>⏱️ Timing &amp; Feeling</summary>
       <div class="row" style="flex-wrap:wrap; gap:14px;">
@@ -5503,7 +5905,7 @@
       sub = `${jamChordName(bar)}${det.bassPc !== det.root ? ' mit ' + jamPcName(det.bassPc, det.root, det.type) + ' im Bass (Umkehrung)' : ''}<br>Akkordtöne: ${tones.join(' – ')}`;
       if (det.missing) sub += `<br><span style="font-size:0.78rem;">(${det.missing} Akkordton${det.missing > 1 ? 'e' : ''} fehlt – klingt trotzdem so)</span>`;
     } else if (P.frets.some(f => f >= 0)) {
-      sub = 'Noch kein Akkord erkennbar – mindestens zwei verschiedene Töne malen.';
+      sub = 'Noch kein Akkord erkennbar – mindestens zwei verschiedene Töne antippen.';
     }
     // Griffbild
     let g = `<div class="jam-paint-grid">`;
@@ -5586,7 +5988,7 @@
       const b = jam.bars[jam.activeBar];
       if (!b) return;
       const fing = jamBarFingering(b);
-      if (!fing) { showToast('Für diesen Akkord gibt es kein Griffbild – mal ihn einfach selbst.'); return; }
+      if (!fing) { showToast('Für diesen Akkord gibt es kein Griffbild – trag ihn einfach selbst ein.'); return; }
       P.frets = fing.frets.slice();
       const played = P.frets.filter(f => f > 0);
       const maxF = played.length ? Math.max(...played) : 0, minF = played.length ? Math.min(...played) : 1;
@@ -8470,6 +8872,7 @@
     document.getElementById('tunerRoot').style.display = 'none';
     document.getElementById('strumRoot').style.display = 'none';
     chordInfoBox.style.display = 'none';
+    { const pb = document.getElementById('progBox'); if (pb) pb.style.display = 'none'; }
     standardControls.style.display = 'flex';
 
     if (mod.type === 'instruction') {
@@ -8565,6 +8968,7 @@
       chordLabControlsRow.style.display = 'flex';
       chordLookupRow.style.display = 'flex';
       chordInfoBox.style.display = 'flex';
+      try { const pb = document.getElementById('progBox'); pb.style.display = 'block'; progRender(); } catch (e) { console.error(e); }
       try { chgRender(); document.getElementById('chgTrainer').style.display = 'block'; } catch (e) {}
       speechBannerEl.textContent = "🎸 Tippe die Töne deines Akkords auf das Griffbrett, oder schlag rechts oben einen Akkord zum Nachschlagen nach!";
       initChordLookup();
@@ -11268,7 +11672,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-08-1';
+  const APP_VERSION = '2026-10-08-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11336,5 +11740,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a476af51af0e4e6c',t:'MTc5MTQ3ODY0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4776497e94b5d82',t:'MTc5MTQ4NjA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
