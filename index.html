@@ -1537,6 +1537,7 @@
       </div>
       <button class="btn btn-secondary" id="chordLookupBtn">🔍 Griffposition anzeigen</button>
     </div>
+    <div class="row" id="chordLookupVariants" style="display:none; flex-wrap:wrap; gap:8px; align-items:flex-start;"></div>
 
     <div class="row" id="scaleViewControlsRow" style="display:none;">
       <div class="toggle-group">
@@ -2733,7 +2734,13 @@
     dom7b9: [0, 4, 7, 10, 13],
     dom7s9: [0, 4, 7, 10, 15],
     dom7b5: [0, 4, 6, 10],
-    dom7s5: [0, 4, 8, 10]
+    dom7s5: [0, 4, 8, 10],
+    mmaj7: [0, 3, 7, 11],
+    dom9sus4: [0, 5, 7, 10, 14],
+    maj7s11: [0, 4, 7, 11, 18],
+    dom7s11: [0, 4, 7, 10, 18],
+    maj13: [0, 4, 7, 11, 21],
+    dom7b13: [0, 4, 7, 10, 20]
   };
   const JAM_CHORD_TYPE_LABELS = {
     dur: 'Dur', moll: 'Moll', dim: 'dim', aug: 'aug',
@@ -2741,7 +2748,8 @@
     maj7: 'maj7', dom7: '7', min7: 'm7', m7b5: 'm7b5', dim7: 'dim7',
     sus2: 'sus2', sus4: 'sus4', dom7sus4: '7sus4',
     dom9: '9', maj9: 'Maj9', min9: 'm9', dom11: '11', min11: 'm11', dom13: '13',
-    dom7b9: '7b9', dom7s9: '7#9', dom7b5: '7b5', dom7s5: '7#5'
+    dom7b9: '7b9', dom7s9: '7#9', dom7b5: '7b5', dom7s5: '7#5',
+    mmaj7: 'm(maj7)', dom9sus4: '9sus4', maj7s11: 'maj7#11', dom7s11: '7#11', maj13: 'maj13', dom7b13: '7b13'
   };
   const JAM_CHORD_TYPE_OPTIONS = [
     { type: 'dur', label: 'Dur', group: 'Dreiklänge' },
@@ -2758,19 +2766,25 @@
     { type: 'min7', label: 'm7', group: 'Septakkorde' },
     { type: 'm7b5', label: 'm7b5 (halbvermindert)', group: 'Septakkorde' },
     { type: 'dim7', label: 'dim7 (vermindert)', group: 'Septakkorde' },
+    { type: 'mmaj7', label: 'm(maj7) (Moll mit großer Septime)', group: 'Septakkorde' },
     { type: 'sus2', label: 'Sus2', group: 'Sus-Akkorde' },
     { type: 'sus4', label: 'Sus4', group: 'Sus-Akkorde' },
     { type: 'dom7sus4', label: '7sus4', group: 'Sus-Akkorde' },
+    { type: 'dom9sus4', label: '9sus4 (7sus4/9)', group: 'Sus-Akkorde' },
     { type: 'dom9', label: '9 (Dominant 9)', group: 'Erweiterte Akkorde' },
     { type: 'maj9', label: 'Maj9', group: 'Erweiterte Akkorde' },
     { type: 'min9', label: 'm9', group: 'Erweiterte Akkorde' },
     { type: 'dom11', label: '11', group: 'Erweiterte Akkorde' },
     { type: 'min11', label: 'm11', group: 'Erweiterte Akkorde' },
     { type: 'dom13', label: '13', group: 'Erweiterte Akkorde' },
+    { type: 'maj13', label: 'maj13 (maj7/13)', group: 'Erweiterte Akkorde' },
+    { type: 'maj7s11', label: 'maj7#11', group: 'Erweiterte Akkorde' },
+    { type: 'dom7s11', label: '7#11', group: 'Erweiterte Akkorde' },
     { type: 'dom7b9', label: '7b9', group: 'Alterierte Akkorde' },
     { type: 'dom7s9', label: '7#9', group: 'Alterierte Akkorde' },
     { type: 'dom7b5', label: '7b5', group: 'Alterierte Akkorde' },
-    { type: 'dom7s5', label: '7#5', group: 'Alterierte Akkorde' }
+    { type: 'dom7s5', label: '7#5', group: 'Alterierte Akkorde' },
+    { type: 'dom7b13', label: '7b13', group: 'Alterierte Akkorde' }
   ];
 
   // Übliche Schreibweise des Akkord-Grundtons: im Modus "Diatonisch" passend zur Tonart
@@ -3880,6 +3894,7 @@
     if (modType === 'game' || modType === 'theory' || modType === 'instruction' || modType === 'planner') return;
 
     if (modType === 'chordlab') {
+      state.chordLabPrefer = null;
       if (state.chordPitches[stringIdx] === fretIdx) {
         delete state.chordPitches[stringIdx];
       } else {
@@ -3967,46 +3982,39 @@
 
     const pitchClasses = [...new Set(activePitches.map(p => (p - rootPitch) % 12))].sort((a, b) => a - b);
 
-    let chordType = "Akkord / Intervall-Kombination";
+    let chordType;
     const intervalsStr = pitchClasses.map(semitonesToIntervalName).join(', ');
-
-    const pcKey = pitchClasses.join(',');
-    if (pcKey === '0,4,7') chordType = `${rootName}-Dur (Major)`;
-    else if (pcKey === '0,3,7') chordType = `${rootName}-Moll (Minor)`;
-    else if (pcKey === '0,4,7,10') chordType = `${rootName}7 (Dominant 7th)`;
-    else if (pcKey === '0,4,7,11') chordType = `${rootName}maj7 (Major 7th)`;
-    else if (pcKey === '0,3,7,10') chordType = `${rootName}m7 (Minor 7th)`;
-    else if (pcKey === '0,2,7') chordType = `${rootName}sus2`;
-    else if (pcKey === '0,5,7') chordType = `${rootName}sus4`;
-    else if (pcKey === '0,3,6') chordType = `${rootName}dim (Vermindert)`;
-    else if (pcKey === '0,4,8') chordType = `${rootName}aug (Übermäßig)`;
-    else if (pcKey === '0,7') chordType = `${rootName}5 (Powerchord)`;
-    else if (pcKey === '0,4,7,9') chordType = `${rootName}6 (Major 6)`;
-    else if (pcKey === '0,3,7,9') chordType = `${rootName}m6 (Moll 6)`;
-    else if (pcKey === '0,2,4,7') chordType = `${rootName}add9`;
-    else if (pcKey === '0,2,3,7') chordType = `${rootName}madd9`;
-    else if (pcKey === '0,3,6,10') chordType = `${rootName}m7b5 (halbvermindert)`;
-    else if (pcKey === '0,3,6,9') chordType = `${rootName}dim7 (vermindert)`;
-    else if (pcKey === '0,5,7,10') chordType = `${rootName}7sus4`;
-    else if (pcKey === '0,2,4,7,10') chordType = `${rootName}9 (Dominant 9)`;
-    else if (pcKey === '0,2,4,7,11') chordType = `${rootName}Maj9`;
-    else if (pcKey === '0,2,3,7,10') chordType = `${rootName}m9`;
-    else if (pcKey === '0,2,5,7,10') chordType = `${rootName}11`;
-    else if (pcKey === '0,2,3,5,7,10') chordType = `${rootName}m11`;
-    else if (pcKey === '0,2,4,7,9,10') chordType = `${rootName}13`;
-    else if (pcKey === '0,1,4,7,10') chordType = `${rootName}7b9`;
-    else if (pcKey === '0,3,4,7,10') chordType = `${rootName}7#9`;
-    else if (pcKey === '0,4,6,10') chordType = `${rootName}7b5`;
-    else if (pcKey === '0,4,8,10') chordType = `${rootName}7#5`;
+    const det = pitchClasses.length >= 2 ? chordDetectFromPitches(activePitches, true, state.chordLabPrefer) : null;
+    const pcName = pc => getDisplayName(activePitches.find(p => p % 12 === pc) ?? (60 + pc));
+    let detailText = `Erkannte Intervalle ab Grundton ${rootName}: ${intervalsStr}`;
+    let altText = '';
+    if (det && det.score >= 70 && (pitchClasses.length > 2 || det.type === 'five')) {
+      const rn = pcName(det.root);
+      chordType = chordLabNiceName(rn, det.type);
+      const miss = (det.missingPcs || []).map(pc => { const iv = (pc - det.root + 12) % 12; return iv === 7 ? 'Quinte' : iv === 2 ? 'None' : iv === 5 ? 'Undezime' : semitonesToIntervalName(iv); });
+      if (miss.length) chordType += ` (ohne ${miss.join(' und ')})`;
+      if (det.bassPc !== det.root) chordType += ` – Umkehrung, ${rootName} im Bass (${rn}${det.type === 'dur' ? '' : det.type === 'moll' ? 'm' : JAM_CHORD_TYPE_LABELS[det.type]}/${rootName})`;
+      const rel = [...new Set(activePitches.map(p => (p - det.root + 120) % 12))].sort((x, y) => x - y);
+      detailText = `Töne ab Grundton ${rn}: ${rel.map(semitonesToIntervalName).join(', ')}`;
+      const same = { dom7s5: '7b13', dom7b5: '7#11' }[det.type];
+      if (same && miss.length === 0) altText = `💡 Gleiche Töne wie ${rn}${same} (ohne Quinte).`;
+      if (det.alts && det.alts.length) altText = '💡 Gleiche Töne, andere Lesart: ' + det.alts.map(c => chordLabNiceName(pcName(c.root), c.type) + (c.missing ? ' (ohne Quinte)' : '')).join(' oder ');
+    }
     else if (pitchClasses.length === 2) chordType = `Intervall: ${rootName} + ${intervalsStr}`;
     else chordType = `${rootName} (${pitchClasses.map(p => getDisplayName(rootPitch + p)).join('-')})`;
 
     chordNameDisplay.textContent = chordType;
-    chordDetailsDisplay.textContent = `Erkannte Intervalle ab Grundton ${rootName}: ${intervalsStr}`;
+    chordDetailsDisplay.textContent = detailText;
+    if (altText && state.showChordHints) { chordHintDisplay.style.display = 'block'; chordHintDisplay.textContent = altText; return; }
 
     if (state.showChordHints) {
       checkAlternativeChords(activePitches, rootNameCanonical);
     }
+  }
+
+  function chordLabNiceName(r, type) {
+    const extra = { dur: '-Dur', moll: '-Moll', five: '5 (Powerchord)', dim: 'dim (vermindert)', aug: 'aug (übermäßig)', m7b5: 'm7b5 (halbvermindert)', dim7: 'dim7 (vermindert)', mmaj7: 'm(maj7)', dom11: '11 (= 9sus4)' };
+    return r + (extra[type] || JAM_CHORD_TYPE_LABELS[type] || '');
   }
 
   function checkAlternativeChords(pitches, currentRootName) {
@@ -4133,6 +4141,10 @@
   function handleChordLookup() {
     const rootPc = parseInt(chordLookupRootSelect.value, 10);
     const chordType = chordLookupTypeSelect.value;
+    const vars = currentTuningKey === 'standard' ? jamGripVariants(rootPc, chordType).filter(f => Math.max(...f) <= 12) : [];
+    renderChordLookupVariants(vars, 0);
+    state.chordLabPrefer = { root: rootPc, type: chordType };
+    if (vars.length) { chordLabApplyFrets(vars[0]); return; }
     const voicing = findChordVoicing(rootPc, chordType);
     if (!voicing) {
       showToast("Für diesen Akkord wurde keine greifbare Position gefunden.");
@@ -4150,6 +4162,28 @@
       chordHintDisplay.style.display = 'block';
       chordHintDisplay.textContent = `💡 Für eine greifbare Position wurde weggelassen: ${voicing.missingNames.join(', ')}.`;
     }
+  }
+
+  function chordLabApplyFrets(frets) {
+    const np = {};
+    frets.forEach((f, i) => { if (f >= 0) np[5 - i] = f; });
+    state.chordPitches = np;
+    renderFretboard();
+    analyzeChord();
+    drawStaff();
+  }
+  function renderChordLookupVariants(vars, sel) {
+    const box = document.getElementById('chordLookupVariants');
+    if (!box) return;
+    if (!vars.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    box.style.display = 'flex';
+    box.innerHTML = `<div style="width:100%; font-size:0.85rem; color:var(--text-muted, #94a3b8);">${vars.length > 1 ? `${vars.length} Griffe – antippen zum Anzeigen:` : 'Griff:'}</div>` +
+      vars.map((f, i) => `<button type="button" class="chord-var-btn" data-i="${i}" style="background:${i === sel ? 'rgba(34,211,238,0.18)' : 'transparent'}; border:1px solid ${i === sel ? '#22d3ee' : 'rgba(148,163,184,0.35)'}; border-radius:10px; padding:4px; cursor:pointer; color:inherit;">${renderJamChordDiagramSvg(f)}<div style="font-size:0.75rem;">Griff ${i + 1}</div></button>`).join('');
+    box.querySelectorAll('.chord-var-btn').forEach(b => b.onclick = () => {
+      const i = parseInt(b.dataset.i, 10);
+      chordLabApplyFrets(vars[i]);
+      renderChordLookupVariants(vars, i);
+    });
   }
 
   function nextGameQuestion() {
@@ -4524,7 +4558,13 @@
       add9: [S('durPenta','Dur-Pentatonik'), S('dur','Dur (Ionisch)')],
       maj6: [S('durPenta','Dur-Pentatonik'), S('dur','Dur (Ionisch)')],
       min6: [S('dorisch','Dorisch'), S('melmoll','Melodisches Moll')],
-      madd9: [S('mollPenta','Moll-Pentatonik'), S('dorisch','Dorisch')]
+      madd9: [S('mollPenta','Moll-Pentatonik'), S('dorisch','Dorisch')],
+      mmaj7: [S('melmoll','Melodisches Moll'), S('harmoll','Harmonisches Moll')],
+      dom9sus4: [S('mixolydisch','Mixolydisch'), S('mollPenta','Moll-Pentatonik')],
+      maj7s11: [S('lydisch','Lydisch')],
+      dom7s11: [S('mixolydisch','Mixolydisch'), S('lydisch','Lydisch (mit kleiner Septime)')],
+      maj13: [S('dur','Dur (Ionisch)'), S('lydisch','Lydisch')],
+      dom7b13: [S('mixolydisch','Mixolydisch'), S('harmoll','Harmonisches Moll (eine Quarte tiefer)', (rootPc + 5) % 12)]
     };
     if (map[type]) return map[type];
     // Sicherheitsnetz für weitere Akkordtypen: nach der Terz entscheiden
@@ -4533,6 +4573,18 @@
 
   // ---------- Mini-Griffbilder ----------
   // Saiten E A D G H e; -1 = nicht spielen. Offene Akkorde für die häufigsten Fälle:
+  // Buchstabenabstände je Intervall (z.B. 15 = ♯9, 18 = ♯11, 20 = ♭13)
+  const JAM_IV_STEPS = {0:0,1:1,2:1,3:2,4:2,5:3,6:4,7:4,8:4,9:5,10:6,11:6,13:1,14:1,15:1,17:3,18:3,20:5,21:5};
+  // Griffe aus dem Akkord-Lexikon (Saiten E A D G H e, -1 = nicht spielen), je Akkord 1–3 Varianten
+  const JAM_BOOK_GRIPS = {"0|dur":[[-1,3,2,0,1,0],[-1,3,5,5,5,3],[8,10,10,9,8,8]],"0|moll":[[-1,3,5,5,4,3],[8,10,10,8,8,8]],"0|maj6":[[-1,3,2,2,1,0],[8,-1,7,9,8,0]],"0|min6":[[-1,3,5,2,4,-1],[8,-1,7,8,8,-1]],"0|sus4":[[-1,3,3,0,1,-1],[-1,3,5,5,6,-1],[8,10,10,10,8,8]],"0|five":[[-1,3,5,-1,-1,-1],[8,10,-1,-1,-1,-1]],"0|aug":[[-1,3,2,1,1,0],[-1,-1,10,9,9,0]],"0|dim":[[-1,3,4,5,4,-1],[8,-1,10,8,7,-1]],"0|maj7":[[-1,3,2,0,0,0],[-1,3,5,4,5,3],[8,-1,9,9,8,0]],"0|dom7":[[-1,3,2,3,1,0],[-1,3,5,3,5,3],[8,10,8,9,8,8]],"0|min7":[[-1,3,5,3,4,3],[8,10,8,8,8,8]],"0|m7b5":[[-1,3,4,3,4,-1],[8,-1,8,8,7,-1]],"0|dom7sus4":[[-1,3,5,3,6,3],[8,10,8,10,8,8]],"0|dom7s5":[[-1,3,6,3,5,-1],[8,-1,8,9,9,0]],"0|dim7":[[-1,3,4,2,4,-1],[8,-1,7,8,7,-1]],"0|mmaj7":[[-1,3,1,0,0,-1],[8,10,9,8,8,8]],"0|sus2":[[-1,3,5,5,3,3]],"0|add9":[[-1,3,2,0,3,0]],"0|maj9":[[-1,3,2,4,3,0]],"0|dom9":[[-1,3,2,3,3,0]],"0|dom7b9":[[-1,3,2,3,2,0]],"0|dom7s9":[[-1,3,2,3,4,0]],"0|dom9sus4":[[-1,3,3,3,3,3]],"0|min9":[[-1,3,1,3,3,-1]],"0|maj7s11":[[8,-1,9,9,7,0]],"0|dom7s11":[[8,-1,8,9,7,0]],"0|min11":[[8,-1,8,8,6,-1]],"0|maj13":[[8,-1,9,9,10,0]],"0|dom13":[[8,-1,8,9,10,0]],"0|dom7b13":[[8,-1,8,9,9,0]],"1|dur":[[-1,4,6,6,6,4],[9,11,11,10,9,9]],"1|moll":[[-1,4,6,6,5,4],[9,11,11,9,9,9]],"1|maj6":[[-1,4,3,3,2,-1],[9,-1,8,10,9,-1]],"1|min6":[[-1,4,6,3,5,0],[9,-1,8,9,9,0]],"1|sus4":[[-1,4,6,6,7,4],[9,11,11,11,9,9]],"1|five":[[-1,4,6,-1,-1,-1],[9,11,-1,-1,-1,-1]],"1|aug":[[-1,4,3,2,2,-1],[9,-1,11,10,10,-1]],"1|dim":[[-1,4,5,6,5,0],[9,-1,11,9,8,0]],"1|maj7":[[-1,4,6,5,6,4],[9,-1,10,10,9,-1]],"1|dom7":[[-1,4,3,4,2,-1],[-1,4,6,4,6,4],[9,11,9,10,9,9]],"1|min7":[[-1,4,6,4,5,4],[9,11,9,9,9,9]],"1|m7b5":[[-1,4,5,4,5,0],[9,-1,9,9,8,0]],"1|dom7sus4":[[-1,4,6,4,7,4]],"1|dom7s5":[[-1,4,7,4,6,-1],[9,-1,9,10,10,-1]],"1|dim7":[[-1,4,5,3,5,0],[9,-1,8,9,8,0]],"1|mmaj7":[[-1,4,6,5,5,4],[9,11,10,9,9,9]],"1|sus2":[[-1,4,6,6,4,4]],"1|add9":[[-1,-1,11,10,9,11]],"1|maj9":[[-1,4,3,5,4,-1]],"1|dom9":[[-1,4,3,4,4,-1]],"1|dom7b9":[[-1,4,3,4,3,-1]],"1|dom7s9":[[-1,4,3,4,5,-1]],"1|dom9sus4":[[-1,4,4,4,4,4]],"1|min9":[[-1,4,2,4,4,0]],"1|maj7s11":[[9,-1,10,10,8,-1]],"1|dom7s11":[[9,-1,9,10,8,-1]],"1|min11":[[-1,-1,11,11,9,0]],"1|maj13":[[9,-1,10,10,11,-1]],"1|dom13":[[9,-1,9,10,11,-1]],"1|dom7b13":[[9,-1,9,10,10,-1]],"2|dur":[[-1,-1,0,2,3,2],[-1,5,7,7,7,5],[10,12,12,11,10,10]],"2|moll":[[-1,-1,0,2,3,1],[-1,5,7,7,6,5],[10,12,12,10,10,10]],"2|maj6":[[-1,-1,0,2,0,2],[-1,5,4,4,3,-1],[10,-1,9,11,10,-1]],"2|min6":[[-1,-1,0,2,0,1],[-1,5,7,4,6,-1],[10,-1,9,10,10,-1]],"2|sus4":[[-1,-1,-1,2,3,3],[-1,5,7,7,8,5],[10,12,12,12,10,10]],"2|five":[[-1,5,7,-1,-1,-1],[10,12,-1,-1,-1,-1]],"2|aug":[[-1,-1,12,11,11,-1],[10,-1,12,11,11,-1]],"2|dim":[[-1,5,6,7,6,-1],[10,-1,12,10,9,-1]],"2|maj7":[[-1,-1,0,2,2,2],[-1,5,7,6,7,5],[10,-1,11,11,10,-1]],"2|dom7":[[-1,-1,0,2,1,2],[-1,5,4,5,3,-1],[-1,5,7,5,7,5],[10,12,10,11,10,10]],"2|min7":[[-1,-1,0,2,1,1],[-1,5,7,5,6,5],[10,12,10,10,10,10]],"2|m7b5":[[-1,5,6,5,6,-1],[10,-1,10,10,9,-1]],"2|dom7sus4":[[-1,5,7,5,8,5],[10,12,10,12,10,10]],"2|dom7s5":[[-1,5,8,5,7,-1],[10,-1,10,11,11,-1]],"2|dim7":[[-1,5,6,4,6,-1],[10,-1,9,10,9,-1]],"2|mmaj7":[[-1,5,7,6,6,5],[10,12,11,10,10,10]],"2|sus2":[[-1,-1,0,2,3,0]],"2|add9":[[0,0,12,11,10,12]],"2|maj9":[[-1,5,4,6,5,-1]],"2|dom9":[[-1,5,4,5,5,0]],"2|dom7b9":[[-1,5,4,5,4,-1]],"2|dom7s9":[[-1,5,4,5,6,-1]],"2|dom9sus4":[[-1,5,5,5,5,5]],"2|min9":[[-1,5,3,5,5,0]],"2|maj7s11":[[10,-1,11,11,9,-1]],"2|dom7s11":[[10,-1,10,11,9,-1]],"2|min11":[[10,-1,10,10,8,-1]],"2|maj13":[[10,-1,11,11,12,-1]],"2|dom13":[[10,-1,10,11,12,-1]],"2|dom7b13":[[10,-1,10,11,11,-1]],"3|dur":[[-1,6,8,8,8,6],[11,13,13,12,11,11]],"3|moll":[[-1,6,8,8,7,6],[11,13,13,11,11,11]],"3|maj6":[[-1,6,5,5,4,-1],[11,-1,10,12,11,-1]],"3|min6":[[-1,6,8,5,7,-1],[11,-1,10,11,11,-1]],"3|sus4":[[-1,6,8,8,9,6],[11,13,13,13,11,11]],"3|five":[[-1,6,8,-1,-1,-1],[11,13,-1,-1,-1,-1]],"3|aug":[[-1,6,5,4,4,-1],[11,-1,13,12,12,-1]],"3|dim":[[-1,6,7,8,7,-1],[11,-1,13,11,10,-1]],"3|maj7":[[-1,6,8,7,8,6]],"3|dom7":[[-1,6,5,6,4,-1],[-1,6,8,6,8,6],[11,13,11,12,11,11]],"3|min7":[[-1,6,8,6,7,6],[11,13,11,11,11,11]],"3|m7b5":[[-1,6,7,6,7,-1],[11,-1,11,11,10,-1]],"3|dom7sus4":[[-1,6,8,6,9,6],[11,13,11,13,11,11]],"3|dom7s5":[[-1,6,9,6,8,-1],[11,-1,11,12,12,-1]],"3|dim7":[[-1,6,7,5,7,-1],[11,-1,10,11,10,-1]],"3|mmaj7":[[-1,6,8,7,7,6],[11,13,12,11,11,11]],"3|sus2":[[-1,6,8,8,6,6]],"3|add9":[[-1,-1,13,12,11,13]],"3|maj9":[[-1,6,5,7,6,-1]],"3|dom9":[[-1,6,5,6,6,-1]],"3|dom7b9":[[-1,6,5,6,5,-1]],"3|dom9sus4":[[-1,6,6,6,6,6]],"3|min9":[[-1,6,4,6,6,-1]],"3|maj7s11":[[11,-1,12,12,10,-1]],"3|dom7s11":[[11,-1,11,12,10,-1]],"3|min11":[[11,-1,11,11,9,-1]],"3|maj13":[[11,-1,12,12,13,-1]],"3|dom13":[[11,-1,11,12,13,-1]],"3|dom7b13":[[11,-1,11,12,12,-1]],"4|dur":[[0,2,2,1,0,0],[0,7,9,9,9,7]],"4|moll":[[0,2,2,0,0,0],[-1,7,9,9,8,7]],"4|maj6":[[0,2,2,1,2,0],[0,7,6,6,5,0]],"4|min6":[[0,2,2,0,2,0]],"4|sus4":[[0,2,2,2,0,0],[-1,7,9,9,10,7]],"4|five":[[0,2,-1,-1,-1,-1],[-1,7,9,-1,-1,-1]],"4|aug":[[0,3,2,1,1,0],[0,7,6,5,5,0]],"4|dim":[[0,-1,5,3,5,0],[-1,7,8,9,8,0]],"4|maj7":[[0,2,1,1,0,0],[0,7,9,8,9,7]],"4|dom7":[[0,2,0,1,0,0],[0,7,9,7,9,7]],"4|min7":[[0,2,0,0,0,0],[0,7,9,7,8,7]],"4|m7b5":[[0,-1,2,3,3,3],[0,7,8,7,8,0]],"4|dom7sus4":[[0,2,0,2,0,0],[0,7,9,7,10,7]],"4|dom7s5":[[0,3,2,1,3,0],[0,7,10,7,9,-1]],"4|dim7":[[0,1,2,0,2,0],[0,4,5,3,5,0]],"4|mmaj7":[[0,2,1,0,0,0],[0,7,9,8,8,7]],"4|sus2":[[0,7,9,9,7,7]],"4|add9":[[0,-1,2,1,0,2]],"4|maj9":[[0,7,6,8,7,0]],"4|dom9":[[0,7,6,7,7,0]],"4|dom7b9":[[0,7,6,7,6,0]],"4|dom7s9":[[0,7,6,7,8,0]],"4|dom9sus4":[[0,7,7,7,7,7]],"4|min9":[[0,-1,5,7,7,-1]],"4|maj7s11":[[12,-1,13,13,11,0]],"4|dom7s11":[[12,-1,12,13,11,-1]],"4|min11":[[12,-1,12,12,10,0]],"4|maj13":[[0,-1,1,1,2,0]],"4|dom13":[[0,-1,0,1,2,0]],"4|dom7b13":[[0,-1,0,1,1,0]],"5|dur":[[1,3,3,2,1,1],[-1,8,10,10,10,8]],"5|moll":[[1,3,3,1,1,1],[-1,8,10,10,9,8]],"5|maj6":[[1,0,0,2,1,-1],[-1,8,7,7,6,-1]],"5|min6":[[1,-1,0,1,1,-1],[-1,8,10,7,9,-1]],"5|sus4":[[1,3,3,3,1,1],[-1,8,10,10,11,8]],"5|five":[[1,3,-1,-1,-1,-1],[-1,8,10,-1,-1,-1]],"5|aug":[[1,-1,3,2,2,-1],[-1,8,7,6,6,-1]],"5|dim":[[1,-1,3,1,0,-1],[-1,8,9,10,9,-1]],"5|maj7":[[-1,-1,3,2,1,0],[1,0,2,2,1,0],[-1,8,10,9,10,8]],"5|dom7":[[1,3,1,2,1,1],[-1,8,10,8,10,8]],"5|min7":[[1,3,1,1,1,1],[-1,8,10,8,9,8]],"5|m7b5":[[1,-1,1,1,0,-1],[-1,8,9,8,9,-1]],"5|dom7sus4":[[1,3,1,3,1,1],[-1,8,10,8,11,8]],"5|dom7s5":[[1,0,1,2,2,-1],[-1,8,11,8,10,-1]],"5|dim7":[[1,-1,0,1,0,-1],[-1,8,9,7,9,-1]],"5|mmaj7":[[1,3,2,1,1,1],[-1,8,10,9,9,8]],"5|sus2":[[-1,8,10,10,8,8]],"5|add9":[[-1,-1,3,2,1,3]],"5|maj9":[[-1,8,7,9,8,-1]],"5|dom9":[[-1,8,7,8,8,-1]],"5|dom7b9":[[-1,8,7,8,7,-1]],"5|dom7s9":[[-1,8,7,8,9,-1]],"5|dom9sus4":[[-1,8,8,8,8,8]],"5|min9":[[-1,8,6,8,8,-1]],"5|maj7s11":[[1,0,2,2,0,0]],"5|dom7s11":[[1,0,1,2,0,-1]],"5|min11":[[13,-1,13,13,11,-1]],"5|maj13":[[1,0,2,2,3,0]],"5|dom13":[[1,0,1,2,3,-1]],"5|dom7b13":[[1,0,1,2,2,-1]],"6|dur":[[2,4,4,3,2,2],[-1,9,11,11,11,9]],"6|moll":[[2,4,4,2,2,2],[-1,9,11,11,10,9]],"6|maj6":[[2,-1,1,3,2,-1],[-1,9,8,8,7,-1]],"6|min6":[[2,0,1,2,2,-1],[-1,9,11,8,10,-1]],"6|sus4":[[2,4,4,4,2,2],[-1,9,11,11,12,9]],"6|five":[[2,4,-1,-1,-1,-1],[-1,9,11,-1,-1,-1]],"6|aug":[[2,-1,4,3,3,-1],[-1,9,8,7,7,-1]],"6|dim":[[2,0,4,2,1,-1],[-1,9,10,11,10,-1]],"6|maj7":[[2,-1,3,3,2,-1],[-1,9,11,10,11,9]],"6|dom7":[[2,4,2,3,2,2],[-1,9,8,9,7,-1],[-1,9,11,9,11,9]],"6|min7":[[2,4,2,2,2,2],[-1,9,11,9,10,9]],"6|m7b5":[[2,0,2,2,1,0],[-1,9,10,9,10,-1]],"6|dom7sus4":[[2,4,2,4,2,2],[-1,9,11,9,12,9]],"6|dom7s5":[[2,-1,2,3,3,0],[-1,9,12,9,11,-1]],"6|dim7":[[2,0,1,2,1,-1],[-1,9,10,8,10,-1]],"6|mmaj7":[[2,4,3,2,2,2],[-1,9,11,10,10,9]],"6|sus2":[[-1,9,11,11,9,9]],"6|add9":[[-1,-1,4,3,2,4]],"6|maj9":[[-1,9,8,10,9,-1]],"6|dom9":[[-1,9,8,9,9,-1]],"6|dom7b9":[[-1,9,8,9,8,-1]],"6|dom7s9":[[-1,9,8,9,10,-1]],"6|dom9sus4":[[-1,9,9,9,9,9]],"6|min9":[[-1,9,7,9,9,-1]],"6|maj7s11":[[2,-1,3,3,1,-1]],"6|dom7s11":[[2,-1,2,3,1,-1]],"6|min11":[[2,0,2,2,0,0]],"6|maj13":[[2,-1,3,3,4,-1]],"6|dom13":[[2,-1,2,3,4,0]],"6|dom7b13":[[2,-1,2,3,3,0]],"7|dur":[[3,2,0,0,0,3],[3,5,5,4,3,3],[-1,10,12,12,12,10]],"7|moll":[[3,5,5,3,3,3],[-1,10,12,12,11,10]],"7|maj6":[[3,2,0,0,3,0],[-1,10,9,9,8,0]],"7|min6":[[3,-1,2,3,3,0],[-1,10,12,9,11,0]],"7|sus4":[[3,5,5,5,3,3],[-1,10,12,12,13,10]],"7|five":[[3,5,-1,-1,-1,-1],[-1,10,12,-1,-1,-1]],"7|aug":[[3,-1,5,4,4,-1],[-1,10,9,8,8,-1]],"7|dim":[[3,-1,5,3,2,-1],[-1,10,11,12,11,-1]],"7|maj7":[[3,2,0,0,0,2],[3,-1,4,4,3,-1],[-1,10,12,11,12,10]],"7|dom7":[[3,2,0,0,0,1],[3,5,3,4,3,3],[-1,10,9,10,8,-1],[-1,10,12,10,12,10]],"7|min7":[[3,5,3,3,3,3],[-1,10,12,10,11,10]],"7|m7b5":[[3,-1,3,3,2,-1],[-1,10,11,10,11,-1]],"7|dom7sus4":[[3,5,3,5,3,3],[-1,10,12,10,13,10]],"7|dom7s5":[[3,-1,3,4,4,-1],[-1,10,13,10,12,-1]],"7|dim7":[[3,-1,2,3,2,-1],[-1,10,11,9,11,-1]],"7|mmaj7":[[3,5,4,3,3,3],[-1,10,12,11,11,10]],"7|sus2":[[-1,10,12,12,10,10]],"7|add9":[[3,2,0,2,0,3]],"7|maj9":[[-1,10,9,11,10,-1]],"7|dom9":[[-1,10,9,10,10,-1]],"7|dom7b9":[[-1,10,9,10,9,-1]],"7|dom7s9":[[-1,10,9,10,11,-1]],"7|dom9sus4":[[-1,10,10,10,10,10]],"7|min9":[[-1,10,8,10,10,-1]],"7|maj7s11":[[3,-1,4,4,2,-1]],"7|dom7s11":[[3,-1,3,4,2,-1]],"7|min11":[[3,-1,3,3,1,-1]],"7|maj13":[[3,-1,4,4,5,0]],"7|dom13":[[3,-1,3,4,5,-1]],"7|dom7b13":[[3,-1,3,4,4,-1]],"8|dur":[[4,6,6,5,4,4],[-1,11,13,13,13,11]],"8|moll":[[4,6,6,4,4,4],[-1,11,13,13,12,11]],"8|maj6":[[4,-1,3,5,4,-1],[-1,11,10,10,9,-1]],"8|min6":[[4,-1,3,4,4,-1],[-1,11,13,10,12,-1]],"8|sus4":[[4,6,6,6,4,4],[-1,11,13,13,14,11]],"8|five":[[4,6,-1,-1,-1,-1],[-1,11,13,-1,-1,-1]],"8|aug":[[4,-1,6,5,5,0],[-1,11,10,9,9,-1]],"8|dim":[[4,-1,6,4,3,-1],[-1,11,12,13,12,-1]],"8|maj7":[[4,-1,5,5,4,-1],[-1,11,13,12,13,11]],"8|dom7":[[4,6,4,5,4,4],[-1,11,10,11,9,-1],[-1,11,13,11,13,11]],"8|min7":[[4,6,4,4,4,4],[-1,11,13,11,12,11]],"8|m7b5":[[4,-1,4,4,3,-1],[-1,11,12,11,12,-1]],"8|dom7sus4":[[4,6,4,6,4,4],[-1,11,13,11,14,11]],"8|dom7s5":[[4,-1,4,5,5,-1]],"8|dim7":[[4,-1,3,4,3,-1],[-1,11,12,10,12,-1]],"8|mmaj7":[[4,6,5,4,4,4],[-1,11,13,12,12,11]],"8|sus2":[[-1,11,13,13,11,11]],"8|add9":[[-1,-1,6,5,4,6]],"8|maj9":[[-1,11,10,12,11,-1]],"8|dom9":[[-1,11,10,11,11,-1]],"8|dom7b9":[[-1,11,10,11,10,-1]],"8|dom7s9":[[-1,11,10,11,12,-1]],"8|dom9sus4":[[-1,11,11,11,11,11]],"8|min9":[[-1,11,9,11,11,-1]],"8|maj7s11":[[4,-1,5,5,3,-1]],"8|dom7s11":[[4,-1,4,5,3,-1]],"8|min11":[[4,-1,4,4,2,-1]],"8|maj13":[[4,-1,5,5,6,-1]],"8|dom13":[[4,-1,4,5,6,-1]],"8|dom7b13":[[4,-1,4,5,5,0]],"9|dur":[[-1,0,2,2,2,0],[5,7,7,6,5,5]],"9|moll":[[-1,0,2,2,1,0],[5,7,7,5,5,5]],"9|maj6":[[-1,0,2,2,2,2],[5,0,4,6,5,0]],"9|min6":[[-1,0,2,2,1,2],[5,0,4,5,5,0]],"9|sus4":[[-1,0,2,2,3,0],[5,7,7,7,5,5]],"9|five":[[-1,0,2,-1,-1,-1],[5,7,-1,-1,-1,-1]],"9|aug":[[-1,0,3,2,2,-1],[5,0,7,6,6,-1]],"9|dim":[[-1,12,13,14,13,-1]],"9|maj7":[[-1,0,2,1,2,0],[5,0,6,6,5,0]],"9|dom7":[[-1,0,2,0,2,0],[5,7,5,6,5,5],[-1,12,11,12,10,0]],"9|min7":[[-1,0,2,0,1,0],[5,7,5,5,5,5]],"9|m7b5":[[-1,0,1,0,1,-1],[5,0,5,5,4,-1]],"9|dom7sus4":[[-1,0,2,0,3,0],[5,7,5,7,5,5]],"9|dom7s5":[[-1,0,3,0,2,-1],[5,0,5,6,6,-1]],"9|dim7":[[-1,0,1,2,1,2],[5,0,4,5,4,-1]],"9|mmaj7":[[-1,0,2,1,1,0],[5,7,6,5,5,5]],"9|sus2":[[-1,0,2,2,0,0]],"9|add9":[[-1,0,7,6,5,7]],"9|maj9":[[-1,12,11,13,12,-1]],"9|dom9":[[-1,12,11,12,12,-1]],"9|dom7b9":[[-1,12,11,12,11,-1]],"9|dom7s9":[[-1,12,11,12,13,-1]],"9|dom9sus4":[[-1,0,0,0,0,0]],"9|min9":[[-1,12,10,12,12,-1]],"9|maj7s11":[[5,0,6,6,4,-1]],"9|dom7s11":[[5,0,5,6,4,-1]],"9|min11":[[5,0,5,5,3,-1]],"9|maj13":[[5,0,6,6,7,-1]],"9|dom13":[[5,0,5,6,7,-1]],"9|dom7b13":[[5,-1,5,6,6,-1]],"10|dur":[[-1,1,3,3,3,1],[6,8,8,7,6,6]],"10|moll":[[-1,1,3,3,2,1],[6,8,8,6,6,6]],"10|maj6":[[-1,1,3,0,3,-1],[6,-1,5,7,6,-1]],"10|min6":[[-1,1,3,0,2,-1],[6,-1,5,6,6,-1]],"10|sus4":[[-1,1,3,3,4,1],[6,8,8,8,6,6]],"10|five":[[-1,1,3,-1,-1,-1],[6,8,-1,-1,-1,-1]],"10|aug":[[-1,1,4,3,3,-1]],"10|dim":[[-1,1,2,3,2,0],[6,-1,8,6,5,-1]],"10|maj7":[[-1,1,3,2,3,1],[6,-1,7,7,6,-1]],"10|dom7":[[-1,1,3,1,3,1],[6,8,6,7,6,6],[-1,13,12,13,11,-1]],"10|min7":[[-1,1,3,1,2,1],[6,8,6,6,6,6]],"10|m7b5":[[-1,1,2,1,2,0],[6,-1,6,6,5,0]],"10|dom7sus4":[[-1,1,3,1,4,1]],"10|dom7s5":[[-1,1,4,1,3,-1],[6,-1,6,7,7,-1]],"10|dim7":[[-1,1,2,0,2,0],[6,-1,5,6,5,0]],"10|mmaj7":[[-1,1,3,2,2,1],[6,8,7,6,6,6]],"10|sus2":[[-1,1,3,3,1,1]],"10|add9":[[-1,-1,8,7,6,8]],"10|maj9":[[-1,1,0,2,1,-1]],"10|dom9":[[-1,1,0,1,1,-1]],"10|dom7b9":[[-1,1,0,1,0,-1]],"10|dom7s9":[[-1,1,0,1,2,-1]],"10|dom9sus4":[[-1,1,1,1,1,1]],"10|min9":[[-1,13,11,13,13,-1]],"10|maj7s11":[[6,-1,7,7,5,0]],"10|dom7s11":[[6,-1,6,7,5,0]],"10|min11":[[6,-1,6,6,4,-1]],"10|maj13":[[6,-1,7,7,8,-1]],"10|dom13":[[6,-1,6,7,8,-1]],"10|dom7b13":[[6,-1,6,7,7,-1]],"11|dur":[[-1,2,4,4,4,2],[7,9,9,8,7,7]],"11|moll":[[-1,2,4,4,3,2],[7,9,9,7,7,7]],"11|maj6":[[-1,2,1,1,0,-1],[7,-1,6,8,7,-1]],"11|min6":[[-1,2,4,1,3,-1],[7,-1,6,7,7,-1]],"11|sus4":[[-1,2,4,4,5,2],[7,9,9,9,7,7]],"11|five":[[-1,2,4,-1,-1,-1],[7,9,-1,-1,-1,-1]],"11|aug":[[-1,2,1,0,0,-1],[7,-1,9,8,8,-1]],"11|dim":[[-1,2,3,4,3,-1],[7,-1,9,7,6,-1]],"11|maj7":[[-1,2,4,3,4,2],[7,-1,8,8,7,-1]],"11|dom7":[[-1,2,1,2,0,2],[-1,2,4,2,4,2],[7,9,7,8,7,7]],"11|min7":[[-1,2,4,2,3,2],[7,9,7,7,7,7]],"11|m7b5":[[-1,2,3,2,3,-1]],"11|dom7sus4":[[-1,2,4,2,5,2],[7,9,7,9,7,7]],"11|dom7s5":[[-1,2,5,2,4,-1],[7,-1,7,8,8,-1]],"11|dim7":[[-1,2,3,1,3,-1],[7,-1,6,7,6,-1]],"11|mmaj7":[[-1,2,4,3,3,2],[7,9,8,7,7,7]],"11|sus2":[[-1,2,4,4,2,2]],"11|add9":[[-1,-1,9,8,7,9]],"11|maj9":[[-1,2,1,3,2,-1]],"11|dom9":[[-1,2,1,2,2,-1]],"11|dom7b9":[[-1,2,1,2,1,-1]],"11|dom7s9":[[-1,2,1,2,3,-1]],"11|dom9sus4":[[-1,2,2,2,2,2]],"11|min9":[[-1,2,0,2,2,-1]],"11|maj7s11":[[7,-1,8,8,6,-1]],"11|dom7s11":[[7,-1,7,8,6,-1]],"11|min11":[[7,-1,7,7,5,0]],"11|maj13":[[7,-1,8,8,9,-1]],"11|dom13":[[7,-1,7,8,9,-1]],"11|dom7b13":[[7,-1,7,8,8,-1]]};
+  // Alle Griff-Varianten eines Akkords (Standardgriff zuerst, dann Lexikon-Griffe)
+  function jamGripVariants(rootPc, type) {
+    const L = (JAM_BOOK_GRIPS[rootPc + '|' + type] || []).map(f => f.slice());
+    const def = getJamChordFingering(rootPc, type);
+    if (def && !def.simplified && !L.some(f => f.join() === def.frets.join())) L.unshift(def.frets.slice());
+    else if (def && !def.simplified) { const i = L.findIndex(f => f.join() === def.frets.join()); if (i > 0) L.unshift(L.splice(i, 1)[0]); }
+    return L;
+  }
   const JAM_OPEN_CHORDS = {
     '0|dur':[-1,3,2,0,1,0], '2|dur':[-1,-1,0,2,3,2], '7|dur':[3,2,0,0,0,3], '4|dur':[0,2,2,1,0,0], '9|dur':[-1,0,2,2,2,0],
     '9|moll':[-1,0,2,2,1,0], '4|moll':[0,2,2,0,0,0], '2|moll':[-1,-1,0,2,3,1],
@@ -4553,6 +4605,13 @@
 
   function getJamChordFingering(rootPc, type) {
     let t = type, simplified = false;
+    if (!JAM_OPEN_CHORDS[`${rootPc}|${t}`]) {
+      const bk = JAM_BOOK_GRIPS[`${rootPc}|${t}`];
+      if (bk && bk.length) {
+        const best = bk.slice().sort((a, b) => Math.max(...a) - Math.max(...b))[0];
+        return { frets: best.slice(), simplified: false, book: true };
+      }
+    }
     if (!JAM_OPEN_CHORDS[`${rootPc}|${t}`] && !JAM_SHAPES_E[t] && !JAM_SHAPES_A[t] && JAM_DIAGRAM_SIMPLIFY[t]) { t = JAM_DIAGRAM_SIMPLIFY[t]; simplified = true; }
     if (JAM_OPEN_CHORDS[`${rootPc}|${t}`]) return { frets: JAM_OPEN_CHORDS[`${rootPc}|${t}`], simplified };
     const candidates = [];
@@ -4616,7 +4675,7 @@
     const r = jamRootName(pc, type);
     const letter = r[0] === 'B' ? 'H' : r[0];
     const def = (typeof TH_CHORD_TYPES !== 'undefined') && TH_CHORD_TYPES[type];
-    const steps = def && def.iv.length === iv.length && def.iv.every((x, i) => x === iv[i]) ? def.st : undefined;
+    const steps = def && def.iv.length === iv.length && def.iv.every((x, i) => x === iv[i]) ? def.st : iv.map(x => JAM_IV_STEPS[x] ?? TH_LETTER_STEPS[((x % 12) + 12) % 12] ?? 0);
     try { return thSpell(pc, letter, iv, steps).map(n => n.name); }
     catch (e) { return iv.map(i => SCALE_VIEW_ROOTS[(pc + i) % 12]); }
   }
@@ -4630,6 +4689,8 @@
     const cur = jam.bars[curIdx], next = jam.bars[nextIdx];
     if (!cur) return;
     const fing = jamBarFingering(cur);
+    const gripVars = jamGripVariants(cur.chordRoot || 0, cur.chordType);
+    const gripIdx = fing ? gripVars.findIndex(f => f.join() === fing.frets.join()) : -1;
     const tones = jamChordToneNames(cur.chordRoot, cur.chordType);
     const sugg = getJamScaleSuggestions(cur.chordRoot, cur.chordType);
     let keyTip = '';
@@ -4644,12 +4705,19 @@
           <div class="jam-improv-tones">Akkordtöne: ${tones.join(' – ')}</div>
           <div class="jam-improv-next">als Nächstes: <strong>${next ? jamChordName(next) : '–'}</strong></div>
         </div>
-        <div class="jam-improv-diagram">${fing ? renderJamChordDiagramSvg(fing.frets) + (fing.own ? '<div class="jam-improv-small">✏️ dein Griff</div>' : fing.simplified ? '<div class="jam-improv-small">vereinfacht</div>' : '') : '<div class="jam-improv-small">kein Griffbild</div>'}</div>
+        <div class="jam-improv-diagram">${fing ? renderJamChordDiagramSvg(fing.frets) + (fing.own && gripIdx >= 0 ? '' : fing.own ? '<div class="jam-improv-small">✏️ dein Griff</div>' : fing.simplified ? '<div class="jam-improv-small">vereinfacht</div>' : '') : '<div class="jam-improv-small">kein Griffbild</div>'}${gripVars.length > 1 ? `<button type="button" class="theory-chip" id="jamGripNext" style="margin-top:4px;">🔁 Griff ${gripIdx >= 0 ? gripIdx + 1 : '–'}/${gripVars.length}</button>` : ''}</div>
         <div class="jam-improv-scales">
           <div class="jam-improv-label">Passt dazu (antippen = in Modul 8 zeigen):</div>
           ${sugg.map(s => `<button type="button" class="theory-chip jam-scale-btn" data-m8="${s.m8}" data-root="${s.rootPc}">${jamRootName(s.rootPc, /Moll|Dorisch|Lokrisch|Phryg/.test(s.label) ? 'moll' : 'dur')} ${s.label}</button>`).join(' ')}
         </div>
       </div>${keyTip}`;
+    const gBtn = box.querySelector('#jamGripNext');
+    if (gBtn) gBtn.onclick = () => {
+      const nf = gripVars[(gripIdx + 1) % gripVars.length];
+      cur.ownFrets = nf.slice(); cur.ownFretsFor = (cur.chordRoot || 0) + ':' + cur.chordType;
+      scheduleJamAutosave();
+      renderJamModule();
+    };
     box.querySelectorAll('.jam-scale-btn').forEach(b => {
       b.onclick = () => {
         const m8 = b.dataset.m8;
@@ -4924,7 +4992,9 @@
   const PLAN_CHORD_SUFFIX = { '': 'dur', 'm': 'moll', 'min': 'moll', '-': 'moll', '7': 'dom7', 'm7': 'min7', 'min7': 'min7', '-7': 'min7',
     'maj7': 'maj7', 'mj7': 'maj7', 'j7': 'maj7', 'M7': 'maj7', 'Δ': 'maj7', 'Δ7': 'maj7', 'm7b5': 'm7b5', 'ø': 'm7b5', 'dim': 'dim', '°': 'dim', 'dim7': 'dim7', '°7': 'dim7',
     'aug': 'aug', '+': 'aug', '6': 'maj6', 'm6': 'min6', 'add9': 'add9', 'madd9': 'madd9', '5': 'five', 'sus2': 'sus2', 'sus4': 'sus4', 'sus': 'sus4', '7sus4': 'dom7sus4',
-    '9': 'dom9', 'maj9': 'maj9', 'mj9': 'maj9', 'm9': 'min9', '11': 'dom11', 'm11': 'min11', '13': 'dom13', '7b9': 'dom7b9', '7#9': 'dom7s9', '7b5': 'dom7b5', '7#5': 'dom7s5' };
+    '9': 'dom9', 'maj9': 'maj9', 'mj9': 'maj9', 'm9': 'min9', '11': 'dom11', 'm11': 'min11', '13': 'dom13', '7b9': 'dom7b9', '7#9': 'dom7s9', '7b5': 'dom7b5', '7#5': 'dom7s5',
+    'mmaj7': 'mmaj7', 'm(maj7)': 'mmaj7', 'mmaj': 'mmaj7', 'mM7': 'mmaj7', '9sus4': 'dom9sus4', '7sus4/9': 'dom9sus4', 'maj7#11': 'maj7s11', '7#11': 'dom7s11', 'maj13': 'maj13', 'maj7/13': 'maj13', '7b13': 'dom7b13',
+    'sus9': 'sus2', '7/9': 'dom9', 'maj7/9': 'maj9', 'm7/9': 'min9', 'm7/11': 'min11', '7/13': 'dom13' };
   function parsePlanChords(name) {
     const words = String(name || '').replace(/[,;|]+/g, ' ').replace(/\s[-–]\s/g, ' ').trim().split(/\s+/).filter(Boolean);
     if (!words.length) return null;
@@ -5368,12 +5438,16 @@
   // Erkennt den Akkord aus den gemalten Tönen – probiert jeden Ton als Grundton und alle Akkordarten des Beat-Moduls
   function jamDetectPaintedChord(frets) {
     const pitches = frets.map((f, s) => f >= 0 ? JAM_PAINT_OPEN[s] + f : null).filter(p => p !== null);
+    return chordDetectFromPitches(pitches);
+  }
+  // Akkord aus beliebigen Tonhöhen erkennen (auch ohne Quinte, Umkehrungen, Optionstöne weggelassen)
+  function chordDetectFromPitches(pitches, withAlts, prefer) {
     if (pitches.length < 2) return null;
     const pcs = [...new Set(pitches.map(p => p % 12))];
     if (pcs.length < 2) return null;
     const bassPc = Math.min(...pitches) % 12;
     const types = Object.keys(JAM_CHORD_INTERVALS);
-    let best = null;
+    let best = null; const all = [];
     for (let root = 0; root < 12; root++) {
       types.forEach((type, tIdx) => {
         const set = new Set(JAM_CHORD_INTERVALS[type].map(iv => (root + iv) % 12));
@@ -5382,15 +5456,23 @@
         const missing = [...set].filter(pc => !pcs.includes(pc));
         // erlaubt: Quinte weggelassen (bei Vier-/Mehrklängen auch None/Undezime-Basis nicht nötig)
         const fifth = (root + 7) % 12;
-        const okMissing = missing.every(pc => pc === fifth || (set.size >= 5 && pc === (root + 2) % 12 && type !== 'dom9' && type !== 'maj9' && type !== 'min9'));
+        const okMissing = missing.every(pc => pc === fifth || (set.size >= 5 && pc === (root + 2) % 12 && type !== 'dom9' && type !== 'maj9' && type !== 'min9' && type !== 'dom9sus4'));
         if (!pcs.includes(root)) return; // Grundton muss vorkommen
         let score = 100 - missing.length * 12 - tIdx * 0.3;
         if (!okMissing) score -= 40;
-        if (root === bassPc) score += 15;
+        if (root === bassPc) score += 28;
+        if (missing.length && pcs.length <= 3) score -= 10;
         if (type === 'five' && pcs.length > 2) score -= 50;
-        if (!best || score > best.score) best = { root, type, score, missing: missing.length, exact: missing.length === 0, bassPc };
+        const cand = { root, type, score, missing: missing.length, missingPcs: missing, exact: missing.length === 0, bassPc };
+        if (withAlts) all.push(cand);
+        if (!best || score > best.score) best = cand;
       });
     }
+    if (best && prefer) {
+      const p = all.find(c => c.root === prefer.root && c.type === prefer.type);
+      if (p && p !== best && p.score >= best.score - 30) { const old = best; best = p; best.alts = [old]; return best; }
+    }
+    if (best && withAlts) best.alts = all.filter(c => c !== best && c.score >= best.score - 14 && c.score >= 70 && c.missing === 0).sort((a, b) => b.score - a.score).slice(0, 2);
     return best;
   }
   function jamPcName(pc, rootPc, type) {
@@ -6349,7 +6431,8 @@
     dur: 7, moll: 7, dim: 6, aug: 8, maj6: 9, min6: 9, add9: 2, madd9: 2, five: 7,
     maj7: 11, dom7: 10, min7: 10, m7b5: 6, dim7: 9, sus2: 2, sus4: 5, dom7sus4: 5,
     dom9: 2, maj9: 2, min9: 2, dom11: 5, min11: 5, dom13: 9,
-    dom7b9: 1, dom7s9: 3, dom7b5: 6, dom7s5: 8
+    dom7b9: 1, dom7s9: 3, dom7b5: 6, dom7s5: 8,
+    mmaj7: 11, dom9sus4: 5, maj7s11: 6, dom7s11: 6, maj13: 9, dom7b13: 8
   };
 
   function jamPlayBass(time, rootPc, vol, tone = 0.5, ctx = null, intervalOffset = 0) {
@@ -8377,6 +8460,7 @@
     finderControlsRow.style.display = 'none';
     chordLabControlsRow.style.display = 'none';
     chordLookupRow.style.display = 'none';
+    { const cv = document.getElementById('chordLookupVariants'); if (cv) cv.style.display = 'none'; }
     try { chgStop(); document.getElementById('chgTrainer').style.display = 'none'; } catch (e) {}
     stringPracticeControlsRow.style.display = 'none';
     scaleViewControlsRow.style.display = 'none';
@@ -10100,7 +10184,7 @@
     arpeggioBtn.addEventListener('click', () => playChord('arpeggio'));
 
     clearChordBtn.addEventListener('click', () => {
-      state.chordPitches = {};
+      state.chordPitches = {}; state.chordLabPrefer = null;
       analyzeChord();
       renderFretboard();
       drawStaff();
@@ -11184,7 +11268,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-05-2';
+  const APP_VERSION = '2026-10-08-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11252,5 +11336,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a47673216a06dc8e',t:'MTc5MTQ3NjE4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a476af51af0e4e6c',t:'MTc5MTQ3ODY0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
