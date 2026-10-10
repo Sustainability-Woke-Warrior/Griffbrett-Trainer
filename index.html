@@ -1066,6 +1066,18 @@
     .prog-mini button { background: rgba(148,163,184,0.12); border: 1px solid rgba(148,163,184,0.3); color: inherit; border-radius: 8px; padding: 3px 7px; font-size: 0.78rem; cursor: pointer; }
     .prog-pick { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .prog-pick select { background: var(--bg-color); color: var(--text-color); border: 1px solid rgba(148,163,184,0.35); border-radius: 6px; font-size: 0.78rem; max-width: 100%; }
+    .prog-big { position: fixed; inset: 0; z-index: 9999; background: #ffffff; color: #0f172a; overflow-y: auto; padding: 14px 16px 30px; box-sizing: border-box; display: none; }
+    .prog-big.open { display: block; }
+    .prog-big-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .prog-big-title { font-size: clamp(1.4rem, 4vw, 2.4rem); font-weight: 800; color: #0f172a; }
+    .prog-big-close { background: #0f172a; color: #fff; border: none; border-radius: 50%; width: 52px; height: 52px; font-size: 1.6rem; font-weight: 700; cursor: pointer; flex: 0 0 auto; }
+    .prog-big-seq { font-size: clamp(1rem, 2.6vw, 1.4rem); color: #334155; margin: 4px 0 14px; font-weight: 600; }
+    .prog-big-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px 14px; }
+    .prog-big-card { text-align: center; border: 2px solid #e2e8f0; border-radius: 16px; padding: 10px 6px 12px; background: #fff; }
+    .prog-big-num { font-size: 0.85rem; color: #64748b; font-weight: 700; }
+    .prog-big-name { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 900; line-height: 1.05; color: #0f172a; margin: 2px 0 6px; }
+    .prog-big-tones { font-size: 1rem; color: #334155; margin-top: 6px; font-weight: 600; }
+    .prog-big-card svg { width: 100%; max-width: 260px; height: auto; }
     .prog-theory { margin-top: 12px; background: rgba(15,23,42,0.5); border-radius: 12px; padding: 10px 12px; font-size: 0.9rem; line-height: 1.45; }
     .prog-theory h4 { margin: 8px 0 4px; font-size: 0.95rem; }
     .prog-theory ul { margin: 4px 0; padding-left: 20px; }
@@ -1397,6 +1409,22 @@
     .dy-entry .dy-top span { flex:1; }
     .dy-entry .dy-top button { background:none; border:none; color:var(--text-color); font-size:1rem; cursor:pointer; padding:2px 6px; }
     .dy-month { margin:14px 0 4px; font-weight:800; opacity:.8; }
+    .mcal { max-width: 340px; }
+    .mcal-head { display: flex; align-items: center; justify-content: space-between; margin: 6px 0; font-weight: 700; }
+    .mcal-head button { background: rgba(148,163,184,0.15); border: 1px solid rgba(148,163,184,0.3); color: inherit; border-radius: 8px; padding: 4px 12px; font-size: 1rem; cursor: pointer; }
+    .mcal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .mcal-dn { text-align: center; font-size: 0.72rem; opacity: 0.7; padding: 2px 0; }
+    .mcal-d { position: relative; height: 38px; border-radius: 8px; border: 1px solid transparent; background: rgba(148,163,184,0.08); color: inherit; font-size: 0.9rem; cursor: pointer; padding: 0; }
+    .mcal-d.lv1 { background: rgba(34,197,94,0.22); }
+    .mcal-d.lv2 { background: rgba(34,197,94,0.42); }
+    .mcal-d.lv3 { background: rgba(34,197,94,0.65); }
+    .mcal-d.today { border-color: #fbbf24; font-weight: 800; }
+    .mcal-d.sel { outline: 2px solid #22d3ee; outline-offset: -2px; }
+    .mcal-d.wk { box-shadow: inset 0 -3px 0 #22d3ee; }
+    .mcal-d.dot::after { content: ''; position: absolute; left: 50%; bottom: 4px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #fb923c; }
+    .mcal-d:disabled { opacity: 0.3; cursor: default; }
+    .mcal-legend { font-size: 0.75rem; opacity: 0.8; margin-top: 6px; line-height: 1.5; }
+    .mcal-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: middle; margin: 0 3px 0 8px; }
     .dy-items label { display:flex; gap:8px; align-items:center; margin:4px 0; }
     .dy-mood button { font-size:1.5rem; background:none; border:2px solid transparent; border-radius:10px; padding:2px 6px; cursor:pointer; }
     .dy-mood button.on { border-color: var(--accent-color, #3b82f6); }
@@ -2096,6 +2124,8 @@
         <button class="btn btn-secondary" id="resetWeekBtn">Woche zurücksetzen</button>
       </div>
     </div>
+
+    <details id="plannerCalDet" class="prog-box" style="margin:6px 0 10px; max-width:420px;"><summary>📅 Kalender</summary><div id="plannerCal"></div></details>
 
     <div class="planner-table-wrapper">
       <table class="planner-table">
@@ -5192,9 +5222,11 @@
       <input type="text" id="progName" placeholder="Name der Folge, z. B. Mein Lied – Strophe" value="${homeEsc(dr.name || '')}" maxlength="60" style="flex:1 1 200px;">
     </div>
     <div class="prog-row">
+      <button type="button" class="btn" data-act="big">🔍 Große Ansicht</button>
       <button type="button" class="btn btn-secondary" data-act="playall">▶ Folge anhören</button>
       <button type="button" class="btn btn-secondary" data-act="save">💾 Speichern</button>
       <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
+      <button type="button" class="btn btn-secondary" data-act="plan">📅 In den Wochenplan</button>
       <button type="button" class="btn btn-secondary" data-act="new">✨ Neue Folge</button>
     </div>`;
     if (progState.saved.length) {
@@ -5268,6 +5300,100 @@
   }
   function progPlayChord(c, t0) {
     c.frets.forEach((f, si) => { if (f >= 0) playPitch(JAM_PAINT_OPEN[si] + f, t0 + si * 0.04); });
+  }
+  // ---------- Große Ansicht (weiß, zum Üben) ----------
+  function progBigSvg(c, d) {
+    const played = c.frets.filter(f => f > 0);
+    const maxF = played.length ? Math.max(...played) : 0, minF = played.length ? Math.min(...played) : 1;
+    const start = maxF <= 5 ? 1 : minF;
+    const W = 240, H = 290, L = 36, T = 48, gx = 36, gy = 44;
+    let g = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+    if (start === 1) g += `<rect x="${L - 2}" y="${T - 8}" width="${gx * 5 + 4}" height="8" fill="#0f172a"/>`;
+    else g += `<text x="${L - 10}" y="${T + gy * 0.62}" font-size="20" font-weight="700" fill="#0f172a" text-anchor="end">${start}</text>`;
+    for (let i = 0; i <= 5; i++) g += `<line x1="${L}" y1="${T + i * gy}" x2="${L + gx * 5}" y2="${T + i * gy}" stroke="#334155" stroke-width="2"/>`;
+    for (let si = 0; si < 6; si++) g += `<line x1="${L + si * gx}" y1="${T}" x2="${L + si * gx}" y2="${T + gy * 5}" stroke="#0f172a" stroke-width="${2.6 - si * 0.25}"/>`;
+    c.frets.forEach((f, si) => {
+      const x = L + si * gx;
+      if (f === -1) g += `<text x="${x}" y="${T - 16}" font-size="22" font-weight="700" fill="#dc2626" text-anchor="middle">✕</text>`;
+      else if (f === 0) g += `<circle cx="${x}" cy="${T - 23}" r="8" fill="none" stroke="#0f172a" stroke-width="2.5"/>`;
+      else if (f >= start && f < start + 5) {
+        const pc = (JAM_PAINT_OPEN[si] + f) % 12, isRoot = d && pc === d.root;
+        const nm = d ? jamPcName(pc, d.root, d.type) : SCALE_VIEW_ROOTS[pc];
+        const cy = T + (f - start + 0.5) * gy;
+        g += `<circle cx="${x}" cy="${cy}" r="16" fill="${isRoot ? '#ea580c' : '#0f172a'}"/><text x="${x}" y="${cy + 5}" font-size="${nm.length > 2 ? 11 : 14}" font-weight="700" fill="#fff" text-anchor="middle">${nm}</text>`;
+      }
+    });
+    JAM_PAINT_STRINGS.forEach((n, si) => g += `<text x="${L + si * gx}" y="${T + gy * 5 + 24}" font-size="15" fill="#64748b" text-anchor="middle">${n}</text>`);
+    return g + `</svg>`;
+  }
+  let progWakeLock = null;
+  function progBigOpen() {
+    const dr = progState.draft;
+    const list = dr.chords.map(c => ({ c, d: progDetect(c) })).filter(x => x.c.frets.some(f => f >= 0));
+    if (!list.length) { showToast('Trage zuerst mindestens einen Akkord ein.'); return; }
+    let ov = document.getElementById('progBigOverlay');
+    if (!ov) { ov = document.createElement('div'); ov.id = 'progBigOverlay'; ov.className = 'prog-big'; document.body.appendChild(ov); }
+    const names = list.map(x => x.d ? progChordShort(x.d) : '?');
+    ov.innerHTML = `<div class="prog-big-top"><div class="prog-big-title">${homeEsc((dr.name || '').trim() || 'Meine Akkordfolge')}</div><button type="button" class="prog-big-close" id="progBigClose" aria-label="Schließen">✕</button></div>
+      <div class="prog-big-seq">${names.map(homeEsc).join('  –  ')}</div>
+      <div class="prog-big-grid">${list.map((x, i) => `<div class="prog-big-card"><div class="prog-big-num">${i + 1}</div><div class="prog-big-name">${homeEsc(names[i])}</div>${progBigSvg(x.c, x.d)}<div class="prog-big-tones">${x.d ? jamChordToneNames(x.d.root, x.d.type).join(' – ') : ''}</div></div>`).join('')}</div>`;
+    ov.classList.add('open');
+    document.getElementById('progBigClose').onclick = progBigClose;
+    try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(l => { progWakeLock = l; }).catch(() => {}); } catch (e) {}
+  }
+  function progBigClose() {
+    const ov = document.getElementById('progBigOverlay'); if (ov) ov.classList.remove('open');
+    try { if (progWakeLock) progWakeLock.release(); } catch (e) {}
+    progWakeLock = null;
+  }
+  document.addEventListener('visibilitychange', () => {
+    const ov = document.getElementById('progBigOverlay');
+    if (document.visibilityState === 'visible' && ov && ov.classList.contains('open') && navigator.wakeLock) { try { navigator.wakeLock.request('screen').then(l => { progWakeLock = l; }).catch(() => {}); } catch (e) {} }
+  });
+  function progPlanName(dr) {
+    const items = dr.chords.map(progDetect).filter(Boolean);
+    if (!items.length) return null;
+    const ch = items.map(d => jamChordShort({ chordRoot: d.root, chordType: d.type })).join(' ');
+    const nm = (dr.name || '').trim().replace(/[()]/g, '');
+    return nm ? `${nm} (${ch})` : ch;
+  }
+  function progToPlan() {
+    const dr = progState.draft;
+    const name = progPlanName(dr);
+    if (!name) { showToast('Trage zuerst mindestens einen Akkord ein.'); return; }
+    if (!parsePlanChords(name)) { showToast('Diese Akkorde kann der Wochenplan leider nicht lesen.'); return; }
+    // Folge mit Namen auch speichern, damit die eigenen Griffe später mit in den Beat kommen
+    if ((dr.name || '').trim()) {
+      const copy = JSON.parse(JSON.stringify(dr)); copy.name = dr.name.trim();
+      const i = progState.saved.findIndex(p => p.name === copy.name);
+      if (i >= 0) progState.saved[i] = copy; else progState.saved.push(copy);
+    }
+    const prevDate = plannerState.currentDate;
+    plannerState.currentDate = new Date();
+    try { renderPlanner(); } catch (e) {}
+    const wk = getWeekKey(getMonday(new Date()));
+    const rows = plannerState.plannerData[wk] = plannerState.plannerData[wk] || [];
+    if (rows.some(r => plannerNormName(r.name) === plannerNormName(name))) { showToast('Steht schon im Wochenplan dieser Woche.'); plannerState.currentDate = prevDate; return; }
+    rows.push({ name, checks: [false, false, false, false, false, false, false] });
+    savePlannerToLocalStorage();
+    try { renderPlanner(); } catch (e) {}
+    showToast(`📅 „${name}“ steht jetzt im Wochenplan dieser Woche ✔`);
+  }
+  // Beim Öffnen aus dem Wochenplan: eigene Griffe einer gespeicherten Folge übernehmen
+  function progApplyOwnGrips(planName) {
+    try {
+      const m = String(planName || '').match(/^(.*?)\s*\([^()]+\)\s*$/);
+      if (!m) return false;
+      const d = progLoad();
+      const p = d.saved.find(x => plannerNormName(x.name) === plannerNormName(m[1]));
+      if (!p) return false;
+      const items = p.chords.map(c => ({ c, d: progDetect(c) })).filter(x => x.d);
+      const jam = state.jam;
+      if (!jam || items.length !== jam.bars.length) return false;
+      let ok = true;
+      jam.bars.forEach((b, i) => { const it = items[i]; if (it.d.root === b.chordRoot && it.d.type === b.chordType) { b.ownFrets = it.c.frets.slice(); b.ownFretsFor = b.chordRoot + ':' + b.chordType; } else ok = false; });
+      return ok;
+    } catch (e) { return false; }
   }
   function progToBeat() {
     const dr = progState.draft;
@@ -5357,6 +5483,8 @@
       }
       else if (act === 'new') { progState.draft = { name: '', chords: [progEmptyChord(), progEmptyChord(), progEmptyChord(), progEmptyChord()] }; }
       else if (act === 'beat') { progSave(); progToBeat(); return; }
+      else if (act === 'plan') { progToPlan(); }
+      else if (act === 'big') { progBigOpen(); return; }
       else if (act === 'scale') {
         const m8 = t.dataset.m8; if (!SCALE_VIEW_TYPES[m8]) return;
         state.scaleViewRoot = parseInt(t.dataset.root, 10) || 0; state.scaleViewType = m8;
@@ -5398,6 +5526,8 @@
     'mmaj7': 'mmaj7', 'm(maj7)': 'mmaj7', 'mmaj': 'mmaj7', 'mM7': 'mmaj7', '9sus4': 'dom9sus4', '7sus4/9': 'dom9sus4', 'maj7#11': 'maj7s11', '7#11': 'dom7s11', 'maj13': 'maj13', 'maj7/13': 'maj13', '7b13': 'dom7b13',
     'sus9': 'sus2', '7/9': 'dom9', 'maj7/9': 'maj9', 'm7/9': 'min9', 'm7/11': 'min11', '7/13': 'dom13' };
   function parsePlanChords(name) {
+    const pm = String(name || '').match(/\(([^()]+)\)\s*$/);
+    if (pm) { const inner = parsePlanChords(pm[1]); if (inner) return inner; }
     const words = String(name || '').replace(/[,;|]+/g, ' ').replace(/\s[-–]\s/g, ' ').trim().split(/\s+/).filter(Boolean);
     if (!words.length) return null;
     const LET = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11, H: 11 };
@@ -5445,11 +5575,12 @@
       stopJamPlayback();
       jam.chordMode = 'free';
       setJamBarCount(Math.min(JAM_MAX_BARS, chords.length));
-      jam.bars.forEach((b, i) => { const c = chords[i % chords.length]; b.chordRoot = c[0]; b.chordType = c[1]; });
+      jam.bars.forEach((b, i) => { const c = chords[i % chords.length]; b.chordRoot = c[0]; b.chordType = c[1]; b.ownFrets = undefined; b.ownFretsFor = undefined; });
+      const ownG = progApplyOwnGrips(name);
       jam.parts = [];
       jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
       scheduleJamAutosave();
-      msg = `Die Akkorde aus dem Namen sind eingestellt (${jam.bars.map(jamChordShort).join(' – ')}), ein Takt pro Akkord. Tempo und Stil kannst du frei wählen.`;
+      msg = `Die Akkorde aus dem Namen sind eingestellt (${jam.bars.map(jamChordShort).join(' – ')}), ein Takt pro Akkord${ownG ? ', mit deinen eigenen Griffen' : ''}. Tempo und Stil kannst du frei wählen.`;
     } else if (preset) {
       msg = applyJamSongPreset(preset.id);
     } else {
@@ -10095,7 +10226,57 @@
     }
   }
 
+  // Kalender im Wochenplan: zeigt abgehakte Übungen je Tag, Tippen springt zur Woche
+  let plannerCalYM = null;
+  function plannerCalDayInfo(k) {
+    const [y, m, d] = k.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    const wk = getWeekKey(getMonday(dt)), idx = (dt.getDay() + 6) % 7;
+    const rows = Array.isArray(plannerState.plannerData[wk]) ? plannerState.plannerData[wk] : [];
+    const done = rows.filter(r => r && Array.isArray(r.checks) && r.checks[idx]).length;
+    let sec = 0; try { sec = (ptData.days || {})[k] || 0; } catch (e) {}
+    return { done, sec, wk };
+  }
+  let plannerCalSel = null;
+  function plannerCalDayDetail() {
+    if (!plannerCalSel) return '';
+    const [y, m, d] = plannerCalSel.split('-').map(Number);
+    const title = new Date(y, m - 1, d).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const tot = Math.round(((ptData.days || {})[plannerCalSel] || 0) / 60);
+    const ex = Object.entries((ptData.ex || {})[plannerCalSel] || {}).filter(e => e[1] >= 30).sort((a, b) => b[1] - a[1]);
+    let h = `<div id="plannerCalDetail" style="margin-top:8px; padding:8px 10px; border-radius:10px; border:1px solid var(--card-border); font-size:0.9rem;"><strong>${homeEsc(title)}</strong><br>`;
+    h += tot ? `⏱ Gesamt mit Timer: ${tot} Min.` : 'An diesem Tag keine Zeit mit dem Timer.';
+    if (ex.length) h += '<ul style="margin:4px 0 0 18px; padding:0;">' + ex.map(([n, sec]) => `<li>${homeEsc(n)} – ${Math.max(1, Math.round(sec / 60))} Min.</li>`).join('') + '</ul>';
+    return h + '</div>';
+  }
+  function plannerCalRender() {
+    const box = document.getElementById('plannerCal');
+    if (!box) return;
+    const cur = plannerState.currentDate || new Date();
+    if (!plannerCalYM) plannerCalYM = { y: cur.getFullYear(), m: cur.getMonth() };
+    const { y, m } = plannerCalYM;
+    const curWk = getWeekKey(getMonday(cur));
+    let practiced = 0, checks = 0, mins = 0;
+    const days = new Date(y, m + 1, 0).getDate();
+    for (let d = 1; d <= days; d++) { const inf = plannerCalDayInfo(ptDayKey(new Date(y, m, d))); if (inf.done || inf.sec >= 60) practiced++; checks += inf.done; mins += Math.round(inf.sec / 60); }
+    const html = miniCalHtml({ y, m, level: k => { const inf = plannerCalDayInfo(k); return inf.done >= 4 ? 3 : inf.done >= 2 ? 2 : (inf.done || inf.sec >= 60) ? 1 : 0; }, wk: k => plannerCalDayInfo(k).wk === curWk });
+    const mName = new Date(y, m, 1).toLocaleDateString('de-DE', { month: 'long' });
+    box.innerHTML = html + `<div class="mcal-legend"><i style="background:rgba(34,197,94,0.25)"></i>geübt <i style="background:rgba(34,197,94,0.45)"></i>2–3 Übungen abgehakt <i style="background:rgba(34,197,94,0.7)"></i>4 und mehr <i style="background:#22d3ee;height:3px"></i>angezeigte Woche</div>
+      <div style="margin-top:6px; font-size:0.9rem;"><strong>${mName}:</strong> an ${practiced} Tag${practiced === 1 ? '' : 'en'} geübt · ${checks} Übung${checks === 1 ? '' : 'en'} abgehakt${mins ? ' · ' + mins + ' Min. Timer' : ''}</div>
+      <div style="font-size:0.8rem; opacity:0.75; margin-top:4px;">Tippe auf einen Tag, um diese Woche und die Zeiten des Tages anzuzeigen.</div>${plannerCalDayDetail()}`;
+    box.querySelectorAll('[data-mcal]').forEach(b => b.onclick = () => { plannerCalYM.m += b.dataset.mcal === 'next' ? 1 : -1; if (plannerCalYM.m < 0) { plannerCalYM.m = 11; plannerCalYM.y--; } if (plannerCalYM.m > 11) { plannerCalYM.m = 0; plannerCalYM.y++; } plannerCalRender(); });
+    box.querySelectorAll('[data-mday]').forEach(b => b.onclick = () => {
+      const [yy, mm, dd] = b.dataset.mday.split('-').map(Number);
+      plannerState.currentDate = new Date(yy, mm - 1, dd);
+      plannerCalSel = b.dataset.mday;
+      renderPlanner(); plannerCalRender();
+      const t = document.getElementById('plannerTitle'); if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  document.addEventListener('toggle', e => { if (e.target && e.target.id === 'plannerCalDet' && e.target.open) { plannerCalYM = null; plannerCalRender(); } }, true);
+
   function renderPlanner() {
+    try { const cd = document.getElementById('plannerCalDet'); if (cd && cd.open) setTimeout(plannerCalRender, 0); } catch (e) {}
     const monday = getMonday(plannerState.currentDate);
     const weekKey = getWeekKey(monday);
     const days = getWeekDays(monday);
@@ -10206,8 +10387,9 @@
       timerBtn.type = 'button';
       timerBtn.className = 'btn btn-secondary planner-timer-btn';
       timerBtn.style.padding = '6px 10px';
-      timerBtn.textContent = '⏱';
-      timerBtn.title = 'Diese Übung mit Timer üben';
+      const exMin = Math.round(ptExWeekSec(weekKey, row.name) / 60);
+      timerBtn.textContent = exMin ? '⏱ ' + exMin + ' Min.' : '⏱';
+      timerBtn.title = exMin ? 'Diese Woche ' + exMin + ' Min. mit Timer geübt – nochmal üben' : 'Diese Übung mit Timer üben';
       timerBtn.style.marginLeft = '4px';
       timerBtn.addEventListener('click', () => ptOpenForPlan(row.name));
       tdName.appendChild(timerBtn);
@@ -11099,12 +11281,46 @@
     let d = null; try { d = JSON.parse(localStorage.getItem(PT_KEY) || 'null'); } catch (e) {}
     if (!d || typeof d !== 'object') d = {};
     if (!d.days || typeof d.days !== 'object') d.days = {};
+    if (!d.ex || typeof d.ex !== 'object') d.ex = {};
     d.set = Object.assign({ chime: true, brk: true, brkMin: 25, downMin: 10, mode: 'down' }, d.set || {});
     if (!Array.isArray(d.sections) || !d.sections.length) d.sections = PT_DEFAULT_SECTIONS.map(s => ({ ...s }));
     return d;
   }
   let ptData = ptLoad();
-  function ptSave() { try { localStorage.setItem(PT_KEY, JSON.stringify(ptData)); } catch (e) {} }
+  const PT_SESSION_KEY = 'guitartrainer_ptsession';
+  function ptSave() {
+    try { localStorage.setItem(PT_KEY, JSON.stringify(ptData)); } catch (e) {}
+    ptSaveSession();
+  }
+  // Laufenden/pausierten Timer sichern, damit er nach Standby oder Neuladen der Seite weiterläuft
+  function ptSaveSession() {
+    try {
+      if (typeof pt === 'undefined') return;
+      if (!pt.running) { localStorage.removeItem(PT_SESSION_KEY); return; }
+      localStorage.setItem(PT_SESSION_KEY, JSON.stringify({ mode: pt.mode, paused: pt.paused, elapsed: ptElapsed(), target: pt.target, secIdx: pt.secIdx, sinceBreak: pt.sinceBreak, plan: pt.plan, savedAt: Date.now() }));
+    } catch (e) {}
+  }
+  function ptRestoreSession() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(PT_SESSION_KEY) || 'null'); } catch (e) { s = null; }
+    if (!s || typeof s !== 'object' || !(s.savedAt > 0)) return;
+    const gap = Date.now() - s.savedAt;
+    if (gap < 0 || gap > 12 * 3600000) { try { localStorage.removeItem(PT_SESSION_KEY); } catch (e) {} return; }
+    pt.mode = ['down', 'up', 'sec'].includes(s.mode) ? s.mode : 'up';
+    pt.target = +s.target || 0; pt.secIdx = +s.secIdx || 0; pt.sinceBreak = +s.sinceBreak || 0; pt.plan = s.plan || null;
+    pt.running = true;
+    const el = Math.max(0, +s.elapsed || 0);
+    if (!s.paused && gap < 120000) {
+      // war gerade eben noch aktiv (z. B. Seite kurz neu geladen): einfach weiterlaufen lassen
+      pt.accum = el + gap; pt.paused = false; pt.startedAt = Date.now();
+      const k = ptDayKey(); ptData.days[k] = (ptData.days[k] || 0) + gap / 1000; ptLogEx(k, gap / 1000);
+    } else {
+      pt.accum = el; pt.paused = true;
+      if (!s.paused) setTimeout(() => { try { showToast('⏸ Der Timer wurde angehalten, als das Tablet aus war. Tippe auf ▶, um weiterzumachen.'); } catch (e) {} }, 800);
+    }
+    pt.lastTick = Date.now();
+    clearInterval(pt.iv); pt.iv = setInterval(ptTick, 1000);
+  }
   const pt = { running: false, paused: false, mode: ptData.set.mode, accum: 0, startedAt: 0, target: 0, secIdx: 0, lastTick: 0, sinceBreak: 0, plan: null, iv: null, saveCnt: 0 };
   function ptDayKey(d) { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function ptStats() {
@@ -11149,14 +11365,33 @@
       if (el.dataset.ptb !== 'close') { const f = buttons[+el.dataset.ptb][1]; if (f) f(); }
     }));
   }
+  // Zeit pro Übung: ptData.ex[Tag][Übungsname] = Sekunden (wird nie gelöscht)
+  function ptCurExName() {
+    if (pt.plan) return String(pt.plan).trim();
+    if (pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; return c ? String(c.name || '').trim() : ''; }
+    return '';
+  }
+  function ptLogEx(k, sec) {
+    const n = ptCurExName(); if (!n || !(sec > 0)) return;
+    const day = ptData.ex[k] || (ptData.ex[k] = {});
+    day[n] = (day[n] || 0) + sec;
+  }
+  function ptExWeekSec(weekKey, name) {
+    const nn = plannerNormName(name); if (!nn) return 0;
+    const mon = new Date(weekKey + 'T00:00:00'); if (isNaN(mon)) return 0;
+    let t = 0;
+    for (let i = 0; i < 7; i++) { const d = new Date(mon); d.setDate(mon.getDate() + i); const day = ptData.ex[ptDayKey(d)] || {}; for (const n in day) if (plannerNormName(n) === nn) t += day[n]; }
+    return t;
+  }
   function ptLogTick() {
     const now = Date.now();
     if (pt.running && !pt.paused && pt.lastTick) {
       const dt = Math.min(60000, Math.max(0, now - pt.lastTick));
       const k = ptDayKey();
       ptData.days[k] = (ptData.days[k] || 0) + dt / 1000;
+      ptLogEx(k, dt / 1000);
       pt.sinceBreak += dt;
-      if (++pt.saveCnt >= 10) { pt.saveCnt = 0; ptSave(); }
+      if (++pt.saveCnt >= 10) { pt.saveCnt = 0; ptSave(); } else if (pt.saveCnt % 3 === 0) ptSaveSession();
     }
     pt.lastTick = now;
   }
@@ -11229,7 +11464,7 @@
     ptRender(); ptUpdateLive();
   }
   function ptPause() { if (!pt.running || pt.paused) return; ptLogTick(); pt.accum = ptElapsed(); pt.paused = true; ptSave(); ptRender(); ptUpdateLive(); }
-  function ptResume() { if (!pt.running || !pt.paused) return; pt.startedAt = Date.now(); pt.lastTick = Date.now(); pt.paused = false; ptRender(); ptUpdateLive(); }
+  function ptResume() { if (!pt.running || !pt.paused) return; pt.startedAt = Date.now(); pt.lastTick = Date.now(); pt.paused = false; ptSaveSession(); ptRender(); ptUpdateLive(); }
   function ptStop() {
     ptLogTick();
     pt.running = false; pt.paused = false; pt.accum = 0; pt.plan = null;
@@ -11356,6 +11591,8 @@
     // Beim Schließen/Wechseln der App die Zeit sichern
     document.addEventListener('visibilitychange', () => { if (document.hidden) { ptLogTick(); ptSave(); } else if (pt.running && !pt.paused) { pt.lastTick = Date.now(); ptTick(); } });
     window.addEventListener('pagehide', () => { ptLogTick(); ptSave(); });
+    window.addEventListener('freeze', () => { ptLogTick(); ptSave(); });
+    try { ptRestoreSession(); } catch (e) {}
     ptUpdateLive();
   }
 
@@ -11619,11 +11856,20 @@
     let h = `<div class="pt-head"><h3>📓 Übungs-Tagebuch</h3><button type="button" class="btn btn-secondary" id="diaryCloseBtn">✕</button></div>`;
     if (diaryDraft) {
       const d = diaryDraft, offer = [...new Set([...(d.offer || []), ...d.items])];
-      h += `<div class="dy-panel"><p style="opacity:.8; margin:8px 0;">${diaryEditId ? 'Eintrag bearbeiten' : 'Neuer Eintrag'} · ${diaryDateTxt(d.date)}</p>
+      const dKey = ptDayKey(new Date(d.date)), yKey = ptDayKey(new Date(Date.now() - 86400000));
+      if (!d.calY && d.calY !== 0) { const dt = new Date(d.date); d.calY = dt.getFullYear(); d.calM = dt.getMonth(); }
+      const entryDays = new Set(diaryLoad().filter(x => x.id !== d.id).map(x => ptDayKey(new Date(x.date))));
+      h += `<div class="dy-panel"><p style="opacity:.8; margin:8px 0;">${diaryEditId ? 'Eintrag bearbeiten' : 'Neuer Eintrag'}</p>
+        <div class="row" style="gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:6px;">
+          <button type="button" class="btn btn-secondary" id="dyDateBtn">📅 ${diaryDateTxt(d.date)} ${d.calOpen ? '▲' : 'ändern ▼'}</button>
+          <button type="button" class="btn btn-secondary" data-dyday="${ptDayKey()}" ${dKey === ptDayKey() ? 'disabled' : ''}>Heute</button>
+          <button type="button" class="btn btn-secondary" data-dyday="${yKey}" ${dKey === yKey ? 'disabled' : ''}>Gestern</button>
+        </div>
+        ${d.calOpen ? `<div id="dyCal">${miniCalHtml({ y: d.calY, m: d.calM, sel: dKey, maxKey: ptDayKey(), level: ptLevelForDay, dot: k => entryDays.has(k) })}<div class="mcal-legend"><i style="background:#fb923c;border-radius:50%"></i>schon ein Eintrag <i style="background:rgba(34,197,94,0.5)"></i>Übungszeit (Timer)</div></div>` : ''}
         <label style="font-weight:600;">Dauer (Minuten)</label><input type="number" id="dyMin" min="0" max="600" value="${d.min}" placeholder="z. B. 20">
         <div style="font-weight:600; margin-top:10px;">Was hast du geübt?</div>
         <div class="dy-items">${offer.length ? offer.map((o, i) => `<label><input type="checkbox" data-dyitem="${i}" ${d.items.includes(o) ? 'checked' : ''}> ${homeEsc(o)}</label>`).join('') : '<div style="opacity:.7; font-size:.9rem;">Noch nichts geöffnet.</div>'}</div>
-        <input type="text" id="dyExtra" placeholder="Weiteres, z. B. „Lied: Knockin' on Heaven's Door“" style="margin-top:6px;">
+        <input type="text" id="dyExtra" placeholder="Weiteres, z. B. „Lied: Knockin' on Heaven's Door“" style="margin-top:6px;" value="${homeEsc(d.extra || '')}">
         <label style="font-weight:600; display:block; margin-top:10px;">Notiz</label><textarea id="dyNote" rows="3" placeholder="z. B. Wechsel C→F noch hakelig">${homeEsc(d.note || '')}</textarea>
         <div style="font-weight:600; margin-top:10px;">Wie war's?</div>
         <div class="dy-mood">${['🙂', '😐', '🙁'].map(m => `<button type="button" data-dymood="${m}" class="${d.mood === m ? 'on' : ''}">${m}</button>`).join('')}</div>
@@ -11651,6 +11897,10 @@
     document.getElementById('diaryCloseBtn').addEventListener('click', diaryClose);
     box.querySelectorAll('[data-dymood]').forEach(b => b.addEventListener('click', () => { d.mood = d.mood === b.dataset.dymood ? '' : b.dataset.dymood; box.querySelectorAll('[data-dymood]').forEach(x => x.classList.toggle('on', x.dataset.dymood === d.mood)); }));
     document.getElementById('dyCancel').addEventListener('click', () => { diaryDraft = null; diaryEditId = null; diaryRender(); });
+    document.getElementById('dyDateBtn').addEventListener('click', () => { diaryGrab(); d.calOpen = !d.calOpen; diaryRender(); });
+    box.querySelectorAll('[data-dyday]').forEach(b => b.addEventListener('click', () => { diaryGrab(); diarySetDay(b.dataset.dyday); const dt = new Date(d.date); d.calY = dt.getFullYear(); d.calM = dt.getMonth(); diaryRender(); }));
+    box.querySelectorAll('[data-mday]').forEach(b => b.addEventListener('click', () => { diaryGrab(); diarySetDay(b.dataset.mday); d.calOpen = false; diaryRender(); }));
+    box.querySelectorAll('[data-mcal]').forEach(b => b.addEventListener('click', () => { diaryGrab(); d.calM += b.dataset.mcal === 'next' ? 1 : -1; if (d.calM < 0) { d.calM = 11; d.calY--; } if (d.calM > 11) { d.calM = 0; d.calY++; } diaryRender(); }));
     document.getElementById('dySave').addEventListener('click', () => {
       const items = offer.filter((o, i) => { const c = box.querySelector(`[data-dyitem="${i}"]`); return c && c.checked; });
       const ex = document.getElementById('dyExtra').value.trim(); if (ex) items.push(ex);
@@ -11662,6 +11912,40 @@
       diaryDraft = null; diaryEditId = null; diaryRender(); showToast('📓 Gespeichert');
     });
   }
+  // ---------- Kleiner Monatskalender (Tagebuch & Wochenplan) ----------
+  // opts: { y, m, level(key)->0..3, dot(key)->bool, sel, maxKey, wk(key)->bool, id }
+  function miniCalHtml(o) {
+    const first = new Date(o.y, o.m, 1), days = new Date(o.y, o.m + 1, 0).getDate();
+    const off = (first.getDay() + 6) % 7, today = ptDayKey();
+    let h = `<div class="mcal"><div class="mcal-head"><button type="button" data-mcal="prev" aria-label="Monat zurück">◀</button><span>${first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })}</span><button type="button" data-mcal="next" aria-label="Monat vor">▶</button></div><div class="mcal-grid">`;
+    ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(n => h += `<div class="mcal-dn">${n}</div>`);
+    for (let i = 0; i < off; i++) h += '<div></div>';
+    for (let d = 1; d <= days; d++) {
+      const k = ptDayKey(new Date(o.y, o.m, d));
+      const lv = o.level ? o.level(k) : 0;
+      const cls = ['mcal-d', lv ? 'lv' + lv : '', k === today ? 'today' : '', k === o.sel ? 'sel' : '', o.dot && o.dot(k) ? 'dot' : '', o.wk && o.wk(k) ? 'wk' : ''].join(' ');
+      h += `<button type="button" class="${cls}" data-mday="${k}" ${o.maxKey && k > o.maxKey ? 'disabled' : ''}>${d}</button>`;
+    }
+    return h + `</div></div>`;
+  }
+  function ptLevelForDay(k) {
+    try { const sec = (ptData.days || {})[k] || 0; return sec >= 1800 ? 3 : sec >= 900 ? 2 : sec >= 60 ? 1 : 0; } catch (e) { return 0; }
+  }
+  function diaryGrab() {
+    const d = diaryDraft; if (!d) return;
+    const box = document.getElementById('diaryPanel'); if (!box) return;
+    const mi = document.getElementById('dyMin'); if (mi) d.min = mi.value;
+    const no = document.getElementById('dyNote'); if (no) d.note = no.value;
+    const ex = document.getElementById('dyExtra'); if (ex) d.extra = ex.value;
+    const offer = [...new Set([...(d.offer || []), ...d.items])];
+    const items = offer.filter((o, i) => { const c = box.querySelector(`[data-dyitem="${i}"]`); return c ? c.checked : d.items.includes(o); });
+    d.items = items;
+  }
+  function diarySetDay(k) {
+    const [y, m, dd] = k.split('-').map(Number);
+    diaryDraft.date = new Date(y, m - 1, dd, 12, 0, 0).toISOString();
+  }
+
   function diaryInit() {
     if (document.getElementById('diaryOverlay')) return;
     const o = document.createElement('div'); o.id = 'diaryOverlay'; o.className = 'pt-overlay';
@@ -11672,7 +11956,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-08-2';
+  const APP_VERSION = '2026-10-09-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -11740,5 +12024,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4776497e94b5d82',t:'MTc5MTQ4NjA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4844749a8dbfb4e',t:'MTc5MTYyMTE4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
