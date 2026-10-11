@@ -1398,9 +1398,24 @@
     .home-ver { text-align: center; font-size: .8rem; opacity: .7; margin: 18px 0 6px; display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; }
     .home-ver button { font-size: .8rem; background: none; border: 1px solid var(--card-border); color: var(--text-color); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
     #chgTrainer { margin-top: 14px; }
+    .ear-card { padding: 14px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--card-bg); max-width: 760px; margin: 0 auto; }
+    .ear-card h3 { margin: 0 0 8px; }
+    .ear-tabs, .ear-answers, .ear-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; align-items: center; }
+    .ear-answers .theory-chip { min-width: 110px; font-size: 1rem; padding: 10px 12px; }
+    .ear-q { font-size: 1.05rem; margin: 10px 0 4px; }
+    .ear-fb { min-height: 1.4em; margin: 6px 0; }
+    .ear-score { font-size: .85rem; opacity: .75; }
+    .ear-hint { font-size: .82rem; opacity: .75; margin-top: 4px; }
+    .ear-frets { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 6px; margin: 8px 0; }
+    .ear-fret { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--bg-color); color: var(--text-color); cursor: pointer; font: inherit; }
+    .ear-fret b { font-size: .62rem; opacity: .7; font-weight: 600; } .ear-fret span { font-size: 1.15rem; font-weight: 800; }
+    .ear-staff { max-width: 640px; margin: 4px auto 0; } .ear-snote { cursor: pointer; }
+    .ear-fret.on { border-color: var(--accent-color); background: color-mix(in srgb, var(--accent-color) 25%, var(--bg-color)); }
+    .ear-fret i { position: absolute; top: 2px; right: 4px; font-style: normal; font-size: .65rem; font-weight: 800; color: var(--accent-color); }
     .chg-card { padding: 14px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--card-bg); }
     .chg-card h3 { margin: 0 0 8px; }
     .chg-chords { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+    .chg-chords.many input { width: 60px; font-size: .9rem; padding: 5px 4px; }
     .chg-chords input { width: 74px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px 8px; font-size: 1rem; font-weight: 700; text-align: center; }
     .chg-stage { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 12px 0 4px; }
     .chg-box { text-align: center; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--card-border); min-width: 120px; }
@@ -1512,7 +1527,7 @@
         <optgroup label="Griffbrett üben">
           <option value="3">4. Alle Töne</option>
           <option value="4">5. Töne erraten</option>
-          <option value="5">6. Notenlesen</option>
+          <option value="5">6. Noten lesen &amp; finden</option>
           <option value="6">7. Gehörbildung</option>
           <option value="7">8. Tonleitern</option>
         </optgroup>
@@ -1557,6 +1572,7 @@
         <select id="finderModeSelect" style="background:var(--bg-color); color:var(--text-color); border:none; outline:none; font-size:0.85rem;">
           <option value="showAll">Alle Positionen aufdecken</option>
           <option value="interactive">Interaktiv auf dem Griffbrett suchen</option>
+          <option value="explore">Frei erkunden: Bund antippen → Note sehen</option>
         </select>
       </div>
       <div class="toggle-group">
@@ -1642,6 +1658,7 @@
   <div id="jamModuleRoot" style="display:none;"></div>
   <div id="tunerRoot" style="display:none;"></div>
   <div id="strumRoot" style="display:none;"></div>
+  <div id="earRoot" style="display:none;"></div>
 
   <div class="theory-box" id="instructionBox">
     <h2>1. Chronologische Anleitung zur Bedienung des Trainers</h2>
@@ -1652,7 +1669,9 @@
       <ul>
         <li><strong>Akkord nachschlagen, Griffvarianten (Akkord-Lexikon):</strong> 🧪 Akkord-Labor, oben „Griffposition anzeigen“</li>
         <li><strong>Eigene Akkordfolge eintragen, anhören, als MIDI speichern:</strong> ✍️ Akkordfolgen erstellen</li>
-        <li><strong>Akkordwechsel im Takt üben:</strong> 🔁 Akkordwechsel-Trainer</li>
+        <li><strong>Akkordwechsel im Takt üben (auch mit deinen eigenen Akkordfolgen):</strong> 🔁 Akkordwechsel-Trainer</li>
+        <li><strong>Intervalle hören, Dur oder Moll erkennen:</strong> 👂 Gehörbildung</li>
+        <li><strong>Note im Notensystem auf dem Griffbrett finden – oder umgekehrt:</strong> 🎶 Noten lesen &amp; finden</li>
         <li><strong>Mit Schlagzeug-Begleitung spielen, Musikstile:</strong> 🥁 Beat &amp; Jam</li>
         <li><strong>Schlag- und Zupfmuster:</strong> 🪕 Anschlag &amp; Zupfen</li>
         <li><strong>Tonleitern, Pentatonik, CAGED:</strong> 🪜 Tonleitern</li>
@@ -1690,7 +1709,7 @@
       <p>Intervalllehre, Dreiklänge und Septakkorde, Tonleitern und Pentatoniken, Quintenzirkel sowie Kadenzen und Transponieren. Die Inhalte sind direkt mit dem Griffbrett verknüpft und können in kleinen interaktiven Beispielen erkundet werden.</p>
       <ul>
         <li><strong>Griffbrett-Experiment:</strong> Alle 12 Intervalle auf- und abwärts mit Anhören, dazu Dur, Moll (natürlich, harmonisch, melodisch), Pentatoniken und die 7 Kirchentonarten mit Merksatz und 🔊-Wiedergabe.</li>
-        <li><strong>Quiz:</strong> Intervalle erkennen (sehen oder hören) und Fragen zu Tonarten und Quintenzirkel, mit Punktezähler und Erklärung.</li>
+        <li><strong>Quiz:</strong> Intervalle erkennen (sehen) und Fragen zu Tonarten und Quintenzirkel, mit Punktezähler und Erklärung.</li>
         <li><strong>Stufenakkorde &amp; Akkordfolgen:</strong> Die sieben Akkorde jeder Tonart (auch als Septakkorde), typische Akkordfolgen zum Anhören und per Knopf direkt ins Beat- &amp; Jam-Modul übernehmen.</li>
         <li><strong>Akkord-Baukasten &amp; Umkehrungen:</strong> 14 Akkordtypen mit Tönen und Stufenformel, dazu alle Umkehrungen zum Anhören.</li>
         <li><strong>Griffbrett-Karte:</strong> Einen Ton antippen und sehen, wo Terzen, Quarten, Quinten und Oktaven liegen, oder alle Oktav-Muster anzeigen lassen.</li>
@@ -1724,11 +1743,12 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">6</span>
-        <h3>Notenlesen</h3>
+        <h3>Noten lesen &amp; finden</h3>
       </div>
       <p>Wähle direkt im Notensystem eine beliebige Note mit der Maus oder dem Finger aus. Beim Anklicken erklingt der Ton sofort.</p>
       <ul>
         <li><strong>Modus „Alle Positionen aufdecken":</strong> Zeigt dir automatisch alle Positionen der gewählten Note auf dem Griffbrett an.</li>
+        <li><strong>Modus „Frei erkunden":</strong> Umgekehrt: Tippe auf einen Bund – du hörst den Ton und siehst Notennamen und Note im Notensystem. Ohne Zeitdruck und ohne Bewertung.</li>
         <li><strong>Modus „Interaktiv suchen":</strong> Wähle eine Note im Notensystem aus und finde danach alle passenden Bünde auf dem Griffbrett selbst heraus.</li>
         <li><strong>Lagenfilter:</strong> Begrenzt die Abfrage oder Anzeige auf Wunsch auf bestimmte Bünde (1. Lage 0.–4. Bund, 2. Lage 5.–8. Bund, 3. Lage 9.–12. Bund).</li>
         <li><strong>Tonart-Auswahl:</strong> Über die kleine Notengrafik in der Steuerleiste kannst du eine Tonart wählen. Halbtöne werden dann automatisch passend als # oder b benannt, und im Notensystem erscheinen standardmäßig nur noch die sieben Tonleiter-eigenen Noten der gewählten Tonart (z.B. bei G-Dur automatisch Fis statt F).</li>
@@ -1741,7 +1761,17 @@
         <span class="module-number-badge">7</span>
         <h3>Gehörbildung</h3>
       </div>
-      <p>Ohne Zeitdruck und ohne Erfolgsbewertung. Beim Antippen eines Bundes hörst du den Ton, siehst den Notennamen und die Position im Notensystem, um dein Gehör zu schulen.</p>
+      <p>Trainiere dein Gehör in Ruhe – du kannst jede Aufgabe so oft anhören, wie du magst.</p>
+      <ul>
+        <li><strong>🎵 Intervall hören:</strong> Zwei Töne erklingen, du tippst das Intervall. „Einfach“ fragt nur Terzen, Quinte und Oktave, „Alle 12 Intervalle“ alle. Die Töne kommen nacheinander oder zusammen.</li>
+        <li><strong>🎸 Dur oder Moll?</strong> Ein Akkord erklingt erst einzeln, dann zusammen. Auf Wunsch auch vermindert und übermäßig.</li>
+        <li><strong>↕️ Höher oder tiefer?</strong> Ist der zweite Ton höher, tiefer oder gleich? „Ganz nah“ macht es kniffliger.</li>
+        <li><strong>🧪 Ausprobieren:</strong> Die Töne einer Saite (Bund 0–12) – oben als Knöpfe mit Tonnamen, darunter als Noten. Tippe auf einen Ton oder eine Note, um ihn zu hören. Bei zwei Tönen siehst du den Namen des Intervalls (z. B. „G → H = große Terz, 4 Halbtöne = 4 Bünde“). Die Auswahl leuchtet in beiden Reihen auf.</li>
+        <li><strong>Klang:</strong> „Klavier-ähnlich“ (klar, klingt lange), „Klarer Ton“ (sehr rein, Tonhöhen am leichtesten zu hören) oder „Gitarre“.</li>
+        <li><strong>Töne einzeln:</strong> Mit „Ton 1“, „Ton 2“ … hörst du jeden Ton für sich. Nach deiner Antwort kannst du jede Antwortmöglichkeit antippen und zum Vergleich hören.</li>
+        <li>Nach jeder Antwort siehst du eine kurze Erklärung. Unten steht, wie viele du richtig hattest – nur zur Info.</li>
+      </ul>
+      <p>Das freie Erkunden (Bund antippen → Note sehen) findest du jetzt in Modul 6 „Noten lesen &amp; finden“.</p>
     </div>
 
     <div class="module-block">
@@ -1789,7 +1819,7 @@
         <li><strong>Anhören:</strong> Art wählen (Anschlag oder Zupfen), Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet.</li>
         <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen.</li>
         <li><strong>💾 Speichern / Gespeichert:</strong> Folgen unter einem Namen sichern und später wieder öffnen.</li>
-        <li><strong>⋯ Mehr:</strong> Folge in den Beat oder in den Wochenplan übernehmen oder als MIDI-Datei speichern (landet im Ordner „Downloads“).</li>
+        <li><strong>⋯ Mehr:</strong> Folge in den Beat, in den Wochenplan oder in den Akkordwechsel-Trainer übernehmen oder als MIDI-Datei speichern (landet im Ordner „Downloads“).</li>
       </ul>
     </div>
 
@@ -1798,7 +1828,7 @@
         <span class="module-number-badge">11</span>
         <h3>Akkordwechsel-Trainer</h3>
       </div>
-      <p>Hier übst du den Wechsel zwischen 2 bis 4 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück.</p>
+      <p>Hier übst du den Wechsel zwischen 2 bis 16 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück. <strong>Aus deinen Akkordfolgen:</strong> Über „📂 Aus meinen Akkordfolgen“ übernimmst du eine gespeicherte Folge mit deinen eigenen Griffen (bis zu 16 Akkorde). <strong>Art:</strong> „Anschlag“ oder „Zupfen (Arpeggio)“ – beim Zupfen klingen pro Schlag zwei einzelne Töne, vom Bass nach oben und zurück.</p>
     </div>
 
     <div class="module-block">
@@ -2069,9 +2099,9 @@
       <div class="theory-card">
         <div class="theory-chip-row" id="thQuizTypes" style="margin-top:0;">
           <button class="theory-chip active" type="button" data-type="see">👁️ Intervall sehen</button>
-          <button class="theory-chip" type="button" data-type="hear">👂 Intervall hören</button>
           <button class="theory-chip" type="button" data-type="keys">⭕ Tonarten</button>
         </div>
+        <div style="font-size:0.88rem; margin:6px 0;">👂 Intervalle <em>hören</em> übst du jetzt im Modul Gehörbildung: <button type="button" class="theory-chip" data-goto-mod="6">👂 Zur Gehörbildung</button></div>
         <div class="theory-demo" id="thQuizQuestion"></div>
         <div class="theory-chip-row th-quiz-grid" id="thQuizAnswers"></div>
         <div class="theory-demo" id="thQuizFeedback">Wähle eine Antwort.</div>
@@ -2357,8 +2387,8 @@
     { name: "Musiktheorie für Gitarristen", stringIdx: -1, time: 0, type: "theoryPro" },
     { name: "Alle Töne des Griffbretts lernen", stringIdx: -1, time: 0, type: "stringpractice" },
     { name: "Spiel: Töne erraten", stringIdx: -1, time: 0, type: "game" },
-    { name: "Notenlesen - Griffbrettfinder", stringIdx: -1, time: 0, type: "finder" },
-    { name: "Gehörbildung", stringIdx: -1, time: 0, type: "ear" },
+    { name: "Noten lesen & finden", stringIdx: -1, time: 0, type: "finder" },
+    { name: "Gehörbildung", stringIdx: -1, time: 0, type: "eartrain" },
     { name: "Tonleitern & Pentatoniken", stringIdx: -1, time: 0, type: "scaleview" },
     { name: "Akkord- & Noten-Labor", stringIdx: -1, time: 0, type: "chordlab" },
     { name: "Beat- & Jam-Modul", stringIdx: -1, time: 0, type: "jam" },
@@ -3734,7 +3764,7 @@
     state.finderStickyPitch = isPitchDiatonicInCurrentKey(state.finderPitch) ? null : state.finderPitch;
     renderFretboard();
     drawStaff();
-    const modType = MODULES[state.currentModule].type;
+    const modType = curModType();
     if (modType === 'chordlab') analyzeChord();
   }
 
@@ -3784,11 +3814,18 @@
     });
   }
 
+  // „Frei erkunden“ in „Noten lesen & finden“ verhält sich wie das frühere Erkunden-Modul
+  function curModType() { const t = MODULES[state.currentModule].type; return t === 'finder' && state.finderMode === 'explore' ? 'ear' : t; }
+  function finderBanner() {
+    return state.finderMode === 'explore' ? "🎧 Frei erkunden: Tippe auf einen Bund, um den Ton zu hören und im Notensystem zu sehen."
+      : state.finderMode === 'interactive' ? "🎼 Tippe eine Note im Notensystem an und suche dann alle passenden Stellen auf dem Griffbrett."
+      : "🎼 Tippe eine Note im Notensystem an, um den Ton zu hören und alle Stellen auf dem Griffbrett zu sehen.";
+  }
   function renderNotePicker() {
     notePickerEl.innerHTML = '';
-    const modType = MODULES[state.currentModule].type;
+    const modType = curModType();
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod') {
+    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -3859,7 +3896,7 @@
 
   function renderFretboard() {
     fretboardEl.innerHTML = '';
-    const modType = MODULES[state.currentModule].type;
+    const modType = curModType();
     const fingers = (modType === 'chordlab') ? calculateFingers(state.chordPitches) : {};
 
     STRINGS.forEach((stringData, stringIdx) => {
@@ -4017,7 +4054,7 @@
   }
 
   function handleCellClick(stringIdx, fretIdx) {
-    const modType = MODULES[state.currentModule].type;
+    const modType = curModType();
     if (modType === 'game' || modType === 'theory' || modType === 'instruction' || modType === 'planner') return;
 
     if (modType === 'chordlab') {
@@ -5303,6 +5340,7 @@
     if (progMoreOpen) h += `<div class="prog-row" style="padding:6px 8px; border:1px dashed rgba(148,163,184,0.4); border-radius:10px;">
       <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
       <button type="button" class="btn btn-secondary" data-act="plan">📅 In den Wochenplan</button>
+      <button type="button" class="btn btn-secondary" data-act="chg">🔁 Im Wechsel-Trainer üben</button>
       <button type="button" class="btn btn-secondary" data-act="midi">🎹 MIDI speichern</button>
     </div>`;
     const po = progPlayOpts();
@@ -5692,6 +5730,7 @@
       else if (act === 'play' && c) { try { initAudio(); progPlayChord(c, 0); } catch (er) {} return; }
       else if (act === 'playall') { try { if (progPlayer.on) progPlayStop(); else progPlayStart(); } catch (er) { console.error(er); } return; }
       else if (act === 'midi') { progMidiExport(); return; }
+      else if (act === 'chg') { if (chgImportFrom(dr)) { switchToModule(14); window.scrollTo(0, 0); } return; }
       else if (act === 'more') { progMoreOpen = !progMoreOpen; progRender(); return; }
       else if (act === 'grip' && c) {
         const d = progDetect(c); if (!d) return;
@@ -9257,6 +9296,7 @@
     jamModuleRoot.style.display = 'none';
     document.getElementById('tunerRoot').style.display = 'none';
     document.getElementById('strumRoot').style.display = 'none';
+    document.getElementById('earRoot').style.display = 'none';
     chordInfoBox.style.display = 'none';
     { const pb = document.getElementById('progBox'); if (pb) { pb.style.display = 'none'; pb.classList.remove('solo'); } }
     { const ll = document.getElementById('labLinks'); if (ll) ll.style.display = 'none'; }
@@ -9296,10 +9336,15 @@
     } else if (mod.type === 'finder') {
       timerContainerEl.style.display = 'none';
       finderControlsRow.style.display = 'flex';
-      speechBannerEl.textContent = "🎼 Klicke auf eine Note im Notensystem, um den Ton zu hören und seine Positionen auf dem Griffbrett zu finden!";
-    } else if (mod.type === 'ear') {
+      speechBannerEl.textContent = finderBanner();
+    } else if (mod.type === 'eartrain') {
+      fretboardWrapper.style.display = 'none';
+      staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
-      speechBannerEl.textContent = "🎧 Freies Erkunden: Tippe auf einen Bund, um den Ton zu hören und im Notensystem zu sehen.";
+      standardControls.style.display = 'none';
+      speechBannerEl.textContent = "👂 Gehörbildung: Hör genau hin und tippe deine Antwort – ganz in Ruhe, so oft du magst.";
+      document.getElementById('earRoot').style.display = 'block';
+      earRender();
     } else if (mod.type === 'scaleview') {
       fretboardWrapper.style.display = 'none';
       staffContainer.style.display = state.showStaff ? 'flex' : 'none';
@@ -10359,7 +10404,7 @@
   const HOME_GUITAR_SVG = '<img src="data:image/webp;base64,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" alt="" draggable="false">';
   const HOME_GROUPS = [
     { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
-    { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Notenlesen', 'Noten im Notensystem auf dem Griffbrett finden'], [6, '👂', 'Gehörbildung', 'Töne und Intervalle hören – ohne Zeitdruck'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
+    { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Noten lesen & finden', 'Note → Griffbrett finden oder Bund antippen → Note sehen'], [6, '👂', 'Gehörbildung', 'Intervalle, Dur oder Moll, höher oder tiefer'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
     { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben']] },
     { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
     { title: 'Planen', color: 'teal', items: [[10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Kalender, Statistik']] }
@@ -11013,7 +11058,10 @@
       state.finderMode = e.target.value;
       state.finderFound = {};
       state.userGrid = {};
+      speechBannerEl.textContent = finderBanner();
+      renderNotePicker();
       renderFretboard();
+      drawStaff();
     });
 
     positionFilterSelect.addEventListener('change', (e) => {
@@ -11134,7 +11182,7 @@
     });
 
     staffCanvas.addEventListener('click', (e) => {
-      const modType = MODULES[state.currentModule].type;
+      const modType = curModType();
       const rect = staffCanvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
@@ -11241,7 +11289,7 @@
   function drawStaff() {
     if (!state.showStaff) return;
     const ctx = staffCanvas.getContext('2d');
-    const modType = MODULES[state.currentModule].type;
+    const modType = curModType();
 
     if (modType === 'chordlab') {
       staffCanvas.width = 850;
@@ -11906,7 +11954,235 @@
     document.addEventListener('click', () => m.classList.remove('open'));
   }
 
-  // =================== Akkordwechsel-Trainer (Akkord-Labor) ===================
+
+  // =================== Gehörbildung (Modul 7) ===================
+  const EAR_KEY = 'guitartrainer_ear';
+  const EAR_EASY = [3, 4, 7, 12];
+  const EAR_SOUNDS = [['piano', '🎹 Klavier-ähnlich'], ['clear', '🔔 Klarer Ton'], ['guitar', '🎸 Gitarre']];
+  const EAR_STRINGS = [['40', 'tiefe E-Saite'], ['45', 'A-Saite'], ['50', 'D-Saite'], ['55', 'G-Saite'], ['59', 'H-Saite'], ['64', 'hohe e-Saite']];
+  const EAR_CHORDS = { dur: ['Dur', [0, 4, 7], 'Dur klingt hell und offen – die große Terz (4 Halbtöne) liegt unten.'], moll: ['Moll', [0, 3, 7], 'Moll klingt weicher, oft etwas traurig – die kleine Terz (3 Halbtöne) liegt unten.'],
+    dim: ['Vermindert', [0, 3, 6], 'Vermindert klingt eng und gespannt – zwei kleine Terzen übereinander.'], aug: ['Übermäßig', [0, 4, 8], 'Übermäßig klingt schwebend, wie ein Fragezeichen – zwei große Terzen übereinander.'] };
+  let earState = null, earOut = null, earOutCtx = null;
+  function earLoad() {
+    const d = { ex: 'iv', ivLevel: 'easy', ivMode: 'up', chordMore: false, hlLevel: 'easy', sound: 'piano', tryStr: '55' };
+    try { Object.assign(d, JSON.parse(localStorage.getItem(EAR_KEY) || '{}')); } catch (e) {}
+    if (!EAR_SOUNDS.some(x => x[0] === d.sound)) d.sound = 'piano';
+    if (!EAR_STRINGS.some(x => x[0] === String(d.tryStr))) d.tryStr = '55';
+    d.q = null; d.right = 0; d.total = 0; d.answered = false; d.trySel = [];
+    return d;
+  }
+  function earSave() { try { const { ex, ivLevel, ivMode, chordMore, hlLevel, sound, tryStr } = earState; localStorage.setItem(EAR_KEY, JSON.stringify({ ex, ivLevel, ivMode, chordMore, hlLevel, sound, tryStr })); } catch (e) {} }
+  function earRand(n) { return Math.floor(Math.random() * n); }
+  function earShuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = earRand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function earGetOut(ctx) {
+    if (earOut && earOutCtx === ctx) return earOut;
+    const g = ctx.createGain(); g.gain.value = 0.7;
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -12; comp.ratio.value = 3;
+    g.connect(comp); comp.connect(ctx.destination);
+    earOut = g; earOutCtx = ctx; return g;
+  }
+  // Ein Ton im gewählten Klang. t = Start in Sekunden ab jetzt
+  function earNote(midi, t, dur, k) {
+    initAudio(); if (!audioCtx) return;
+    const ctx = audioCtx;
+    try { if (ctx.state === 'suspended') ctx.resume(); } catch (e) {}
+    const t0 = ctx.currentTime + 0.05 + (t || 0), f = appA4() * Math.pow(2, (midi - 69) / 12);
+    const snd = earState ? earState.sound : 'piano';
+    try {
+      if (snd === 'guitar') { strumPluck(ctx, midi, t0, 1, 'ear' + (k || 0), Math.max(2.4, dur || 0)); return; }
+      const out = earGetOut(ctx);
+      if (snd === 'clear') {
+        const d = Math.max(1.2, dur || 1.4);
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0.0001, t0); env.gain.linearRampToValueAtTime(0.2, t0 + 0.03);
+        env.gain.setValueAtTime(0.2, t0 + d - 0.25); env.gain.linearRampToValueAtTime(0.0001, t0 + d);
+        env.connect(out);
+        [[1, 1], [2, 0.12]].forEach(([m, a]) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f * m, t0); g.gain.value = a; o.connect(g); g.connect(env); o.start(t0); o.stop(t0 + d + 0.05); });
+        return;
+      }
+      // Klavier-ähnlich: harter Anschlag, mehrere Teiltöne, die unterschiedlich schnell verklingen
+      const d = Math.max(2.2, dur || 2.6);
+      [[1, 0.22, d], [2, 0.09, d * 0.6], [3, 0.04, d * 0.4], [4, 0.02, d * 0.25]].forEach(([m, a, dd]) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = m === 1 ? 'triangle' : 'sine'; o.frequency.setValueAtTime(f * m * (1 + (m - 1) * 0.0008), t0);
+        g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(a, t0 + 0.006);
+        g.gain.exponentialRampToValueAtTime(a * 0.35, t0 + 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dd);
+        o.connect(g); g.connect(out); o.start(t0); o.stop(t0 + dd + 0.05);
+      });
+    } catch (e) { playPitch(midi, t || 0); }
+  }
+  function earIvName(semis) { return semis === 0 ? 'Prime (gleicher Ton)' : TH_INTERVAL_NAMES[semis]; }
+  function earSpell(lo, semis) { const [r, t] = thSpell(lo % 12, TH_LETTER_CHOICES[lo % 12][0], [0, semis]); return [r.name, t.name]; }
+  function earMakeQ() {
+    const E = earState;
+    if (E.ex === 'iv') {
+      const pool = E.ivLevel === 'easy' ? EAR_EASY : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      const semis = pool[earRand(pool.length)], root = 60 + earRand(12);
+      const opts = E.ivLevel === 'easy' ? EAR_EASY : earShuffle([semis, ...earShuffle(pool.filter(x => x !== semis)).slice(0, 3)]).sort((a, b) => a - b);
+      const [rn, tn] = earSpell(root, semis);
+      return { text: E.ivMode === 'together' ? 'Welches Intervall hörst du? (beide Töne zusammen)' : 'Welches Intervall hörst du? (erst der tiefere, dann der höhere Ton)',
+        options: opts.map(x => ({ id: String(x), label: TH_INTERVAL_NAMES[x] })), correct: String(semis),
+        explain: `${rn} → ${tn} = ${TH_INTERVAL_NAMES[semis]} (${semis} Halbtöne = ${semis} Bünde).`, play: { kind: 'iv', root, semis }, notes: [root, root + semis], names: [rn, tn] };
+    }
+    if (E.ex === 'chord') {
+      const ids = E.chordMore ? ['dur', 'moll', 'dim', 'aug'] : ['dur', 'moll'];
+      const id = ids[earRand(ids.length)], k = EAR_CHORDS[id], root = 57 + earRand(12);
+      const name = jamRootName(root % 12, id === 'dur' ? 'dur' : 'moll');
+      let names = []; try { names = thSpell(root % 12, TH_LETTER_CHOICES[root % 12][0], k[1], [0, 2, 4]).map(n => n.name); } catch (e) {}
+      return { text: 'Wie klingt dieser Akkord?', options: ids.map(x => ({ id: x, label: EAR_CHORDS[x][0] })), correct: id,
+        explain: `Das war ${name}-${k[0]}. ${k[2]}`, play: { kind: 'chord', root, iv: k[1] }, notes: k[1].map(x => root + x), names };
+    }
+    const hard = E.hlLevel === 'hard';
+    const diffs = hard ? [1, 2] : [3, 4, 5, 7, 12];
+    const r = earRand(10), sign = r < 1 ? 0 : (r < 5 ? 1 : -1);
+    const d = sign === 0 ? 0 : sign * diffs[earRand(diffs.length)], a = 62 + earRand(12);
+    const correct = d > 0 ? 'up' : d < 0 ? 'down' : 'same';
+    return { text: 'Ist der zweite Ton höher, tiefer oder gleich?', options: [{ id: 'up', label: '⬆️ Höher' }, { id: 'down', label: '⬇️ Tiefer' }, { id: 'same', label: '➡️ Gleich' }], correct,
+      explain: d === 0 ? 'Beide Töne waren gleich.' : `Der zweite Ton war ${Math.abs(d)} Halbton${Math.abs(d) > 1 ? 'schritte' : 'schritt'} ${d > 0 ? 'höher' : 'tiefer'}.`, play: { kind: 'hl', a, b: a + d }, notes: [a, a + d], names: [] };
+  }
+  function earPlayIv(lo, semis, together) {
+    if (together) { earNote(lo, 0, 2.4, 1); earNote(lo + semis, 0, 2.4, 2); }
+    else { earNote(lo, 0, 2.2, 1); earNote(lo + semis, 0.9, 2.2, 2); }
+  }
+  function earPlayChord(root, iv) {
+    iv.forEach((x, i) => earNote(root + x, i * 0.45, 1.6, i + 1));
+    iv.forEach((x, i) => earNote(root + x, 1.6 + i * 0.012, 2.6, i + 5));
+  }
+  function earPlay() {
+    const q = earState && earState.q; if (!q) return;
+    const p = q.play;
+    if (p.kind === 'iv') earPlayIv(p.root, p.semis, earState.ivMode === 'together');
+    else if (p.kind === 'chord') earPlayChord(p.root, p.iv);
+    else { earNote(p.a, 0, 1.6, 1); earNote(p.b, 1.0, 1.8, 2); }
+  }
+  // Zum Vergleich: eine Antwortmöglichkeit anhören (vom selben Grundton aus)
+  function earPlayOption(id) {
+    const q = earState.q, p = q.play;
+    if (p.kind === 'iv') earPlayIv(p.root, +id, earState.ivMode === 'together');
+    else if (p.kind === 'chord' && EAR_CHORDS[id]) earPlayChord(p.root, EAR_CHORDS[id][1]);
+    else if (p.kind === 'hl') { const dd = id === 'up' ? 4 : id === 'down' ? -4 : 0; earNote(p.a, 0, 1.6, 1); earNote(p.a + dd, 1.0, 1.8, 2); }
+  }
+  // Notenzeile mit den 13 Tönen der gewählten Saite – jede Note lässt sich antippen
+  function earTryStaff() {
+    const E = earState, base = +E.tryStr;
+    const LET = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6], ACC = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
+    const gap = 10, st0 = 50, yBot = st0 + 4 * gap, L = 58, colW = 30, W = L + 13 * colW + 8, H = 150;
+    let g = '';
+    for (let k = 0; k < 5; k++) g += `<line x1="4" x2="${W - 4}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="ps-line"/>`;
+    const cy0 = st0, gl = st0 + 3 * gap;
+    g += `<path class="ps-clef" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
+    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="ps-fill"/><text x="24" y="${yBot + 34}" class="ps-acc" style="font-size:10px;">8</text>`;
+    for (let f = 0; f <= 12; f++) {
+      const m = base + f + 12, pc = m % 12, oct = Math.floor(m / 12) - 1, di = oct * 7 + LET[pc];   // notiert eine Oktave höher
+      const y = yBot - (di - 30) * gap / 2, x = L + f * colW + colW / 2, on = E.trySel.indexOf(f);
+      let n = `<rect x="${x - colW / 2}" y="0" width="${colW}" height="${H}" fill="transparent"/>`;
+      for (let ld = 28; ld >= di; ld -= 2) { const yy = yBot - (ld - 30) * gap / 2; n += `<line x1="${x - 10}" x2="${x + 10}" y1="${yy}" y2="${yy}" class="ps-line"/>`; }
+      for (let ld = 40; ld <= di; ld += 2) { const yy = yBot - (ld - 30) * gap / 2; n += `<line x1="${x - 10}" x2="${x + 10}" y1="${yy}" y2="${yy}" class="ps-line"/>`; }
+      const fill = on >= 0 ? 'style="fill:var(--accent-color)"' : 'class="ps-fill"';
+      n += `<ellipse cx="${x}" cy="${y}" rx="6.2" ry="4.4" transform="rotate(-20 ${x} ${y})" ${fill}/>`;
+      if (ACC[pc]) n += `<text x="${x - 17}" y="${y + 5}" class="ps-acc" ${on >= 0 ? 'style="fill:var(--accent-color)"' : ''}>♯</text>`;
+      if (on >= 0) n += `<text x="${x - 3}" y="${Math.min(y, st0) - 10}" class="ps-acc" style="font-size:11px; font-weight:800; fill:var(--accent-color)">${on + 1}</text>`;
+      g += `<g class="ear-snote" data-ear-fret="${f}" role="button" aria-label="Note ${SCALE_VIEW_ROOTS[pc]}">${n}</g>`;
+    }
+    return `<svg class="prog-staff ear-staff" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+  }
+  function earTryHtml() {
+    const E = earState, base = +E.tryStr;
+    const flats = false;
+    let h = `<div class="ear-q">Tippe zwei Töne an – oben auf einen Ton oder unten auf eine Note. Du hörst beide Töne und siehst, wie das Intervall heißt.</div>
+      <div class="ear-frets">`;
+    for (let f = 0; f <= 12; f++) {
+      const pc = (base + f) % 12, on = E.trySel.indexOf(f);
+      h += `<button type="button" class="ear-fret ${on >= 0 ? 'on' : ''}" data-ear-fret="${f}"><span>${SCALE_VIEW_ROOTS[pc].replace('#', '♯')}</span><b>Bund ${f}</b>${on >= 0 ? `<i>${on + 1}</i>` : ''}</button>`;
+    }
+    h += `</div>` + earTryStaff();
+    let res = 'Noch nichts ausgewählt.';
+    if (E.trySel.length === 1) res = `Bund ${E.trySel[0]} gewählt – jetzt einen zweiten Bund antippen.`;
+    if (E.trySel.length === 2) {
+      const [a, b] = E.trySel, lo = Math.min(a, b), semis = Math.abs(b - a);
+      const [n1, n2] = earSpell(base + lo, semis);
+      const names = b >= a ? `${n1} → ${n2}` : `${n2} → ${n1}`;
+      res = `<strong>Bund ${a} und ${b}: ${earIvName(semis)}</strong>${semis ? ` ${b > a ? 'aufwärts' : 'abwärts'}` : ''} – ${names}. ${semis} Halbt${semis === 1 ? 'on' : 'öne'} = ${semis} Bün${semis === 1 ? 'd' : 'de'}.
+        <div class="ear-row"><button type="button" class="theory-chip" id="earTryAgain">🔊 Nochmal anhören</button><button type="button" class="theory-chip" id="earTryTogether">🔊 Zusammen</button><button type="button" class="theory-chip" id="earTryClear">✕ Neu</button></div>`;
+    }
+    return h + `<div class="ear-fb">${res}</div>`;
+  }
+  function earRender() {
+    if (!earState) earState = earLoad();
+    const box = document.getElementById('earRoot'); if (!box) return;
+    const E = earState;
+    const tab = (id, l) => `<button type="button" class="theory-chip ${E.ex === id ? 'active' : ''}" data-ear-ex="${id}">${l}</button>`;
+    const sel = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:5px 6px;';
+    const o = (v, cur, l) => `<option value="${v}" ${String(cur) === String(v) ? 'selected' : ''}>${l}</option>`;
+    let opts = `<label>Klang: <select id="earSound" style="${sel}">${EAR_SOUNDS.map(x => o(x[0], E.sound, x[1])).join('')}</select></label>`;
+    if (E.ex === 'iv') opts += `<label>Auswahl: <select id="earIvLevel" style="${sel}">${o('easy', E.ivLevel, 'Einfach (Terzen, Quinte, Oktave)')}${o('all', E.ivLevel, 'Alle 12 Intervalle')}</select></label>
+      <label>Spielweise: <select id="earIvMode" style="${sel}">${o('up', E.ivMode, 'nacheinander')}${o('together', E.ivMode, 'zusammen')}</select></label>`;
+    else if (E.ex === 'chord') opts += `<label><input type="checkbox" id="earChordMore" ${E.chordMore ? 'checked' : ''}> auch vermindert &amp; übermäßig</label>`;
+    else if (E.ex === 'hl') opts += `<label>Abstand: <select id="earHlLevel" style="${sel}">${o('easy', E.hlLevel, 'gut hörbar')}${o('hard', E.hlLevel, 'ganz nah (1–2 Halbtöne)')}</select></label>`;
+    else opts += `<label>Saite: <select id="earTryStr" style="${sel}">${EAR_STRINGS.map(x => o(x[0], E.tryStr, x[1])).join('')}</select></label>`;
+    let body;
+    if (E.ex === 'try') body = earTryHtml();
+    else {
+      if (!E.q) { E.q = earMakeQ(); E.answered = false; }
+      const q = E.q;
+      const toneBtns = q.notes.map((m, i) => `<button type="button" class="theory-chip" data-ear-tone="${i}">🔈 Ton ${i + 1}${E.answered && q.names[i] ? ': ' + homeEsc(q.names[i]) : ''}</button>`).join('');
+      body = `<div class="ear-q">${q.text}</div>
+      <div class="ear-row"><button type="button" class="btn" id="earPlayBtn">🔊 Anhören</button>${toneBtns}</div>
+      <div class="ear-answers" id="earAnswers">${q.options.map(x => `<button type="button" class="theory-chip" data-ear-a="${x.id}">${E.answered ? '🔊 ' : ''}${homeEsc(x.label)}</button>`).join('')}</div>
+      <div class="ear-fb" id="earFb">${E.answered ? E.fb + '<div class="ear-hint">Tipp: Tippe auf eine Antwort, um sie zum Vergleich zu hören.</div>' : 'Hör dir die Aufgabe an und tippe deine Antwort. Mit „Ton 1“, „Ton 2“ … hörst du die Töne einzeln.'}</div>
+      <div class="ear-row"><button type="button" class="btn btn-secondary" id="earNext">➡️ Nächste Aufgabe</button><span class="ear-score">${E.total ? `${E.right} von ${E.total} richtig` : ''}</span></div>`;
+    }
+    box.innerHTML = `<div class="ear-card"><h3>👂 Gehörbildung</h3>
+      <div class="ear-tabs">${tab('iv', '🎵 Intervall hören')}${tab('chord', '🎸 Dur oder Moll?')}${tab('hl', '↕️ Höher oder tiefer?')}${tab('try', '🧪 Ausprobieren')}</div>
+      <div class="ear-row">${opts}</div>${body}</div>`;
+    if (E.ex !== 'try' && E.answered) box.querySelectorAll('[data-ear-a]').forEach(b => { if (b.dataset.earA === E.q.correct) b.classList.add('th-right'); else if (b.dataset.earA === E.picked) b.classList.add('th-wrong'); });
+  }
+  function earTryPlay(together) {
+    const E = earState, base = +E.tryStr, [a, b] = E.trySel;
+    if (together) { earNote(base + a, 0, 2.4, 1); earNote(base + b, 0, 2.4, 2); }
+    else { earNote(base + a, 0, 2.0, 1); earNote(base + b, 0.8, 2.2, 2); }
+  }
+  document.addEventListener('click', e => {
+    const box = document.getElementById('earRoot');
+    if (!box || !earState || !box.contains(e.target)) return;
+    const b = e.target.closest('button, [data-ear-fret]'); if (!b) return;
+    const E = earState;
+    if (b.dataset.earEx) { E.ex = b.dataset.earEx; E.q = null; E.right = 0; E.total = 0; E.trySel = []; earSave(); earRender(); if (E.ex !== 'try') earPlay(); return; }
+    if (b.dataset.earFret !== undefined) {
+      const f = +b.dataset.earFret;
+      if (E.trySel.length >= 2) E.trySel = [];
+      E.trySel.push(f);
+      if (E.trySel.length === 2) earTryPlay(false); else earNote(+E.tryStr + f, 0, 1.8, 1);
+      earRender(); return;
+    }
+    if (b.id === 'earTryAgain') { earTryPlay(false); return; }
+    if (b.id === 'earTryTogether') { earTryPlay(true); return; }
+    if (b.id === 'earTryClear') { E.trySel = []; earRender(); return; }
+    if (b.id === 'earPlayBtn' || b.id === 'earPlayBtn2') { earPlay(); return; }
+    if (b.dataset.earTone !== undefined && E.q) { earNote(E.q.notes[+b.dataset.earTone], 0, 2.0, 1); return; }
+    if (b.id === 'earNext') { E.q = null; earRender(); earPlay(); return; }
+    if (b.dataset.earA && E.q) {
+      if (E.answered) { earPlayOption(b.dataset.earA); return; }
+      E.answered = true; E.picked = b.dataset.earA; E.total++;
+      const ok = E.picked === E.q.correct; if (ok) E.right++;
+      E.fb = (ok ? '✅ Richtig! ' : '❌ Nicht ganz. ') + homeEsc(E.q.explain) + ' <button type="button" class="theory-chip" id="earPlayBtn2">🔊 Nochmal anhören</button>';
+      earRender();
+    }
+  });
+  document.addEventListener('change', e => {
+    if (!earState || !e.target) return;
+    const id = e.target.id, E = earState;
+    if (id === 'earSound') { E.sound = e.target.value; earSave(); earRender(); if (E.ex !== 'try') earPlay(); return; }
+    if (id === 'earTryStr') { E.tryStr = e.target.value; E.trySel = []; earSave(); earRender(); return; }
+    if (id === 'earIvLevel') E.ivLevel = e.target.value;
+    else if (id === 'earIvMode') E.ivMode = e.target.value;
+    else if (id === 'earChordMore') E.chordMore = e.target.checked;
+    else if (id === 'earHlLevel') E.hlLevel = e.target.value;
+    else return;
+    E.q = null; E.right = 0; E.total = 0; earSave(); earRender();
+  });
+
+  // =================== Akkordwechsel-Trainer (eigenes Modul) ===================
   const CHG_KEY = 'guitartrainer_chg';
   const CHG_QUICK = ['C F', 'G C', 'Am F', 'D G', 'E Am', 'C G7', 'C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G'];
   let chgState = null, chgPlaying = false, chgTimer = null, chgNext = 0, chgBeat = 0;
@@ -11914,22 +12190,56 @@
     const d = { chords: ['C', 'F'], beats: 4, tempos: {}, click: true };
     try { Object.assign(d, JSON.parse(localStorage.getItem(CHG_KEY) || '{}')); } catch (e) {}
     if (!Array.isArray(d.chords) || d.chords.length < 2) d.chords = ['C', 'F'];
-    d.chords = d.chords.slice(0, 4); return d;
+    d.chords = d.chords.slice(0, 16);
+    if (!Array.isArray(d.grips)) d.grips = [];
+    d.grips = d.grips.slice(0, d.chords.length);
+    if (d.style !== 'arp') d.style = 'strum';
+    return d;
   }
   function chgSave() { try { localStorage.setItem(CHG_KEY, JSON.stringify(chgState)); } catch (e) {} }
   function chgKey() { return chgState.chords.join(' '); }
   function chgBpm() { return Math.max(30, Math.min(160, (chgState.tempos || {})[chgKey()] || 60)); }
-  function chgParsed() { const r = chgState.chords.map(c => { const p = parsePlanChords(c); return p && p.length === 1 ? p[0] : null; }); return r.every(Boolean) ? r : null; }
+  function chgGrip(i) { const g = (chgState.grips || [])[i]; return g && Array.isArray(g.frets) && g.frets.length === 6 ? g : null; }
+  function chgParsed() { const r = chgState.chords.map((c, i) => { const g = chgGrip(i); if (g) return [g.root, g.type]; const p = parsePlanChords(c); return p && p.length === 1 ? p[0] : null; }); return r.every(Boolean) ? r : null; }
+  function chgFrets(i, P) { const g = chgGrip(i); return g ? g.frets : strumFingering(P[i]); }
+  // Akkordfolge (aus „Akkordfolgen erstellen“) übernehmen – mit den eigenen Griffen
+  function chgImportFrom(p) {
+    if (!chgState) chgState = chgLoad();
+    const filled = p.chords.filter(c => c.frets.some(f => f >= 0));
+    const items = filled.map(c => ({ c, d: progDetect(c) })).filter(x => x.d).slice(0, 16);
+    const skipped = filled.length - items.length;
+    if (items.length < 2) { showToast('Für den Wechsel-Trainer braucht die Folge mindestens zwei erkannte Akkorde.'); return false; }
+    chgStop();
+    chgState.chords = items.map(x => progChordShort(x.d));
+    chgState.grips = items.map(x => ({ frets: x.c.frets.slice(), root: x.d.root, type: x.d.type }));
+    chgSave(); chgRender();
+    const nm = (p.name || '').trim();
+    showToast(`${nm ? '„' + nm + '“' : 'Deine Folge'} ist im Wechsel-Trainer ✔` + (skipped ? ` (${skipped} Akkord${skipped > 1 ? 'e' : ''} ohne Namen ausgelassen)` : ''));
+    return true;
+  }
+  function chgPlayBeat(P, ci, b, t) {
+    const frets = chgFrets(ci, P), s = [0, 1, 2, 3, 4, 5].filter(si => frets[si] >= 0);
+    if (!s.length) return;
+    const pitch = si => STRUM_OPEN[si] + frets[si];
+    if (chgState.style === 'arp') {
+      const seq = s.concat(s.slice(1, -1).reverse()), half = 30 / chgBpm();
+      for (let k = 0; k < 2; k++) { const si = seq[(b * 2 + k) % seq.length], tt = t + k * half; strumDamp(audioCtx, tt, si); strumPluck(audioCtx, pitch(si), tt, b === 0 && k === 0 ? 1 : 0.8, si, 2.0); }
+    } else {
+      const vel = b === 0 ? 1.08 : 0.68, gap = jamLowPerf() ? 0.016 : 0.011;
+      s.forEach((si, k) => { strumDamp(audioCtx, t + k * gap, si); strumPluck(audioCtx, pitch(si), t + k * gap, vel, si, 1.5); });
+    }
+  }
   function chgRender() {
     if (!chgState) chgState = chgLoad();
     const box = document.getElementById('chgTrainer'); if (!box) return;
     const sel = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.9rem; padding:5px 6px;';
     const n = chgState.chords.length, bpm = chgBpm();
     let h = `<div class="chg-card"><h3>🔁 Akkordwechsel-Trainer</h3>
-      <div class="jam-hint" style="margin:0 0 6px;">Übe den Wechsel zwischen zwei bis vier Akkorden im Takt.</div>
+      <div class="jam-hint" style="margin:0 0 6px;">Übe den Wechsel zwischen zwei bis 16 Akkorden im Takt.</div>
+      ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.filter(c => progDetect(c)).length >= 2; if (!hasDraft && !progState.saved.length) return ''; return `<div class="row" style="margin:0 0 6px;"><select id="chgImport" style="${sel}"><option value="">📂 Aus meinen Akkordfolgen …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></div>`; })()}
       <div class="row" style="flex-wrap:wrap; gap:6px;">${CHG_QUICK.map(q => `<button type="button" class="strum-chip" data-chgq="${q}">${q.split(' ').join(q.split(' ').length === 2 ? ' ↔ ' : ' → ')}</button>`).join('')}</div>
-      <div class="chg-chords">${chgState.chords.map((c, i) => `<input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
-        ${n < 4 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
+      <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
+        ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="font-weight:600;">Schläge pro Akkord:</label>
         <select id="chgBeats" style="${sel}">${[4, 2, 1].map(b => `<option value="${b}" ${b === chgState.beats ? 'selected' : ''}>${b}</option>`).join('')}</select>
@@ -11937,6 +12247,7 @@
           <input type="range" id="chgTempo" min="30" max="160" step="1" value="${bpm}" style="width:130px;">
           <span id="chgTempoLabel" style="font-size:0.85rem; min-width:62px;">${bpm} BPM</span>
           <button type="button" class="strum-chip" id="chgTempoReset" title="Zurück auf 60 BPM" style="visibility:${bpm !== 60 ? 'visible' : 'hidden'};">↺</button></div>
+        <label style="font-weight:600;">Art: <select id="chgStyle" style="${sel}"><option value="strum" ${chgState.style !== 'arp' ? 'selected' : ''}>Anschlag</option><option value="arp" ${chgState.style === 'arp' ? 'selected' : ''}>Zupfen (Arpeggio)</option></select></label>
         <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="chgClick" ${chgState.click ? 'checked' : ''}> Metronom-Klick</label>
         <button type="button" class="btn" id="chgPlayBtn">${chgPlaying ? '⏸ Stop' : '▶ Start'}</button>
       </div>
@@ -11944,13 +12255,15 @@
     box.innerHTML = h;
     chgShow(0, -1);
     const restart = () => { if (chgPlaying) { chgStop(); chgStart(); } };
-    box.querySelectorAll('[data-chgq]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords = b.dataset.chgq.split(' '); chgSave(); chgRender(); }));
+    box.querySelectorAll('[data-chgq]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords = b.dataset.chgq.split(' '); chgState.grips = []; chgSave(); chgRender(); }));
+    { const im = document.getElementById('chgImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; const p = v === 'draft' ? progState.draft : progState.saved[+v]; if (p) chgImportFrom(p); else im.value = ''; }); }
+    { const cs = document.getElementById('chgStyle'); if (cs) cs.addEventListener('change', () => { chgState.style = cs.value === 'arp' ? 'arp' : 'strum'; chgSave(); }); }
     box.querySelectorAll('[data-chgi]').forEach(inp => inp.addEventListener('change', () => {
       const v = inp.value.trim(); const p = parsePlanChords(v);
       if (!p || p.length !== 1) { showToast(`„${v}“ kenne ich nicht – z. B. C, Am, G7, Fmaj7.`); inp.value = chgState.chords[+inp.dataset.chgi]; return; }
-      chgState.chords[+inp.dataset.chgi] = v; chgSave(); const was = chgPlaying; chgStop(); chgRender(); if (was) chgStart();
+      chgState.chords[+inp.dataset.chgi] = v; if (chgState.grips) chgState.grips[+inp.dataset.chgi] = null; chgSave(); const was = chgPlaying; chgStop(); chgRender(); if (was) chgStart();
     }));
-    box.querySelectorAll('[data-chgdel]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords.splice(+b.dataset.chgdel, 1); chgSave(); chgRender(); }));
+    box.querySelectorAll('[data-chgdel]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords.splice(+b.dataset.chgdel, 1); if (chgState.grips) chgState.grips.splice(+b.dataset.chgdel, 1); chgSave(); chgRender(); }));
     on2('chgAdd', () => { chgStop(); chgState.chords.push(['G', 'Am', 'F', 'C'].find(c => !chgState.chords.includes(c)) || 'G'); chgSave(); chgRender(); });
     document.getElementById('chgBeats').addEventListener('change', e => { chgState.beats = +e.target.value; chgSave(); restart(); });
     document.getElementById('chgTempo').addEventListener('input', e => {
@@ -11965,7 +12278,7 @@
   function chgShow(idx, beat) {
     const st = document.getElementById('chgStage'); if (!st || !chgState) return;
     const P = chgParsed(), n = chgState.chords.length, nx = (idx + 1) % n;
-    const dia = i => { try { return P ? renderJamChordDiagramSvg(strumFingering(P[i])) : ''; } catch (e) { return ''; } };
+    const dia = i => { try { return P ? renderJamChordDiagramSvg(chgFrets(i, P)) : ''; } catch (e) { return ''; } };
     st.innerHTML = `<div class="chg-box now"><div class="lbl">Jetzt</div><div class="nm">${homeEsc(chgState.chords[idx])}</div>${dia(idx)}
         <div class="chg-beats">${Array.from({ length: chgState.beats }, (_, b) => `<span class="${b === beat ? 'on' : ''}"></span>`).join('')}</div></div>
       <div class="chg-box next"><div class="lbl">Als Nächstes</div><div class="nm">${homeEsc(chgState.chords[nx])}</div>${dia(nx)}</div>`;
@@ -11979,7 +12292,7 @@
     const look = jamLowPerf() ? 0.25 : 0.12;
     while (chgNext < audioCtx.currentTime + look) {
       const ci = Math.floor(chgBeat / per) % n, b = chgBeat % per;
-      strumPlayStep(audioCtx, CHG_PAT, P[ci], b === 0 ? 0 : 1, chgNext);
+      chgPlayBeat(P, ci, b, chgNext);
       if (chgState.click) strumClick(audioCtx, chgNext, b === 0);
       const delay = Math.max(0, (chgNext - audioCtx.currentTime) * 1000);
       setTimeout(() => { if (chgPlaying) chgShow(ci, b); }, delay);
@@ -12225,7 +12538,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-11-3';
+  const APP_VERSION = '2026-10-11-6';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -12293,5 +12606,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a48cbfe2ecbe4927',t:'MTc5MTcxMDAxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a48df6954cceb1f7',t:'MTc5MTcyMjc0MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
