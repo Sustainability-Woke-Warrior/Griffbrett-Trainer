@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Gitarren Griffbrett Trainer Pro</title>
+  <title>Gitarren-Griffbrett-Trainer</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Griffbrett Trainer">
+  <meta name="apple-mobile-web-app-title" content="Griffbrett-Trainer">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon-192.png">
   <style>
@@ -1048,6 +1048,7 @@
     .jam-paint-sub { font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 10px; }
     .jam-paint-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .prog-box { width: 100%; max-width: 1100px; margin: 12px auto; background: rgba(30,41,59,0.6); border: 1px solid rgba(148,163,184,0.25); border-radius: 14px; padding: 10px 12px; box-sizing: border-box; }
+    .prog-box.solo > summary { display: none; }
     .prog-box > summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; padding: 4px 0; }
     .prog-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
     .prog-row input[type=text], .prog-row select { background: var(--bg-color); color: var(--text-color); border: 1px solid rgba(148,163,184,0.35); border-radius: 8px; padding: 6px 8px; font-size: 0.9rem; }
@@ -1062,6 +1063,14 @@
     .prog-name { font-size: 1.35rem; font-weight: 800; margin-top: 4px; min-height: 1.6rem; }
     .prog-roman { font-size: 0.85rem; color: #fbbf24; font-weight: 700; }
     .prog-tones { font-size: 0.78rem; color: var(--text-muted); min-height: 1rem; }
+    .prog-card.playing { border-color: var(--accent-color); box-shadow: 0 0 0 2px var(--accent-color); }
+    .prog-staff { display: block; width: 100%; height: auto; margin-top: 4px; color: var(--text-color); }
+    .prog-staff .ps-line { stroke: currentColor; stroke-width: 1; opacity: 0.7; }
+    .prog-staff .ps-fill { fill: currentColor; }
+    .prog-staff .ps-clef { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
+    .prog-staff .ps-acc { fill: currentColor; font-size: 15px; font-family: serif; }
+    .prog-staff .ps-root { fill: #f97316; }
+    .prog-playrow input[type=range] { width: 110px; vertical-align: middle; }
     .prog-mini { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .prog-mini button { background: rgba(148,163,184,0.12); border: 1px solid rgba(148,163,184,0.3); color: inherit; border-radius: 8px; padding: 3px 7px; font-size: 0.78rem; cursor: pointer; }
     .prog-pick { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
@@ -1160,13 +1169,13 @@
     body.home-mode #homeBtn { display: none; }
     #homeScreen { display: none; }
     body.home-mode #homeScreen { display: block; }
-    .home-hero { position:relative; overflow:hidden; border-radius:22px; padding:26px 24px 22px; margin:14px 0 8px; background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 45%,#ec4899 100%); color:#fff; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+    .home-hero { position:relative; overflow:hidden; border-radius:22px; padding:26px 24px 22px; margin:14px 0 8px; background:linear-gradient(135deg,#fef08a 0%,#fdba74 40%,#f97316 70%,#dc2626 100%); color:#431407; box-shadow:0 6px 18px rgba(0,0,0,.25); }
     .home-hero { min-height:230px; } .home-hero .gtr { position:absolute; right:6px; top:-14px; height:270px; width:auto; opacity:.9; pointer-events:none; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
     .home-hero .hi { font-size:.95rem; opacity:.92; font-weight:600; position:relative; }
     .home-hero .sub { position:relative; margin:-8px 0 10px; font-size:1rem; font-weight:600; opacity:.95; max-width:62%; }
     .home-hero .tip { position:relative; margin:0 0 14px; font-size:.9rem; line-height:1.35; opacity:.92; max-width:62%; background:rgba(255,255,255,.14); border-radius:12px; padding:8px 10px; }
-    .home-hero h2 { margin:4px 0 14px; font-size:1.7rem; line-height:1.15; color:#fff; position:relative; }
-    .home-hero .cont { position:relative; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); color:#fff; border-radius:999px; padding:9px 16px; font-size:.95rem; font-weight:700; cursor:pointer; font-family:inherit; }
+    .home-hero h2 { max-width:62%; margin:4px 0 14px; font-size:1.7rem; line-height:1.15; color:#431407; position:relative; }
+    .home-hero .cont { position:relative; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.35); border:1px solid rgba(67,20,7,.35); color:#431407; border-radius:999px; padding:9px 16px; font-size:.95rem; font-weight:700; cursor:pointer; font-family:inherit; }
     .home-hero .cont:active { transform:scale(.97); }
     .home-group { margin:22px 0 10px; display:flex; align-items:center; gap:10px; }
     .home-group .dot { width:10px; height:10px; border-radius:50%; background:var(--c1); }
@@ -1183,7 +1192,7 @@
     .home-tile .desc { font-size:.8rem; color:var(--text-muted); line-height:1.3; }
     .home-tile.last { border:2px solid var(--c1); }
     .home-tile.last::before { content:"zuletzt"; position:absolute; bottom:10px; right:12px; font-size:.65rem; font-weight:800; color:var(--c1); text-transform:uppercase; letter-spacing:.05em; }
-    .home-c-blue { --c1:#3b82f6; --c2:#818cf8; } .home-c-green { --c1:#10b981; --c2:#34d399; } .home-c-orange { --c1:#f97316; --c2:#fbbf24; }
+    .home-c-blue { --c1:#3b82f6; --c2:#818cf8; } .home-c-green { --c1:#10b981; --c2:#34d399; } .home-c-orange { --c1:#f97316; --c2:#fbbf24; } .home-c-rose { --c1:#e11d48; --c2:#fb7185; } .home-c-teal { --c1:#0d9488; --c2:#2dd4bf; }
     @media (max-width:520px) { .home-hero { min-height:190px; } .home-hero .sub, .home-hero .tip { max-width:68%; } .home-hero .gtr { height:200px; right:-6px; opacity:.85; } .home-tiles { grid-template-columns:1fr 1fr; gap:10px; } .home-tile .desc { display:none; } .home-hero h2 { font-size:1.35rem; } }
     .home-settings { margin:28px 0 10px; text-align:center; font-size:.8rem; color:var(--text-muted); display:flex; justify-content:center; flex-wrap:wrap; gap:8px; align-items:center; }
     .home-settings select { background:transparent; color:var(--text-muted); border:1px solid var(--card-border); border-radius:8px; padding:3px 6px; font-size:.8rem; }
@@ -1380,9 +1389,8 @@
     .str-form select, .str-form input { width: 100%; box-sizing: border-box; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px; font-size: 0.95rem; }
     header { flex-wrap: wrap; gap: 6px; }
     header h1 { min-width: 0; }
-    #settingsBtn { display: none; }
-    body:not(.home-mode) #settingsBtn { display: inline-block; }
-    body:not(.home-mode) #backupBtn, body:not(.home-mode) #fontSizeBtn, body:not(.home-mode) #themeToggleBtn { display: none; }
+    #settingsBtn { display: inline-block; }
+    #backupBtn, #fontSizeBtn, #themeToggleBtn { display: none !important; }
     .set-menu { position: fixed; z-index: 3500; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3); padding: 6px; display: none; min-width: 210px; }
     .set-menu.open { display: block; }
     .set-menu button { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text-color); padding: 10px 12px; font-size: 1rem; border-radius: 8px; cursor: pointer; }
@@ -1469,7 +1477,7 @@
 
 <div class="container">
   <header>
-    <h1>Gitarren Griffbrett Trainer Pro</h1>
+    <h1>Gitarren-Griffbrett-Trainer</h1>
     <button class="btn btn-secondary" id="homeBtn" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
     <button class="btn btn-secondary" id="ptBtn" title="Übungs-Timer" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⏱</button>
     <button class="btn btn-secondary" id="diaryBtn" title="Übungs-Tagebuch" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">📓</button>
@@ -1496,19 +1504,31 @@
     <div class="row">
       <label for="moduleSelect" style="font-size:0.85rem; font-weight:600;">Modul:</label>
       <select id="moduleSelect" class="module-select">
-        <option value="0">1. Anleitung zur Bedienung</option>
-        <option value="2">2. Musiktheorie für Gitarristen</option>
-        <option value="1">3. Theorie zu: Alle Töne des Griffbretts lernen</option>
-        <option value="3">4. Alle Töne des Griffbretts lernen</option>
-        <option value="4">5. Spiel: Töne erraten</option>
-        <option value="5">6. Notenlesen - Griffbrettfinder</option>
-        <option value="6">7. Gehörbildung / Freies Erkunden (Ohne Zeit)</option>
-        <option value="7">8. Tonleitern & Pentatoniken</option>
-        <option value="8">9. Akkord- & Noten-Labor (Interaktiv)</option>
-        <option value="9">10. Beat- & Jam-Modul</option>
-        <option value="12">11. Anschlag &amp; Zupfen</option>
-        <option value="11">12. Stimmgerät</option>
-        <option value="10">13. Interaktiver Wochen-Übungsplan</option>
+        <optgroup label="Lernen">
+          <option value="0">1. Anleitung</option>
+          <option value="2">2. Musiktheorie</option>
+          <option value="1">3. Griffbrett-Theorie</option>
+        </optgroup>
+        <optgroup label="Griffbrett üben">
+          <option value="3">4. Alle Töne</option>
+          <option value="4">5. Töne erraten</option>
+          <option value="5">6. Notenlesen</option>
+          <option value="6">7. Gehörbildung</option>
+          <option value="7">8. Tonleitern</option>
+        </optgroup>
+        <optgroup label="Akkorde">
+          <option value="8">9. Akkord-Labor</option>
+          <option value="13">10. Akkordfolgen erstellen</option>
+          <option value="14">11. Akkordwechsel-Trainer</option>
+        </optgroup>
+        <optgroup label="Spielen">
+          <option value="9">12. Beat &amp; Jam</option>
+          <option value="12">13. Anschlag &amp; Zupfen</option>
+          <option value="11">14. Stimmgerät</option>
+        </optgroup>
+        <optgroup label="Planen">
+          <option value="10">15. Wochenplan</option>
+        </optgroup>
       </select>
     </div>
 
@@ -1625,28 +1645,47 @@
 
   <div class="theory-box" id="instructionBox">
     <h2>1. Chronologische Anleitung zur Bedienung des Trainers</h2>
-    <p>Willkommen beim Gitarren Griffbrett Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt.</p>
+    <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt.</p>
+
+    <div class="module-block">
+      <div class="module-block-header"><span class="module-number-badge">🧭</span><h3>Wo finde ich was?</h3></div>
+      <ul>
+        <li><strong>Akkord nachschlagen, Griffvarianten (Akkord-Lexikon):</strong> 🧪 Akkord-Labor, oben „Griffposition anzeigen“</li>
+        <li><strong>Eigene Akkordfolge eintragen, anhören, als MIDI speichern:</strong> ✍️ Akkordfolgen erstellen</li>
+        <li><strong>Akkordwechsel im Takt üben:</strong> 🔁 Akkordwechsel-Trainer</li>
+        <li><strong>Mit Schlagzeug-Begleitung spielen, Musikstile:</strong> 🥁 Beat &amp; Jam</li>
+        <li><strong>Schlag- und Zupfmuster:</strong> 🪕 Anschlag &amp; Zupfen</li>
+        <li><strong>Tonleitern, Pentatonik, CAGED:</strong> 🪜 Tonleitern</li>
+        <li><strong>Intervalle, Quintenzirkel, Stufenakkorde, Quiz:</strong> 🎼 Musiktheorie</li>
+        <li><strong>Gitarre stimmen:</strong> 🎚️ Stimmgerät · <strong>Saitenwechsel:</strong> Startseite → 🎸 Saiten</li>
+        <li><strong>Übungen planen, Kalender, Zeit pro Übung:</strong> 📅 Wochenplan</li>
+        <li><strong>Übungszeit messen:</strong> ⏱ oben rechts · <strong>Tagebuch:</strong> 📓 oben rechts</li>
+        <li><strong>Datensicherung, Schriftgröße, Hell/Dunkel, Kammerton:</strong> ⚙️ oben rechts</li>
+      </ul>
+    </div>
+
 
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">1</span>
-        <h3>Anleitung zur Bedienung</h3>
+        <h3>Anleitung</h3>
       </div>
       <p>Diese Seite gibt dir einen schnellen Überblick über alle im Programm enthaltenen Module, deren Zwecke und Steuerungselemente.</p>
       <ul>
         <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben bringt dich „↪ Weiter mit“ zurück ins zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
         <li><strong>⏱ Übungs-Timer (oben rechts):</strong> <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App sammelt deine Übungsminuten (heute/Woche). Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
         <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Mit „Jetzt aktualisieren“ wird sie geladen. Deine Daten bleiben dabei erhalten.</li>
-        <li><strong>💾 Datensicherung (oben rechts):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
-        <li><strong>A+ (Schriftgröße):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
-        <li><strong>🌙 / ☀️:</strong> Hell- oder Dunkel-Modus.</li>
+        <li><strong>⚙️ Einstellungen (oben rechts):</strong> Hier findest du Datensicherung, Schriftgröße, Hell/Dunkel und den Kammerton.</li>
+        <li><strong>💾 Datensicherung (im ⚙️-Menü):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
+        <li><strong>A+ Schriftgröße (im ⚙️-Menü):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
+        <li><strong>🌙 Hell / Dunkel (im ⚙️-Menü):</strong> Hell- oder Dunkel-Modus.</li>
       </ul>
     </div>
 
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">2</span>
-        <h3>Musiktheorie für Gitarristen</h3>
+        <h3>Musiktheorie</h3>
       </div>
       <p>Intervalllehre, Dreiklänge und Septakkorde, Tonleitern und Pentatoniken, Quintenzirkel sowie Kadenzen und Transponieren. Die Inhalte sind direkt mit dem Griffbrett verknüpft und können in kleinen interaktiven Beispielen erkundet werden.</p>
       <ul>
@@ -1661,7 +1700,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">3</span>
-        <h3>Theorie zu: Alle Töne des Griffbretts lernen</h3>
+        <h3>Griffbrett-Theorie</h3>
       </div>
       <p>Hier findest du die musiktheoretischen Grundlagen (C-Dur-Tonleiter, Ganz- und Halbtöne, Vorzeichen #/b) sowie das genaue System des 4-Wochen-Übeplans mit Tageszeiten und Regeln, die Grundlage für das Modul „Alle Töne des Griffbretts lernen".</p>
     </div>
@@ -1669,7 +1708,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">4</span>
-        <h3>Alle Töne des Griffbretts lernen</h3>
+        <h3>Alle Töne</h3>
       </div>
       <p>Führt dich schrittweise durch die einzelnen Saiten der Gitarre (Tiefe E, A, D, G, H, Hohe e & Gesamtes Griffbrett). Über die Schaltflächen oberhalb des Griffbretts wählst du, welchen der sechs Schritte du gerade übst, jeder hat seine eigene Timer-Länge. Ein grüner Haken markiert Schritte, die du in dieser Sitzung schon einmal bis zum Ablauf des Timers geübt hast. Du wählst oben den Notennamen aus und klickst die passenden Bünde auf dem Griffbrett an.</p>
     </div>
@@ -1677,7 +1716,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">5</span>
-        <h3>Spiel: Töne erraten</h3>
+        <h3>Töne erraten</h3>
       </div>
       <p>Das Programm markiert einen zufälligen Bund auf dem Griffbrett. Du wählst den richtigen Notennamen in der Auswahlleiste aus. Punkte belohnen richtige Antworten.</p>
     </div>
@@ -1685,7 +1724,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">6</span>
-        <h3>Notenlesen – Griffbrettfinder</h3>
+        <h3>Notenlesen</h3>
       </div>
       <p>Wähle direkt im Notensystem eine beliebige Note mit der Maus oder dem Finger aus. Beim Anklicken erklingt der Ton sofort.</p>
       <ul>
@@ -1700,7 +1739,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">7</span>
-        <h3>Gehörbildung / Freies Erkunden</h3>
+        <h3>Gehörbildung</h3>
       </div>
       <p>Ohne Zeitdruck und ohne Erfolgsbewertung. Beim Antippen eines Bundes hörst du den Ton, siehst den Notennamen und die Position im Notensystem, um dein Gehör zu schulen.</p>
     </div>
@@ -1708,7 +1747,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">8</span>
-        <h3>Tonleitern & Pentatoniken</h3>
+        <h3>Tonleitern</h3>
       </div>
       <p>Wähle einen Grundton (alle 12 Töne) und einen Tonleiter-Typ (Dur, Moll, Dur-Pentatonik, Moll-Pentatonik oder Chromatisch für alle Töne). Ein eigenes Griffbrett-Raster zeigt dir alle passenden Positionen an, der Grundton ist orange hervorgehoben, alle übrigen Skalentöne blau.</p>
       <ul>
@@ -1724,7 +1763,7 @@
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">9</span>
-        <h3>Akkord- & Noten-Labor (Interaktiv)</h3>
+        <h3>Akkord-Labor</h3>
       </div>
       <p>Antippen von Bünden setzt Töne für Akkorde, die sofort im Notensystem erscheinen.</p>
       <ul>
@@ -1734,14 +1773,38 @@
         <li><strong>Alternative Stimmungen:</strong> Wähle zwischen Standard, Drop D, DADGAD und Open G.</li>
         <li><strong>Fingersatz-Empfehlung:</strong> Zeigt ergonomische Fingerzahlen (1 = Zeigefinger bis 4 = kleiner Finger) direkt im Tonknoten an.</li>
         <li><strong>Tonart-Auswahl (optional):</strong> Über die Checkbox „Tonart-Auswahl anzeigen" kannst du bei Bedarf den Tonart-Picker einblenden, der dann auch hier bestimmt, ob Halbtöne als # oder b benannt werden. Standardmäßig ist er ausgeblendet.</li>
-        <li><strong>Akkordwechsel-Trainer:</strong> Unten im Labor übst du den Wechsel zwischen 2 bis 4 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück.</li>
+        <li><strong>Mehr zu Akkorden:</strong> Ganz unten im Labor führen zwei Knöpfe zu „Akkordfolgen erstellen“ und zum „Akkordwechsel-Trainer“.</li>
       </ul>
     </div>
 
     <div class="module-block">
       <div class="module-block-header">
         <span class="module-number-badge">10</span>
-        <h3>Beat- & Jam-Modul</h3>
+        <h3>Akkordfolgen erstellen</h3>
+      </div>
+      <p>Trage deine eigenen Griffe ein und lass dir die Theorie dazu erklären.</p>
+      <ul>
+        <li><strong>Griffe eintragen:</strong> Punkt antippen = setzen/entfernen, über den Saiten ○ = leer, ✕ = nicht spielen. Mit ◀ ▶ verschiebst du das Griffbild am Hals. „📖 aus Liste“ setzt einen fertigen Griff ein, „🔁 Griff“ zeigt eine andere Griffvariante.</li>
+        <li><strong>Erkennung:</strong> Die App zeigt Akkordname, Töne, Stufe und eine kurze Notenzeile. Darunter stehen Tonart, die Aufgabe jedes Akkords, bekannte Folgen und passende Tonleitern zum Improvisieren.</li>
+        <li><strong>Anhören:</strong> Art wählen (Anschlag oder Zupfen), Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet.</li>
+        <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen.</li>
+        <li><strong>💾 Speichern / Gespeichert:</strong> Folgen unter einem Namen sichern und später wieder öffnen.</li>
+        <li><strong>⋯ Mehr:</strong> Folge in den Beat oder in den Wochenplan übernehmen oder als MIDI-Datei speichern (landet im Ordner „Downloads“).</li>
+      </ul>
+    </div>
+
+    <div class="module-block">
+      <div class="module-block-header">
+        <span class="module-number-badge">11</span>
+        <h3>Akkordwechsel-Trainer</h3>
+      </div>
+      <p>Hier übst du den Wechsel zwischen 2 bis 4 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück.</p>
+    </div>
+
+    <div class="module-block">
+      <div class="module-block-header">
+        <span class="module-number-badge">12</span>
+        <h3>Beat &amp; Jam</h3>
       </div>
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus Modul 8.</p>
       <ul>
@@ -1771,7 +1834,7 @@
 
     <div class="module-block">
       <div class="module-block-header">
-        <span class="module-number-badge">11</span>
+        <span class="module-number-badge">13</span>
         <h3>Anschlag &amp; Zupfen</h3>
       </div>
       <p>Lerne Anschlag- und Zupfmuster – vom einfachen Grundschlag bis Travis-Picking, Bossa Nova und ungeraden Taktarten (3/4, 6/8, 12/8, 5/4, 7/8).</p>
@@ -1789,7 +1852,7 @@
 
     <div class="module-block">
       <div class="module-block-header">
-        <span class="module-number-badge">12</span>
+        <span class="module-number-badge">14</span>
         <h3>Stimmgerät</h3>
       </div>
       <p>Stimmt deine Gitarre über das Mikrofon des Geräts.</p>
@@ -1818,8 +1881,8 @@
 
     <div class="module-block">
       <div class="module-block-header">
-        <span class="module-number-badge">13</span>
-        <h3>Interaktiver Wochen-Übungsplan</h3>
+        <span class="module-number-badge">15</span>
+        <h3>Wochenplan</h3>
       </div>
       <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
       <ul>
@@ -2101,6 +2164,9 @@
 
   <div id="chgTrainer" style="display:none;"></div>
 
+  <div id="labLinks" class="prog-box" style="display:none;"><div style="font-weight:700; margin-bottom:6px;">Mehr zu Akkorden</div>
+    <div class="prog-row" style="margin:0;"><button type="button" class="btn btn-secondary" data-goto-mod="13">✍️ Akkordfolgen erstellen</button><button type="button" class="btn btn-secondary" data-goto-mod="14">🔁 Akkordwechsel-Trainer</button></div></div>
+
   <div class="notation-container" id="staffContainer" style="display:none;">
     <canvas id="staffCanvas" height="320"></canvas>
   </div>
@@ -2298,7 +2364,9 @@
     { name: "Beat- & Jam-Modul", stringIdx: -1, time: 0, type: "jam" },
     { name: "Interaktiver Wochen-Übungsplan", stringIdx: -1, time: 0, type: "planner" },
     { name: "Stimmgerät", stringIdx: -1, time: 0, type: "tuner" },
-    { name: "Anschlag & Zupfen", stringIdx: -1, time: 0, type: "strum" }
+    { name: "Anschlag & Zupfen", stringIdx: -1, time: 0, type: "strum" },
+    { name: "Akkordfolgen erstellen", stringIdx: -1, time: 0, type: "progmod" },
+    { name: "Akkordwechsel-Trainer", stringIdx: -1, time: 0, type: "chgmod" }
   ];
 
   const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "H"];
@@ -3383,6 +3451,11 @@
     hideBackupBanner();
     showToast('Sicherung gespeichert 💾 (im Download-Ordner)');
   }
+  document.addEventListener('click', e => {
+    const b = e.target && e.target.closest && e.target.closest('[data-goto-mod]');
+    if (!b) return;
+    switchToModule(parseInt(b.dataset.gotoMod, 10)); window.scrollTo(0, 0);
+  });
   function switchToModule(v) {
     moduleSelectEl.value = String(v);
     moduleSelectEl.dispatchEvent(new Event('change', { bubbles: true }));
@@ -3715,7 +3788,7 @@
     notePickerEl.innerHTML = '';
     const modType = MODULES[state.currentModule].type;
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum') {
+    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -5223,14 +5296,25 @@
     </div>
     <div class="prog-row">
       <button type="button" class="btn" data-act="big">🔍 Große Ansicht</button>
-      <button type="button" class="btn btn-secondary" data-act="playall">▶ Folge anhören</button>
       <button type="button" class="btn btn-secondary" data-act="save">💾 Speichern</button>
+      <button type="button" class="btn btn-secondary" data-act="new">✨ Neue Folge</button>
+      <button type="button" class="btn btn-secondary" data-act="more" aria-expanded="${progMoreOpen}">${progMoreOpen ? '✕ Weniger' : '⋯ Mehr'}</button>
+    </div>`;
+    if (progMoreOpen) h += `<div class="prog-row" style="padding:6px 8px; border:1px dashed rgba(148,163,184,0.4); border-radius:10px;">
       <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
       <button type="button" class="btn btn-secondary" data-act="plan">📅 In den Wochenplan</button>
-      <button type="button" class="btn btn-secondary" data-act="new">✨ Neue Folge</button>
+      <button type="button" class="btn btn-secondary" data-act="midi">🎹 MIDI speichern</button>
+    </div>`;
+    const po = progPlayOpts();
+    h += `<div class="prog-row prog-playrow">
+      <button type="button" class="btn" data-act="playall" id="progPlayBtn">${progPlayer.on ? '⏹ Stopp' : '▶ Anhören'}</button>
+      <label>Art: <select id="progPlayStyle"><option value="strum" ${po.style === 'strum' ? 'selected' : ''}>Anschlag</option><option value="arp" ${po.style === 'arp' ? 'selected' : ''}>Zupfen (Arpeggio)</option></select></label>
+      <label>Tempo: <input type="range" id="progPlayBpm" min="40" max="160" step="5" value="${po.bpm}"> <span id="progBpmVal">${po.bpm}</span></label>
+      <label><input type="checkbox" id="progPlayLoop" ${po.loop ? 'checked' : ''}> Wiederholen</label>
     </div>`;
     if (progState.saved.length) {
-      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></label>
+      const selI = progSelIdx !== null && progState.saved[progSelIdx] ? progSelIdx : progState.saved.findIndex(p => p.name === (dr.name || '').trim());
+      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progState.saved.map((p, i) => `<option value="${i}" ${i === selI ? 'selected' : ''}>${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></label>
         <button type="button" class="btn btn-secondary" data-act="open">📂 Öffnen</button>
         <button type="button" class="btn btn-secondary" data-act="del">🗑️ Löschen</button></div>`;
     }
@@ -5263,6 +5347,7 @@
         <div class="prog-name">${d ? homeEsc(progChordShort(d)) : (played.length ? '?' : '–')}</div>
         ${rm ? `<div class="prog-roman">Stufe ${rm.text}</div>` : ''}
         <div class="prog-tones">${tones}${d && d.missing ? ' <span title="Ein Akkordton fehlt">(ohne Quinte)</span>' : ''}</div>
+        ${progStaffSvg(c, d)}
         <div class="prog-mini">
           <button type="button" data-act="play" data-c="${ci}">▶</button>
           ${d ? `<button type="button" data-act="grip" data-c="${ci}">🔁 Griff</button>` : ''}
@@ -5297,6 +5382,168 @@
     }
     h += `</div>`;
     body.innerHTML = h;
+    progMarkPlaying();
+  }
+  // ---------- Kurze Notenzeile unter jedem Akkordbild ----------
+  function progStaffSvg(c, d) {
+    const NAT = [0, 2, 4, 5, 7, 9, 11], LETS = 'CDEFGAH';
+    const pitches = [...new Set(c.frets.map((f, si) => f >= 0 ? JAM_PAINT_OPEN[si] + f : null).filter(p => p !== null))].sort((a, b) => a - b);
+    const W = 250, gap = 10, st0 = 44, yBot = st0 + 4 * gap, H = 150;
+    let g = '';
+    for (let k = 0; k < 5; k++) g += `<line x1="4" x2="${W - 4}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="ps-line"/>`;
+    g += `<line x1="4" x2="4" y1="${st0}" y2="${yBot}" class="ps-line"/><line x1="${W - 4}" x2="${W - 4}" y1="${st0}" y2="${yBot}" class="ps-line"/>`;
+    const cy0 = st0, gl = st0 + 3 * gap;
+    g += `<path class="ps-clef" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
+    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="ps-fill"/>`;
+    g += `<text x="24" y="${yBot + 34}" class="ps-acc" style="font-size:10px;">8</text>`;
+    const notes = pitches.map(m => {
+      const pc = m % 12;
+      let li = -1;
+      if (d) { const nm = String(jamPcName(pc, d.root, d.type) || ''); const ch = nm[0] === 'B' ? 'H' : nm[0]; li = LETS.indexOf(ch); }
+      if (li < 0) li = LETS.indexOf(SCALE_VIEW_ROOTS[pc][0]);
+      let acc = ((pc - NAT[li]) % 12 + 12) % 12; if (acc > 6) acc -= 12;
+      const base = m - acc;                                 // Stammton
+      const oct = Math.round((base - NAT[li]) / 12) - 1 + 1;  // Gitarre klingt eine Oktave tiefer als notiert
+      const di = oct * 7 + li;
+      return { di, acc, y: yBot - (di - 30) * (gap / 2), root: d && pc === d.root };
+    }).sort((a, b) => a.di - b.di);
+    const cx = 150;
+    // Hilfslinien
+    const minDi = notes.length ? notes[0].di : 30, maxDi = notes.length ? notes[notes.length - 1].di : 30;
+    for (let di = 28; di >= minDi; di -= 2) { const y = yBot - (di - 30) * gap / 2; g += `<line x1="${cx - 13}" x2="${cx + 25}" y1="${y}" y2="${y}" class="ps-line" style="opacity:.9"/>`; }
+    for (let di = 40; di <= maxDi; di += 2) { const y = yBot - (di - 30) * gap / 2; g += `<line x1="${cx - 13}" x2="${cx + 25}" y1="${y}" y2="${y}" class="ps-line" style="opacity:.9"/>`; }
+    // Notenköpfe (Sekunden nach rechts versetzt)
+    let prevDi = -99, prevShift = false, accCols = [];
+    notes.forEach(n => {
+      const shift = n.di - prevDi === 1 && !prevShift;
+      prevShift = shift; prevDi = n.di;
+      const hx = cx + (shift ? 12 : 0);
+      g += `<ellipse cx="${hx}" cy="${n.y}" rx="6.2" ry="4.4" transform="rotate(-20 ${hx} ${n.y})" class="${n.root ? 'ps-root' : 'ps-fill'}"/>`;
+      if (n.acc) {
+        let col = 0; while (accCols.some(a => a.col === col && Math.abs(a.di - n.di) < 6)) col++;
+        accCols.push({ col, di: n.di });
+        const sym = n.acc === 1 ? '♯' : n.acc === -1 ? '♭' : n.acc === 2 ? '𝄪' : '♭♭';
+        g += `<text x="${cx - 20 - col * 11}" y="${n.y + 5}" class="ps-acc">${sym}</text>`;
+      }
+    });
+    if (!notes.length) g += `<text x="${cx - 30}" y="${st0 + 24}" class="ps-acc" style="font-size:11px; opacity:.6;">(noch leer)</text>`;
+    return `<svg class="prog-staff" viewBox="0 0 ${W} ${H}" role="img" aria-label="Noten des Akkords">${g}</svg>`;
+  }
+  // ---------- Anhören: Anschlag / Zupfen, Tempo, Wiederholen ----------
+  let progSelIdx = null, progMoreOpen = false;
+  const progPlayer = { on: false, iv: null, idx: 0, list: [], next: 0, cur: -1, tos: [] };
+  function progPlayOpts() {
+    if (!progState.play || typeof progState.play !== 'object') progState.play = {};
+    const o = progState.play;
+    if (o.style !== 'arp') o.style = 'strum';
+    o.bpm = Math.min(160, Math.max(40, parseInt(o.bpm, 10) || 80));
+    o.loop = !!o.loop;
+    return o;
+  }
+  function progSounding(c) { return [0, 1, 2, 3, 4, 5].filter(si => c.frets[si] >= 0); }
+  // Ereignisse eines Akkords (ein 4/4-Takt): [{beat, si, vel}]
+  function progChordEvents(c, style) {
+    const s = progSounding(c), ev = [];
+    if (!s.length) return ev;
+    if (style === 'arp') {
+      const seq = s.concat(s.slice(1, -1).reverse());
+      for (let e = 0; e < 8; e++) ev.push({ beat: e * 0.5, si: seq[e % seq.length], vel: e === 0 ? 1 : 0.8 });
+    } else {
+      for (let b = 0; b < 4; b++) s.forEach((si, k) => ev.push({ beat: b, si, vel: b === 0 ? 1 : 0.8, k }));
+    }
+    return ev;
+  }
+  function progMarkPlaying() {
+    document.querySelectorAll('#progBody .prog-card').forEach((el, i) => el.classList.toggle('playing', progPlayer.on && i === progPlayer.cur));
+    const b = document.getElementById('progPlayBtn'); if (b) b.textContent = progPlayer.on ? '⏹ Stopp' : '▶ Anhören';
+  }
+  function progPlayStop() {
+    clearInterval(progPlayer.iv); progPlayer.iv = null;
+    progPlayer.tos.forEach(clearTimeout); progPlayer.tos = [];
+    progPlayer.on = false; progPlayer.cur = -1;
+    try { if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime); } catch (e) {}
+    progMarkPlaying();
+  }
+  function progPlayStart() {
+    initAudio();
+    if (!audioCtx) return;
+    try { if (audioCtx.state === 'suspended') audioCtx.resume(); } catch (e) {}
+    const dr = progState.draft;
+    const list = dr.chords.map((c, i) => i).filter(i => progSounding(dr.chords[i]).length);
+    if (!list.length) { showToast('Trag zuerst einen Griff ein.'); return; }
+    Object.assign(progPlayer, { on: true, idx: 0, list, next: audioCtx.currentTime + 0.12, cur: -1 });
+    const tick = () => {
+      const box = document.getElementById('progBox');
+      if (!progPlayer.on || !box || !box.open || box.style.display === 'none') { progPlayStop(); return; }
+      const o = progPlayOpts(), beat = 60 / o.bpm, bar = 4 * beat;
+      while (progPlayer.on && progPlayer.next < audioCtx.currentTime + 0.2) {
+        if (progPlayer.idx >= progPlayer.list.length) {
+          if (o.loop) progPlayer.idx = 0;
+          else { const end = progPlayer.next; progPlayer.tos.push(setTimeout(progPlayStop, Math.max(0, (end - audioCtx.currentTime) * 1000))); clearInterval(progPlayer.iv); progPlayer.iv = null; return; }
+        }
+        const ci = progPlayer.list[progPlayer.idx], c = progState.draft.chords[ci], t0 = progPlayer.next;
+        if (c) {
+          const gapS = jamLowPerf() ? 0.016 : 0.011;
+          progChordEvents(c, o.style).forEach(ev => {
+            const t = t0 + ev.beat * beat + (ev.k || 0) * gapS;
+            try { strumDamp(audioCtx, t, ev.si); strumPluck(audioCtx, JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], t, ev.vel, ev.si, o.style === 'arp' ? 2.0 : 1.5); } catch (e) {}
+          });
+          progPlayer.tos.push(setTimeout(() => { progPlayer.cur = ci; progMarkPlaying(); }, Math.max(0, (t0 - audioCtx.currentTime) * 1000)));
+        }
+        progPlayer.next += bar; progPlayer.idx++;
+      }
+    };
+    tick();
+    if (progPlayer.on && !progPlayer.iv && progPlayer.idx < progPlayer.list.length + 1) progPlayer.iv = setInterval(tick, 60);
+    progMarkPlaying();
+  }
+  // ---------- MIDI-Export ----------
+  function progMidiBytes() {
+    const dr = progState.draft, o = progPlayOpts(), TPQ = 480;
+    const notes = [];
+    let k = 0;
+    dr.chords.forEach(c => {
+      if (!progSounding(c).length) return;
+      const barStart = k * 4 * TPQ, barEnd = barStart + 4 * TPQ;
+      progChordEvents(c, o.style).forEach(ev => notes.push({ on: barStart + Math.round(ev.beat * TPQ) + (ev.k || 0) * 8, p: JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], vel: Math.round(ev.vel * 100), barEnd }));
+      k++;
+    });
+    if (!notes.length) return null;
+    notes.sort((a, b) => a.on - b.on);
+    notes.forEach((n, i) => {
+      let off = n.barEnd;
+      for (let j = i + 1; j < notes.length; j++) if (notes[j].p === n.p) { off = Math.min(off, notes[j].on); break; }
+      n.off = Math.max(n.on + 10, off);
+    });
+    const evs = [];
+    notes.forEach(n => { evs.push({ t: n.on, o: 1, b: [0x90, n.p, n.vel] }); evs.push({ t: n.off, o: 0, b: [0x80, n.p, 0] }); });
+    evs.sort((a, b) => a.t - b.t || a.o - b.o);
+    const vlq = v => { const out = [v & 0x7f]; while ((v >>= 7)) out.unshift((v & 0x7f) | 0x80); return out; };
+    const tr = [];
+    const name = Array.from(new TextEncoder().encode((dr.name || '').trim() || 'Akkordfolge'));
+    tr.push(0, 0xff, 0x03, ...vlq(name.length), ...name);
+    const us = Math.round(60000000 / o.bpm);
+    tr.push(0, 0xff, 0x51, 0x03, (us >> 16) & 255, (us >> 8) & 255, us & 255);
+    tr.push(0, 0xff, 0x58, 0x04, 4, 2, 24, 8);
+    tr.push(0, 0xc0, 24);                                  // Nylon-Gitarre
+    let last = 0;
+    evs.forEach(e => { tr.push(...vlq(e.t - last), ...e.b); last = e.t; });
+    tr.push(0, 0xff, 0x2f, 0x00);
+    const L = tr.length;
+    return new Uint8Array([0x4d, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, (TPQ >> 8) & 255, TPQ & 255,
+      0x4d, 0x54, 0x72, 0x6b, (L >>> 24) & 255, (L >> 16) & 255, (L >> 8) & 255, L & 255, ...tr]);
+  }
+  function progMidiExport() {
+    const bytes = progMidiBytes();
+    if (!bytes) { showToast('Trag zuerst einen Griff ein.'); return; }
+    const nm = ((progState.draft.name || '').trim() || 'Akkordfolge').replace(/[\\/:*?"<>|]+/g, '_').slice(0, 60);
+    try {
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'audio/midi' }));
+      const a = document.createElement('a'); a.href = url; a.download = nm + '.mid';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      showToast(`„${nm}.mid“ gespeichert ✔ – du findest die Datei im Ordner „Downloads“.`);
+    } catch (e) { showToast('Die MIDI-Datei konnte leider nicht gespeichert werden.'); }
   }
   function progPlayChord(c, t0) {
     c.frets.forEach((f, si) => { if (f >= 0) playPitch(JAM_PAINT_OPEN[si] + f, t0 + si * 0.04); });
@@ -5443,7 +5690,9 @@
       else if (act === 'down' && c) c.start = Math.max(1, c.start - 1);
       else if (act === 'clear' && c) dr.chords[ci] = progEmptyChord();
       else if (act === 'play' && c) { try { initAudio(); progPlayChord(c, 0); } catch (er) {} return; }
-      else if (act === 'playall') { try { initAudio(); let k = 0; dr.chords.forEach(ch => { if (ch.frets.some(f => f >= 0)) { progPlayChord(ch, k * 1.4); k++; } }); } catch (er) {} return; }
+      else if (act === 'playall') { try { if (progPlayer.on) progPlayStop(); else progPlayStart(); } catch (er) { console.error(er); } return; }
+      else if (act === 'midi') { progMidiExport(); return; }
+      else if (act === 'more') { progMoreOpen = !progMoreOpen; progRender(); return; }
       else if (act === 'grip' && c) {
         const d = progDetect(c); if (!d) return;
         const vars = jamGripVariants(d.root, d.type);
@@ -5470,18 +5719,19 @@
         const copy = JSON.parse(JSON.stringify(dr)); copy.name = name;
         const i = progState.saved.findIndex(p => p.name === name);
         if (i >= 0) progState.saved[i] = copy; else progState.saved.push(copy);
+        progSelIdx = i >= 0 ? i : progState.saved.length - 1;
         showToast(`„${name}“ gespeichert ✔`);
       }
       else if (act === 'open') {
         const i = parseInt(document.getElementById('progSavedSel').value, 10);
-        if (progState.saved[i]) { progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
+        if (progState.saved[i]) { progSelIdx = i; progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
       }
       else if (act === 'del') {
         const i = parseInt(document.getElementById('progSavedSel').value, 10);
         const p = progState.saved[i];
-        if (p && confirm(`„${p.name}“ wirklich löschen?`)) progState.saved.splice(i, 1);
+        if (p && confirm(`„${p.name}“ wirklich löschen?`)) { progState.saved.splice(i, 1); progSelIdx = null; }
       }
-      else if (act === 'new') { progState.draft = { name: '', chords: [progEmptyChord(), progEmptyChord(), progEmptyChord(), progEmptyChord()] }; }
+      else if (act === 'new') { progSelIdx = null; progState.draft = { name: '', chords: [progEmptyChord(), progEmptyChord(), progEmptyChord(), progEmptyChord()] }; }
       else if (act === 'beat') { progSave(); progToBeat(); return; }
       else if (act === 'plan') { progToPlan(); }
       else if (act === 'big') { progBigOpen(); return; }
@@ -5506,8 +5756,13 @@
       ch.length = n;
       progSave(); progRender();
     }
+    else if (e.target.id === 'progSavedSel') { progSelIdx = parseInt(e.target.value, 10); }
+    else if (e.target.id === 'progPlayStyle') { progPlayOpts().style = e.target.value; progSave(); }
+    else if (e.target.id === 'progPlayLoop') { progPlayOpts().loop = e.target.checked; progSave(); }
+    else if (e.target.id === 'progPlayBpm') { progSave(); }
   });
   document.addEventListener('input', e => {
+    if (e.target && e.target.id === 'progPlayBpm' && progState) { progPlayOpts().bpm = parseInt(e.target.value, 10); const v = document.getElementById('progBpmVal'); if (v) v.textContent = progPlayOpts().bpm; }
     if (e.target && e.target.id === 'progName' && progState) { progState.draft.name = e.target.value; progSave(); }
   });
 
@@ -9003,7 +9258,8 @@
     document.getElementById('tunerRoot').style.display = 'none';
     document.getElementById('strumRoot').style.display = 'none';
     chordInfoBox.style.display = 'none';
-    { const pb = document.getElementById('progBox'); if (pb) pb.style.display = 'none'; }
+    { const pb = document.getElementById('progBox'); if (pb) { pb.style.display = 'none'; pb.classList.remove('solo'); } }
+    { const ll = document.getElementById('labLinks'); if (ll) ll.style.display = 'none'; }
     standardControls.style.display = 'flex';
 
     if (mod.type === 'instruction') {
@@ -9094,13 +9350,24 @@
       speechBannerEl.textContent = "📅 Trage hier deine individuellen Übungen ein, passe die Reihenfolge per Drag & Drop an und verwalte deinen wöchentlichen Fortschritt.";
       plannerContainer.style.display = 'flex';
       renderPlanner();
+    } else if (mod.type === 'progmod' || mod.type === 'chgmod') {
+      fretboardWrapper.style.display = 'none';
+      staffContainer.style.display = 'none';
+      timerContainerEl.style.display = 'none';
+      standardControls.style.display = 'none';
+      if (mod.type === 'progmod') {
+        speechBannerEl.textContent = "✍️ Akkordfolgen erstellen: Griffe in die Diagramme tippen – die App erkennt die Akkorde und erklärt die Theorie dazu.";
+        try { const pb = document.getElementById('progBox'); pb.style.display = 'block'; pb.classList.add('solo'); pb.open = true; progRender(); } catch (e) { console.error(e); }
+      } else {
+        speechBannerEl.textContent = "🔁 Akkordwechsel-Trainer: Akkorde wählen, Tempo einstellen und ▶ Start drücken.";
+        try { chgRender(); document.getElementById('chgTrainer').style.display = 'block'; } catch (e) { console.error(e); }
+      }
     } else if (mod.type === 'chordlab') {
       timerContainerEl.style.display = 'none';
       chordLabControlsRow.style.display = 'flex';
       chordLookupRow.style.display = 'flex';
       chordInfoBox.style.display = 'flex';
-      try { const pb = document.getElementById('progBox'); pb.style.display = 'block'; progRender(); } catch (e) { console.error(e); }
-      try { chgRender(); document.getElementById('chgTrainer').style.display = 'block'; } catch (e) {}
+      { const ll = document.getElementById('labLinks'); if (ll) ll.style.display = 'block'; }
       speechBannerEl.textContent = "🎸 Tippe die Töne deines Akkords auf das Griffbrett, oder schlag rechts oben einen Akkord zum Nachschlagen nach!";
       initChordLookup();
       analyzeChord();
@@ -10091,15 +10358,17 @@
   // Konzertgitarre (Foto, Hintergrund entfernt, eingebettet)
   const HOME_GUITAR_SVG = '<img src="data:image/webp;base64,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" alt="" draggable="false">';
   const HOME_GROUPS = [
-    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
-    { title: 'Üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Notenlesen', 'Noten im Notensystem auf dem Griffbrett finden'], [6, '👂', 'Gehörbildung', 'Töne und Intervalle hören – ohne Zeitdruck'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen'], [8, '🧪', 'Akkord-Labor', 'Akkorde greifen, anhören, nachschlagen und Wechsel üben']] },
-    { title: 'Spielen & Planen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen'], [10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Statistik']] }
+    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
+    { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Notenlesen', 'Noten im Notensystem auf dem Griffbrett finden'], [6, '👂', 'Gehörbildung', 'Töne und Intervalle hören – ohne Zeitdruck'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
+    { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben']] },
+    { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
+    { title: 'Planen', color: 'teal', items: [[10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Kalender, Statistik']] }
   ];
   function homeStartSetting() { try { return localStorage.getItem(HOME_START_KEY) === 'last' ? 'last' : 'home'; } catch (e) { return 'home'; } }
   function homeModuleNo(v) { const o = [...moduleSelectEl.options].find(x => x.value === String(v)); return o ? parseInt(o.text, 10) : ''; }
   function homeModuleInfo(v) { for (const g of HOME_GROUPS) for (const it of g.items) if (it[0] === v) return it; return null; }
   function homeEsc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-  const HOME_TIPS = ["Wer länger langsam übt, wird schneller schnell.", "Schon 10 Minuten täglich bringen mehr als 2 Stunden am Sonntag.", "Sag beim Greifen die Tonnamen laut mit – so merkst du sie dir schneller.", "Locker bleiben: Daumen hinter dem Hals, Schultern unten.", "Drück nur so fest, wie nötig – dicht hinter dem Bundstäbchen klingt es am saubersten.", "Erst sauber, dann schnell. Tempo kommt von ganz allein.", "Ein schwieriger Akkordwechsel? Übe nur diese zwei Griffe hin und her.", "Die Oktave eines Tons liegt zwei Saiten höher und zwei Bünde weiter.", "Ein Metronom ist kein Gegner, sondern ein Freund, der nie aus dem Takt kommt.", "Pausen gehören zur Musik – und zum Üben.", "Hör dir zu: Nimm dich ab und zu mit dem Handy auf.", "Fehler sind Wegweiser. Sie zeigen dir, was du als Nächstes üben kannst.", "Der Grundton ist dein Anker – such ihn zuerst.", "Dur klingt hell, Moll klingt weich. Der Unterschied ist nur ein Halbton.", "Zwischen H und C sowie zwischen E und F liegt nur ein Halbton.", "Die Pentatonik hat fünf Töne – und fast keine falschen.", "Übe lieber kurz und oft als lang und selten.", "Zupfen mit p i m a: Daumen für den Bass, Finger für die Melodie.", "Gleichmäßiger Rhythmus ist wichtiger als viele Töne.", "Wärme deine Finger ein paar Minuten auf, bevor es schwierig wird.", "Spiel ein Lied, das du magst – Freude ist der beste Lehrer.", "Am 12. Bund beginnt das Griffbrett von vorn – nur eine Oktave höher.", "Die Hand beim Schlagen weiter pendeln lassen, auch wenn du nicht triffst.", "Kleine Schritte sind auch Schritte.", "Zähl laut mit – dann sitzt der Rhythmus.", "Ein Akkord klingt schief? Spiel jede Saite einzeln und hör, welche stört.", "Die Fingerkuppen werden mit der Zeit härter. Dranbleiben lohnt sich.", "Musik lernt man mit den Ohren, nicht nur mit den Fingern.", "Wiederholung ist die Mutter des Könnens.", "Heute schon etwas Neues ausprobiert? Ein neues Zupfmuster vielleicht?", "Ein Quintenzirkel-Schritt im Uhrzeigersinn bringt ein ♯ dazu.", "Lass offene Saiten ruhig mitklingen – das macht den Klang voll.", "Stimm deine Gitarre vor dem Üben. Sauber klingt einfach schöner.", "Langsam ist nicht langweilig – langsam ist gründlich.", "Jeder Profi hat mal mit drei Akkorden angefangen.", "Atme ruhig weiter, auch bei schwierigen Stellen.", "Dein Gehör wird mit jedem Tag besser – auch wenn du es nicht sofort merkst.", "Ein Lied in Teile zerlegen: erst den Refrain, dann den Rest.", "Spiel mit Gefühl: mal leise, mal laut.", "Die Terz entscheidet, ob ein Akkord Dur oder Moll ist.", "Beim Barré hilft es, den Zeigefinger leicht zur Seite zu kippen.", "Übung macht nicht den Meister – gute Übung macht den Meister.", "Gönn dir Erfolgserlebnisse: Beende das Üben mit etwas, das du schon kannst.", "Der Weg ist das Ziel – genieß jeden Ton."];
+  const HOME_TIPS = ["Wer länger langsam spielt, spielt schneller schnell.", "Schon 10 Minuten täglich bringen mehr als 2 Stunden am Sonntag.", "Sag beim Greifen die Tonnamen laut mit – so merkst du sie dir schneller.", "Locker bleiben: Daumen hinter dem Hals, Schultern unten.", "Drück nur so fest, wie nötig – dicht hinter dem Bundstäbchen klingt es am saubersten.", "Erst sauber, dann schnell. Tempo kommt von ganz allein.", "Ein schwieriger Akkordwechsel? Übe nur diese zwei Griffe hin und her.", "Die Oktave eines Tons liegt meist zwei Saiten höher und zwei Bünde weiter – über die H-Saite hinweg sind es drei Bünde.", "Ein Metronom ist kein Gegner, sondern ein Freund, der nie aus dem Takt kommt.", "Pausen gehören zur Musik – und zum Üben.", "Hör dir zu: Nimm dich ab und zu mit dem Handy auf.", "Fehler sind Wegweiser. Sie zeigen dir, was du als Nächstes üben kannst.", "Der Grundton ist dein Anker – such ihn zuerst.", "Dur klingt hell, Moll klingt weich. Der Unterschied ist nur ein Halbton.", "Zwischen H und C sowie zwischen E und F liegt nur ein Halbton.", "Die Pentatonik hat fünf Töne – und fast keine falschen.", "Übe lieber kurz und oft als lang und selten.", "Zupfen mit p i m a: Daumen für den Bass, Finger für die Melodie.", "Gleichmäßiger Rhythmus ist wichtiger als viele Töne.", "Wärme deine Finger ein paar Minuten auf, bevor es schwierig wird.", "Spiel ein Lied, das du magst – Freude ist der beste Lehrer.", "Am 12. Bund beginnt das Griffbrett von vorn – nur eine Oktave höher.", "Die Hand beim Schlagen weiter pendeln lassen, auch wenn du nicht triffst.", "Kleine Schritte sind auch Schritte.", "Zähl laut mit – dann sitzt der Rhythmus.", "Ein Akkord klingt schief? Spiel jede Saite einzeln und hör, welche stört.", "Die Fingerkuppen werden mit der Zeit härter. Dranbleiben lohnt sich.", "Musik lernt man mit den Ohren, nicht nur mit den Fingern.", "Wiederholung ist die Mutter des Könnens.", "Heute schon etwas Neues ausprobiert? Ein neues Zupfmuster vielleicht?", "Ein Quintenzirkel-Schritt im Uhrzeigersinn bringt ein ♯ dazu.", "Lass offene Saiten ruhig mitklingen – das macht den Klang voll.", "Stimm deine Gitarre vor dem Üben. Sauber klingt einfach schöner.", "Langsam ist nicht langweilig – langsam ist gründlich.", "Jeder Profi hat mal mit drei Akkorden angefangen.", "Atme ruhig weiter, auch bei schwierigen Stellen.", "Dein Gehör wird mit jedem Tag besser – auch wenn du es nicht sofort merkst.", "Ein Lied in Teile zerlegen: erst den Refrain, dann den Rest.", "Spiel mit Gefühl: mal leise, mal laut.", "Die Terz entscheidet, ob ein Akkord Dur oder Moll ist.", "Beim Barré hilft es, den Zeigefinger leicht zur Seite zu kippen.", "Übung macht nicht den Meister – gute Übung macht den Meister.", "Gönn dir Erfolgserlebnisse: Beende das Üben mit etwas, das du schon kannst.", "Der Weg ist das Ziel – genieß jeden Ton."];
   function homeTipOfDay() { const d = new Date(), start = new Date(d.getFullYear(), 0, 0); const n = Math.floor((d - start) / 86400000); return HOME_TIPS[(n + d.getFullYear()) % HOME_TIPS.length]; }
   function renderHome() {
     const box = document.getElementById('homeScreen');
@@ -10110,9 +10379,9 @@
     const greet = hr < 11 ? 'Guten Morgen' : hr < 18 ? 'Hallo' : 'Guten Abend';
     const ic = x => x === 'GTR' ? HOME_GUITAR_SVG : x;
     let h = `<div class="home-hero">${HOME_GUITAR_SVG.replace('<img ', '<img class="gtr" aria-hidden="true" ')}
-      <div class="hi">${greet}! 👋</div><h2>Gitarren-Trainer</h2>
+      <div class="hi">${greet}! 👋</div><h2>Gitarren-Griffbrett-Trainer</h2>
       <div class="sub">Griffbrett, Akkorde, Rhythmus – Schritt für Schritt.</div>
-      <div class="tip">💡 ${homeEsc(homeTipOfDay())}</div>
+      <div class="tip"><strong>💡 Tipp des Tages</strong><br>${homeEsc(homeTipOfDay())}</div>
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     { const L = diaryLoad(); const e = L[0]; h += `<button type="button" class="home-pt" id="homeDiaryBtn"><b>📓</b><span><strong>Übungs-Tagebuch</strong><br>${e ? 'Zuletzt: ' + diaryDateTxt(e.date) + (e.note ? ' · ' + homeEsc(e.note.slice(0, 40)) + (e.note.length > 40 ? '…' : '') : '') : 'Noch keine Einträge'}</span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`; }
@@ -11956,7 +12225,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-09-4';
+  const APP_VERSION = '2026-10-11-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -12024,5 +12293,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4844749a8dbfb4e',t:'MTc5MTYyMTE4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a48cbfe2ecbe4927',t:'MTc5MTcxMDAxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
