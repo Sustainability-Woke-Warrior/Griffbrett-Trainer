@@ -1,5 +1,5 @@
 {
-  "name": "Gitarren Griffbrett Trainer Pro",
+  "name": "Gitarren Griffbrett Trainer",
   "short_name": "Griffbrett Trainer",
   "description": "Interaktiver Trainer zum Erlernen des Gitarrengriffbretts: Noten, Tonleitern, Pentatoniken, Akkorde und ein Beat-Sequenzer.",
   "start_url": "./index.html",
