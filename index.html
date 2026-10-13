@@ -286,6 +286,8 @@
       border-right: 6px solid #f8fafc;
       background: rgba(255,255,255,0.03);
     }
+    .fret-cell.open-string[data-sname]::after { content: attr(data-sname); position: absolute; left: 5px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.6); pointer-events: none; z-index: 0; }
+    .fret-cell.open-string:has(.note-node)::after, .fret-cell.open-string:has(.note-node-wrap)::after { display: none; }
 
     .fret-cell.disabled-fret {
       opacity: 0.25;
@@ -1084,9 +1086,27 @@
     .prog-big-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px 14px; }
     .prog-big-card { text-align: center; border: 2px solid #e2e8f0; border-radius: 16px; padding: 10px 6px 12px; background: #fff; }
     .prog-big-num { font-size: 0.85rem; color: #64748b; font-weight: 700; }
-    .prog-big-name { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 900; line-height: 1.05; color: #0f172a; margin: 2px 0 6px; }
+    .prog-big-name { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 900; line-height: 1.05; color: #0f172a; margin: 2px 0 6px; white-space: nowrap; overflow: hidden; }
     .prog-big-tones { font-size: 1rem; color: #334155; margin-top: 6px; font-weight: 600; }
     .prog-big-card svg { width: 100%; max-width: 260px; height: auto; }
+    .prog-big { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .prog-big .prog-staff { color: #0f172a; margin: 6px auto 0; }
+    .prog-big-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+    .prog-big-actions button { background: #fff; color: #0f172a; border: 2px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+    .prog-big-actions button.on { background: #0f172a; color: #fff; border-color: #0f172a; }
+    .prog-staff .ps-name { fill: currentColor; font-size: 12px; font-weight: 700; font-family: system-ui, sans-serif; }
+    .prog-staff .ps-name.ps-root { fill: #ea580c; }
+    .prog-staff-tap { cursor: pointer; }
+    .prog-notes-tog { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; }
+    @media print {
+      body.prog-big-open > *:not(#progBigOverlay) { display: none !important; }
+      body.prog-big-open { background: #fff !important; }
+      body.prog-big-open #progBigOverlay { position: static; overflow: visible; padding: 0; display: block; }
+      .prog-big-close, .prog-big-actions { display: none !important; }
+      .prog-big-grid { grid-template-columns: repeat(3, 1fr); }
+      .prog-big-card { break-inside: avoid; page-break-inside: avoid; }
+      .prog-big-name { font-size: 2rem !important; }
+    }
     .prog-theory { margin-top: 12px; background: rgba(15,23,42,0.5); border-radius: 12px; padding: 10px 12px; font-size: 0.9rem; line-height: 1.45; }
     .prog-theory h4 { margin: 8px 0 4px; font-size: 0.95rem; }
     .prog-theory ul { margin: 4px 0; padding-left: 20px; }
@@ -1164,6 +1184,15 @@
     .strum-notation .strum-col.now { fill: rgba(34,211,238,0.22); }
     .strum-now { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px; }
     .strum-now .big { font-size:2rem; font-weight:800; }
+    .strum-pick-row { display:flex; gap:12px; align-items:center; }
+    .strum-pick-row.stack { flex-direction:column; align-items:stretch; gap:4px; }
+    .strum-pick-chord { flex:0 0 120px; text-align:center; }
+    .strum-pick-row.stack .strum-pick-chord { display:flex; align-items:center; justify-content:center; gap:12px; text-align:left; }
+    .strum-pick-chord .nm { font-size:1.9rem; font-weight:800; line-height:1.1; color:var(--accent-color); }
+    .strum-pick-chord .nx { font-size:0.85rem; opacity:0.85; }
+    .strum-pick-chord svg { width:84px; height:auto; }
+    .strum-pick-row.stack .strum-pick-chord svg { width:62px; }
+    .strum-pick-tab { flex:1 1 auto; min-width:0; }
     .strum-chip { padding:4px 10px; border-radius:14px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text-color); cursor:pointer; font-size:0.82rem; }
     body.home-mode .container > *:not(header):not(#homeScreen) { display: none !important; }
     body.home-mode #homeBtn { display: none; }
@@ -1478,6 +1507,31 @@
     .pt-banner { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 3100; background: var(--card-bg); color: var(--text-color); border: 2px solid var(--primary-color, #3b82f6); border-radius: 14px; padding: 12px 14px; box-shadow: 0 6px 24px rgba(0,0,0,.35); width: min(94vw, 520px); display: none; }
     .pt-banner.open { display: block; }
     .pt-banner .row2 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .gb-quick { border: 2px solid var(--accent-color); border-radius: 14px; padding: 12px 16px; margin: 10px 0 18px; background: rgba(56,189,248,.08); }
+    .gb-quick h3 { margin: 0 0 6px; }
+    .gb-quick ul { margin: 0; padding-left: 20px; } .gb-quick li { margin: 4px 0; line-height: 1.45; }
+    .path-mod { font-size: .8rem; opacity: .75; margin: -2px 0 6px; }
+    body.path-bar-open .container { padding-bottom: 120px; }
+    .path-note { background: rgba(56,189,248,.12); border-radius: 10px; padding: 8px 10px; font-size: .9rem; margin: 8px 0; }
+    .path-item { display: flex; gap: 10px; border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
+    .path-item .pn { flex: 0 0 30px; height: 30px; border-radius: 50%; background: rgba(148,163,184,.25); display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .path-item.done .pn { background: #16a34a; color: #fff; }
+    .path-item.done h4 { opacity: .75; }
+    .path-item.next { border-color: var(--accent-color); box-shadow: 0 0 0 1px var(--accent-color); }
+    .path-item h4 { margin: 3px 0 4px; font-size: 1rem; }
+    .path-item p { margin: 0 0 8px; font-size: .92rem; line-height: 1.45; }
+    .path-btns, .path-foot { display: flex; gap: 6px; flex-wrap: wrap; }
+    .path-foot { margin-top: 12px; }
+    .path-btns .btn, .path-foot .btn { font-size: .88rem; padding: 6px 10px; }
+    #pathBar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 12px; z-index: 2500; display: none; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; background: var(--card-bg); color: var(--text-color); border: 2px solid var(--accent-color); border-radius: 14px; padding: 8px 10px; box-shadow: 0 6px 20px rgba(0,0,0,.35); max-width: calc(100vw - 20px); box-sizing: border-box; }
+    #pathBar.open { display: flex; }
+    #pathBar .btn { font-size: .88rem; padding: 6px 10px; }
+    body.home-mode #pathBar { display: none !important; }
+    .gloss-letters { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+    .gloss-letters button { min-width: 32px; padding: 4px 6px; border-radius: 8px; border: 1px solid var(--card-border); background: transparent; color: var(--text-color); font-weight: 700; cursor: pointer; }
+    .gloss-L { margin: 14px 0 2px; font-size: .85rem; font-weight: 800; color: var(--accent-color); scroll-margin-top: 10px; }
+    .gloss-item { padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+    .gloss-item p { margin: 3px 0 0; font-size: .92rem; line-height: 1.45; }
     .home-pt { display: flex; width: 100%; align-items: center; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 1rem; text-align: left; cursor: pointer; }
     .home-pt b { font-size: 1.4rem; }
     .home-pt span { flex: 1; }
@@ -1676,9 +1730,10 @@
         <li><strong>Schlag- und Zupfmuster:</strong> 🪕 Anschlag &amp; Zupfen</li>
         <li><strong>Tonleitern, Pentatonik, CAGED:</strong> 🪜 Tonleitern</li>
         <li><strong>Intervalle, Quintenzirkel, Stufenakkorde, Quiz:</strong> 🎼 Musiktheorie</li>
-        <li><strong>Gitarre stimmen:</strong> 🎚️ Stimmgerät · <strong>Saitenwechsel:</strong> Startseite → 🎸 Saiten</li>
+        <li><strong>Gitarre stimmen:</strong> 🎚️ Stimmgerät · <strong>Saitenwechsel:</strong> 🎚️ Stimmgerät → 🎸 Saiten</li>
         <li><strong>Übungen planen, Kalender, Zeit pro Übung:</strong> 📅 Wochenplan</li>
         <li><strong>Übungszeit messen:</strong> ⏱ oben rechts · <strong>Tagebuch:</strong> 📓 oben rechts</li>
+        <li><strong>Wie fange ich an?</strong> <button type="button" class="theory-chip" data-open-path>🚀 Erste Schritte</button> · <strong>Begriffe erklärt:</strong> <button type="button" class="theory-chip" data-open-gloss>📖 Wörterbuch</button> (beides auch über ⚙️)</li>
         <li><strong>Datensicherung, Schriftgröße, Hell/Dunkel, Kammerton:</strong> ⚙️ oben rechts</li>
       </ul>
     </div>
@@ -1817,7 +1872,8 @@
         <li><strong>Griffe eintragen:</strong> Punkt antippen = setzen/entfernen, über den Saiten ○ = leer, ✕ = nicht spielen. Mit ◀ ▶ verschiebst du das Griffbild am Hals. „📖 aus Liste“ setzt einen fertigen Griff ein, „🔁 Griff“ zeigt eine andere Griffvariante.</li>
         <li><strong>Erkennung:</strong> Die App zeigt Akkordname, Töne, Stufe und eine kurze Notenzeile. Darunter stehen Tonart, die Aufgabe jedes Akkords, bekannte Folgen und passende Tonleitern zum Improvisieren.</li>
         <li><strong>Anhören:</strong> Art wählen (Anschlag oder Zupfen), Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet.</li>
-        <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen.</li>
+        <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen. Mit „🖨️ Drucken“ kommt die Ansicht aufs Papier (oder als PDF). Klappt das Drucken nicht, speichert „💾 Als Datei speichern“ die Ansicht als Datei – die öffnest du in Chrome und druckst sie von dort.</li>
+        <li><strong>🎼 Noten mit Namen:</strong> Zeigt unter jedem Akkord die gegriffenen Töne als Noten nebeneinander (tief → hoch) mit ihrem Namen. Antippen spielt den Akkord Ton für Ton. Gilt beim Erstellen und in der großen Ansicht.</li>
         <li><strong>💾 Speichern / Gespeichert:</strong> Folgen unter einem Namen sichern und später wieder öffnen.</li>
         <li><strong>⋯ Mehr:</strong> Folge in den Beat, in den Wochenplan oder in den Akkordwechsel-Trainer übernehmen oder als MIDI-Datei speichern (landet im Ordner „Downloads“).</li>
       </ul>
@@ -1874,6 +1930,8 @@
         <li><strong>Anzeige Zupfen:</strong> Die sechs Zeilen sind die Saiten (oben hohe e-Saite). Die Buchstaben sind die Finger der Anschlagshand: p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger. Die Saiten passen sich automatisch dem Akkord an.</li>
         <li><strong>Zählzeiten:</strong> Die obere Zeile zeigt, wie gezählt wird („1 + 2 +“ bzw. „1 e + e“ bei Sechzehnteln).</li>
         <li><strong>Akkorde:</strong> Einfach eintippen, z. B. „Am F C G“, oder einen Vorschlag antippen. „Takte pro Akkord“ legt fest, wie lange jeder Akkord bleibt.</li>
+        <li><strong>📥 Aus meinen Akkordfolgen:</strong> Holt eine selbst erstellte Folge – mit deinen eigenen Griffen. Beim Zupfen zeigt die Tab dann genau deine Saiten. Tippst du die Akkorde danach von Hand um, gelten wieder die normalen Griffe.</li>
+        <li><strong>Akkord beim Zupfen:</strong> Neben der Tab (auf schmalen Bildschirmen darüber) stehen der aktuelle Akkord mit Griffbild und „danach: …“.</li>
         <li><strong>Abspielen:</strong> ▶ spielt das Muster mit Gitarrenklang, auf Wunsch mit Metronom-Klick und Einzähler. Die gerade gespielte Stelle leuchtet. Tipp: erst langsam, Tempo nur erhöhen, wenn es sich locker anfühlt.</li>
         <li><strong>✏️ Eigene Muster:</strong> „✏️ Eigenes Muster“ öffnet den Editor: Name, Taktart, Raster (Achtel, Sechzehntel, Triolen) und Tempo wählen, dann Kästchen antippen. Beim Anschlag wechselt jedes Antippen das Zeichen (· ↓ ↑ ✕ B¹ B²), beim Zupfen setzt es einen Punkt (Bass, Wechselbass, G-, H-, e-Saite) – mit Vorschau in Noten und Tabulatur. ▶ spielt schon während der Eingabe. Gespeicherte Muster stehen unter „✏️ Meine Muster“ und lassen sich bearbeiten oder löschen. „📋 Als Vorlage kopieren“ macht aus einem fertigen Muster ein eigenes zum Abwandeln. Deine Muster sind in der 💾-Sicherung enthalten.</li>
         <li><strong>🥁 Im Beat-Modul üben:</strong> Übernimmt Akkorde, Tempo und Taktart ins Beat-Modul. Dort spielt dann das Schlagzeug, und du spielst das Muster auf der Gitarre dazu.</li>
@@ -1900,12 +1958,13 @@
         <span class="module-number-badge">🎸</span>
         <h3>Saitenwechsel im Blick</h3>
       </div>
-      <p>Auf der Startseite zeigt die Kachel „🎸 Saiten“, wie lange deine Saiten schon drauf sind.</p>
+      <p>Im 🎚️ Stimmgerät zeigt oben der Kasten „🎸 Saiten“, wie lange deine Saiten schon drauf sind. Auf der Startseite erscheint die Kachel nur, wenn ein Wechsel bald fällig oder fällig ist.</p>
       <ul>
-        <li><strong>Einstellen:</strong> Kachel antippen, Saitenart wählen (Nylon, Stahl, Stahl beschichtet, E-Gitarre normal oder beschichtet) und das Datum des letzten Wechsels eintragen. Marke und Stärke kannst du dazuschreiben.</li>
+        <li><strong>Einstellen:</strong> Kasten im Stimmgerät antippen, Saitenart wählen (Nylon, Stahl, Stahl beschichtet, E-Gitarre normal oder beschichtet) und das Datum des letzten Wechsels eintragen. Marke und Stärke kannst du dazuschreiben.</li>
         <li><strong>Nach Wochen oder Spielstunden:</strong> Wähle, ob nach Kalender gezählt wird oder nach gespielter Zeit. Bei Spielstunden zählt die Zeit aus dem ⏱-Timer. An Tagen ohne Timer rechnet die App mit dem Wert „ca. Minuten pro Tag“ – trag 0 ein, wenn nur Timer-Zeit zählen soll.</li>
         <li><strong>Anzeige:</strong> Der Balken füllt sich; kurz vor dem Ziel wird er orange, danach rot. Auch der Timer zeigt den Hinweis an.</li>
-        <li><strong>„✔ Saiten gewechselt“</strong> setzt alles zurück und trägt den Wechsel ins Übungs-Tagebuch ein.</li>
+        <li><strong>„✔ Neue Saiten sind drauf“</strong> setzt alles zurück und trägt den Wechsel ins Übungs-Tagebuch ein.</li>
+        <li><strong>Hinweis-Fenster:</strong> Wenn du es im Saiten-Fenster einschaltest, erscheint beim Öffnen der App ein kurzer Hinweis, sobald der Wechsel fällig ist (höchstens einmal am Tag). „Später erinnern“ = in einer Woche wieder.</li>
       </ul>
     </div>
 
@@ -1920,7 +1979,7 @@
         <li><strong>Automatische Übernahme:</strong> Wechselst du in eine neue, bisher leere Woche, werden die Übungstitel aus der vorherigen Woche automatisch übernommen.</li>
         <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern.</li>
         <li><strong>▶ Üben:</strong> Neben jeder Übung. Öffnet das Beat-Modul: Ein verknüpfter Beat wird geladen. Besteht der Name aus Akkorden (z. B. „Am F C G“), werden sie eingestellt, sonst wird ein passendes Song-Preset gesucht. Mit „🔗 Mit Übung verknüpfen“ merkt sich die App deinen Beat, mit „✓ Heute geübt“ wird der heutige Tag abgehakt. Es gibt keinen Timer.</li>
-        <li><strong>Daten exportieren / importieren:</strong> Sichere deine Pläne als JSON-Datei auf deinem Gerät oder lade gesicherte Pläne wieder hoch.</li>
+        <li><strong>Plan als Datei speichern / laden:</strong> Sichere deine Pläne als Datei auf deinem Gerät oder lade einen gesicherten Plan wieder.</li>
         <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
       </ul>
     </div>
@@ -1928,6 +1987,18 @@
 
   <div class="theory-box" id="theoryBox" style="display:none;">
     <h2>2. Theorie zu: Alle Töne des Griffbretts lernen</h2>
+    <div class="gb-quick">
+      <h3>🧭 Das Wichtigste in einer Minute</h3>
+      <ul>
+        <li><strong>Die 6 Saiten</strong> heißen von der dicksten zur dünnsten: <b>E – A – D – G – H – e</b>. Merksatz: „<b>E</b>ine <b>A</b>lte <b>D</b>ame <b>G</b>eht <b>H</b>eute <b>e</b>inkaufen.“</li>
+        <li><strong>1 Bund = 1 Halbton.</strong> Jeder Bund weiter Richtung Gitarrenkörper macht den Ton einen Halbton höher.</li>
+        <li><strong>Die Tonreihe:</strong> C – C♯ – D – D♯ – E – F – F♯ – G – G♯ – A – A♯ – H – C. Zwischen <b>E und F</b> und zwischen <b>H und C</b> liegt nur 1 Bund, zwischen allen anderen Stammtönen 2 Bünde.</li>
+        <li><strong>Beispiel tiefe E-Saite:</strong> leer = E, 1. Bund = F, 3. Bund = G, 5. Bund = A, 7. Bund = H, 8. Bund = C.</li>
+        <li><strong>Bund 12</strong> ist die Oktave: Dort liegen wieder dieselben Töne wie auf den leeren Saiten.</li>
+      </ul>
+      <div class="row" style="gap:8px; flex-wrap:wrap; margin-top:6px;"><button type="button" class="theory-chip" data-goto-mod="3">🎸 Gleich ausprobieren: Alle Töne</button></div>
+      <p style="font-size:.88rem; opacity:.8; margin:8px 0 0;">Darunter folgt der ausführliche Übeplan – den kannst du dir auch später anschauen.</p>
+    </div>
     <p class="theory-subtitle">Alle Töne auf der Gitarre lernen in 4 Wochen</p>
     <p>Das folgende System basiert auf dem inspirierenden Lernkonzept aus dem Video <a href="https://youtu.be/6C2RWnS-BAo?list=PLrGagL5OedER8yi7DkqDg-mz09OzM9Jdt" target="_blank" rel="noopener">Alle Töne auf der Gitarre lernen in 4 Wochen von Andreas Januschke (Kanal: Fingerfux)</a>, das den ursprünglichen Grundstein für die Entwicklung dieser App gelegt hat.</p>
     <p>Das Erlernen der Töne auf dem Griffbrett der Gitarre ist das Fundament für freies Spiel, Improvisation und Akkordverständnis. Mit einer Gesamtübungszeit von ca. 4 Stunden über 4 Wochen verteilt lässt sich das komplette Griffbrett dauerhaft einprägen.</p>
@@ -2214,8 +2285,8 @@
     <div class="planner-header">
       <button class="btn" id="addExerciseBtn">+ Übung hinzufügen</button>
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <button class="btn btn-secondary" id="exportDataBtn">Daten exportieren (JSON)</button>
-        <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">Daten importieren</label>
+        <button class="btn btn-secondary" id="exportDataBtn">💾 Plan als Datei speichern</button>
+        <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">📂 Plan aus Datei laden</label>
         <input type="file" id="importDataInput" style="display:none;">
         <button class="btn btn-secondary" id="resetWeekBtn">Woche zurücksetzen</button>
       </div>
@@ -2227,7 +2298,7 @@
       <table class="planner-table">
         <thead>
           <tr id="plannerTableHead">
-            <th style="width: 30%;">Übung / Thema</th>
+            <th style="width: 34%; min-width: 210px;">Übung / Thema</th>
             <th>Mo</th>
             <th>Di</th>
             <th>Mi</th>
@@ -3609,6 +3680,7 @@
     const bkBtn = document.getElementById('backupBtn');
     if (bkBtn) bkBtn.addEventListener('click', openBackupDialog);
     setTimeout(maybeShowBackupReminder, 2500);
+    setTimeout(() => { try { strMaybePopup(); } catch (e) {} }, 3200);
     loadPlannerFromLocalStorage();
     buildKeyPicker(document.getElementById('keyPickerFinder'));
     buildKeyPicker(document.getElementById('keyPickerChordlab'));
@@ -3910,6 +3982,7 @@
         cell.className = `fret-cell ${fretIdx === 0 ? 'open-string' : ''} ${!allowed && modType === 'finder' ? 'disabled-fret' : ''}`;
         cell.dataset.string = stringIdx;
         cell.dataset.fret = fretIdx;
+        if (fretIdx === 0) cell.dataset.sname = stringData.name;
 
         if (stringIdx === 3 && [3, 5, 7, 9].includes(fretIdx)) {
           const marker = document.createElement('div');
@@ -4039,7 +4112,7 @@
         const step = STRING_PRACTICE_STEPS[state.stringPracticeIndex];
         state.timerSeconds = step.time;
         updateTimerDisplay();
-        speechBannerEl.textContent = `🎯 Aktiv: ${step.label}. Starte den Timer und übertrage die Töne auf das Griffbrett!`;
+        speechBannerEl.textContent = `🎯 ${step.label}: Wähle oben einen Ton (z. B. C) und tippe auf dem Griffbrett die Stelle an, wo er liegt. Links am Rand stehen die Saitennamen.`;
         renderStringPracticeControls();
         renderNotePicker();
         renderFretboard();
@@ -4084,7 +4157,7 @@
           showToast("Richtig! Position gefunden. 🎉");
         } else {
           state.userGrid[key] = { status: 'incorrect' };
-          showToast("Falscher Bund!");
+          showToast("Nicht ganz – such weiter! 🙂");
         }
         renderFretboard();
       }
@@ -4095,7 +4168,7 @@
 
     const modString = getActiveStringIdx();
     if (modType === 'stringpractice' && modString !== -1 && modString !== stringIdx) {
-      showToast("Achtung: Bitte übe auf der aktiven Saite des Moduls!");
+      { const st = STRING_PRACTICE_STEPS[state.stringPracticeIndex]; showToast(`Gerade ist die ${st ? st.label.replace(/^Tiefe/, 'tiefe').replace(/^Hohe/, 'hohe') : 'markierte Saite'} dran – tippe bitte auf dieser Saite.`); }
       return;
     }
 
@@ -4113,7 +4186,7 @@
       let status = 'none';
       if (state.autoCheck) {
         status = (chosenNote === correctNote) ? 'correct' : 'incorrect';
-        showToast(status === 'correct' ? "Richtig! 🎉" : `Falsch! Die richtige Antwort ist: ${correctNote}`);
+        showToast(status === 'correct' ? "Richtig! 🎉" : `Nicht ganz – hier liegt ein ${correctNote}.`);
       }
       state.userGrid[key] = { note: chosenNote, status: status };
     }
@@ -4383,7 +4456,7 @@
       }
       showToast("Richtig! +10 Punkte 🎉");
     } else {
-      showToast(`Falsch! Es war ${correctNote}`);
+      showToast(`Nicht ganz – es war ${correctNote}.`);
     }
 
     gameScoreEl.textContent = `Punkte: ${state.gameScore}`;
@@ -5336,6 +5409,7 @@
       <button type="button" class="btn btn-secondary" data-act="save">💾 Speichern</button>
       <button type="button" class="btn btn-secondary" data-act="new">✨ Neue Folge</button>
       <button type="button" class="btn btn-secondary" data-act="more" aria-expanded="${progMoreOpen}">${progMoreOpen ? '✕ Weniger' : '⋯ Mehr'}</button>
+      <label class="prog-notes-tog"><input type="checkbox" id="progNotesTog" ${progState.notes ? 'checked' : ''}> 🎼 Noten mit Namen</label>
     </div>`;
     if (progMoreOpen) h += `<div class="prog-row" style="padding:6px 8px; border:1px dashed rgba(148,163,184,0.4); border-radius:10px;">
       <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
@@ -5385,7 +5459,7 @@
         <div class="prog-name">${d ? homeEsc(progChordShort(d)) : (played.length ? '?' : '–')}</div>
         ${rm ? `<div class="prog-roman">Stufe ${rm.text}</div>` : ''}
         <div class="prog-tones">${tones}${d && d.missing ? ' <span title="Ein Akkordton fehlt">(ohne Quinte)</span>' : ''}</div>
-        ${progStaffSvg(c, d)}
+        ${progState.notes ? `<div class="prog-staff-tap" data-act="arp" data-c="${ci}" title="Antippen: Ton für Ton anhören">${progStaffSvg(c, d, true)}</div>` : progStaffSvg(c, d)}
         <div class="prog-mini">
           <button type="button" data-act="play" data-c="${ci}">▶</button>
           ${d ? `<button type="button" data-act="grip" data-c="${ci}">🔁 Griff</button>` : ''}
@@ -5423,7 +5497,8 @@
     progMarkPlaying();
   }
   // ---------- Kurze Notenzeile unter jedem Akkordbild ----------
-  function progStaffSvg(c, d) {
+  function progStaffSvg(c, d, spread) {
+    if (spread) return progStaffSpreadSvg(c, d);
     const NAT = [0, 2, 4, 5, 7, 9, 11], LETS = 'CDEFGAH';
     const pitches = [...new Set(c.frets.map((f, si) => f >= 0 ? JAM_PAINT_OPEN[si] + f : null).filter(p => p !== null))].sort((a, b) => a - b);
     const W = 250, gap = 10, st0 = 44, yBot = st0 + 4 * gap, H = 150;
@@ -5466,6 +5541,41 @@
     });
     if (!notes.length) g += `<text x="${cx - 30}" y="${st0 + 24}" class="ps-acc" style="font-size:11px; opacity:.6;">(noch leer)</text>`;
     return `<svg class="prog-staff" viewBox="0 0 ${W} ${H}" role="img" aria-label="Noten des Akkords">${g}</svg>`;
+  }
+  // Gegriffene Töne nebeneinander (tief → hoch) mit Tonnamen darunter
+  function progStaffSpreadSvg(c, d) {
+    const NAT = [0, 2, 4, 5, 7, 9, 11], LETS = 'CDEFGAH';
+    const pitches = [...new Set(c.frets.map((f, si) => f >= 0 ? JAM_PAINT_OPEN[si] + f : null).filter(p => p !== null))].sort((a, b) => a - b);
+    const W = 250, gap = 10, st0 = 40, yBot = st0 + 4 * gap, H = 166;
+    let g = '';
+    for (let k = 0; k < 5; k++) g += `<line x1="4" x2="${W - 4}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="ps-line"/>`;
+    g += `<line x1="4" x2="4" y1="${st0}" y2="${yBot}" class="ps-line"/><line x1="${W - 4}" x2="${W - 4}" y1="${st0}" y2="${yBot}" class="ps-line"/>`;
+    const cy0 = st0, gl = st0 + 3 * gap;
+    g += `<path class="ps-clef" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
+    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="ps-fill"/><text x="24" y="${yBot + 34}" class="ps-acc" style="font-size:10px;">8</text>`;
+    const n = pitches.length, x0 = 66, step = n ? Math.min(34, (W - 10 - x0) / n) : 34;
+    pitches.forEach((m, i) => {
+      const pc = m % 12;
+      let nm = d ? String(jamPcName(pc, d.root, d.type) || '') : '';
+      if (!nm) nm = SCALE_VIEW_ROOTS[pc].replace('#', '♯');
+      let li = LETS.indexOf(nm[0] === 'B' ? 'H' : nm[0]);
+      if (li < 0) li = LETS.indexOf(SCALE_VIEW_ROOTS[pc][0]);
+      let acc = ((pc - NAT[li]) % 12 + 12) % 12; if (acc > 6) acc -= 12;
+      const base = m - acc, oct = Math.round((base - NAT[li]) / 12), di = oct * 7 + li;   // notiert eine Oktave höher
+      const y = yBot - (di - 30) * gap / 2, x = x0 + step * (i + 0.5), root = d && pc === d.root;
+      for (let ld = 28; ld >= di; ld -= 2) { const yy = yBot - (ld - 30) * gap / 2; g += `<line x1="${x - 10}" x2="${x + 10}" y1="${yy}" y2="${yy}" class="ps-line"/>`; }
+      for (let ld = 40; ld <= di; ld += 2) { const yy = yBot - (ld - 30) * gap / 2; g += `<line x1="${x - 10}" x2="${x + 10}" y1="${yy}" y2="${yy}" class="ps-line"/>`; }
+      g += `<ellipse cx="${x}" cy="${y}" rx="6.2" ry="4.4" transform="rotate(-20 ${x} ${y})" class="${root ? 'ps-root' : 'ps-fill'}"/>`;
+      if (acc) g += `<text x="${x - 17}" y="${y + 5}" class="ps-acc">${acc === 1 ? '♯' : acc === -1 ? '♭' : acc === 2 ? '𝄪' : '♭♭'}</text>`;
+      g += `<text x="${x}" y="${H - 6}" text-anchor="middle" class="ps-name ${root ? 'ps-root' : ''}">${homeEsc(nm)}</text>`;
+    });
+    if (!n) g += `<text x="96" y="${st0 + 24}" class="ps-acc" style="font-size:11px; opacity:.6;">(noch leer)</text>`;
+    return `<svg class="prog-staff" viewBox="0 0 ${W} ${H}" role="img" aria-label="Noten des Akkords mit Namen">${g}</svg>`;
+  }
+  // Akkord Ton für Ton vorspielen (tief → hoch)
+  function progPlayArp(c) {
+    const ps = [...new Set(c.frets.map((f, si) => f >= 0 ? JAM_PAINT_OPEN[si] + f : null).filter(p => p !== null))].sort((a, b) => a - b);
+    try { initAudio(); ps.forEach((p, i) => playPitch(p, i * 0.38)); } catch (e) {}
   }
   // ---------- Anhören: Anschlag / Zupfen, Tempo, Wiederholen ----------
   let progSelIdx = null, progMoreOpen = false;
@@ -5617,16 +5727,71 @@
     const list = dr.chords.map(c => ({ c, d: progDetect(c) })).filter(x => x.c.frets.some(f => f >= 0));
     if (!list.length) { showToast('Trage zuerst mindestens einen Akkord ein.'); return; }
     let ov = document.getElementById('progBigOverlay');
-    if (!ov) { ov = document.createElement('div'); ov.id = 'progBigOverlay'; ov.className = 'prog-big'; document.body.appendChild(ov); }
+    if (!ov) {
+      ov = document.createElement('div'); ov.id = 'progBigOverlay'; ov.className = 'prog-big'; document.body.appendChild(ov);
+      ov.addEventListener('click', e => {
+        const t = e.target.closest('[data-big]'); if (!t) return;
+        const a = t.dataset.big;
+        if (a === 'close') progBigClose();
+        else if (a === 'notes') { progState.notes = !progState.notes; progSave(); progBigOpen(); try { progRender(); } catch (er) {} }
+        else if (a === 'print') progBigPrint();
+        else if (a === 'file') progBigFile();
+        else if (a === 'arp') { const c = (progBigOpen._list || [])[+t.dataset.i]; if (c) progPlayArp(c); }
+      });
+    }
+    progBigOpen._list = list.map(x => x.c);
     const names = list.map(x => x.d ? progChordShort(x.d) : '?');
-    ov.innerHTML = `<div class="prog-big-top"><div class="prog-big-title">${homeEsc((dr.name || '').trim() || 'Meine Akkordfolge')}</div><button type="button" class="prog-big-close" id="progBigClose" aria-label="Schließen">✕</button></div>
+    ov.innerHTML = `<div class="prog-big-top"><div class="prog-big-title">${homeEsc((dr.name || '').trim() || 'Meine Akkordfolge')}</div><button type="button" class="prog-big-close" id="progBigClose" data-big="close" aria-label="Schließen">✕</button></div>
+      <div class="prog-big-actions">
+        <button type="button" class="${progState.notes ? 'on' : ''}" data-big="notes" aria-pressed="${!!progState.notes}">🎼 Noten mit Namen</button>
+        <button type="button" data-big="print">🖨️ Drucken</button>
+        <button type="button" data-big="file">💾 Als Datei speichern</button>
+      </div>
       <div class="prog-big-seq">${names.map(homeEsc).join('  –  ')}</div>
-      <div class="prog-big-grid">${list.map((x, i) => `<div class="prog-big-card"><div class="prog-big-num">${i + 1}</div><div class="prog-big-name">${homeEsc(names[i])}</div>${progBigSvg(x.c, x.d)}<div class="prog-big-tones">${x.d ? jamChordToneNames(x.d.root, x.d.type).join(' – ') : ''}</div></div>`).join('')}</div>`;
+      <div class="prog-big-grid">${list.map((x, i) => `<div class="prog-big-card"><div class="prog-big-num">${i + 1}</div><div class="prog-big-name">${homeEsc(names[i])}</div>${progBigSvg(x.c, x.d)}<div class="prog-big-tones">${x.d ? jamChordToneNames(x.d.root, x.d.type).join(' – ') : ''}</div>${progState.notes ? `<div class="prog-staff-tap" data-big="arp" data-i="${i}" title="Antippen: Ton für Ton anhören">${progStaffSvg(x.c, x.d, true)}</div>` : ''}</div>`).join('')}</div>`;
     ov.classList.add('open');
-    document.getElementById('progBigClose').onclick = progBigClose;
-    try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(l => { progWakeLock = l; }).catch(() => {}); } catch (e) {}
+    document.body.classList.add('prog-big-open');
+    progBigFit();
+    if (!progWakeLock) try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(l => { progWakeLock = l; }).catch(() => {}); } catch (e) {}
   }
+  function progBigPrint() {
+    try { if (typeof window.print === 'function') { window.print(); return; } } catch (e) {}
+    showToast('Drucken klappt hier leider nicht – nimm „💾 Als Datei speichern“ und drucke die Datei aus Chrome.');
+  }
+  // Große Ansicht als eigenständige Datei (zum Öffnen und Drucken in Chrome)
+  function progBigFile() {
+    const ov = document.getElementById('progBigOverlay'); if (!ov) return;
+    let css = '';
+    try { for (const sh of document.styleSheets) { let rules; try { rules = sh.cssRules; } catch (e) { continue; } for (const r of rules) if (r.selectorText && /prog-big|prog-staff/.test(r.selectorText)) css += r.cssText + '\n'; } } catch (e) {}
+    css += 'body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#fff;} .prog-big{position:static !important;display:block !important;overflow:visible !important;} .prog-staff{color:#0f172a !important;} .pb-print{margin:6px 0 10px;padding:10px 16px;font-size:1rem;font-weight:700;border-radius:10px;border:2px solid #0f172a;background:#fff;cursor:pointer;} @media print{.pb-print{display:none;} .prog-big-card{break-inside:avoid;page-break-inside:avoid;} .prog-big-name{font-size:2rem !important;}}';
+    const clone = ov.cloneNode(true);
+    clone.querySelectorAll('.prog-big-close, .prog-big-actions').forEach(n => n.remove());
+    clone.querySelectorAll('.prog-big-name').forEach(n => n.style.fontSize = '');
+    const title = (progState.draft.name || '').trim() || 'Meine Akkordfolge';
+    const html = `${'<'}!DOCTYPE html>${'<'}html lang="de">${'<'}head>${'<'}meta charset="utf-8">${'<'}meta name="viewport" content="width=device-width, initial-scale=1">${'<'}title>${homeEsc(title)}${'<'}/title>${'<'}style>${css}${'<'}/style>${'<'}/head>${'<'}body>${'<'}div class="prog-big open" style="padding:14px 16px 30px;">${'<'}button class="pb-print" onclick="window.print()">🖨️ Drucken${'<'}/button>${clone.innerHTML}${'<'}/div>${'<'}/body>${'<'}/html>`;
+    const name = 'Akkordfolge_' + (title.replace(/[^\wäöüÄÖÜß\- ]+/g, '').trim().replace(/\s+/g, '_') || 'ohne_Name') + '.html';
+    try {
+      const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+      const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    } catch (e) {
+      const a = document.createElement('a'); a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(html); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    }
+    showToast('💾 Gespeichert: ' + name + ' – in Chrome öffnen und dort drucken.');
+  }
+  // Lange Akkordnamen so weit verkleinern, dass sie in die Karte passen
+  function progBigFit() {
+    const ov = document.getElementById('progBigOverlay');
+    if (!ov || !ov.classList.contains('open')) return;
+    ov.querySelectorAll('.prog-big-name').forEach(el => {
+      el.style.fontSize = '';
+      let px = parseFloat(getComputedStyle(el).fontSize) || 40, n = 0;
+      while (el.clientWidth > 0 && el.scrollWidth > el.clientWidth && px > 16 && n++ < 40) { px *= 0.92; el.style.fontSize = px + 'px'; }
+    });
+  }
+  window.addEventListener('resize', () => { clearTimeout(progBigFit._t); progBigFit._t = setTimeout(progBigFit, 150); });
   function progBigClose() {
+    document.body.classList.remove('prog-big-open');
     const ov = document.getElementById('progBigOverlay'); if (ov) ov.classList.remove('open');
     try { if (progWakeLock) progWakeLock.release(); } catch (e) {}
     progWakeLock = null;
@@ -5707,7 +5872,7 @@
   document.addEventListener('click', e => {
     const body = document.getElementById('progBody');
     if (!body || !body.contains(e.target)) return;
-    const t = e.target.closest('button');
+    const t = e.target.closest('button, [data-act="arp"]');
     if (!t) return;
     if (!progState) progState = progLoad();
     const dr = progState.draft;
@@ -5728,6 +5893,7 @@
       else if (act === 'down' && c) c.start = Math.max(1, c.start - 1);
       else if (act === 'clear' && c) dr.chords[ci] = progEmptyChord();
       else if (act === 'play' && c) { try { initAudio(); progPlayChord(c, 0); } catch (er) {} return; }
+      else if (act === 'arp' && c) { progPlayArp(c); return; }
       else if (act === 'playall') { try { if (progPlayer.on) progPlayStop(); else progPlayStart(); } catch (er) { console.error(er); } return; }
       else if (act === 'midi') { progMidiExport(); return; }
       else if (act === 'chg') { if (chgImportFrom(dr)) { switchToModule(14); window.scrollTo(0, 0); } return; }
@@ -5795,6 +5961,7 @@
       ch.length = n;
       progSave(); progRender();
     }
+    else if (e.target.id === 'progNotesTog') { progState.notes = e.target.checked; progSave(); progRender(); }
     else if (e.target.id === 'progSavedSel') { progSelIdx = parseInt(e.target.value, 10); }
     else if (e.target.id === 'progPlayStyle') { progPlayOpts().style = e.target.value; progSave(); }
     else if (e.target.id === 'progPlayLoop') { progPlayOpts().loop = e.target.checked; progSave(); }
@@ -9070,7 +9237,7 @@
     if (!root) return;
     if (!tuner.tuningKey) tuner.tuningKey = (typeof currentTuningKey !== 'undefined' && TUNINGS[currentTuningKey]) ? currentTuningKey : 'standard';
     const strs = tunerStrings();
-    root.innerHTML = `<div class="tuner-card">
+    root.innerHTML = `<div id="tunerStrBox" style="margin-bottom:10px;"></div><div class="tuner-card">
       <div class="tuner-row">
         <label style="font-weight:600;">Stimmung:</label>
         <select id="tunerTuningSelect">${Object.keys(TUNINGS).map(k => `<option value="${k}" ${k === tuner.tuningKey ? 'selected' : ''}>${TUNER_TUNING_LABELS[k] || k}</option>`).join('')}</select>
@@ -9115,6 +9282,7 @@
       if (tuner.target !== 'auto') tunerPlayRef();
     }));
     document.getElementById('tunerRefBtn').addEventListener('click', tunerPlayRef);
+    try { strTunerRefresh(); } catch (e) {}
   }
 
   function tunerPlayRef() {
@@ -9314,14 +9482,14 @@
       staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "📖 Lerne die theoretischen Grundlagen und den Übeplan kennen.";
+      speechBannerEl.textContent = "🧭 Wie die Töne auf dem Griffbrett liegen – oben das Wichtigste in Kürze, darunter der Übeplan.";
       theoryBox.style.display = 'block';
     } else if (mod.type === 'theoryPro') {
       fretboardWrapper.style.display = 'none';
       staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "🎓 Musiktheorie zum Mitdenken: Klicke dich durch Intervalle, Quintenzirkel und Transposition.";
+      speechBannerEl.textContent = "🎓 Musiktheorie zum Mitdenken: Tippe dich durch Intervalle, Akkorde, Tonleitern und den Quintenzirkel.";
       theoryProBox.style.display = 'block';
       initTheoryPro();
       try { initTheoryExtras(); } catch (e) { console.error('Theorie-Erweiterungen:', e); }
@@ -9332,7 +9500,7 @@
       const step = STRING_PRACTICE_STEPS[state.stringPracticeIndex];
       state.timerSeconds = step.time;
       updateTimerDisplay();
-      speechBannerEl.textContent = `🎯 Aktiv: ${step.label}. Starte den Timer und übertrage die Töne auf das Griffbrett!`;
+      speechBannerEl.textContent = `🎯 ${step.label}: Wähle oben einen Ton (z. B. C) und tippe auf dem Griffbrett die Stelle an, wo er liegt. Links am Rand stehen die Saitennamen.`;
     } else if (mod.type === 'finder') {
       timerContainerEl.style.display = 'none';
       finderControlsRow.style.display = 'flex';
@@ -9359,7 +9527,7 @@
       staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "🥁 Baue dir einen Beat über 4 bis 64 Takte, wähle Akkorde für Bass & Pad und improvisiere dazu, z.B. mit der passenden Pentatonik aus Modul 8!";
+      speechBannerEl.textContent = "🥁 Wähle einen Rhythmus-Stil und einen Akkord, drück ▶ Start und spiel zur Begleitung mit. Alles Weitere kannst du später entdecken.";
       jamModuleRoot.style.display = 'block';
       if (!state.jam) initJamState();
       renderJamModule();
@@ -9369,7 +9537,7 @@
       gameScoreContainer.style.display = 'block';
       state.gameScore = 0;
       gameScoreEl.textContent = `Punkte: ${state.gameScore}`;
-      speechBannerEl.textContent = "🎮 Spielmodus: Errate den hervogehobenen Ton auf dem Griffbrett!";
+      speechBannerEl.textContent = "🎮 Spielmodus: Welcher Ton ist auf dem Griffbrett markiert? Tippe oben den passenden Ton an.";
       nextGameQuestion();
     } else if (mod.type === 'strum') {
       fretboardWrapper.style.display = 'none';
@@ -9392,7 +9560,7 @@
       staffContainer.style.display = 'none';
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "📅 Trage hier deine individuellen Übungen ein, passe die Reihenfolge per Drag & Drop an und verwalte deinen wöchentlichen Fortschritt.";
+      speechBannerEl.textContent = "📅 Trag deine Übungen ein und hake ab, an welchen Tagen du sie geübt hast. Mit ▶ Üben oder ⏱ legst du direkt los.";
       plannerContainer.style.display = 'flex';
       renderPlanner();
     } else if (mod.type === 'progmod' || mod.type === 'chgmod') {
@@ -9413,7 +9581,7 @@
       chordLookupRow.style.display = 'flex';
       chordInfoBox.style.display = 'flex';
       { const ll = document.getElementById('labLinks'); if (ll) ll.style.display = 'block'; }
-      speechBannerEl.textContent = "🎸 Tippe die Töne deines Akkords auf das Griffbrett, oder schlag rechts oben einen Akkord zum Nachschlagen nach!";
+      speechBannerEl.textContent = "🎸 Tippe die Töne eines Akkords aufs Griffbrett – die App erkennt ihn. Oder schlag bei „Akkord nachschlagen“ einen Akkord nach.";
       initChordLookup();
       analyzeChord();
     }
@@ -9721,7 +9889,7 @@
     const eg = document.getElementById('strumEditGrid');
     if (eg) eg.innerHTML = strumEditGridHtml();
     const gw = document.getElementById('strumGridWrap');
-    if (gw) gw.innerHTML = strumEdit.draft.kind === 'pick' ? renderStrumGrid((strumChords() || [[0, 'dur']])[0]) : '';
+    if (gw) gw.innerHTML = strumEdit.draft.kind === 'pick' ? strumGridAt(0) : '';
     bindStrumEditGrid();
   }
   function bindStrumEditGrid() {
@@ -9782,6 +9950,7 @@
   function strumSteps(p) { return Array.isArray(p.steps) ? p.steps : p.steps.split(''); }
   function strumBpm() { const p = strumPattern(); const m = (!strumEdit && strumState.tempos) ? strumState.tempos[p.id] : 0; return Math.max(30, Math.min(180, strumState.bpm || m || p.bpm)); }
   function strumChords() {
+    if (strumState.imp && strumState.imp.text === strumState.chords && Array.isArray(strumState.imp.chords) && strumState.imp.chords.length) return strumState.imp.chords.map(c => c.slice());
     const c = parsePlanChords(strumState.chords);
     return c && c.length ? c : null;
   }
@@ -9792,7 +9961,29 @@
     return Array.from({ length: n }, (_, i) => (i % p.unit === 0 ? String(Math.floor(i / p.unit) + 1) : sub[i % p.unit]));
   }
   function strumIsBeat(p, i) { return /^\d+$/.test(strumCountLabels(p)[i]); }
-  function strumFingering(c) { const f = getJamChordFingering(c[0], c[1]); return f ? f.frets : [0, 0, 0, 0, 0, 0]; }
+  function strumFingering(c) { if (Array.isArray(c[2]) && c[2].length === 6) return c[2]; const f = getJamChordFingering(c[0], c[1]); return f ? f.frets : [0, 0, 0, 0, 0, 0]; }
+  function strumChordName(c) { return c[3] || jamChordShort({ chordRoot: c[0], chordType: c[1] }); }
+  // Zupf-Tab + Akkord für einen Takt
+  function strumGridAt(bar) {
+    const ch = strumChords() || [[0, 'dur']], b = Math.max(0, bar || 0);
+    return renderStrumGrid(strumChordAt(ch, b), ch.length > 1 ? strumChordAt(ch, b + (strumState.bpc || 1)) : null);
+  }
+  // Eigene Akkordfolge übernehmen (mit den eigenen Griffen)
+  function strumImportFrom(p) {
+    const filled = p.chords.filter(c => c.frets.some(f => f >= 0));
+    const items = filled.map(c => ({ c, d: progDetect(c) })).filter(x => x.d);
+    const skipped = filled.length - items.length;
+    if (!items.length) { showToast('In dieser Folge wurde kein Akkord erkannt.'); return false; }
+    const names = items.map(x => progChordShort(x.d));
+    strumState.chords = names.join(' ');
+    strumState.imp = { text: strumState.chords, chords: items.map((x, i) => [x.d.root, x.d.type, x.c.frets.slice(), names[i]]) };
+    saveStrumState();
+    if (typeof strumPlaying !== 'undefined' && strumPlaying) { try { stopStrum(); } catch (e) {} }
+    renderStrum();
+    const nm = (p.name || '').trim();
+    showToast(`${nm ? '„' + nm + '“' : 'Deine Folge'} ist übernommen – mit deinen Griffen ✔` + (skipped ? ` (${skipped} Akkord${skipped > 1 ? 'e' : ''} ohne Namen ausgelassen)` : ''));
+    return true;
+  }
   function strumBassIdx(frets) { const i = frets.findIndex(f => f >= 0); return i < 0 ? 0 : i; }
   function strumAltBassIdx(frets) {
     const b = strumBassIdx(frets);
@@ -10029,7 +10220,7 @@
       try {
         const chords = strumChords() || [[0, 'dur']];
         const p = strumPattern();
-        if (p.kind === 'pick') wrap.innerHTML = renderStrumGrid(strumChordAt(chords, Math.max(0, strumShownBar)));
+        if (p.kind === 'pick') wrap.innerHTML = strumGridAt(strumShownBar);
         else wrap.innerHTML = renderStrumGrid(chords[0]);
       } catch (e) {}
     }, 250);
@@ -10169,10 +10360,11 @@
   }
 
   // Verfügbare Breite für die Taktanzeige (Handy im Hochformat: schmal)
+  let strumAvailMinus = 0;
   function strumAvailW() {
     const w = document.getElementById('strumGridWrap');
     const cw = w && w.clientWidth;
-    return Math.max(240, cw || ((window.innerWidth || 1024) - 48));
+    return Math.max(240, (cw || ((window.innerWidth || 1024) - 48)) - strumAvailMinus);
   }
   // Takt an Zählzeit-Grenzen in r möglichst gleich große Zeilen teilen
   function strumSplitRows(p, n, r) {
@@ -10190,9 +10382,15 @@
     for (let i = 0; i < b.length - 1; i++) out.push([b[i], b[i + 1]]);
     return out;
   }
-  function renderStrumGrid(chord) {
+  function renderStrumGrid(chord, nxt) {
     const p = strumPattern(), steps = strumSteps(p), labels = strumCountLabels(p);
-    if (p.kind === 'pick') return renderPickResponsive(chord, p);
+    if (p.kind === 'pick') {
+      const side = strumAvailW() >= 640;
+      strumAvailMinus = side ? 132 : 0;
+      let tab; try { tab = renderPickResponsive(chord, p); } finally { strumAvailMinus = 0; }
+      const box = `<div class="strum-pick-chord"><div>${renderJamChordDiagramSvg(strumFingering(chord))}</div><div><div class="nm">${homeEsc(strumChordName(chord))}</div>${nxt ? `<div class="nx">danach: <b>${homeEsc(strumChordName(nxt))}</b></div>` : ''}</div></div>`;
+      return `<div class="strum-pick-row ${side ? '' : 'stack'}">${box}<div class="strum-pick-tab">${tab}</div></div>`;
+    }
     const n = steps.length;
     const beatStart = i => i > 0 && strumIsBeat(p, i);
     const avail = strumAvailW();
@@ -10251,13 +10449,13 @@
     const chords = strumChords();
     if (!chords) { box.innerHTML = '<div class="jam-hint">Akkorde nicht erkannt. Beispiel: „Am F C G“ (Leerzeichen dazwischen; B oder H = H, Bb = B♭).</div>'; return; }
     const cur = strumChordAt(chords, bar), nxt = strumChordAt(chords, bar + (strumState.bpc || 1));
-    const nm = c => jamChordShort({ chordRoot: c[0], chordType: c[1] });
+    const nm = c => homeEsc(strumChordName(c));
     box.innerHTML = `<div>${renderJamChordDiagramSvg(strumFingering(cur))}</div>
       <div><div class="jam-hint" style="margin:0;">Jetzt</div><div class="big">${nm(cur)}</div>
       ${chords.length > 1 ? `<div class="jam-hint">danach: <b>${nm(nxt)}</b></div>` : ''}</div>`;
     if (strumPattern().kind === 'pick') {
       const wrap = document.getElementById('strumGridWrap');
-      if (wrap) { wrap.innerHTML = renderStrumGrid(cur); }
+      if (wrap) { wrap.innerHTML = strumGridAt(bar); }
     }
   }
   function renderStrum() {
@@ -10284,7 +10482,7 @@
     if (strumEdit) {
       h = h.replace('id="strumPatternSelect"', 'id="strumPatternSelect" disabled');
       h += strumEditorHtml();
-      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? renderStrumGrid((strumChords() || [[0, 'dur']])[0]) : ''}</div>`;
+      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : ''}</div>`;
     } else {
       h += `<div class="row" style="flex-wrap:wrap; gap:8px; margin-top:8px;">
         <button type="button" class="btn btn-secondary" id="strumNewBtn">✏️ Eigenes Muster</button>
@@ -10293,7 +10491,7 @@
         ${p.custom ? `<button type="button" class="btn btn-secondary" id="strumEditBtn">✎ Bearbeiten</button><button type="button" class="btn btn-secondary" id="strumDelBtn">🗑 Löschen</button>` : ''}
       </div>`;
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
-      h += `<div class="strum-grid-wrap" id="strumGridWrap">${renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
+      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
     }
     h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
@@ -10311,6 +10509,7 @@
       <label style="font-size:0.88rem;">Takte pro Akkord:</label>
       <select id="strumBpc" style="${sel}">${[1, 2, 4].map(n => `<option value="${n}" ${n === (strumState.bpc || 1) ? 'selected' : ''}>${n}</option>`).join('')}</select>
     </div>
+    ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)); if (!hasDraft && !progState.saved.length) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
     h += `<div class="strum-now" id="strumNow"></div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
@@ -10360,10 +10559,11 @@
     document.getElementById('strumClick').addEventListener('change', e => { strumState.click = e.target.checked; saveStrumState(); });
     document.getElementById('strumCountIn').addEventListener('change', e => { strumState.countIn = e.target.checked; saveStrumState(); });
     const ci = document.getElementById('strumChordsInput');
-    const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = renderStrumGrid(c[0]); } restart(); };
+    const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = strumGridAt(0); } restart(); };
     ci.addEventListener('change', applyChords);
     { const sb = document.getElementById('strumStyleChordsBtn'); if (sb) sb.addEventListener('click', () => { ci.value = strumPattern().chords; applyChords(); }); }
     root.querySelectorAll('[data-schords]').forEach(b => b.addEventListener('click', () => { ci.value = b.dataset.schords; applyChords(); }));
+    { const im = document.getElementById('strumImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; const q = v === 'draft' ? progState.draft : progState.saved[+v]; if (!q || !strumImportFrom(q)) im.value = ''; }); }
     document.getElementById('strumBpc').addEventListener('change', e => { strumState.bpc = parseInt(e.target.value, 10); saveStrumState(); restart(); });
     document.getElementById('strumToBeatBtn').addEventListener('click', strumSendToBeat);
   }
@@ -10428,6 +10628,7 @@
       <div class="sub">Griffbrett, Akkorde, Rhythmus – Schritt für Schritt.</div>
       <div class="tip"><strong>💡 Tipp des Tages</strong><br>${homeEsc(homeTipOfDay())}</div>
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
+    try { h += pathHomeCard(); } catch (e) {}
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     { const L = diaryLoad(); const e = L[0]; h += `<button type="button" class="home-pt" id="homeDiaryBtn"><b>📓</b><span><strong>Übungs-Tagebuch</strong><br>${e ? 'Zuletzt: ' + diaryDateTxt(e.date) + (e.note ? ' · ' + homeEsc(e.note.slice(0, 40)) + (e.note.length > 40 ? '…' : '') : '') : 'Noch keine Einträge'}</span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`; }
     h += strHomeTile();
@@ -10436,6 +10637,7 @@
       g.items.forEach(([v, icon, nm, desc]) => {
         h += `<button type="button" class="home-tile home-c-${g.color} ${v === last && last !== 0 ? 'last' : ''}" data-home-open="${v}"><span class="no">${homeModuleNo(v)}</span><span class="ic">${ic(icon)}</span><span class="nm">${homeEsc(nm)}</span><span class="desc">${homeEsc(desc)}</span></button>`;
       });
+      if (g.title === 'Lernen') h += `<button type="button" class="home-tile home-c-${g.color}" data-open-gloss><span class="ic">📖</span><span class="nm">Wörterbuch</span><span class="desc">Fachbegriffe in einfachen Worten</span></button>`;
       h += `</div>`;
     });
     const st = homeStartSetting();
@@ -10453,6 +10655,7 @@
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
     { const hs = document.getElementById('homeStrBtn'); if (hs) hs.addEventListener('click', () => strOpen()); }
     const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
+    { const hp = document.getElementById('homePathBtn'); if (hp) hp.addEventListener('click', () => pathOpen()); }
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
     const ss = document.getElementById('homeStartSelect');
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
@@ -10613,8 +10816,9 @@
         }));
       } else {
         plannerState.plannerData[weekKey] = [
-          { name: "Pentatonik Position 1", checks: [false, false, false, false, false, false, false] },
-          { name: "Wechselschlag Übung 100 BPM", checks: [false, false, false, false, false, false, false] }
+          { name: "Gitarre stimmen", checks: [false, false, false, false, false, false, false] },
+          { name: "Töne der tiefen E-Saite", checks: [false, false, false, false, false, false, false] },
+          { name: "Akkordwechsel Em ↔ Am", checks: [false, false, false, false, false, false, false] }
         ];
       }
       savePlannerToLocalStorage();
@@ -10694,8 +10898,8 @@
       practiceBtn.textContent = hasLink ? '▶ Üben 🔗' : '▶ Üben';
       practiceBtn.title = 'Im Beat-Modul üben (ohne Zeitdruck)';
       practiceBtn.addEventListener('click', () => startPracticeFromPlan(weekKey, rowIdx));
-      tdName.style.whiteSpace = 'nowrap';
-      inputName.style.width = 'calc(100% - 140px)';
+      tdName.style.textAlign = 'left';
+      inputName.style.width = '100%'; inputName.style.display = 'block'; inputName.style.marginBottom = '5px'; inputName.style.boxSizing = 'border-box';
       tdName.appendChild(practiceBtn);
       const timerBtn = document.createElement('button');
       timerBtn.type = 'button';
@@ -11934,7 +12138,7 @@
   function setMenuInit() {
     const btn = document.getElementById('settingsBtn'); if (!btn || document.getElementById('setMenu')) return;
     const m = document.createElement('div'); m.id = 'setMenu'; m.className = 'set-menu';
-    m.innerHTML = `<button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>
+    m.innerHTML = `<button type="button" data-setfn="path">🚀 Erste Schritte</button><button type="button" data-setfn="gloss">📖 Wörterbuch</button><button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>
       <div style="padding:8px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;"><label for="setA4Select">🎵 Kammerton</label>
       <select id="setA4Select" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px;">${APP_A4_LIST.map(v => `<option value="${v}">${v} Hz</option>`).join('')}</select></div>`;
     const sa = m.querySelector('#setA4Select'); sa.value = String(appA4());
@@ -11950,8 +12154,188 @@
       m.style.top = (r.bottom + 6) + 'px'; m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
       m.classList.add('open');
     });
+    m.querySelectorAll('[data-setfn]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('open'); if (b.dataset.setfn === 'path') pathOpen(); else glossOpen(); }));
     m.querySelectorAll('[data-setgo]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('open'); const t = document.getElementById(b.dataset.setgo); if (t) t.click(); }));
     document.addEventListener('click', () => m.classList.remove('open'));
+  }
+
+  // =================== Erste Schritte (Lernpfad) & Wörterbuch ===================
+  const PATH_KEY = 'guitartrainer_path';
+  const PATH_STEPS = [
+    { id: 'tune', mod: 11, icon: '🎚️', title: 'Gitarre stimmen', text: 'Tippe auf „Mikrofon starten“ und zupfe jede Saite einzeln, bis die Nadel im grünen Bereich steht. Tipp: Vor jedem Üben kurz stimmen – eine verstimmte Gitarre klingt auch mit richtigen Griffen schief.' },
+    { id: 'strings', mod: 1, icon: '🧭', title: 'Saiten und Griffbrett verstehen', text: 'Oben auf der Seite steht „Das Wichtigste in einer Minute“: die Namen der Saiten (E – A – D – G – H – e), ein Merksatz und wie die Töne auf dem Griffbrett liegen. Den langen Text darunter kannst du dir später anschauen.' },
+    { id: 'notes', mod: 3, icon: '🎸', title: 'Die Töne auf der tiefen E-Saite', text: 'Wähle oben einen Ton (z. B. C) und tippe auf der tiefen E-Saite die Stelle an, wo er liegt. Die tiefe E-Saite ist die unterste Linie – links am Rand stehen die Saitennamen. Sag die Tonnamen laut mit. Ein paar Minuten am Tag reichen.' },
+    { id: 'chords', mod: 8, icon: '🧪', title: 'Die ersten Akkorde', text: 'Bei „Akkord nachschlagen“ E und Moll wählen und auf „🔍 Griffposition anzeigen“ tippen – schon siehst du den Griff für Em. Genauso für Am, C, G und D. Greif sie langsam und zupf jede Saite einzeln an: Klingt jede sauber? Wenn eine schnarrt, den Finger näher an das Bundstäbchen setzen.' },
+    { id: 'strum', mod: 12, icon: '🪕', title: 'Das erste Schlagmuster', text: 'Wähle ein Muster mit ⭐ (Einfach), trag „Em Am“ als Akkorde ein und spiel langsam mit. Lieber langsam und gleichmäßig als schnell und holprig.' },
+    { id: 'change', mod: 14, icon: '🔁', title: 'Akkorde wechseln', text: 'Tippe oben auf die Schnellwahl „Em ↔ Am“ und dann auf ▶ Start. Fang mit niedrigem Tempo an und dreh es erst höher, wenn der Wechsel rechtzeitig klappt.' },
+    { id: 'ear', mod: 6, icon: '👂', title: 'Das Ohr schulen', text: '„Dur oder Moll?“ ist schon ausgewählt. Hör dir den Akkord an: Klingt er hell (Dur) oder eher weich und traurig (Moll)? Ein paar Aufgaben am Tag schulen das Gehör – das hilft später beim Nachspielen von Liedern.', pre: () => { try { if (!earState) earState = earLoad(); earState.ex = 'chord'; earState.q = null; earState.right = 0; earState.total = 0; earSave(); } catch (e) {} } },
+    { id: 'theory', mod: 2, icon: '🎼', title: 'Ein bisschen Theorie', text: 'Warum klingt ein Akkord so, wie er klingt? Schau dir an, was eine Terz ist und wie ein Dur- und ein Moll-Akkord aufgebaut sind.' },
+    { id: 'prog', mod: 13, icon: '✍️', title: 'Eine eigene Akkordfolge', text: 'Trag die Akkorde eines Lieblingslieds ein. Tipp: Mit „📖 aus Liste“ wählst du einen Griff einfach aus, statt ihn selbst einzutippen. Die App zeigt dir Namen, Töne und Tonart. Mit „🔍 Große Ansicht“ kannst du direkt mitspielen.' },
+    { id: 'beat', mod: 9, icon: '🥁', title: 'Mit Begleitung spielen', text: 'Ganz einfach in drei Schritten: 1. Oben bei „Rhythmus-Stil“ einen Stil wählen. 2. Bei „Akkord Takt 1“ einen Akkord einstellen, z. B. Em. 3. ▶ Start drücken und mitspielen. Die vielen anderen Regler kannst du erst mal ignorieren. Noch einfacher: In „Anschlag & Zupfen“ auf „🥁 Im Beat-Modul üben“ tippen – dann sind Akkorde und Tempo schon eingestellt.' },
+    { id: 'plan', mod: 10, icon: '📅', title: 'Einen Übungsplan machen', text: 'Leg dir einen kleinen Plan für die Woche an – ändere einfach die Beispiele oder füge eigene Übungen hinzu – und starte beim Üben den ⏱-Timer. Regelmäßig 10–15 Minuten bringen mehr als selten lange.' }
+  ];
+  function pathLoad() { try { const d = JSON.parse(localStorage.getItem(PATH_KEY) || 'null'); if (d && Array.isArray(d.done)) return d; } catch (e) {} return { done: [], hide: false }; }
+  function pathSave(d) { try { localStorage.setItem(PATH_KEY, JSON.stringify(d)); } catch (e) {} }
+  function pathModName(st) { const o = [...moduleSelectEl.options].find(x => x.value === String(st.mod)); return o ? o.text : ''; }
+  function pathNextIdx(d) { return PATH_STEPS.findIndex(st => !d.done.includes(st.id)); }
+  function pathHomeCard() {
+    const d = pathLoad(); if (d.hide) return '';
+    const n = d.done.filter(id => PATH_STEPS.some(st => st.id === id)).length, nx = pathNextIdx(d), tot = PATH_STEPS.length;
+    const line = nx < 0 ? '🎉 Alle Stationen geschafft!' : n === 0 ? `Neu hier? ${tot} Stationen quer durch die App – los geht’s mit: ${PATH_STEPS[0].title}` : `Station ${nx + 1} von ${tot}: ${PATH_STEPS[nx].title}`;
+    return `<button type="button" class="home-pt" id="homePathBtn"><b>🚀</b><span style="flex:1;"><strong>Erste Schritte</strong><br>${homeEsc(line)}<div class="str-bar"><i style="width:${Math.round(n / tot * 100)}%"></i></div></span><span style="flex:0; white-space:nowrap; font-weight:700;">${nx < 0 ? 'Ansehen ›' : 'Weiter ›'}</span></button>`;
+  }
+  function pathOverlay(id, panel) {
+    let o = document.getElementById(id);
+    if (!o) {
+      o = document.createElement('div'); o.id = id; o.className = 'pt-overlay';
+      o.innerHTML = `<div class="pt-panel" id="${panel}"></div>`;
+      o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+      document.body.appendChild(o);
+    }
+    return o;
+  }
+  function pathOpen() { const o = pathOverlay('pathOverlay', 'pathPanel'); pathRender(); o.classList.add('open'); }
+  function pathClose() { const o = document.getElementById('pathOverlay'); if (o) o.classList.remove('open'); try { if (document.body.classList.contains('home-mode')) renderHome(); } catch (e) {} }
+  function pathRender() {
+    const box = document.getElementById('pathPanel'); if (!box) return;
+    const d = pathLoad(), nx = pathNextIdx(d), tot = PATH_STEPS.length, n = PATH_STEPS.filter(st => d.done.includes(st.id)).length;
+    let h = `<div class="pt-head"><h3>🚀 Erste Schritte</h3><button type="button" class="btn btn-secondary" data-path="close">✕</button></div>
+      <p style="margin:8px 0;">Ein Vorschlag für den Anfang: Station für Station quer durch die App. Du kannst jederzeit springen, Stationen auslassen oder später zurückkommen.</p>
+      <div class="path-note">ℹ️ Die App hilft dir beim Üben und Verstehen. Wie man die Gitarre hält, greift und anschlägt, zeigt dir am besten ein Lehrer, ein Buch oder ein Video.</div>
+      <div style="margin:10px 0 4px; font-weight:700;">${nx < 0 ? '🎉 Alle Stationen geschafft – super!' : `${n} von ${tot} geschafft`}</div>
+      <div class="str-bar"><i style="width:${Math.round(n / tot * 100)}%"></i></div>`;
+    PATH_STEPS.forEach((st, i) => {
+      const done = d.done.includes(st.id);
+      h += `<div class="path-item ${done ? 'done' : ''} ${i === nx ? 'next' : ''}"><div class="pn">${done ? '✔' : i + 1}</div><div style="flex:1; min-width:0;">
+        <h4>${st.icon} ${homeEsc(st.title)}</h4><div class="path-mod">📍 im Modul „${homeEsc(pathModName(st))}“</div><p>${homeEsc(st.text)}</p>
+        <div class="path-btns"><button type="button" class="btn" data-path="go" data-i="${i}">Öffnen ›</button>
+        <button type="button" class="btn btn-secondary" data-path="done" data-i="${i}">${done ? '↺ Noch nicht' : '✔ Geschafft'}</button></div></div></div>`;
+    });
+    h += `<div class="path-foot"><button type="button" class="btn btn-secondary" data-path="gloss">📖 Wörterbuch</button>
+      <button type="button" class="btn btn-secondary" data-path="hide">${d.hide ? '👁 Auf der Startseite zeigen' : '🙈 Auf der Startseite ausblenden'}</button>
+      ${n ? '<button type="button" class="btn btn-secondary" data-path="reset">↺ Von vorn beginnen</button>' : ''}</div>
+      <div style="font-size:.85rem; opacity:.75; margin-top:8px;">Wieder öffnen kannst du die Ersten Schritte jederzeit über ⚙️ oder die Anleitung („Wo finde ich was?“).</div>`;
+    box.innerHTML = h;
+  }
+  function pathToggleDone(i) {
+    const d = pathLoad(), id = PATH_STEPS[i].id;
+    if (d.done.includes(id)) d.done = d.done.filter(x => x !== id); else { d.done.push(id); }
+    pathSave(d);
+    return d.done.includes(id);
+  }
+  function pathGo(i) {
+    const st = PATH_STEPS[i]; if (!st) return;
+    const o = document.getElementById('pathOverlay'); if (o) o.classList.remove('open');
+    try { hideHome(); } catch (e) {}
+    if (typeof st.pre === 'function') st.pre();
+    switchToModule(st.mod); window.scrollTo(0, 0);
+    pathBarShow(i);
+  }
+  // kleine Leiste unten, solange man in der Station ist
+  let pathBarIdx = -1;
+  function pathBarShow(i) {
+    let b = document.getElementById('pathBar');
+    if (!b) {
+      b = document.createElement('div'); b.id = 'pathBar'; document.body.appendChild(b);
+      b.addEventListener('click', e => {
+        const t = e.target.closest('[data-pbar]'); if (!t) return;
+        const a = t.dataset.pbar;
+        if (a === 'done') { if (pathBarIdx >= 0 && !pathLoad().done.includes(PATH_STEPS[pathBarIdx].id)) pathToggleDone(pathBarIdx); showToast('✔ Station geschafft!'); pathBarHide(); pathOpen(); }
+        else if (a === 'list') { pathOpen(); }
+        else pathBarHide();
+      });
+    }
+    pathBarIdx = i;
+    const st = PATH_STEPS[i], done = pathLoad().done.includes(st.id);
+    b.innerHTML = `<span style="font-weight:700;">🚀 Station ${i + 1}: ${homeEsc(st.title)}<br><span style="font-weight:400; font-size:.8rem; opacity:.8;">im Modul „${homeEsc(pathModName(st))}“</span></span>
+      ${done ? '' : '<button type="button" class="btn" data-pbar="done">✔ Geschafft</button>'}
+      <button type="button" class="btn btn-secondary" data-pbar="list">Alle Schritte</button>
+      <button type="button" class="btn btn-secondary" data-pbar="x" aria-label="Leiste schließen">✕</button>`;
+    b.classList.add('open'); document.body.classList.add('path-bar-open');
+  }
+  function pathBarHide() { const b = document.getElementById('pathBar'); if (b) b.classList.remove('open'); document.body.classList.remove('path-bar-open'); pathBarIdx = -1; }
+  document.addEventListener('change', e => {
+    if (e.target && e.target.id === 'moduleSelect' && pathBarIdx >= 0 && +e.target.value !== PATH_STEPS[pathBarIdx].mod) pathBarHide();
+  });
+  document.addEventListener('click', e => {
+    const t = e.target && e.target.closest && e.target.closest('[data-path], [data-open-path], [data-open-gloss], [data-gloss]');
+    if (!t) return;
+    if (t.hasAttribute('data-open-path')) { pathOpen(); return; }
+    if (t.hasAttribute('data-open-gloss')) { glossOpen(); return; }
+    if (t.dataset.gloss) {
+      const a = t.dataset.gloss;
+      if (a === 'close') glossClose();
+      else if (a === 'letter') { const el = document.getElementById('gloss-L-' + t.dataset.l); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+      else if (a === 'go') { glossClose(); try { hideHome(); } catch (er) {} switchToModule(+t.dataset.mod); window.scrollTo(0, 0); }
+      return;
+    }
+    const a = t.dataset.path, i = +t.dataset.i;
+    if (a === 'close') pathClose();
+    else if (a === 'go') pathGo(i);
+    else if (a === 'done') { const now = pathToggleDone(i); if (now) showToast('✔ Station geschafft!'); pathRender(); }
+    else if (a === 'hide') { const d = pathLoad(); d.hide = !d.hide; pathSave(d); pathRender(); showToast(d.hide ? 'Auf der Startseite ausgeblendet – über ⚙️ findest du die Ersten Schritte wieder.' : 'Wird wieder auf der Startseite gezeigt.'); }
+    else if (a === 'reset') { if (!confirm('Alle Häkchen entfernen und von vorn beginnen?')) return; const d = pathLoad(); d.done = []; pathSave(d); pathRender(); }
+    else if (a === 'gloss') { pathClose(); glossOpen(); }
+  });
+
+  // ---------- Wörterbuch ----------
+  const GLOSSARY = [
+    ['Akkord', 'Mehrere Töne (mindestens drei), die gleichzeitig klingen. Auf der Gitarre greift man dafür mehrere Saiten auf einmal.', 8],
+    ['Akkordfolge', 'Die Reihenfolge der Akkorde in einem Lied, zum Beispiel C – Am – F – G.', 13],
+    ['Anschlag (Strumming)', 'Mit der Hand oder einem Plektrum über mehrere Saiten streichen – abwärts (↓) oder aufwärts (↑).', 12],
+    ['Arpeggio', 'Die Töne eines Akkords nacheinander statt gleichzeitig spielen, also „gebrochen“.', null],
+    ['Barré', 'Ein Finger (meist der Zeigefinger) drückt mehrere Saiten im selben Bund gleichzeitig herunter. So lassen sich Griffe am Hals verschieben.', null],
+    ['Basston / Wechselbass', 'Der tiefste Ton eines Akkords, oft der Grundton. Beim Wechselbass spielt man abwechselnd zwei verschiedene Basstöne.', null],
+    ['BPM (Tempo)', '„Beats per Minute“ – wie viele Schläge pro Minute. 60 BPM = ein Schlag pro Sekunde. Je höher, desto schneller.', null],
+    ['Bund', 'Die Felder zwischen den Metallstäbchen auf dem Griffbrett. Jeder Bund macht einen Ton einen Halbton höher.', 1],
+    ['CAGED', 'Eine Methode, das Griffbrett zu ordnen: Die fünf offenen Griffe C, A, G, E und D lassen sich am Hals verschieben und decken zusammen das ganze Griffbrett ab.', 7],
+    ['Cent', 'Ein sehr kleiner Schritt der Tonhöhe: 100 Cent = ein Halbton. Das Stimmgerät zeigt, um wie viele Cent eine Saite zu hoch oder zu tief ist.', 11],
+    ['Dur', 'Akkord- oder Tonleiter-Art, die meist hell und fröhlich klingt. Kennzeichen: die große Terz (4 Halbtöne) über dem Grundton.', 6],
+    ['Ganzton', 'Zwei Halbtöne, auf der Gitarre also zwei Bünde.', null],
+    ['Griffbild', 'Zeichnung eines Griffs: Senkrechte Linien sind die Saiten, waagerechte die Bünde, Punkte zeigen, wo die Finger hinkommen. ○ = leere Saite, ✕ = nicht spielen.', null],
+    ['Grundton', 'Der Ton, nach dem ein Akkord oder eine Tonleiter benannt ist. Bei C-Dur ist es das C.', null],
+    ['H und B', 'Im Deutschen heißt der Ton zwischen A und C „H“. „B“ ist bei uns der Ton einen Halbton darunter (englisch B♭). Im Englischen heißt das H dagegen „B“.', null],
+    ['Halbton', 'Der kleinste Tonschritt in unserer Musik – auf der Gitarre genau ein Bund.', 1],
+    ['Improvisieren', 'Spontan eigene Melodien erfinden, meist mit den Tönen einer passenden Tonleiter.', 9],
+    ['Intervall', 'Der Abstand zwischen zwei Tönen, gemessen in Halbtönen – zum Beispiel Terz, Quinte oder Oktave.', 6],
+    ['Kammerton', 'Der Bezugston zum Stimmen: das A mit 440 Hz. Manche Gruppen stimmen etwas höher oder tiefer.', 11],
+    ['Kapodaster', 'Eine Klemme, die alle Saiten in einem Bund herunterdrückt. So klingt ein Lied höher, ohne die Griffe zu ändern.', null],
+    ['Leersaite', 'Eine Saite, die angeschlagen wird, ohne dass ein Finger sie greift. Im Griffbild als ○ gezeichnet.', null],
+    ['Metronom', 'Ein gleichmäßiger Klick, der das Tempo vorgibt – hilft, im Takt zu bleiben.', null],
+    ['Moll', 'Akkord- oder Tonleiter-Art, die meist weicher oder etwas traurig klingt. Kennzeichen: die kleine Terz (3 Halbtöne) über dem Grundton. Geschrieben mit „m“, z. B. Am.', 6],
+    ['Notensystem', 'Die fünf Linien, auf denen Noten stehen. Je höher die Note, desto höher der Ton. Gitarrenmusik klingt eine Oktave tiefer als notiert – darum die kleine 8 unter dem Notenschlüssel.', 5],
+    ['Oktave', 'Der Abstand von 12 Halbtönen. Beide Töne tragen denselben Namen, der obere klingt doppelt so hoch.', null],
+    ['Pentatonik', 'Eine Tonleiter mit nur fünf Tönen. Sie klingt fast immer passend und ist darum beliebt zum Improvisieren.', 7],
+    ['Quinte', 'Ein Intervall von 7 Halbtönen. Grundton und Quinte bilden das stabile „Gerüst“ fast jedes Akkords.', 2],
+    ['Quintenzirkel', 'Eine Kreis-Darstellung aller Tonarten. Benachbarte Tonarten sind eng verwandt – praktisch, um passende Akkorde zu finden.', 2],
+    ['Septakkord (7, maj7)', 'Ein Akkord mit einem vierten Ton, der Septime. „7“ klingt spannungsvoll und will weiter, „maj7“ klingt weich und schwebend.', 8],
+    ['Stufe (I – VII)', 'Die Nummer eines Akkords innerhalb einer Tonart. In C-Dur ist C die I., F die IV. und G die V. Stufe. So erkennt man, dass viele Lieder dieselben Muster benutzen.', 13],
+    ['sus-Akkord', 'Bei „sus2“ oder „sus4“ wird die Terz durch die Sekunde bzw. Quarte ersetzt. Der Akkord klingt offen, weder Dur noch Moll.', null],
+    ['Tab (Tabulatur)', 'Eine Schreibweise nur für Gitarre: Sechs Linien sind die Saiten (oben die hohe e-Saite), Zahlen sagen, welcher Bund gegriffen wird.', 12],
+    ['Takt / Taktart', 'Musik ist in gleich lange Abschnitte geteilt. 4/4 heißt: vier Schläge pro Takt, 3/4 (Walzer): drei Schläge.', null],
+    ['Terz', 'Ein Intervall von 3 Halbtönen (kleine Terz) oder 4 Halbtönen (große Terz). Sie entscheidet, ob ein Akkord nach Moll oder Dur klingt.', 2],
+    ['Tonart', 'Die „Heimat“ eines Liedes: ein Grundton plus Dur oder Moll, z. B. G-Dur. Sie bestimmt, welche Töne und Akkorde gut passen.', 13],
+    ['Tonleiter', 'Eine geordnete Reihe von Tönen, z. B. die Dur-Tonleiter mit sieben Tönen. Aus ihr entstehen Melodien und Akkorde.', 7],
+    ['Umkehrung (z. B. D/F♯)', 'Ein Akkord, bei dem nicht der Grundton, sondern ein anderer Akkordton im Bass liegt. Hinter dem Schrägstrich steht der Basston.', 13],
+    ['Zupfen (p, i, m, a)', 'Die Saiten einzeln mit den Fingern anschlagen. p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger.', 12]
+  ];
+  function glossOpen() { const o = pathOverlay('glossOverlay', 'glossPanel'); glossRender(); o.classList.add('open'); }
+  function glossClose() { const o = document.getElementById('glossOverlay'); if (o) o.classList.remove('open'); }
+  function glossRender() {
+    const box = document.getElementById('glossPanel'); if (!box) return;
+    const list = GLOSSARY.slice().sort((a, b) => a[0].localeCompare(b[0], 'de'));
+    const letters = [...new Set(list.map(x => x[0][0].toUpperCase()))];
+    const mods = [...moduleSelectEl.options].reduce((m, o) => { m[o.value] = o.text.replace(/^\d+\.\s*/, ''); return m; }, {});
+    let h = `<div class="pt-head"><h3>📖 Wörterbuch</h3><button type="button" class="btn btn-secondary" data-gloss="close">✕</button></div>
+      <p style="margin:8px 0;">Die wichtigsten Begriffe rund um Gitarre und Musik – in einfachen Worten.</p>
+      <div class="gloss-letters">${letters.map(l => `<button type="button" data-gloss="letter" data-l="${l}">${l}</button>`).join('')}</div>`;
+    let cur = '';
+    list.forEach(([t, txt, mod]) => {
+      const L = t[0].toUpperCase();
+      if (L !== cur) { cur = L; h += `<div class="gloss-L" id="gloss-L-${L}">${L}</div>`; }
+      h += `<div class="gloss-item"><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div>`;
+    });
+    box.innerHTML = h;
   }
 
 
@@ -12184,7 +12568,7 @@
 
   // =================== Akkordwechsel-Trainer (eigenes Modul) ===================
   const CHG_KEY = 'guitartrainer_chg';
-  const CHG_QUICK = ['C F', 'G C', 'Am F', 'D G', 'E Am', 'C G7', 'C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G'];
+  const CHG_QUICK = ['Em Am', 'C F', 'G C', 'Am F', 'D G', 'E Am', 'C G7', 'C Am F G', 'G D Em C', 'Am F C G', 'D A Hm G'];
   let chgState = null, chgPlaying = false, chgTimer = null, chgNext = 0, chgBeat = 0;
   function chgLoad() {
     const d = { chords: ['C', 'F'], beats: 4, tempos: {}, click: true };
@@ -12351,11 +12735,21 @@
     const text = d.mode === 'hours' ? `${since} drauf · ca. ${Math.round(hrs)} von ${d.hours} Std.` : `${since} drauf · Ziel ${d.weeks} Wochen`;
     return { d, ratio, level: ratio >= 1 ? 'due' : ratio >= 0.85 ? 'soon' : 'ok', text };
   }
+  // Startseite: nur wenn ein Wechsel bald fällig oder fällig ist
   function strHomeTile() {
     const st = strStatus();
-    if (!st) return `<button type="button" class="home-pt" id="homeStrBtn"><b>🎸</b><span><strong>Saiten</strong><br>Tipp hier, um deinen Saitenwechsel im Blick zu behalten.</span><span style="flex:0; white-space:nowrap; font-weight:700;">Einrichten ›</span></button>`;
+    return st && st.level !== 'ok' ? strTileHtml('homeStrBtn') : '';
+  }
+  function strTunerRefresh() {
+    const b = document.getElementById('tunerStrBox'); if (!b) return;
+    b.innerHTML = strTileHtml('tunerStrBtn');
+    const t = document.getElementById('tunerStrBtn'); if (t) t.addEventListener('click', () => strOpen());
+  }
+  function strTileHtml(id) {
+    const st = strStatus();
+    if (!st) return `<button type="button" class="home-pt" id="${id}"><b>🎸</b><span><strong>Saiten</strong><br>Tipp hier, um deinen Saitenwechsel im Blick zu behalten.</span><span style="flex:0; white-space:nowrap; font-weight:700;">Einrichten ›</span></button>`;
     const lab = st.level === 'due' ? 'Saitenwechsel fällig' : st.level === 'soon' ? 'Saitenwechsel bald fällig' : 'Saiten';
-    return `<button type="button" class="home-pt" id="homeStrBtn"><b>🎸</b><span style="flex:1;"><strong>${lab}</strong><br>${homeEsc(st.text)}<div class="str-bar ${st.level === 'ok' ? '' : st.level}"><i style="width:${Math.min(100, Math.round(st.ratio * 100))}%"></i></div></span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`;
+    return `<button type="button" class="home-pt" id="${id}"><b>🎸</b><span style="flex:1;"><strong>${lab}</strong><br>${homeEsc(st.text)}<div class="str-bar ${st.level === 'ok' ? '' : st.level}"><i style="width:${Math.min(100, Math.round(st.ratio * 100))}%"></i></div></span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`;
   }
   function strOpen() {
     let o = document.getElementById('strOverlay');
@@ -12367,7 +12761,32 @@
     }
     strRender(); o.classList.add('open');
   }
-  function strClose() { const o = document.getElementById('strOverlay'); if (o) o.classList.remove('open'); try { if (document.body.classList.contains('home-mode')) renderHome(); } catch (e) {} }
+  function strClose() { const o = document.getElementById('strOverlay'); if (o) o.classList.remove('open'); try { if (document.body.classList.contains('home-mode')) renderHome(); } catch (e) {} try { strTunerRefresh(); } catch (e) {} }
+  function strMarkChanged() {
+    const nd = { ...strLoad(), changed: ptDayKey(new Date()) }; delete nd.snooze; strSave(nd);
+    try { const L = diaryLoad(); L.push({ id: 'd_' + Date.now().toString(36), date: new Date().toISOString(), min: '', items: ['🎸 Saiten gewechselt' + (nd.brand ? ' (' + nd.brand + ')' : '')], note: '', mood: '' }); diarySave(L); } catch (e) {}
+    return nd;
+  }
+  // Freundlicher Hinweis beim Öffnen der App (nur wenn eingeschaltet, höchstens 1× am Tag)
+  function strMaybePopup() {
+    const d = strLoad(); if (!d || !d.popup) return;
+    const st = strStatus(); if (!st || st.level !== 'due') return;
+    const today = ptDayKey(new Date());
+    if (d.snooze && today < d.snooze) return;
+    if (d.lastPop === today) return;
+    strSave({ ...d, lastPop: today });
+    let o = document.getElementById('strPopOverlay');
+    if (!o) { o = document.createElement('div'); o.id = 'strPopOverlay'; o.className = 'pt-overlay'; document.body.appendChild(o); }
+    const since = st.text.split(' drauf')[0];
+    o.innerHTML = `<div class="pt-panel" style="max-width:460px;"><div class="pt-head"><h3>🎸 Saiten</h3></div>
+      <p style="font-size:1.05rem; margin:10px 0 14px;">Deine Saiten sind ${homeEsc(since)} drauf. Vielleicht wird es Zeit für neue?</p>
+      <div class="row" style="gap:8px; flex-wrap:wrap;"><button type="button" class="btn" id="strPopDone">✔ Neue Saiten sind drauf</button><button type="button" class="btn btn-secondary" id="strPopLater">Später erinnern</button></div>
+      <div style="font-size:.85rem; opacity:.75; margin-top:10px;">„Später erinnern“: der Hinweis kommt in einer Woche wieder.</div></div>`;
+    o.classList.add('open');
+    const close = () => { o.classList.remove('open'); try { if (document.body.classList.contains('home-mode')) renderHome(); } catch (e) {} try { strTunerRefresh(); } catch (e) {} };
+    document.getElementById('strPopLater').onclick = () => { const s2 = strLoad(); if (s2) { const t = new Date(); t.setDate(t.getDate() + 7); strSave({ ...s2, snooze: ptDayKey(t) }); } close(); };
+    document.getElementById('strPopDone').onclick = () => { strMarkChanged(); close(); showToast('🎸 Neue Saiten – viel Spaß!'); };
+  }
   function strRender() {
     const box = document.getElementById('strPanel'); if (!box) return;
     const cur = strLoad(), st = strStatus();
@@ -12375,7 +12794,7 @@
     let h = `<div class="pt-head"><h3>🎸 Saiten</h3><button type="button" class="btn btn-secondary" id="strCloseBtn">✕</button></div>`;
     if (st) h += `<div style="margin:10px 0;"><strong>${st.level === 'due' ? 'Wechsel fällig' : st.level === 'soon' ? 'Wechsel bald fällig' : 'Alles gut'}</strong> · ${homeEsc(st.text)}${d.brand ? ` · ${homeEsc(d.brand)}` : ''}
         <div class="str-bar ${st.level === 'ok' ? '' : st.level}"><i style="width:${Math.min(100, Math.round(st.ratio * 100))}%"></i></div></div>
-        <button type="button" class="btn" id="strDoneBtn">✔ Saiten gewechselt</button>`;
+        <button type="button" class="btn" id="strDoneBtn">✔ Neue Saiten sind drauf</button>`;
     h += `<div class="str-form">
       <label for="strType">Saitenart</label><select id="strType">${Object.entries(STR_TYPES).map(([k, t]) => `<option value="${k}" ${k === d.type ? 'selected' : ''}>${t.name}</option>`).join('')}</select>
       <label for="strChanged">Zuletzt gewechselt am</label><input type="date" id="strChanged" value="${d.changed}" max="${ptDayKey(new Date())}">
@@ -12384,6 +12803,8 @@
       <div id="strHoursRow"><label for="strHours">Wechseln nach … Spielstunden</label><input type="number" id="strHours" min="5" max="1000" value="${d.hours}">
         <label for="strMin">An Tagen ohne Timer: ca. Minuten pro Tag</label><input type="number" id="strMin" min="0" max="600" value="${d.minPerDay || 0}">
         <div style="font-size:.85rem; opacity:.8; margin-top:4px;">Tage mit Timer zählen mit der gemessenen Zeit. 0 = nur Timer-Zeit zählt.</div></div>
+      <label style="display:flex; gap:8px; align-items:center; margin-top:10px; font-weight:600;"><input type="checkbox" id="strPopup" ${d.popup ? 'checked' : ''}> Hinweis-Fenster, wenn ein Wechsel fällig ist</label>
+      <div style="font-size:.85rem; opacity:.8;">Erscheint dann höchstens einmal am Tag beim Öffnen der App.</div>
       <label for="strBrand">Marke / Stärke (freiwillig)</label><input type="text" id="strBrand" value="${homeEsc(d.brand || '')}" placeholder="z. B. Savarez 540R, normal tension">
       <div class="row" style="gap:8px; margin-top:12px;"><button type="button" class="btn ${st ? 'btn-secondary' : ''}" id="strSaveBtn">💾 Speichern</button></div>
       <details style="margin-top:14px;"><summary style="cursor:pointer; font-weight:600;">Woran erkenne ich alte Saiten?</summary>
@@ -12395,16 +12816,17 @@
     sync(); $s('strMode').addEventListener('change', sync);
     $s('strType').addEventListener('change', e => { const t = STR_TYPES[e.target.value]; $s('strWeeks').value = t.weeks; $s('strHours').value = t.hours; });
     $s('strCloseBtn').addEventListener('click', strClose);
+    $s('strPopup').addEventListener('change', e => { const c2 = strLoad(); if (c2) { strSave({ ...c2, popup: e.target.checked }); showToast(e.target.checked ? '🎸 Hinweis-Fenster ist an' : 'Hinweis-Fenster ist aus'); } });
     $s('strSaveBtn').addEventListener('click', () => {
-      const nd = { type: $s('strType').value, mode: $s('strMode').value, weeks: Math.max(1, Math.min(104, Math.round(+$s('strWeeks').value || 8))), hours: Math.max(5, Math.min(1000, Math.round(+$s('strHours').value || 60))), minPerDay: Math.max(0, Math.min(600, Math.round(+$s('strMin').value || 0))), changed: $s('strChanged').value || ptDayKey(new Date()), brand: $s('strBrand').value.trim() };
+      const nd = { type: $s('strType').value, mode: $s('strMode').value, weeks: Math.max(1, Math.min(104, Math.round(+$s('strWeeks').value || 8))), hours: Math.max(5, Math.min(1000, Math.round(+$s('strHours').value || 60))), minPerDay: Math.max(0, Math.min(600, Math.round(+$s('strMin').value || 0))), changed: $s('strChanged').value || ptDayKey(new Date()), brand: $s('strBrand').value.trim(), popup: $s('strPopup').checked };
+      if (cur && cur.snooze && cur.changed === nd.changed) nd.snooze = cur.snooze;
       if (nd.changed > ptDayKey(new Date())) nd.changed = ptDayKey(new Date());
       strSave(nd); strRender(); showToast('🎸 Gespeichert');
     });
     const done = $s('strDoneBtn');
     if (done) done.addEventListener('click', () => {
       if (!confirm('Saiten heute gewechselt? Der Zähler beginnt dann von vorn.')) return;
-      const nd = { ...strLoad(), changed: ptDayKey(new Date()) }; strSave(nd);
-      try { const L = diaryLoad(); L.push({ id: 'd_' + Date.now().toString(36), date: new Date().toISOString(), min: '', items: ['🎸 Saiten gewechselt' + (nd.brand ? ' (' + nd.brand + ')' : '')], note: '', mood: '' }); diarySave(L); } catch (e) {}
+      strMarkChanged();
       strRender(); showToast('🎸 Neue Saiten – viel Spaß!');
     });
   }
@@ -12538,7 +12960,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-11-6';
+  const APP_VERSION = '2026-10-12-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -12606,5 +13028,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a48df6954cceb1f7',t:'MTc5MTcyMjc0MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
