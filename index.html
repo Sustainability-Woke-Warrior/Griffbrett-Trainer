@@ -1499,6 +1499,13 @@
     .pt-week div { flex: 1; text-align: center; font-size: .75rem; }
     .pt-week i { display: block; background: var(--primary-color, #3b82f6); border-radius: 4px 4px 0 0; margin: 0 auto 2px; width: 70%; min-height: 2px; }
     .pt-week .today { font-weight: 800; }
+    .pth-row { display: grid; grid-template-columns: minmax(92px, 34%) 1fr auto; gap: 8px; align-items: center; font-size: .88rem; margin: 3px 0; }
+    .pth-row i { display: block; height: 10px; border-radius: 5px; background: var(--primary-color, #3b82f6); min-width: 2px; }
+    .pth-row b { font-weight: 600; white-space: nowrap; }
+    .pth-h { font-weight: 600; margin: 12px 0 2px; }
+    .pt-week.pth14 { gap: 3px; height: 82px; }
+    .pt-week.pth14 div { font-size: .68rem; line-height: 1.15; }
+    #ptHistDet > summary { cursor: pointer; font-weight: 600; }
     .pt-clock { border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 12px; margin: 8px 0; }
     .pt-clock summary { cursor: pointer; font-weight: 700; }
     .pt-clock .cw { display: flex; flex-direction: column; align-items: center; padding: 8px 0 2px; }
@@ -1747,7 +1754,7 @@
       <p>Diese Seite gibt dir einen schnellen Überblick über alle im Programm enthaltenen Module, deren Zwecke und Steuerungselemente.</p>
       <ul>
         <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben bringt dich „↪ Weiter mit“ zurück ins zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
-        <li><strong>⏱ Übungs-Timer (oben rechts):</strong> <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App sammelt deine Übungsminuten (heute/Woche). Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
+        <li><strong>⏱ Übungs-Timer (oben rechts):</strong> <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App speichert deine Übungsminuten dauerhaft. Unter „📈 Vergangene Tage &amp; Wochen“ siehst du die letzten 14 Tage, die letzten Wochen und Monate, die Gesamtzeit und was du am meisten geübt hast. Dieselbe Übersicht steht im Wochenplan unter „📊 Statistik“. Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
         <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Mit „Jetzt aktualisieren“ wird sie geladen. Deine Daten bleiben dabei erhalten.</li>
         <li><strong>⚙️ Einstellungen (oben rechts):</strong> Hier findest du Datensicherung, Schriftgröße, Hell/Dunkel und den Kammerton.</li>
         <li><strong>💾 Datensicherung (im ⚙️-Menü):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
@@ -1871,7 +1878,7 @@
       <ul>
         <li><strong>Griffe eintragen:</strong> Punkt antippen = setzen/entfernen, über den Saiten ○ = leer, ✕ = nicht spielen. Mit ◀ ▶ verschiebst du das Griffbild am Hals. „📖 aus Liste“ setzt einen fertigen Griff ein, „🔁 Griff“ zeigt eine andere Griffvariante.</li>
         <li><strong>Erkennung:</strong> Die App zeigt Akkordname, Töne, Stufe und eine kurze Notenzeile. Darunter stehen Tonart, die Aufgabe jedes Akkords, bekannte Folgen und passende Tonleitern zum Improvisieren.</li>
-        <li><strong>Anhören:</strong> Art wählen (Anschlag oder Zupfen), Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet.</li>
+        <li><strong>Anhören:</strong> Bei „Art“ einen einfachen Anschlag, ein einfaches Zupfen oder eines der Muster aus „Anschlag &amp; Zupfen“ wählen (auch deine eigenen). Bei einem Muster klingt jeder Akkord einen Takt lang in diesem Muster. Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet. „🥁 Mit Schlagzeug anhören“ öffnet die Folge mit dem Muster in „Anschlag &amp; Zupfen“ – dort spielt ein Schlagzeug mit.</li>
         <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen. Mit „🖨️ Drucken“ kommt die Ansicht aufs Papier (oder als PDF). Klappt das Drucken nicht, speichert „💾 Als Datei speichern“ die Ansicht als Datei – die öffnest du in Chrome und druckst sie von dort.</li>
         <li><strong>🎼 Noten mit Namen:</strong> Zeigt unter jedem Akkord die gegriffenen Töne als Noten nebeneinander (tief → hoch) mit ihrem Namen. Antippen spielt den Akkord Ton für Ton. Gilt beim Erstellen und in der großen Ansicht.</li>
         <li><strong>💾 Speichern / Gespeichert:</strong> Folgen unter einem Namen sichern und später wieder öffnen.</li>
@@ -1932,7 +1939,7 @@
         <li><strong>Akkorde:</strong> Einfach eintippen, z. B. „Am F C G“, oder einen Vorschlag antippen. „Takte pro Akkord“ legt fest, wie lange jeder Akkord bleibt.</li>
         <li><strong>📥 Aus meinen Akkordfolgen:</strong> Holt eine selbst erstellte Folge – mit deinen eigenen Griffen. Beim Zupfen zeigt die Tab dann genau deine Saiten. Tippst du die Akkorde danach von Hand um, gelten wieder die normalen Griffe.</li>
         <li><strong>Akkord beim Zupfen:</strong> Neben der Tab (auf schmalen Bildschirmen darüber) stehen der aktuelle Akkord mit Griffbild und „danach: …“.</li>
-        <li><strong>Abspielen:</strong> ▶ spielt das Muster mit Gitarrenklang, auf Wunsch mit Metronom-Klick und Einzähler. Die gerade gespielte Stelle leuchtet. Tipp: erst langsam, Tempo nur erhöhen, wenn es sich locker anfühlt.</li>
+        <li><strong>Abspielen:</strong> ▶ spielt das Muster mit Gitarrenklang, auf Wunsch mit Metronom-Klick und Einzähler. Bei „🥁 Schlagzeug“ kannst du eine Schlagzeug-Begleitung dazuschalten (z. B. Rock, Pop, Bossa Nova; bei Mustern, die nicht im 4/4-Takt sind, eine einfache passend zur Taktart). Die gerade gespielte Stelle leuchtet. Tipp: erst langsam, Tempo nur erhöhen, wenn es sich locker anfühlt.</li>
         <li><strong>✏️ Eigene Muster:</strong> „✏️ Eigenes Muster“ öffnet den Editor: Name, Taktart, Raster (Achtel, Sechzehntel, Triolen) und Tempo wählen, dann Kästchen antippen. Beim Anschlag wechselt jedes Antippen das Zeichen (· ↓ ↑ ✕ B¹ B²), beim Zupfen setzt es einen Punkt (Bass, Wechselbass, G-, H-, e-Saite) – mit Vorschau in Noten und Tabulatur. ▶ spielt schon während der Eingabe. Gespeicherte Muster stehen unter „✏️ Meine Muster“ und lassen sich bearbeiten oder löschen. „📋 Als Vorlage kopieren“ macht aus einem fertigen Muster ein eigenes zum Abwandeln. Deine Muster sind in der 💾-Sicherung enthalten.</li>
         <li><strong>🥁 Im Beat-Modul üben:</strong> Übernimmt Akkorde, Tempo und Taktart ins Beat-Modul. Dort spielt dann das Schlagzeug, und du spielst das Muster auf der Gitarre dazu.</li>
       </ul>
@@ -1980,7 +1987,7 @@
         <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern.</li>
         <li><strong>▶ Üben:</strong> Neben jeder Übung. Öffnet das Beat-Modul: Ein verknüpfter Beat wird geladen. Besteht der Name aus Akkorden (z. B. „Am F C G“), werden sie eingestellt, sonst wird ein passendes Song-Preset gesucht. Mit „🔗 Mit Übung verknüpfen“ merkt sich die App deinen Beat, mit „✓ Heute geübt“ wird der heutige Tag abgehakt. Es gibt keinen Timer.</li>
         <li><strong>Plan als Datei speichern / laden:</strong> Sichere deine Pläne als Datei auf deinem Gerät oder lade einen gesicherten Plan wieder.</li>
-        <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
+        <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Ganz oben steht deine Übungszeit mit dem ⏱-Timer (Tage, Wochen, Monate, insgesamt). Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
       </ul>
     </div>
   </div>
@@ -2315,7 +2322,7 @@
     </div>
 
     <details class="planner-stats" id="plannerStatsDetails">
-      <summary>📊 Statistik – was, seit wann, wie oft?</summary>
+      <summary>📊 Statistik – Übungszeit, was, seit wann, wie oft?</summary>
       <div id="plannerStats"></div>
     </details>
   </div>
@@ -5420,9 +5427,10 @@
     const po = progPlayOpts();
     h += `<div class="prog-row prog-playrow">
       <button type="button" class="btn" data-act="playall" id="progPlayBtn">${progPlayer.on ? '⏹ Stopp' : '▶ Anhören'}</button>
-      <label>Art: <select id="progPlayStyle"><option value="strum" ${po.style === 'strum' ? 'selected' : ''}>Anschlag</option><option value="arp" ${po.style === 'arp' ? 'selected' : ''}>Zupfen (Arpeggio)</option></select></label>
+      <label>Art: <select id="progPlayStyle" style="max-width:100%;">${progStyleOptionsHtml(po.style)}</select></label>
       <label>Tempo: <input type="range" id="progPlayBpm" min="40" max="160" step="5" value="${po.bpm}"> <span id="progBpmVal">${po.bpm}</span></label>
       <label><input type="checkbox" id="progPlayLoop" ${po.loop ? 'checked' : ''}> Wiederholen</label>
+      <button type="button" class="btn btn-secondary" data-act="drums" id="progDrumsBtn" style="${po.style.startsWith('pat:') ? '' : 'display:none;'}">🥁 Mit Schlagzeug anhören</button>
     </div>`;
     if (progState.saved.length) {
       const selI = progSelIdx !== null && progState.saved[progSelIdx] ? progSelIdx : progState.saved.findIndex(p => p.name === (dr.name || '').trim());
@@ -5583,10 +5591,76 @@
   function progPlayOpts() {
     if (!progState.play || typeof progState.play !== 'object') progState.play = {};
     const o = progState.play;
-    if (o.style !== 'arp') o.style = 'strum';
+    if (o.style !== 'arp' && !(typeof o.style === 'string' && o.style.startsWith('pat:') && progPatById(o.style.slice(4)))) o.style = 'strum';
     o.bpm = Math.min(160, Math.max(40, parseInt(o.bpm, 10) || 80));
     o.loop = !!o.loop;
     return o;
+  }
+  // Muster aus „Anschlag & Zupfen“ (auch eigene) für das Anhören der Akkordfolge
+  function progPatList() { try { if (!strumState) strumState = loadStrumState(); return strumAllPatterns(); } catch (e) { return []; } }
+  function progPatById(id) { return progPatList().find(p => p.id === id) || null; }
+  function progStyleOptionsHtml(cur) {
+    const L = progPatList();
+    const opt = (v, t) => `<option value="${homeEsc(v)}" ${v === cur ? 'selected' : ''}>${homeEsc(t)}</option>`;
+    let h = `<optgroup label="Einfach">${opt('strum', 'Anschlag (4 Abschläge)')}${opt('arp', 'Zupfen (Arpeggio)')}</optgroup>`;
+    let fav = () => false; try { fav = strumIsFav; } catch (e) {}
+    [['strum', '↕ Anschlag'], ['pick', '✋ Zupfen']].forEach(([k, kl]) => {
+      const ls = L.filter(p => p.kind === k);
+      const grp = (lab, arr) => { if (arr.length) h += `<optgroup label="${homeEsc(kl + ': ' + lab)}">${arr.map(p => opt('pat:' + p.id, `${p.name} (${p.sig})`)).join('')}</optgroup>`; };
+      grp('★ Favoriten', ls.filter(p => fav(p.id)));
+      grp('✏️ Meine Muster', ls.filter(p => p.level === 0));
+      grp('⭐ Einfach', ls.filter(p => p.level === 1));
+      grp('⭐⭐ Mittel', ls.filter(p => p.level === 2));
+      grp('⭐⭐⭐ Fortgeschritten', ls.filter(p => p.level === 3));
+      grp('🎵 Stile', ls.filter(p => p.level === 4));
+    });
+    return h;
+  }
+  // Ein Takt eines Akkords: { beats, sig, ev:[{beat, si, vel, sus, k, x}] }
+  function progBarInfo(c, o) {
+    const p = typeof o.style === 'string' && o.style.startsWith('pat:') ? progPatById(o.style.slice(4)) : null;
+    if (!p) return { beats: 4, sig: '4/4', unit: 2, ev: progChordEvents(c, o.style).map(e => ({ ...e, sus: o.style === 'arp' ? 2.0 : 1.5 })) };
+    const frets = c.frets, steps = strumSteps(p), ev = [];
+    steps.forEach((tok, i) => {
+      const first = i === 0, beat = i / p.unit;
+      if (p.kind === 'strum') {
+        if (tok === '-') return;
+        if (tok === 'x') { ev.push({ beat, x: true }); return; }
+        if (tok === 'b' || tok === 'B') {
+          const si = tok === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets);
+          if (frets[si] >= 0) ev.push({ beat, si, vel: first ? 1 : 0.85, sus: 1.8 });
+          return;
+        }
+        const down = tok === 'D' || tok === 'd';
+        const vel = (tok === 'D' || tok === 'U' ? 1 : 0.68) * (first ? 1.08 : 1) * (down ? 1 : 0.85);
+        let strs = [0, 1, 2, 3, 4, 5].filter(i2 => frets[i2] >= 0);
+        if (!down) strs = strs.filter(i2 => i2 >= 2).reverse();
+        strs.forEach((si, k) => ev.push({ beat, si, vel, sus: 1.5, k }));
+      } else {
+        strumParsePick(tok).forEach(hh => {
+          const si = strumResolveString(hh.s, frets);
+          if (si < 0 || !(frets[si] >= 0)) return;
+          ev.push({ beat, si, vel: (hh.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1), sus: 2.0 });
+        });
+      }
+    });
+    return { beats: steps.length / p.unit, sig: p.sig, unit: p.unit, ev };
+  }
+  // Akkordfolge mit dem gewählten Muster in „Anschlag & Zupfen“ öffnen – dort spielt das Schlagzeug mit
+  function progToStrumDrums() {
+    const o = progPlayOpts();
+    const p = o.style.startsWith('pat:') ? progPatById(o.style.slice(4)) : null;
+    if (!p) { showToast('Wähle zuerst bei „Art“ ein Muster.'); return; }
+    if (!progState.draft.chords.some(c => progDetect(c))) { showToast('Trag zuerst einen Griff ein.'); return; }
+    if (progPlayer.on) progPlayStop();
+    if (!strumState) strumState = loadStrumState();
+    strumState.kind = p.kind; strumState.id = p.id; strumState.bpc = 1;
+    strumState.bpm = o.bpm; strumState.tempos = strumState.tempos || {}; strumState.tempos[p.id] = o.bpm;
+    if (!strumState.drum || strumState.drum === 'off') strumState.drum = 'default';
+    saveStrumState();
+    if (!strumImportFrom(progState.draft)) return;
+    try { switchToModule(12); } catch (e) {}
+    setTimeout(() => showToast('🥁 Übernommen – tippe auf „▶ Abspielen“. Den Schlagzeug-Stil wählst du bei „🥁 Schlagzeug“.'), 400);
   }
   function progSounding(c) { return [0, 1, 2, 3, 4, 5].filter(si => c.frets[si] >= 0); }
   // Ereignisse eines Akkords (ein 4/4-Takt): [{beat, si, vel}]
@@ -5623,18 +5697,23 @@
     const tick = () => {
       const box = document.getElementById('progBox');
       if (!progPlayer.on || !box || !box.open || box.style.display === 'none') { progPlayStop(); return; }
-      const o = progPlayOpts(), beat = 60 / o.bpm, bar = 4 * beat;
+      const o = progPlayOpts(), beat = 60 / o.bpm;
       while (progPlayer.on && progPlayer.next < audioCtx.currentTime + 0.2) {
         if (progPlayer.idx >= progPlayer.list.length) {
           if (o.loop) progPlayer.idx = 0;
           else { const end = progPlayer.next; progPlayer.tos.push(setTimeout(progPlayStop, Math.max(0, (end - audioCtx.currentTime) * 1000))); clearInterval(progPlayer.iv); progPlayer.iv = null; return; }
         }
         const ci = progPlayer.list[progPlayer.idx], c = progState.draft.chords[ci], t0 = progPlayer.next;
+        let bar = 4 * beat;
         if (c) {
           const gapS = jamLowPerf() ? 0.016 : 0.011;
-          progChordEvents(c, o.style).forEach(ev => {
+          const info = progBarInfo(c, o); bar = info.beats * beat;
+          info.ev.forEach(ev => {
             const t = t0 + ev.beat * beat + (ev.k || 0) * gapS;
-            try { strumDamp(audioCtx, t, ev.si); strumPluck(audioCtx, JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], t, ev.vel, ev.si, o.style === 'arp' ? 2.0 : 1.5); } catch (e) {}
+            try {
+              if (ev.x) { strumDamp(audioCtx, t); strumChuck(audioCtx, t, 0.8); }
+              else { strumDamp(audioCtx, t, ev.si); strumPluck(audioCtx, JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], t, ev.vel, ev.si, ev.sus); }
+            } catch (e) {}
           });
           progPlayer.tos.push(setTimeout(() => { progPlayer.cur = ci; progMarkPlaying(); }, Math.max(0, (t0 - audioCtx.currentTime) * 1000)));
         }
@@ -5649,12 +5728,15 @@
   function progMidiBytes() {
     const dr = progState.draft, o = progPlayOpts(), TPQ = 480;
     const notes = [];
-    let k = 0;
+    let pos = 0, sig = '4/4', tpb = TPQ;
     dr.chords.forEach(c => {
       if (!progSounding(c).length) return;
-      const barStart = k * 4 * TPQ, barEnd = barStart + 4 * TPQ;
-      progChordEvents(c, o.style).forEach(ev => notes.push({ on: barStart + Math.round(ev.beat * TPQ) + (ev.k || 0) * 8, p: JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], vel: Math.round(ev.vel * 100), barEnd }));
-      k++;
+      const info = progBarInfo(c, o);
+      sig = info.sig;
+      tpb = (/\/8$/.test(info.sig) && info.unit === 3) ? TPQ * 1.5 : TPQ;     // 6/8, 9/8, 12/8: Schlag = punktierte Viertel
+      const barStart = pos, barEnd = barStart + Math.round(info.beats * tpb);
+      info.ev.forEach(ev => { if (!ev.x) notes.push({ on: barStart + Math.round(ev.beat * tpb) + (ev.k || 0) * 8, p: JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], vel: Math.min(127, Math.round(ev.vel * 100)), barEnd }); });
+      pos = barEnd;
     });
     if (!notes.length) return null;
     notes.sort((a, b) => a.on - b.on);
@@ -5670,9 +5752,9 @@
     const tr = [];
     const name = Array.from(new TextEncoder().encode((dr.name || '').trim() || 'Akkordfolge'));
     tr.push(0, 0xff, 0x03, ...vlq(name.length), ...name);
-    const us = Math.round(60000000 / o.bpm);
+    const us = Math.round(60000000 / o.bpm * TPQ / tpb);
     tr.push(0, 0xff, 0x51, 0x03, (us >> 16) & 255, (us >> 8) & 255, us & 255);
-    tr.push(0, 0xff, 0x58, 0x04, 4, 2, 24, 8);
+    { const [sn, sd] = sig.split('/').map(Number); tr.push(0, 0xff, 0x58, 0x04, sn || 4, Math.round(Math.log2(sd || 4)), 24, 8); }
     tr.push(0, 0xc0, 24);                                  // Nylon-Gitarre
     let last = 0;
     evs.forEach(e => { tr.push(...vlq(e.t - last), ...e.b); last = e.t; });
@@ -5896,6 +5978,7 @@
       else if (act === 'arp' && c) { progPlayArp(c); return; }
       else if (act === 'playall') { try { if (progPlayer.on) progPlayStop(); else progPlayStart(); } catch (er) { console.error(er); } return; }
       else if (act === 'midi') { progMidiExport(); return; }
+      else if (act === 'drums') { progToStrumDrums(); return; }
       else if (act === 'chg') { if (chgImportFrom(dr)) { switchToModule(14); window.scrollTo(0, 0); } return; }
       else if (act === 'more') { progMoreOpen = !progMoreOpen; progRender(); return; }
       else if (act === 'grip' && c) {
@@ -5963,7 +6046,17 @@
     }
     else if (e.target.id === 'progNotesTog') { progState.notes = e.target.checked; progSave(); progRender(); }
     else if (e.target.id === 'progSavedSel') { progSelIdx = parseInt(e.target.value, 10); }
-    else if (e.target.id === 'progPlayStyle') { progPlayOpts().style = e.target.value; progSave(); }
+    else if (e.target.id === 'progPlayStyle') {
+      const o = progPlayOpts(); o.style = e.target.value;
+      const p = o.style.startsWith('pat:') ? progPatById(o.style.slice(4)) : null;
+      if (p && p.bpm) {
+        o.bpm = Math.min(160, Math.max(40, Math.round(p.bpm / 5) * 5));
+        const r = document.getElementById('progPlayBpm'); if (r) r.value = o.bpm;
+        const v = document.getElementById('progBpmVal'); if (v) v.textContent = o.bpm;
+      }
+      const db = document.getElementById('progDrumsBtn'); if (db) db.style.display = p ? '' : 'none';
+      progSave();
+    }
     else if (e.target.id === 'progPlayLoop') { progPlayOpts().loop = e.target.checked; progSave(); }
     else if (e.target.id === 'progPlayBpm') { progSave(); }
   });
@@ -9771,7 +9864,7 @@
   let strumPlaying = false, strumTimer = null, strumNext = 0, strumStep = 0, strumBar = 0, strumVoices = [], strumOut = null, strumOutCtx = null;
 
   function loadStrumState() {
-    const d = { kind: 'strum', id: 's_pop', chords: 'C Am F G', bpc: 1, bpm: null, click: true, countIn: true };
+    const d = { kind: 'strum', id: 's_pop', chords: 'C Am F G', bpc: 1, bpm: null, click: true, countIn: true, drum: 'off' };
     try { Object.assign(d, JSON.parse(localStorage.getItem(STRUM_KEY) || '{}')); } catch (e) {}
     if (!strumAllPatterns().find(p => p.id === d.id)) d.id = 's_pop';
     return d;
@@ -10103,6 +10196,32 @@
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
     o.connect(g); g.connect(out); o.start(t); o.stop(t + 0.07);
   }
+  // Schlagzeug-Begleitung (Klänge aus dem Beat-Modul)
+  const STRUM_DRUM_STYLES = [['off', 'Aus'], ['default', 'Einfach (passend zur Taktart)'], ['rock', 'Rock'], ['pop', 'Pop'], ['funk', 'Funk'], ['soul', 'Soul'], ['bossa', 'Bossa Nova'], ['reggae', 'Reggae'], ['jazz', 'Jazz'], ['disco', 'Disco']];
+  let strumDrumCache = { key: '', pat: null, n: 0 };
+  function strumDrumPat(p) {
+    const d = (strumState && strumState.drum) || 'off';
+    if (d === 'off' || typeof JAM_TIME_SIGS === 'undefined' || !JAM_TIME_SIGS[p.sig]) return null;
+    const style = p.sig === '4/4' ? d : 'default';
+    const key = style + '|' + p.sig;
+    if (strumDrumCache.key !== key) {
+      let pat = null; try { pat = getPatternForStyle(style, p.sig); } catch (e) {}
+      strumDrumCache = { key, pat, n: JAM_TIME_SIGS[p.sig].steps };
+    }
+    return strumDrumCache.pat ? strumDrumCache : null;
+  }
+  function strumDrumStep(ctx, p, N, i, t, sd) {
+    const dc = strumDrumPat(p); if (!dc) return;
+    const D = dc.n, pat = dc.pat, V = JAM_DEFAULT_VOLUMES, f = 0.35;
+    for (let j = Math.ceil(i * D / N - 1e-9); j < (i + 1) * D / N - 1e-9; j++) {
+      const tt = t + (j * N / D - i) * sd;
+      try {
+        if (pat.kick && pat.kick[j]) jamPlayKick(tt, V.kick * f, 0.5, ctx);
+        if (pat.snare && pat.snare[j]) jamPlaySnare(tt, V.snare * f, 0.5, ctx);
+        if (pat.hihat && pat.hihat[j]) jamPlayHihat(tt, V.hihat * f, 0.5, ctx);
+      } catch (e) {}
+    }
+  }
   function strumPlayStep(ctx, p, chord, stepIdx, t) {
     const tok = strumSteps(p)[stepIdx];
     const frets = strumFingering(chord);
@@ -10153,6 +10272,7 @@
       }
       const chord = strumPreview ? chords[0] : strumChordAt(chords, strumBar);
       strumPlayStep(audioCtx, p, chord, strumStep, strumNext);
+      if (!strumPreview) strumDrumStep(audioCtx, p, steps.length, strumStep, strumNext, sd);
       if (strumState.click && strumIsBeat(p, strumStep)) strumClick(audioCtx, strumNext, strumStep === 0);
       const st = strumStep, bar = strumBar, delay = Math.max(0, (strumNext - audioCtx.currentTime) * 1000);
       setTimeout(() => { if (strumPlaying) strumShowStep(st, bar); }, delay);
@@ -10502,6 +10622,7 @@
         <button type="button" class="strum-chip" id="strumTempoReset" title="Zurück auf das normale Tempo (${p.bpm} BPM)" style="visibility:${!strumEdit && strumBpm() !== p.bpm ? 'visible' : 'hidden'};">↺</button></div>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
+      <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;">🥁 Schlagzeug: <select id="strumDrum" style="${sel}">${STRUM_DRUM_STYLES.filter(x => p.sig === '4/4' || x[0] === 'off' || x[0] === 'default').map(([v, l]) => `<option value="${v}" ${v === (p.sig === '4/4' || strumState.drum === 'off' ? (strumState.drum || 'off') : 'default') ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
     </div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:12px;">
       <label style="font-weight:600;">Akkorde:</label>
@@ -10558,6 +10679,7 @@
     });
     document.getElementById('strumClick').addEventListener('change', e => { strumState.click = e.target.checked; saveStrumState(); });
     document.getElementById('strumCountIn').addEventListener('change', e => { strumState.countIn = e.target.checked; saveStrumState(); });
+    document.getElementById('strumDrum').addEventListener('change', e => { strumState.drum = e.target.value; saveStrumState(); });
     const ci = document.getElementById('strumChordsInput');
     const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = strumGridAt(0); } restart(); };
     ci.addEventListener('change', applyChords);
@@ -11067,7 +11189,9 @@
     const favDay = maxWd > 0 ? dayNames[st.weekdayCount.indexOf(maxWd)] : '–';
     const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-    let html = `<div class="pst-cards">
+    let html = '';
+    try { html += `<div class="pth-h" style="margin-top:4px;">⏱ Übungszeit mit dem Timer</div>${ptHistInner()}<div class="pth-h" style="margin-top:16px;">✅ Abgehakte Übungen</div>`; } catch (e) {}
+    html += `<div class="pst-cards">
       <div class="pst-card"><b>${st.totalDays}</b><span>Übungstage insgesamt</span></div>
       <div class="pst-card"><b>${st.streak}${st.streak >= 3 ? ' 🔥' : ''}</b><span>Tage am Stück (aktuell)</span></div>
       <div class="pst-card"><b>${st.best}</b><span>längste Serie</span></div>
@@ -11850,6 +11974,62 @@
     for (let i = 0; i < 7; i++) { const d = new Date(mon); d.setDate(mon.getDate() + i); const k = ptDayKey(d); const v = ptData.days[k] || 0; days.push({ k, v, today: k === ptDayKey(now) }); week += v; }
     return { today: ptData.days[ptDayKey(now)] || 0, week, days };
   }
+  // Übersicht über vergangene Tage, Wochen und Monate (Timer + Wochenplan-Statistik)
+  let ptHistOpen = false;
+  function ptHistInner() {
+    const days = (ptData && ptData.days) || {};
+    const keys = Object.keys(days).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k) && days[k] >= 30).sort();
+    if (!keys.length) return '<div style="opacity:.8; margin-top:6px;">Noch keine Übungszeit gespeichert. Starte den ⏱-Timer – danach erscheint hier deine Übersicht.</div>';
+    const fm = sec => sec >= 60 ? ptFmtMin(sec) : '–';
+    const now = new Date(); now.setHours(12, 0, 0, 0);
+    const dayOf = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+    const sumRange = (a, b) => { let t = 0; const d = new Date(a); while (d <= b) { t += +days[ptDayKey(d)] || 0; d.setDate(d.getDate() + 1); } return t; };
+    let total = 0; for (const k in days) total += +days[k] || 0;
+    const month = sumRange(new Date(now.getFullYear(), now.getMonth(), 1, 12), now);
+    const first = dayOf(keys[0]);
+    let h = `<div class="pst-cards">
+      <div class="pst-card"><b>${fm(month)}</b><span>diesen Monat</span></div>
+      <div class="pst-card"><b>${fm(total)}</b><span>insgesamt seit ${first.toLocaleDateString('de-DE')}</span></div>
+      <div class="pst-card"><b>${keys.length}</b><span>Tage mit Timer</span></div>
+      <div class="pst-card"><b>${fm(total / keys.length)}</b><span>im Schnitt pro Übungstag</span></div></div>`;
+    // letzte 14 Tage
+    const d14 = [];
+    for (let i = 13; i >= 0; i--) { const d = new Date(now); d.setDate(now.getDate() - i); d14.push({ d, v: +days[ptDayKey(d)] || 0 }); }
+    const max14 = Math.max(60, ...d14.map(x => x.v));
+    h += `<div class="pth-h">Letzte 14 Tage</div><div class="pt-week pth14">${d14.map((x, i) => `<div class="${i === 13 ? 'today' : ''}"><i style="height:${Math.round(44 * x.v / max14)}px"></i>${['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'][x.d.getDay()]}<br>${x.d.getDate()}.<br>${Math.floor(x.v / 60)}</div>`).join('')}</div>
+      <div style="font-size:.78rem; opacity:.7;">Unter jedem Balken: Wochentag, Datum, Minuten.</div>`;
+    // letzte 8 Wochen
+    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const wk = [];
+    for (let i = 0; i < 8; i++) {
+      const a = new Date(mon); a.setDate(mon.getDate() - 7 * i); const b = new Date(a); b.setDate(a.getDate() + 6);
+      if (b < first) break;
+      const lab = i === 0 ? 'diese Woche' : i === 1 ? 'letzte Woche' : `${a.getDate()}.${a.getMonth() + 1}.–${b.getDate()}.${b.getMonth() + 1}.`;
+      wk.push({ lab, v: sumRange(a, b > now ? now : b) });
+    }
+    const maxW = Math.max(60, ...wk.map(x => x.v));
+    h += `<div class="pth-h">Wochen</div>` + wk.map(x => `<div class="pth-row"><span>${x.lab}</span><i style="width:${Math.max(1, Math.round(100 * x.v / maxW))}%"></i><b>${fm(x.v)}</b></div>`).join('');
+    // Monate
+    const mo = [];
+    for (let i = 0; i < 6; i++) {
+      const a = new Date(now.getFullYear(), now.getMonth() - i, 1, 12), b = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 12);
+      if (b < first) break;
+      mo.push({ lab: a.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' }), v: sumRange(a, b > now ? now : b) });
+    }
+    if (mo.length > 1) {
+      const maxM = Math.max(60, ...mo.map(x => x.v));
+      h += `<div class="pth-h">Monate</div>` + mo.map(x => `<div class="pth-row"><span>${x.lab}</span><i style="width:${Math.max(1, Math.round(100 * x.v / maxM))}%"></i><b>${fm(x.v)}</b></div>`).join('');
+    }
+    // meistgeübt (letzte 4 Wochen, nur mit Timer bei einer Übung)
+    const exT = {};
+    for (let i = 0; i < 28; i++) { const d = new Date(now); d.setDate(now.getDate() - i); const e = (ptData.ex || {})[ptDayKey(d)] || {}; for (const n in e) exT[n] = (exT[n] || 0) + (+e[n] || 0); }
+    const top = Object.entries(exT).filter(e => e[1] >= 60).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    if (top.length) {
+      const maxE = top[0][1];
+      h += `<div class="pth-h">Am meisten geübt (letzte 4 Wochen)</div>` + top.map(([n, v]) => `<div class="pth-row"><span>${homeEsc(n)}</span><i style="width:${Math.max(1, Math.round(100 * v / maxE))}%"></i><b>${fm(v)}</b></div>`).join('');
+    }
+    return h;
+  }
   function ptFmtMin(sec) { const m = Math.floor(sec / 60); return m < 60 ? m + ' Min.' : Math.floor(m / 60) + ' Std. ' + (m % 60) + ' Min.'; }
   function ptFmt(ms) { const s = Math.max(0, Math.round(ms / 1000)); const m = Math.floor(s / 60); return (m >= 60 ? Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') : m) + ':' + String(s % 60).padStart(2, '0'); }
   function ptElapsed() { return pt.accum + (pt.running && !pt.paused ? Date.now() - pt.startedAt : 0); }
@@ -12072,6 +12252,8 @@
     h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div>
       <div class="pt-week">${s.days.map((d, i) => `<div class="${d.today ? 'today' : ''}"><i style="height:${Math.round(48 * d.v / max)}px"></i>${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][i]}<br>${Math.floor(d.v / 60)}</div>`).join('')}</div>
       <div style="font-size:.8rem; opacity:.7; margin-top:4px;">Minuten pro Tag, diese Woche.</div></div>`;
+    h += `<details class="pt-box" id="ptHistDet" ${ptHistOpen ? 'open' : ''}><summary>📈 Vergangene Tage &amp; Wochen</summary>${ptHistInner()}
+      <div style="margin-top:10px;"><button type="button" class="btn btn-secondary" id="ptHistCal">📅 Kalender im Wochenplan öffnen</button></div></details>`;
     h += `<div class="pt-box"><strong>Einstellungen</strong>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptChime" ${ptData.set.chime ? 'checked' : ''}> Sanfter Ton am Ende</label></div>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptBrk" ${ptData.set.brk ? 'checked' : ''}> Pausen-Erinnerung nach</label>
@@ -12080,6 +12262,11 @@
     ptClockTick();
     const on = (id, f, ev = 'click') => { const el = document.getElementById(id); if (el) el.addEventListener(ev, f); };
     on('ptCloseBtn', ptClose);
+    on('ptHistCal', () => {
+      ptClose();
+      try { hideHome(); switchToModule(10); } catch (e) {}
+      setTimeout(() => { const cd = document.getElementById('plannerCalDet'); if (cd) { cd.open = true; try { cd.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} } }, 200);
+    });
     p.querySelectorAll('[data-ptmode]').forEach(b => b.addEventListener('click', () => { pt.mode = b.dataset.ptmode; ptData.set.mode = pt.mode; ptSave(); ptRender(); }));
     p.querySelectorAll('[data-ptmin]').forEach(b => b.addEventListener('click', () => { ptData.set.downMin = +b.dataset.ptmin; ptSave(); ptRender(); }));
     on('ptMinInput', e => { const v = Math.round(+e.target.value); if (v >= 1 && v <= 180) { ptData.set.downMin = v; ptSave(); ptRender(); } }, 'change');
@@ -12105,7 +12292,7 @@
     const o = document.createElement('div'); o.id = 'ptOverlay'; o.className = 'pt-overlay';
     o.innerHTML = '<div class="pt-panel" id="ptPanel"></div>';
     o.addEventListener('click', e => { if (e.target === o) ptClose(); });
-    o.addEventListener('toggle', e => { if (e.target && e.target.id === 'ptClockDet') { try { localStorage.setItem(PT_CLOCK_KEY, e.target.open ? '1' : '0'); } catch (err) {} ptClockTick(); } }, true);
+    o.addEventListener('toggle', e => { if (e.target && e.target.id === 'ptHistDet') ptHistOpen = e.target.open; if (e.target && e.target.id === 'ptClockDet') { try { localStorage.setItem(PT_CLOCK_KEY, e.target.open ? '1' : '0'); } catch (err) {} ptClockTick(); } }, true);
     document.body.appendChild(o);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
@@ -12960,7 +13147,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-12-4';
+  const APP_VERSION = '2026-10-17-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -13028,5 +13215,5 @@
     });
   }
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bdea60c988bbc2',t:'MTc5MjIyNTU1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
