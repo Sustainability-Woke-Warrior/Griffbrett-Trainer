@@ -5782,11 +5782,13 @@
   function progBigSvg(c, d) {
     const played = c.frets.filter(f => f > 0);
     const maxF = played.length ? Math.max(...played) : 0, minF = played.length ? Math.min(...played) : 1;
-    const start = maxF <= 5 ? 1 : minF;
-    const W = 240, H = 290, L = 36, T = 48, gx = 36, gy = 44;
+    // gleicher Bund-Ausschnitt wie im Bearbeiten-Fenster; nur falls ein Ton außerhalb läge, automatisch wählen
+    let start = Math.max(1, Math.min(12, parseInt(c.start, 10) || 1));
+    if (played.some(f => f < start || f >= start + 5)) start = maxF <= 5 ? 1 : minF;
+    const W = 240, H = 300, L = 36, T = 48, gx = 36, gy = 44;
     let g = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
     if (start === 1) g += `<rect x="${L - 2}" y="${T - 8}" width="${gx * 5 + 4}" height="8" fill="#0f172a"/>`;
-    else g += `<text x="${L - 10}" y="${T + gy * 0.62}" font-size="20" font-weight="700" fill="#0f172a" text-anchor="end">${start}</text>`;
+    for (let r = 0; r < 5; r++) g += `<text x="${L - 9}" y="${T + gy * (r + 0.5) + 6}" font-size="${r === 0 ? 18 : 15}" font-weight="${r === 0 ? 700 : 600}" fill="${r === 0 ? '#0f172a' : '#64748b'}" text-anchor="end">${start + r}</text>`;
     for (let i = 0; i <= 5; i++) g += `<line x1="${L}" y1="${T + i * gy}" x2="${L + gx * 5}" y2="${T + i * gy}" stroke="#334155" stroke-width="2"/>`;
     for (let si = 0; si < 6; si++) g += `<line x1="${L + si * gx}" y1="${T}" x2="${L + si * gx}" y2="${T + gy * 5}" stroke="#0f172a" stroke-width="${2.6 - si * 0.25}"/>`;
     c.frets.forEach((f, si) => {
@@ -13147,7 +13149,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-17-1';
+  const APP_VERSION = '2026-10-17-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -13215,5 +13217,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bdea60c988bbc2',t:'MTc5MjIyNTU1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4c6826e89a0ab9f',t:'MTc5MjMxNTY3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
