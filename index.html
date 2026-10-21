@@ -1539,6 +1539,21 @@
     .gloss-L { margin: 14px 0 2px; font-size: .85rem; font-weight: 800; color: var(--accent-color); scroll-margin-top: 10px; }
     .gloss-item { padding: 8px 0; border-bottom: 1px solid var(--card-border); }
     .gloss-item p { margin: 3px 0 0; font-size: .92rem; line-height: 1.45; }
+    .gloss-tabs { display: flex; gap: 6px; margin: 8px 0; flex-wrap: wrap; }
+    .gloss-card { padding: 14px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--card-bg); }
+    .gloss-card .gloss-L { scroll-margin-top: 70px; }
+    @media (min-width: 900px) {
+      .gloss-list { columns: 2; column-gap: 28px; }
+      .gloss-list .gloss-item, .gloss-list .gloss-L { break-inside: avoid; }
+      .gloss-list .gloss-L { break-after: avoid; }
+      .gloss-sec-body { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; }
+    }
+    .gloss-tabs .btn { flex: 1 1 160px; }
+    .gloss-sec { border: 1px solid var(--card-border); border-radius: 12px; margin: 8px 0; padding: 0 10px; }
+    .gloss-sec > summary { cursor: pointer; font-weight: 700; padding: 10px 0; }
+    .gloss-n { display: flex; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--card-border); }
+    .gloss-n p { margin: 3px 0 0; font-size: .92rem; line-height: 1.45; }
+    .gl-ico { flex: 0 0 84px; width: 84px; height: 62px; color: var(--text-color); background: rgba(127,127,127,0.10); border-radius: 8px; overflow: visible; }
     .home-pt { display: flex; width: 100%; align-items: center; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 1rem; text-align: left; cursor: pointer; }
     .home-pt b { font-size: 1.4rem; }
     .home-pt span { flex: 1; }
@@ -1582,28 +1597,29 @@
       <select id="moduleSelect" class="module-select">
         <optgroup label="Lernen">
           <option value="0">1. Anleitung</option>
-          <option value="2">2. Musiktheorie</option>
-          <option value="1">3. Griffbrett-Theorie</option>
+          <option value="15">2. Wörterbuch</option>
+          <option value="2">3. Musiktheorie</option>
+          <option value="1">4. Griffbrett-Theorie</option>
         </optgroup>
         <optgroup label="Griffbrett üben">
-          <option value="3">4. Alle Töne</option>
-          <option value="4">5. Töne erraten</option>
-          <option value="5">6. Noten lesen &amp; finden</option>
-          <option value="6">7. Gehörbildung</option>
-          <option value="7">8. Tonleitern</option>
+          <option value="3">5. Alle Töne</option>
+          <option value="4">6. Töne erraten</option>
+          <option value="5">7. Noten lesen &amp; finden</option>
+          <option value="6">8. Gehörbildung</option>
+          <option value="7">9. Tonleitern</option>
         </optgroup>
         <optgroup label="Akkorde">
-          <option value="8">9. Akkord-Labor</option>
-          <option value="13">10. Akkordfolgen erstellen</option>
-          <option value="14">11. Akkordwechsel-Trainer</option>
+          <option value="8">10. Akkord-Labor</option>
+          <option value="13">11. Akkordfolgen erstellen</option>
+          <option value="14">12. Akkordwechsel-Trainer</option>
         </optgroup>
         <optgroup label="Spielen">
-          <option value="9">12. Beat &amp; Jam</option>
-          <option value="12">13. Anschlag &amp; Zupfen</option>
-          <option value="11">14. Stimmgerät</option>
+          <option value="9">13. Beat &amp; Jam</option>
+          <option value="12">14. Anschlag &amp; Zupfen</option>
+          <option value="11">15. Stimmgerät</option>
         </optgroup>
         <optgroup label="Planen">
-          <option value="10">15. Wochenplan</option>
+          <option value="10">16. Wochenplan</option>
         </optgroup>
       </select>
     </div>
@@ -1720,9 +1736,10 @@
   <div id="tunerRoot" style="display:none;"></div>
   <div id="strumRoot" style="display:none;"></div>
   <div id="earRoot" style="display:none;"></div>
+  <div id="glossRoot" style="display:none;"></div>
 
   <div class="theory-box" id="instructionBox">
-    <h2>1. Chronologische Anleitung zur Bedienung des Trainers</h2>
+    <h2>Chronologische Anleitung zur Bedienung des Trainers</h2>
     <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt.</p>
 
     <div class="module-block">
@@ -1740,7 +1757,7 @@
         <li><strong>Gitarre stimmen:</strong> 🎚️ Stimmgerät · <strong>Saitenwechsel:</strong> 🎚️ Stimmgerät → 🎸 Saiten</li>
         <li><strong>Übungen planen, Kalender, Zeit pro Übung:</strong> 📅 Wochenplan</li>
         <li><strong>Übungszeit messen:</strong> ⏱ oben rechts · <strong>Tagebuch:</strong> 📓 oben rechts</li>
-        <li><strong>Wie fange ich an?</strong> <button type="button" class="theory-chip" data-open-path>🚀 Erste Schritte</button> · <strong>Begriffe erklärt:</strong> <button type="button" class="theory-chip" data-open-gloss>📖 Wörterbuch</button> (beides auch über ⚙️)</li>
+        <li><strong>Wie fange ich an?</strong> <button type="button" class="theory-chip" data-open-path>🚀 Erste Schritte</button> · <strong>Begriffe und Notenzeichen erklärt:</strong> <button type="button" class="theory-chip" data-open-gloss>📖 Wörterbuch</button> – ein eigenes Modul in der Gruppe „Lernen“ (Reiter „🎼 Noten &amp; Zeichen“ für alle Zeichen in Noten, auch speziell für klassische Gitarre). Öffnest du es aus einer Übung heraus, bringt dich „↩ Zurück zu …“ wieder dorthin. (beides auch über ⚙️)</li>
         <li><strong>Datensicherung, Schriftgröße, Hell/Dunkel, Kammerton:</strong> ⚙️ oben rechts</li>
       </ul>
     </div>
@@ -1833,7 +1850,7 @@
         <li><strong>Töne einzeln:</strong> Mit „Ton 1“, „Ton 2“ … hörst du jeden Ton für sich. Nach deiner Antwort kannst du jede Antwortmöglichkeit antippen und zum Vergleich hören.</li>
         <li>Nach jeder Antwort siehst du eine kurze Erklärung. Unten steht, wie viele du richtig hattest – nur zur Info.</li>
       </ul>
-      <p>Das freie Erkunden (Bund antippen → Note sehen) findest du jetzt in Modul 6 „Noten lesen &amp; finden“.</p>
+      <p>Das freie Erkunden (Bund antippen → Note sehen) findest du jetzt im Modul „Noten lesen &amp; finden“.</p>
     </div>
 
     <div class="module-block">
@@ -1899,12 +1916,12 @@
         <span class="module-number-badge">12</span>
         <h3>Beat &amp; Jam</h3>
       </div>
-      <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus Modul 8.</p>
+      <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus dem Modul „Tonleitern“.</p>
       <ul>
         <li><strong>Oben:</strong> Start/Stop, Tempo, Taktart, Rhythmus-Stil und Loop-Bereich. Die weiteren Funktionen stecken in einklappbaren Bereichen (▸ antippen).</li>
         <li><strong>✏️ Griff eintragen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
         <li><strong>Leistung:</strong> Unter „🎚️ Lautstärke &amp; Klangfarbe“. „Automatisch“ rechnet auf Handys sparsamer, damit es nicht knackst oder aussetzt. Du kannst jederzeit von Hand „Sparsam“ oder „Hohe Qualität“ wählen – die Einstellung gilt nur für dieses Gerät.</li>
-        <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie in Modul 8.</li>
+        <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie im Modul „Tonleitern“.</li>
         <li><strong>⏱️ Timing &amp; Feeling:</strong> Swing (bis Triolen-Shuffle), Einzähler, Tap-Tempo, Humanize und der Tempo-Trainer (wird nach einstellbar vielen Durchläufen automatisch schneller, bis zum Zieltempo).</li>
         <li><strong>🛠️ Werkzeuge:</strong> Takt kopieren, 25 Song-Presets mit 4, 8 oder 12 Takten (z.B. 12-Takt-Blues, Kanon-Folge, Jazz ii–V–I, Bossa, Funk, House), zufällige Akkordfolge passend zur Tonart und automatisches Fill-in im letzten Loop-Takt.</li>
         <li><strong>M / S</strong> an jeder Instrumentenzeile: Stumm bzw. Solo.</li>
@@ -1993,7 +2010,7 @@
   </div>
 
   <div class="theory-box" id="theoryBox" style="display:none;">
-    <h2>2. Theorie zu: Alle Töne des Griffbretts lernen</h2>
+    <h2>Theorie zu: Alle Töne des Griffbretts lernen</h2>
     <div class="gb-quick">
       <h3>🧭 Das Wichtigste in einer Minute</h3>
       <ul>
@@ -2051,7 +2068,7 @@
   </div>
 
   <div class="theory-box" id="theoryProBox" style="display:none;">
-    <h2>3. Musiktheorie für Gitarristen</h2>
+    <h2>Musiktheorie für Gitarristen</h2>
     <p class="theory-subtitle">Musiktheorie direkt am Griffbrett verstehen, sehen und anwenden</p>
     <p>Dieses Modul verbindet die wichtigsten Grundlagen mit der Gitarre: Du lernst nicht nur Begriffe und Formeln, sondern siehst, wo sie auf dem Griffbrett liegen und wie sie sich beim Verschieben verändern.</p>
 
@@ -2120,7 +2137,7 @@
         <div class="theory-demo" id="theoryScaleSequence">C (1) – D (2) – E (3) – F (4) – G (5) – A (6) – H (7) – C (Oktave)</div>
         <div class="theory-fret-demo" id="theoryScaleFretDemo"></div>
         <div class="theory-demo" id="theoryScaleTip"></div>
-        <div class="theory-chip-row"><button class="theory-chip" id="theoryScalePlayBtn" type="button">🔊 Tonleiter anhören (auf &amp; ab)</button><button class="theory-chip" id="theoryScaleToM8Btn" type="button">🎸 In Modul 8 auf dem Griffbrett zeigen</button></div>
+        <div class="theory-chip-row"><button class="theory-chip" id="theoryScalePlayBtn" type="button">🔊 Tonleiter anhören (auf &amp; ab)</button><button class="theory-chip" id="theoryScaleToM8Btn" type="button">🎸 Im Modul „Tonleitern“ auf dem Griffbrett zeigen</button></div>
       </div>
     </div>
 
@@ -2474,7 +2491,8 @@
     { name: "Stimmgerät", stringIdx: -1, time: 0, type: "tuner" },
     { name: "Anschlag & Zupfen", stringIdx: -1, time: 0, type: "strum" },
     { name: "Akkordfolgen erstellen", stringIdx: -1, time: 0, type: "progmod" },
-    { name: "Akkordwechsel-Trainer", stringIdx: -1, time: 0, type: "chgmod" }
+    { name: "Akkordwechsel-Trainer", stringIdx: -1, time: 0, type: "chgmod" },
+    { name: "Wörterbuch", stringIdx: -1, time: 0, type: "glossary" }
   ];
 
   const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "H"];
@@ -3904,7 +3922,7 @@
     notePickerEl.innerHTML = '';
     const modType = curModType();
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain') {
+    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain' || modType === 'glossary') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -4659,7 +4677,7 @@
     const hint = document.getElementById('scaleViewTheoryHint');
     if (hint) {
       const m3 = TH_M8_TO_M3[state.scaleViewType] || 'dur';
-      hint.innerHTML = `<span>💡 ${TH_SCALE_TIPS[m3] || ''}</span><button type="button" class="theory-chip" id="scaleViewTheoryBtn">📖 Theorie dazu (Modul 2)</button>`;
+      hint.innerHTML = `<span>💡 ${TH_SCALE_TIPS[m3] || ''}</span><button type="button" class="theory-chip" id="scaleViewTheoryBtn">📖 Theorie dazu (Musiktheorie)</button>`;
       const btn = document.getElementById('scaleViewTheoryBtn');
       if (btn) btn.onclick = () => {
         const idx = MODULES.findIndex(m => m.type === 'theoryPro');
@@ -4951,7 +4969,7 @@
         </div>
         <div class="jam-improv-diagram">${fing ? renderJamChordDiagramSvg(fing.frets) + (fing.own && gripIdx >= 0 ? '' : fing.own ? '<div class="jam-improv-small">✏️ dein Griff</div>' : fing.simplified ? '<div class="jam-improv-small">vereinfacht</div>' : '') : '<div class="jam-improv-small">kein Griffbild</div>'}${gripVars.length > 1 ? `<button type="button" class="theory-chip" id="jamGripNext" style="margin-top:4px;">🔁 Griff ${gripIdx >= 0 ? gripIdx + 1 : '–'}/${gripVars.length}</button>` : ''}</div>
         <div class="jam-improv-scales">
-          <div class="jam-improv-label">Passt dazu (antippen = in Modul 8 zeigen):</div>
+          <div class="jam-improv-label">Passt dazu (antippen = im Modul „Tonleitern“ zeigen):</div>
           ${sugg.map(s => `<button type="button" class="theory-chip jam-scale-btn" data-m8="${s.m8}" data-root="${s.rootPc}">${jamRootName(s.rootPc, /Moll|Dorisch|Lokrisch|Phryg/.test(s.label) ? 'moll' : 'dur')} ${s.label}</button>`).join(' ')}
         </div>
       </div>${keyTip}`;
@@ -9525,6 +9543,9 @@
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && tuner.running) stopTuner(true); });
 
   function updateModule() {
+    const prevMod = state.lastShownMod, cameFromHome = !!state.homeWasShown;
+    state.lastShownMod = parseInt(moduleSelectEl.value);
+    state.homeWasShown = false;
     state.currentModule = parseInt(moduleSelectEl.value);
     try { const mi = homeModuleInfo(state.currentModule); if (mi && state.currentModule !== 0) diaryNote(mi[2]); } catch (e) {}
     try { localStorage.setItem('guitartrainer_last_module', String(state.currentModule)); } catch {}
@@ -9560,6 +9581,7 @@
     document.getElementById('tunerRoot').style.display = 'none';
     document.getElementById('strumRoot').style.display = 'none';
     document.getElementById('earRoot').style.display = 'none';
+    document.getElementById('glossRoot').style.display = 'none';
     chordInfoBox.style.display = 'none';
     { const pb = document.getElementById('progBox'); if (pb) { pb.style.display = 'none'; pb.classList.remove('solo'); } }
     { const ll = document.getElementById('labLinks'); if (ll) ll.style.display = 'none'; }
@@ -9608,6 +9630,15 @@
       speechBannerEl.textContent = "👂 Gehörbildung: Hör genau hin und tippe deine Antwort – ganz in Ruhe, so oft du magst.";
       document.getElementById('earRoot').style.display = 'block';
       earRender();
+    } else if (mod.type === 'glossary') {
+      fretboardWrapper.style.display = 'none';
+      staffContainer.style.display = 'none';
+      timerContainerEl.style.display = 'none';
+      standardControls.style.display = 'none';
+      speechBannerEl.textContent = "📖 Wörterbuch: Begriffe rund um Gitarre und Musik – und unter „🎼 Noten & Zeichen“ alle Zeichen, die in Noten vorkommen.";
+      if (prevMod !== state.currentModule) glossBackMod = (!cameFromHome && Number.isInteger(prevMod) && MODULES[prevMod] && prevMod !== 15) ? prevMod : null;
+      document.getElementById('glossRoot').style.display = 'block';
+      glossRender();
     } else if (mod.type === 'scaleview') {
       fretboardWrapper.style.display = 'none';
       staffContainer.style.display = state.showStaff ? 'flex' : 'none';
@@ -10727,7 +10758,7 @@
   // Konzertgitarre (Foto, Hintergrund entfernt, eingebettet)
   const HOME_GUITAR_SVG = '<img src="data:image/webp;base64,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" alt="" draggable="false">';
   const HOME_GROUPS = [
-    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
+    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [15, '📖', 'Wörterbuch', 'Begriffe & Notenzeichen einfach erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
     { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Noten lesen & finden', 'Note → Griffbrett finden oder Bund antippen → Note sehen'], [6, '👂', 'Gehörbildung', 'Intervalle, Dur oder Moll, höher oder tiefer'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
     { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben']] },
     { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
@@ -10761,7 +10792,6 @@
       g.items.forEach(([v, icon, nm, desc]) => {
         h += `<button type="button" class="home-tile home-c-${g.color} ${v === last && last !== 0 ? 'last' : ''}" data-home-open="${v}"><span class="no">${homeModuleNo(v)}</span><span class="ic">${ic(icon)}</span><span class="nm">${homeEsc(nm)}</span><span class="desc">${homeEsc(desc)}</span></button>`;
       });
-      if (g.title === 'Lernen') h += `<button type="button" class="home-tile home-c-${g.color}" data-open-gloss><span class="ic">📖</span><span class="nm">Wörterbuch</span><span class="desc">Fachbegriffe in einfachen Worten</span></button>`;
       h += `</div>`;
     });
     const st = homeStartSetting();
@@ -10790,6 +10820,7 @@
     try { stopStrum(); } catch (e) {}
     try { stopTimer(); } catch (e) {}
     renderHome();
+    state.homeWasShown = true;
     document.body.classList.add('home-mode');
     window.scrollTo(0, 0);
   }
@@ -12453,9 +12484,10 @@
     if (t.hasAttribute('data-open-gloss')) { glossOpen(); return; }
     if (t.dataset.gloss) {
       const a = t.dataset.gloss;
-      if (a === 'close') glossClose();
+      if (a === 'back') { if (glossBackMod !== null) { switchToModule(glossBackMod); window.scrollTo(0, 0); } }
+      else if (a === 'tab') { glossTab = t.dataset.t === 'notes' ? 'notes' : 'base'; glossRender(); const r = document.getElementById('glossRoot'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ block: 'start' }); }
       else if (a === 'letter') { const el = document.getElementById('gloss-L-' + t.dataset.l); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
-      else if (a === 'go') { glossClose(); try { hideHome(); } catch (er) {} switchToModule(+t.dataset.mod); window.scrollTo(0, 0); }
+      else if (a === 'go') { try { hideHome(); } catch (er) {} switchToModule(+t.dataset.mod); window.scrollTo(0, 0); }
       return;
     }
     const a = t.dataset.path, i = +t.dataset.i;
@@ -12508,23 +12540,256 @@
     ['Umkehrung (z. B. D/F♯)', 'Ein Akkord, bei dem nicht der Grundton, sondern ein anderer Akkordton im Bass liegt. Hinter dem Schrägstrich steht der Basston.', 13],
     ['Zupfen (p, i, m, a)', 'Die Saiten einzeln mit den Fingern anschlagen. p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger.', 12]
   ];
-  function glossOpen() { const o = pathOverlay('glossOverlay', 'glossPanel'); glossRender(); o.classList.add('open'); }
-  function glossClose() { const o = document.getElementById('glossOverlay'); if (o) o.classList.remove('open'); }
+
+  // ---------- Wörterbuch, Kapitel „Noten & Zeichen“ (eigene Texte, selbst gezeichnete Zeichen) ----------
+  const GL_SERIF = "Georgia, 'Noto Serif', 'Times New Roman', serif";
+  function glSvg(inner, staff, y0) {
+    y0 = y0 === undefined ? 12 : y0;
+    let l = '';
+    if (staff) for (let k = 0; k < 5; k++) l += `<line x1="4" x2="80" y1="${y0 + k * 8}" y2="${y0 + k * 8}" stroke="currentColor" stroke-width="1" opacity=".55"/>`;
+    return `<svg class="gl-ico" viewBox="0 0 84 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${l}${inner}</svg>`;
+  }
+  const glY = k => 12 + k * 4;          // k = 0 oberste Linie, 1 Zwischenraum, 2 zweite Linie …, 8 unterste Linie
+  function glHead(x, y, hollow, sc) {
+    sc = sc || 1;
+    return `<ellipse cx="${x}" cy="${y}" rx="${4.6 * sc}" ry="${3.3 * sc}" transform="rotate(-20 ${x} ${y})" ${hollow ? 'fill="none" stroke="currentColor" stroke-width="1.7"' : 'fill="currentColor"'}/>`;
+  }
+  function glNote(x, y, o) {
+    o = o || {};
+    const sc = o.sc || 1, sx = x + 4.2 * sc;
+    let g = glHead(x, y, o.hollow, sc);
+    if (!o.noStem) g += `<line x1="${sx}" y1="${y - 1}" x2="${sx}" y2="${y - 22 * sc}" stroke="currentColor" stroke-width="1.4"/>`;
+    for (let f = 0; f < (o.flags || 0); f++) g += `<path d="M${sx} ${y - 22 * sc + f * 5} c1 5, 7 6, 6 13" fill="none" stroke="currentColor" stroke-width="1.8"/>`;
+    if (o.dot) g += `<circle cx="${x + 9}" cy="${y - 1}" r="1.8" fill="currentColor"/>`;
+    return g;
+  }
+  const glTxt = (x, y, t, sz, o) => `<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${(o && o.anchor) || 'middle'}" font-family="${(o && o.sans) ? 'sans-serif' : GL_SERIF}" font-style="${(o && o.plain) ? 'normal' : 'italic'}" font-weight="700" fill="currentColor">${t}</text>`;
+  const glLine = (x1, y1, x2, y2, w, extra) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="currentColor" stroke-width="${w || 1.4}" ${extra || ''}/>`;
+  const glBar = x => glLine(x, 12, x, 44, 1.4);
+  function glGClef(x) {
+    const st0 = 15, yBot = st0 + 40, cy0 = st0, gl = st0 + 30;
+    return `<g transform="translate(${x - 16} 0) scale(0.8)"><path d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="25" cy="${yBot + 19}" r="3.6" fill="currentColor"/></g>`;
+  }
+  const glAcc = (x, y, t) => glTxt(x, y + 8, t, 25, { plain: true, sans: true });
+  const glDblSharp = (x, y) => `<path d="M${x - 4} ${y - 4} L${x + 4} ${y + 4} M${x + 4} ${y - 4} L${x - 4} ${y + 4}" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>`;
+  const GL_ICONS = {
+    staff: () => glSvg(glNote(18, glY(7)) + glNote(34, glY(5)) + glNote(50, glY(3)) + glNote(66, glY(1)), true),
+    ledger: () => glSvg(glLine(30, 42, 44, 42) + glLine(30, 50, 44, 50) + glNote(37, 50) + glLine(54, 42, 68, 42) + glNote(61, 46), true, 2),
+    gclef: () => glSvg(glGClef(22) + glNote(54, glY(6)), true),
+    gclef8: () => glSvg(glGClef(22) + glTxt(20, 61, '8', 10, { plain: true }) + glNote(54, glY(6)), true),
+    fclef: () => glSvg(`<circle cx="14" cy="20" r="3.4" fill="currentColor"/><path d="M14 20 C13 12, 34 9, 34 23 C34 34, 24 42, 11 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="41" cy="16" r="2.2" fill="currentColor"/><circle cx="41" cy="24" r="2.2" fill="currentColor"/>` + glNote(62, glY(4)), true),
+    ottava: () => glSvg(glTxt(14, 9, '8va', 11) + glLine(28, 5, 76, 5, 1.2, 'stroke-dasharray="3 3"') + glLine(76, 5, 76, 10, 1.2) + glNote(34, glY(3)) + glNote(58, glY(2)), true),
+    whole: () => glSvg(`<ellipse cx="42" cy="${glY(5)}" rx="6" ry="3.8" fill="none" stroke="currentColor" stroke-width="2.4"/>`, true),
+    half: () => glSvg(glNote(40, glY(5), { hollow: true }), true),
+    quarter: () => glSvg(glNote(40, glY(5)), true),
+    eighth: () => glSvg(glNote(26, glY(5), { flags: 1 }) + glNote(50, glY(4)) + glNote(66, glY(3)) + glLine(54.2, glY(4) - 22, 70.2, glY(3) - 22, 3.5), true),
+    sixteenth: () => glSvg(glNote(26, glY(5), { flags: 2 }) + glNote(50, glY(4)) + glNote(66, glY(3)) + glLine(54.2, glY(4) - 22, 70.2, glY(3) - 22, 3) + glLine(54.2, glY(4) - 17, 70.2, glY(3) - 17, 3), true),
+    dotted: () => glSvg(glNote(36, glY(5), { hollow: true, dot: true }), true),
+    triplet: () => glSvg(glNote(24, glY(7)) + glNote(42, glY(6)) + glNote(60, glY(5)) + glLine(28.2, glY(7) - 22, 64.2, glY(5) - 22, 3.5) + glTxt(46, 10, '3', 11), true),
+    tie: () => glSvg(glNote(24, glY(4), { hollow: true }) + glNote(58, glY(4), { hollow: true }) + `<path d="M26 ${glY(4) + 6} Q41 ${glY(4) + 14} 56 ${glY(4) + 6}" fill="none" stroke="currentColor" stroke-width="1.8"/>`, true),
+    slur: () => glSvg(glNote(20, glY(6)) + glNote(40, glY(4)) + glNote(60, glY(2)) + `<path d="M20 ${glY(6) + 7} Q42 ${glY(6) + 16} 64 ${glY(2) + 7}" fill="none" stroke="currentColor" stroke-width="1.8"/>`, true),
+    rests: () => glSvg(`<rect x="9" y="20" width="10" height="4" fill="currentColor"/><rect x="27" y="24" width="10" height="4" fill="currentColor"/><path d="M50 15 l6 7 l-5 6 l6 7 c-6 -3 -9 2 -4 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><circle cx="67" cy="23" r="2.6" fill="currentColor"/><path d="M67 25 q4 1 8 -3 l-6 16" fill="none" stroke="currentColor" stroke-width="1.8"/>`, true),
+    multirest: () => glSvg(`<rect x="20" y="24" width="44" height="8" fill="currentColor"/>` + glLine(20, 20, 20, 36, 1.6) + glLine(64, 20, 64, 36, 1.6) + glTxt(42, 9, '8', 13, { plain: true }), true),
+    sharp: () => glSvg(glAcc(30, glY(5), '♯') + glNote(46, glY(5)), true),
+    flat: () => glSvg(glAcc(30, glY(4), '♭') + glNote(46, glY(4)), true),
+    natural: () => glSvg(glAcc(30, glY(5), '♮') + glNote(46, glY(5)), true),
+    dblsharp: () => glSvg(glDblSharp(30, glY(5)) + glNote(46, glY(5)), true),
+    dblflat: () => glSvg(glAcc(26, glY(4), '♭♭') + glNote(48, glY(4)), true),
+    keysig: () => glSvg(glGClef(18) + glAcc(40, glY(0), '♯') + glAcc(51, glY(3), '♯'), true),
+    accidental: () => glSvg(glAcc(14, glY(5), '♯') + glNote(26, glY(5)) + glNote(44, glY(5)) + glBar(58) + glNote(68, glY(5)), true),
+    barline: () => glSvg(glNote(14, glY(5)) + glNote(28, glY(4)) + glBar(42) + glNote(54, glY(3)) + glNote(68, glY(4)), true),
+    timesig: () => glSvg(glTxt(30, 27, '3', 19, { plain: true }) + glTxt(30, 43, '4', 19, { plain: true }) + glNote(54, glY(5)), true),
+    common: () => glSvg(glTxt(30, 37, 'C', 26, { plain: true }) + glNote(56, glY(5)), true),
+    cut: () => glSvg(glTxt(30, 37, 'C', 26, { plain: true }) + glLine(29, 6, 29, 50, 1.8) + glNote(56, glY(5)), true),
+    doublebar: () => glSvg(glNote(20, glY(5)) + glNote(36, glY(4)) + glBar(50) + glBar(54) + glNote(66, glY(3)), true),
+    finalbar: () => glSvg(glNote(20, glY(5)) + glNote(38, glY(4)) + glBar(62) + `<rect x="66" y="12" width="4" height="32" fill="currentColor"/>`, true),
+    pickup: () => glSvg(glNote(14, glY(4)) + glBar(26) + glNote(38, glY(5)) + glNote(52, glY(4)) + glNote(66, glY(3)), true),
+    dynp: () => glSvg(glTxt(42, 40, 'pp  p', 24)),
+    dynm: () => glSvg(glTxt(42, 40, 'mp  mf', 22)),
+    dynf: () => glSvg(glTxt(42, 40, 'f  ff', 24)),
+    cresc: () => glSvg(glLine(10, 31, 74, 20, 1.8) + glLine(10, 31, 74, 42, 1.8)),
+    decresc: () => glSvg(glLine(10, 20, 74, 31, 1.8) + glLine(10, 42, 74, 31, 1.8)),
+    fp: () => glSvg(glTxt(42, 40, 'fp', 26)),
+    sfz: () => glSvg(glTxt(42, 40, 'sfz', 26)),
+    accent: () => glSvg(glNote(40, glY(7)) + `<path d="M38 3 l12 4 l-12 4" fill="none" stroke="currentColor" stroke-width="1.8"/>`, true),
+    marcato: () => glSvg(glNote(38, glY(7)) + `<path d="M38 10 l5 -8 l5 8" fill="none" stroke="currentColor" stroke-width="2"/>`, true),
+    staccato: () => glSvg(glNote(30, glY(4)) + `<circle cx="30" cy="${glY(4) + 8}" r="2" fill="currentColor"/>` + glNote(56, glY(4)) + `<circle cx="56" cy="${glY(4) + 8}" r="2" fill="currentColor"/>`, true),
+    tenuto: () => glSvg(glNote(30, glY(4)) + glLine(25, glY(4) + 8, 35, glY(4) + 8, 2) + glNote(56, glY(4)) + glLine(51, glY(4) + 8, 61, glY(4) + 8, 2), true),
+    fermata: () => glSvg(glNote(36, glY(7)) + `<path d="M29 9 a12 9 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="41" cy="7" r="1.8" fill="currentColor"/>`, true),
+    arpeggio: () => glSvg(`<path d="M32 44 q-3 -2 0 -4 q3 -2 0 -4 q-3 -2 0 -4 q3 -2 0 -4 q-3 -2 0 -4 q3 -2 0 -4 q-3 -2 0 -4" fill="none" stroke="currentColor" stroke-width="1.5"/>` + glHead(46, glY(7)) + glHead(46, glY(5)) + glHead(46, glY(3)) + glLine(50.2, glY(7), 50.2, glY(3) - 20), true),
+    gliss: () => glSvg(glNote(14, glY(8)) + glLine(22, glY(8) - 1, 56, glY(4) + 1, 1.6) + glNote(64, glY(4)) + glTxt(34, 22, 'gliss.', 9), true),
+    grace: () => glSvg(glNote(26, glY(4), { sc: 0.6, flags: 1 }) + glLine(24, glY(4) - 6, 34, glY(4) - 14, 1.2) + glNote(48, glY(5)) + `<path d="M26 ${glY(4) + 5} Q37 ${glY(5) + 10} 48 ${glY(5) + 5}" fill="none" stroke="currentColor" stroke-width="1.3"/>`, true),
+    trill: () => glSvg(glTxt(28, 9, 'tr', 13) + `<path d="M38 6 q2 -3 4 0 t4 0 t4 0 t4 0 t4 0 t4 0" fill="none" stroke="currentColor" stroke-width="1.4"/>` + glNote(36, glY(5), { hollow: true }), true),
+    tremolo: () => glSvg(glNote(40, glY(5), { hollow: true }) + [0, 1, 2].map(i => glLine(38, glY(5) - 9 - i * 4, 50, glY(5) - 13 - i * 4, 2.2)).join(''), true),
+    repeat: () => glSvg(`<rect x="6" y="12" width="3.5" height="32" fill="currentColor"/>` + glLine(13, 12, 13, 44) + `<circle cx="18" cy="24" r="1.9" fill="currentColor"/><circle cx="18" cy="32" r="1.9" fill="currentColor"/>` + glNote(32, glY(5)) + glNote(48, glY(4)) + `<circle cx="64" cy="24" r="1.9" fill="currentColor"/><circle cx="64" cy="32" r="1.9" fill="currentColor"/>` + glLine(69, 12, 69, 44) + `<rect x="73" y="12" width="3.5" height="32" fill="currentColor"/>`, true),
+    volta: () => glSvg(glLine(6, 3, 6, 10, 1.2) + glLine(6, 3, 38, 3, 1.2) + glTxt(13, 11, '1.', 8, { plain: true }) + glNote(20, glY(5)) + `<circle cx="33" cy="24" r="1.6" fill="currentColor"/><circle cx="33" cy="32" r="1.6" fill="currentColor"/>` + glBar(38) + `<rect x="40.5" y="12" width="3" height="32" fill="currentColor"/>` + glLine(48, 3, 48, 10, 1.2) + glLine(48, 3, 80, 3, 1.2) + glTxt(55, 11, '2.', 8, { plain: true }) + glNote(64, glY(4)), true),
+    dc: () => glSvg(glTxt(42, 38, 'D.C.', 22)),
+    ds: () => glSvg(glTxt(42, 38, 'D.S.', 22)),
+    segno: () => glSvg(`<path d="M50 16 c-3 -5 -14 -4 -13 3 c1 6 14 6 13 13 c-1 7 -13 7 -14 1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>` + glLine(30, 44, 56, 6, 1.8) + `<circle cx="33" cy="22" r="2.4" fill="currentColor"/><circle cx="53" cy="29" r="2.4" fill="currentColor"/>`),
+    coda: () => glSvg(`<ellipse cx="42" cy="27" rx="9" ry="11" fill="none" stroke="currentColor" stroke-width="2.6"/>` + glLine(26, 27, 58, 27, 1.8) + glLine(42, 10, 42, 44, 1.8)),
+    fine: () => glSvg(glTxt(42, 38, 'Fine', 22)),
+    simile: () => glSvg(glBar(8) + `<circle cx="34" cy="21" r="2.6" fill="currentColor"/>` + glLine(32, 38, 52, 18, 4.5) + `<circle cx="50" cy="35" r="2.6" fill="currentColor"/>` + glBar(76), true),
+    pima: () => glSvg(glTxt(42, 38, 'p i m a', 21)),
+    lhfing: () => glSvg(glTxt(13, glY(6) + 3, '1', 9, { plain: true }) + glNote(22, glY(6)) + glTxt(37, glY(4) + 3, '3', 9, { plain: true }) + glNote(46, glY(4)) + glTxt(61, glY(2) + 3, '4', 9, { plain: true }) + glNote(70, glY(2)), true),
+    strnum: () => glSvg(glNote(28, glY(5)) + glTxt(28, 58, '②', 13, { plain: true, sans: true }) + glNote(56, glY(7)) + glTxt(56, 58, '⑥', 13, { plain: true, sans: true }), true),
+    position: () => glSvg(glTxt(42, 40, 'V  VII', 24, { plain: true })),
+    barre: () => glSvg(glTxt(16, 26, 'CV', 15, { plain: true }) + glLine(32, 21, 76, 21, 1.4, 'stroke-dasharray="4 3"') + glLine(76, 21, 76, 28, 1.4) + glTxt(18, 50, '½CII', 12, { plain: true })),
+    harm: () => glSvg(glTxt(40, 8, 'harm. 12', 10) + `<path d="M35 ${glY(5)} l5 -5 l5 5 l-5 5 z" fill="none" stroke="currentColor" stroke-width="1.8"/>` + glLine(45, glY(5), 45, glY(5) - 18), true),
+    hammer: () => glSvg(glNote(28, glY(5)) + glNote(54, glY(3)) + `<path d="M28 ${glY(5) + 6} Q42 ${glY(5) + 14} 54 ${glY(3) + 6}" fill="none" stroke="currentColor" stroke-width="1.6"/>`, true),
+    pulloff: () => glSvg(glNote(28, glY(3)) + glNote(54, glY(5)) + `<path d="M28 ${glY(3) + 6} Q42 ${glY(5) + 14} 54 ${glY(5) + 6}" fill="none" stroke="currentColor" stroke-width="1.6"/>`, true),
+    apoy: () => glSvg(glTxt(42, 26, 'apoy.', 16) + glTxt(42, 50, 'tir.', 16)),
+    sultasto: () => glSvg(glTxt(42, 26, 's.t.', 16) + glTxt(42, 50, 's.p.', 16)),
+    pizz: () => glSvg(glTxt(42, 38, 'pizz.', 22)),
+    vib: () => glSvg(glTxt(42, 22, 'vib.', 14) + `<path d="M12 38 q4 -6 8 0 t8 0 t8 0 t8 0 t8 0 t8 0 t8 0" fill="none" stroke="currentColor" stroke-width="1.8"/>`),
+    scord: () => glSvg(glTxt(42, 38, '⑥ = D', 18, { plain: true, sans: true })),
+    rasg: () => glSvg(glTxt(42, 38, 'rasg.', 22))
+  };
+  const glWord = t => glSvg(glTxt(42, 37, t, t.length > 9 ? 12 : t.length > 6 ? 15 : 19));
+  const GLOSS_NOTES = [
+    { icon: '🎼', title: 'Notensystem & Schlüssel', items: [
+      ['Notensystem', 'Die fünf waagerechten Linien, auf und zwischen denen die Noten stehen. Je höher eine Note steht, desto höher klingt sie.', 'staff', 5],
+      ['Hilfslinien', 'Kurze Extra-Linien über oder unter dem Notensystem für Töne, die nicht mehr hineinpassen. Das tiefe E der Gitarre steht zum Beispiel drei Hilfslinien unter dem System.', 'ledger', 5],
+      ['Violinschlüssel (G-Schlüssel)', 'Steht am Anfang jeder Zeile. Er kringelt sich um die zweite Linie von unten – dort liegt das G.', 'gclef', null],
+      ['Violinschlüssel mit kleiner 8', 'Die kleine 8 unter dem Schlüssel heißt: alles eine Oktave tiefer, als es aussieht. So werden Gitarrennoten geschrieben. Oft fehlt die 8 – gemeint ist es bei Gitarre trotzdem.', 'gclef8', null],
+      ['Bassschlüssel (F-Schlüssel)', 'Für tiefe Instrumente wie Bass oder die linke Hand am Klavier. Die zwei Punkte liegen um die Linie, auf der das F steht. In Gitarrennoten kommt er praktisch nicht vor.', 'fclef', null],
+      ['8va / 8vb (Ottava)', '„8va“ mit gestrichelter Linie über den Noten: eine Oktave höher spielen als geschrieben. „8vb“ unter den Noten: eine Oktave tiefer. Nach dem Ende der Linie gilt wieder die normale Höhe.', 'ottava', null]
+    ] },
+    { icon: '♩', title: 'Notenwerte & Pausen', items: [
+      ['Ganze Note', 'Hohler Notenkopf ohne Hals. Klingt vier Schläge lang – im 4/4-Takt einen ganzen Takt.', 'whole', null],
+      ['Halbe Note', 'Hohler Notenkopf mit Hals. Klingt zwei Schläge.', 'half', null],
+      ['Viertelnote', 'Gefüllter Notenkopf mit Hals. Klingt einen Schlag – das ist der Grundschlag, den man mitzählt.', 'quarter', null],
+      ['Achtelnote', 'Mit einem Fähnchen, oder mehrere mit einem Balken verbunden. Zwei Achtel passen in einen Schlag: „1 und“.', 'eighth', null],
+      ['Sechzehntelnote', 'Zwei Fähnchen oder zwei Balken. Vier Sechzehntel passen in einen Schlag: „1 e und e“.', 'sixteenth', null],
+      ['Punktierte Note', 'Ein Punkt hinter der Note verlängert sie um die Hälfte. Eine punktierte Halbe dauert also 2 + 1 = 3 Schläge.', 'dotted', null],
+      ['Triole', 'Eine kleine 3 über drei Noten: Diese drei Noten teilen sich die Zeit, in der sonst nur zwei gleiche Noten Platz hätten.', 'triplet', null],
+      ['Haltebogen', 'Ein Bogen zwischen zwei Noten mit derselben Tonhöhe: Die zweite wird nicht neu angeschlagen – der Ton klingt einfach weiter.', 'tie', null],
+      ['Bindebogen (Legatobogen)', 'Ein Bogen über verschiedene Tonhöhen: Die Töne gebunden spielen, ohne Lücke dazwischen. Auf der Gitarre oft als Aufschlag- oder Abzugsbindung (siehe „Zeichen für klassische Gitarre“).', 'slur', null],
+      ['Pausen', 'Zeigen, wie lange du nichts spielst. Von links: ganze Pause (hängt unter der Linie), halbe Pause (liegt auf der Linie), Viertelpause (Zickzack), Achtelpause (wie eine 7). Sie dauern so lang wie die passenden Noten.', 'rests', null],
+      ['Pause über mehrere Takte', 'Ein dicker waagerechter Balken mit einer Zahl darüber: so viele Takte lang Pause. Dabei leise mitzählen.', 'multirest', null]
+    ] },
+    { icon: '♯', title: 'Vorzeichen', items: [
+      ['Kreuz (♯)', 'Macht eine Note einen Halbton höher – auf der Gitarre einen Bund höher. Aus F wird Fis.', 'sharp', 2],
+      ['b (♭)', 'Macht eine Note einen Halbton tiefer – einen Bund tiefer. Aus E wird Es. Achtung: Ein H mit ♭ heißt „B“.', 'flat', 2],
+      ['Auflösungszeichen (♮)', 'Hebt ein ♯ oder ♭ wieder auf. Die Note wird wieder „normal“ gespielt.', 'natural', null],
+      ['Doppelkreuz', 'Macht eine Note zwei Halbtöne höher (zwei Bünde). Selten. Aus F wird Fisis – das klingt wie G.', 'dblsharp', null],
+      ['Doppel-b', 'Macht eine Note zwei Halbtöne tiefer. Aus H wird Heses – das klingt wie A.', 'dblflat', null],
+      ['Tonart-Vorzeichen (am Zeilenanfang)', 'Die ♯ oder ♭ direkt nach dem Schlüssel gelten für das ganze Stück und in jeder Oktave. Zwei Kreuze (Fis und Cis) bedeuten zum Beispiel D-Dur oder h-Moll.', 'keysig', 2],
+      ['Versetzungszeichen (mitten im Stück)', 'Ein ♯, ♭ oder ♮ direkt vor einer Note. Es gilt bis zum Ende dieses Takts für diese Tonhöhe – im nächsten Takt ist es wieder weg.', 'accidental', null]
+    ] },
+    { icon: '📏', title: 'Takt', items: [
+      ['Taktstrich', 'Ein senkrechter Strich durch das Notensystem. Er teilt die Musik in Takte – gleich lange Abschnitte.', 'barline', null],
+      ['Taktart', 'Die zwei Zahlen am Anfang. Oben: wie viele Schläge ein Takt hat. Unten: welcher Notenwert ein Schlag ist. 3/4 heißt drei Viertel pro Takt, wie beim Walzer.', 'timesig', 12],
+      ['C (Viervierteltakt)', 'Ein großes C statt 4/4 – bedeutet genau dasselbe.', 'common', null],
+      ['Durchgestrichenes C (Alla breve)', 'Bedeutet 2/2: Man zählt nur zwei halbe Schläge pro Takt, „1, 2“. Das Stück fühlt sich dadurch flüssiger und schneller an.', 'cut', null],
+      ['Doppelstrich', 'Zwei dünne Striche: Ein neuer Abschnitt beginnt, oft mit neuer Tonart oder Taktart.', 'doublebar', null],
+      ['Schlussstrich', 'Ein dünner und ein dicker Strich: Das Stück ist zu Ende.', 'finalbar', null],
+      ['Auftakt', 'Ein unvollständiger erster Takt: Das Stück beginnt nicht auf der „1“, sondern kurz davor. Der fehlende Rest steht oft im letzten Takt.', 'pickup', null]
+    ] },
+    { icon: '🔊', title: 'Lautstärke (Dynamik)', items: [
+      ['pp / p', 'pianissimo (pp) = sehr leise, piano (p) = leise.', 'dynp', null],
+      ['mp / mf', 'mezzopiano (mp) = halb leise, mezzoforte (mf) = halb laut – die Mitte.', 'dynm', null],
+      ['f / ff', 'forte (f) = laut, fortissimo (ff) = sehr laut.', 'dynf', null],
+      ['Crescendo', 'Eine Gabel, die sich öffnet (oder „cresc.“): nach und nach lauter werden.', 'cresc', null],
+      ['Decrescendo / Diminuendo', 'Eine Gabel, die sich schließt (oder „decresc.“, „dim.“): nach und nach leiser werden.', 'decresc', null],
+      ['fp (fortepiano)', 'Laut anschlagen und gleich danach leise weiterspielen.', 'fp', null],
+      ['sfz (sforzando)', 'Diesen einen Ton plötzlich kräftig betonen, danach geht es normal weiter.', 'sfz', null]
+    ] },
+    { icon: '✋', title: 'Spielweise & Verzierungen', items: [
+      ['Akzent', 'Ein kleines „>“ über oder unter der Note: Diesen Ton etwas kräftiger anschlagen als die anderen.', 'accent', null],
+      ['Marcato', 'Ein kleines Dach „^“: noch stärker betont als ein normaler Akzent – kurz und kräftig.', 'marcato', null],
+      ['Staccato', 'Ein Punkt über oder unter dem Notenkopf (nicht dahinter): Den Ton kurz spielen und gleich abdämpfen.', 'staccato', null],
+      ['Tenuto', 'Ein kleiner waagerechter Strich: Den Ton voll aushalten, gern ein wenig betont.', 'tenuto', null],
+      ['Fermate', 'Ein Bogen mit Punkt: Hier anhalten und den Ton (oder die Pause) länger klingen lassen als notiert. Wie lange, entscheidest du.', 'fermata', null],
+      ['Arpeggio-Zeichen', 'Eine senkrechte Wellenlinie vor einem Akkord: Die Töne nicht gleichzeitig, sondern schnell nacheinander von unten nach oben spielen – wie bei einer Harfe.', 'arpeggio', null],
+      ['Glissando (gliss.)', 'Eine Linie zwischen zwei Noten: Mit dem Finger auf der Saite von einem Ton zum anderen rutschen, ohne loszulassen.', 'gliss', null],
+      ['Vorschlag', 'Eine kleine Note (oft durchgestrichen) vor der Hauptnote: ganz kurz vorher spielen. Auf der Gitarre oft mit einer Aufschlag- oder Abzugsbindung.', 'grace', null],
+      ['Triller (tr)', '„tr“ über der Note: schnell zwischen dieser Note und der nächsthöheren hin- und herwechseln.', 'trill', null],
+      ['Tremolo', 'Schräge Striche durch den Notenhals: Den Ton schnell wiederholen. Auf der klassischen Gitarre ist „Tremolo“ auch eine Technik (p-a-m-i), bei der eine Melodie wie ein langer Ton klingt.', 'tremolo', null]
+    ] },
+    { icon: '🔁', title: 'Wiederholungen & Sprünge', items: [
+      ['Wiederholungszeichen', 'Ein Doppelstrich mit zwei Punkten. Zeigen die Punkte nach links, springst du zurück zum Zeichen mit den Punkten nach rechts (oder zum Anfang) und spielst den Teil noch einmal.', 'repeat', null],
+      ['Volten (1. und 2. Ende)', 'Klammern mit „1.“ und „2.“ über den Takten. Beim ersten Mal spielst du die 1. Klammer. Beim Wiederholen überspringst du sie und spielst gleich die 2.', 'volta', null],
+      ['D.C. (Da Capo)', '„Vom Anfang“: zurück an den Anfang des Stücks. „D.C. al Fine“ heißt: vom Anfang bis zum Wort „Fine“.', 'dc', null],
+      ['D.S. (Dal Segno)', '„Vom Zeichen“: zurück zum Segno-Zeichen und von dort weiterspielen.', 'ds', null],
+      ['Segno', 'Das Zeichen (ein schräges S mit Strich und zwei Punkten), zu dem du bei „D.S.“ zurückspringst.', 'segno', null],
+      ['Coda', 'Ein Kreis mit Kreuz. Steht irgendwo „al Coda“ oder „To Coda“, springst du an dieser Stelle zur Coda – dem Schlussteil des Stücks.', 'coda', null],
+      ['Fine', '„Ende“: Hier hört das Stück nach einem D.C. oder D.S. auf.', 'fine', null],
+      ['Takt-Wiederholung / simile', 'Ein schräger Strich mit zwei Punkten in einem Takt: den vorherigen Takt genauso noch einmal spielen. Das Wort „simile“ heißt: so weitermachen wie bisher.', 'simile', null]
+    ] },
+    { icon: '🎸', title: 'Zeichen speziell für klassische Gitarre', items: [
+      ['Rechte Hand: p, i, m, a', 'Buchstaben bei den Noten zeigen, mit welchem Finger der rechten Hand du zupfst: p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger. Selten steht c oder ch für den kleinen Finger.', 'pima', 12],
+      ['Linke Hand: 1, 2, 3, 4', 'Kleine Zahlen vor dem Notenkopf zeigen den Finger der Greifhand: 1 = Zeigefinger, 2 = Mittelfinger, 3 = Ringfinger, 4 = kleiner Finger, 0 = leere Saite.', 'lhfing', null],
+      ['Saitennummer im Kreis', '① bis ⑥ zeigt, auf welcher Saite der Ton gespielt wird: ① = hohe e-Saite, ⑥ = tiefe E-Saite.', 'strnum', 1],
+      ['Lage (römische Zahl)', 'Eine römische Zahl wie V oder VII: In dieser Lage spielen – der Zeigefinger liegt dann im 5. bzw. 7. Bund.', 'position', null],
+      ['Barré-Zeichen (C oder B)', '„C“ (von „Cejilla“) oder „B“ mit römischer Zahl, oft mit gestrichelter Linie: Barré im angegebenen Bund, so lange die Linie reicht. „½C“ heißt halber Barré – nur über einige Saiten.', 'barre', null],
+      ['Flageolett (harm.)', '„harm.“ oder rautenförmige Notenköpfe: Den Finger nur ganz leicht auf die Saite legen, genau über dem Bundstäbchen, ohne zu drücken. Es klingt ein heller, glockiger Ton – besonders gut am 12., 7. und 5. Bund.', 'harm', null],
+      ['Aufschlagbindung (Hammer-on)', 'Ein Bogen von einer tieferen zu einer höheren Note: Nur die erste Note zupfen. Die zweite entsteht, indem ein Finger der linken Hand kräftig auf die Saite „hämmert“.', 'hammer', null],
+      ['Abzugsbindung (Pull-off)', 'Ein Bogen von einer höheren zu einer tieferen Note: Nur die erste zupfen, dann den Finger leicht seitlich von der Saite ziehen – dabei zupft er den tieferen Ton an.', 'pulloff', null],
+      ['Apoyando / Tirando', 'Zwei Anschlagsarten. Apoyando (angelegt): Der Finger zupft und landet auf der nächsten Saite – voller, kräftiger Ton für Melodien. Tirando (frei): Der Finger zupft und schwingt frei in die Hand – für Akkorde und Arpeggien.', 'apoy', null],
+      ['sul tasto / sul ponticello', '„sul tasto“ (s.t.): nah am Griffbrett zupfen – weicher, runder Klang. „sul ponticello“ (s.p. oder pont.): nah am Steg – heller, metallischer Klang. „ord.“ heißt: wieder normal.', 'sultasto', null],
+      ['pizz. (Pizzicato)', 'Die Handkante der rechten Hand liegt leicht auf den Saiten direkt am Steg, dabei wird gezupft. Klingt kurz und gedämpft.', 'pizz', null],
+      ['Vibrato (vib.)', 'Den gegriffenen Ton zum Schwingen bringen: Den Finger leicht hin- und herbewegen, bei klassischer Gitarre in Richtung der Saite.', 'vib', null],
+      ['Scordatura (⑥ = D)', 'Eine andere Stimmung als normal. „⑥ = D“ heißt: die tiefe E-Saite einen Ganzton tiefer auf D stimmen („Drop D“).', 'scord', 11],
+      ['rasg. (Rasgueado)', 'Spanische Technik: Die Finger schnellen nacheinander aus der leicht geschlossenen Hand über die Saiten – ein schnelles, rollendes Schlagen.', 'rasg', null]
+    ] },
+    { icon: '⏱', title: 'Tempo- & Vortragswörter', items: [
+      ['Largo', 'Sehr langsam und breit (etwa 40–60 Schläge pro Minute).', 'w:Largo', null],
+      ['Adagio', 'Langsam und ruhig (etwa 66–76 Schläge pro Minute).', 'w:Adagio', null],
+      ['Andante', '„Gehend“ – gemächlich (etwa 76–108 Schläge pro Minute).', 'w:Andante', null],
+      ['Moderato', 'Mäßig schnell (etwa 108–120 Schläge pro Minute).', 'w:Moderato', null],
+      ['Allegro', 'Schnell und munter (etwa 120–156 Schläge pro Minute).', 'w:Allegro', null],
+      ['Presto', 'Sehr schnell (etwa 168–200 Schläge pro Minute).', 'w:Presto', null],
+      ['ritardando (rit.) / rallentando (rall.)', 'Nach und nach langsamer werden.', 'w:rit.', null],
+      ['accelerando (accel.)', 'Nach und nach schneller werden.', 'w:accel.', null],
+      ['a tempo', 'Wieder im ursprünglichen Tempo spielen, zum Beispiel nach einem „rit.“.', 'w:a tempo', null],
+      ['rubato', 'Frei im Tempo: mal etwas dehnen, mal etwas drängen – nach Gefühl.', 'w:rubato', null],
+      ['dolce', 'Süß, sanft und zart spielen.', 'w:dolce', null],
+      ['legato', 'Gebunden: Die Töne ohne Lücke ineinander übergehen lassen. Das Gegenteil ist staccato.', 'w:legato', null],
+      ['cantabile', '„Singend“: Die Melodie so spielen, als würde sie gesungen.', 'w:cantabile', null],
+      ['espressivo (espr.)', 'Ausdrucksvoll, mit viel Gefühl.', 'w:espr.', null],
+      ['poco / molto', 'poco = ein wenig (poco rit. = etwas langsamer), molto = sehr (molto rit. = deutlich langsamer).', 'w:poco', null]
+    ] }
+  ];
+  let glossTab = 'base';
+  function glossNotesHtml(mods) {
+    let h = `<p style="margin:8px 0;">Was bedeuten die Zeichen in Noten? Tippe auf ein Thema, um es aufzuklappen.</p>`;
+    GLOSS_NOTES.forEach((sec, si) => {
+      h += `<details class="gloss-sec" id="gloss-sec-${si}"><summary>${sec.icon} ${homeEsc(sec.title)} <span style="font-weight:400; opacity:.7;">(${sec.items.length})</span></summary>`;
+      h += `<div class="gloss-sec-body">`;
+      sec.items.forEach(([t, txt, ic, mod]) => {
+        let svg = '';
+        try { svg = ic.startsWith('w:') ? glWord(ic.slice(2)) : (GL_ICONS[ic] ? GL_ICONS[ic]() : ''); } catch (e) { svg = ''; }
+        h += `<div class="gloss-n">${svg}<div><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div></div>`;
+      });
+      h += `</div></details>`;
+    });
+    return h;
+  }
+  let glossBackMod = null;
+  function glossOpen() {
+    try { hideHome(); } catch (e) {}
+    if (state.currentModule === 15) { glossRender(); window.scrollTo(0, 0); return; }
+    switchToModule(15); window.scrollTo(0, 0);
+  }
+  function glossClose() {}
   function glossRender() {
-    const box = document.getElementById('glossPanel'); if (!box) return;
+    const box = document.getElementById('glossRoot'); if (!box) return;
     const list = GLOSSARY.slice().sort((a, b) => a[0].localeCompare(b[0], 'de'));
     const letters = [...new Set(list.map(x => x[0][0].toUpperCase()))];
     const mods = [...moduleSelectEl.options].reduce((m, o) => { m[o.value] = o.text.replace(/^\d+\.\s*/, ''); return m; }, {});
-    let h = `<div class="pt-head"><h3>📖 Wörterbuch</h3><button type="button" class="btn btn-secondary" data-gloss="close">✕</button></div>
-      <p style="margin:8px 0;">Die wichtigsten Begriffe rund um Gitarre und Musik – in einfachen Worten.</p>
-      <div class="gloss-letters">${letters.map(l => `<button type="button" data-gloss="letter" data-l="${l}">${l}</button>`).join('')}</div>`;
+    const backName = glossBackMod !== null && mods[glossBackMod] ? mods[glossBackMod] : '';
+    let h = `${backName ? `<div style="margin-bottom:6px;"><button type="button" class="btn btn-secondary" data-gloss="back">↩ Zurück zu ${homeEsc(backName)}</button></div>` : ''}
+      <div class="gloss-tabs"><button type="button" class="btn ${glossTab === 'base' ? '' : 'btn-secondary'}" data-gloss="tab" data-t="base">🎸 Gitarre &amp; Musik</button><button type="button" class="btn ${glossTab === 'notes' ? '' : 'btn-secondary'}" data-gloss="tab" data-t="notes">🎼 Noten &amp; Zeichen</button></div>`;
+    if (glossTab === 'notes') { box.innerHTML = `<div class="gloss-card">${h}${glossNotesHtml(mods)}</div>`; return; }
+    h += `<p style="margin:8px 0;">Die wichtigsten Begriffe rund um Gitarre und Musik – in einfachen Worten.</p>
+      <div class="gloss-letters">${letters.map(l => `<button type="button" data-gloss="letter" data-l="${l}">${l}</button>`).join('')}</div><div class="gloss-list">`;
     let cur = '';
     list.forEach(([t, txt, mod]) => {
       const L = t[0].toUpperCase();
       if (L !== cur) { cur = L; h += `<div class="gloss-L" id="gloss-L-${L}">${L}</div>`; }
       h += `<div class="gloss-item"><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div>`;
     });
-    box.innerHTML = h;
+    box.innerHTML = `<div class="gloss-card">${h}</div></div>`;
   }
 
 
@@ -13149,7 +13414,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-17-2';
+  const APP_VERSION = '2026-10-21-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -13217,5 +13482,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4c6826e89a0ab9f',t:'MTc5MjMxNTY3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e25a632ca0d3ac',t:'MTc5MjYwNzYzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
