@@ -1116,6 +1116,8 @@
     .jam-section > summary::-webkit-details-marker { display: none; }
     .jam-section > summary::before { content: '▸ '; color: var(--accent-color); }
     .jam-section[open] > summary::before { content: '▾ '; }
+    summary.btn::-webkit-details-marker { display: none; }
+    summary.btn { list-style: none; cursor: pointer; }
     .jam-section[open] { padding-bottom: 12px; }
     .jam-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
     .jam-ms { display: inline-flex; gap: 2px; margin-left: auto; }
@@ -1138,6 +1140,14 @@
     .jam-tab-chord { font-size: 0.68rem; opacity: 0.85; font-weight: 600; }
     #jamBarTabsRow.many { max-height: 190px; overflow-y: auto; padding: 4px 2px; }
     #jamBarTabsRow.many .jam-bar-tab { min-width: 52px; padding: 4px 6px; font-size: 0.78rem; }
+    .jam-bar-tab { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .jam-bar-tab.drag-src { opacity: .45; outline: 2px dashed var(--accent-color); }
+    .jam-bar-tab.drag-over { box-shadow: 0 0 0 3px #22d3ee inset; }
+    .hdrag-src { opacity: .45; outline: 2px dashed var(--accent-color); }
+    .hdrag-over { box-shadow: 0 0 0 3px #22d3ee inset; }
+    .prog-card { user-select: none; -webkit-user-select: none; }
+    .prog-cname { user-select: text; -webkit-user-select: text; }
+    .chg-grip { cursor: grab; }
     .jam-part-chip { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; color: #111; align-self: center; }
     .jam-part-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; }
     #strumRoot .strum-kind { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
@@ -1562,6 +1572,32 @@
     .app-upd button { border: 0; border-radius: 10px; padding: 8px 14px; font-size: 1rem; font-weight: 700; cursor: pointer; }
     .app-upd .go { background: #fff; color: #166534; }
     .app-upd .later { background: rgba(255,255,255,.2); color: #fff; }
+    /* Griff-Leiste (Beat & Jam, Anschlag & Zupfen) */
+    .grip-strip-wrap { margin-top: 10px; }
+    .grip-strip-head { display: inline-flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+    .grip-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .grip-item { background: var(--panel-overlay); border: 2px solid var(--card-border); border-radius: 10px; padding: 3px 3px 1px; cursor: pointer; color: var(--text-color); display: flex; flex-direction: column; align-items: center; font: inherit; }
+    .grip-item .nm { font-weight: 700; font-size: 0.95rem; line-height: 1.2; }
+    .grip-item svg { width: 70px; height: auto; display: block; }
+    .grip-item.cur { border-color: #22d3ee; background: rgba(34,211,238,0.14); box-shadow: 0 0 0 2px rgba(34,211,238,0.35); }
+    .grip-item.next { border-style: dashed; border-color: rgba(34,211,238,0.7); }
+    @media (min-width: 900px) { .grip-item svg { width: 84px; } }
+    /* Suche auf der Startseite */
+    .home-search { display: flex; gap: 6px; align-items: center; margin: 0 0 12px; }
+    .home-search input { flex: 1; min-width: 0; font-size: 1rem; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); }
+    #homeScreen.searching > :not(.home-search):not(#homeSearchRes) { display: none !important; }
+    .srch-group { margin: 12px 0 4px; font-weight: 700; font-size: 0.92rem; }
+    .srch-item { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 10px; margin: 4px 0; color: var(--text-color); cursor: pointer; font: inherit; }
+    .srch-item .ic { font-size: 1.2rem; line-height: 1.3; flex: 0 0 auto; }
+    .srch-item b { display: block; }
+    .srch-item small { display: block; opacity: 0.75; font-size: 0.82rem; }
+    .srch-more { background: none; border: none; color: var(--accent-color); cursor: pointer; font: inherit; padding: 4px 2px; }
+    .srch-none { padding: 10px 2px; opacity: 0.85; }
+    #srchBack { position: fixed; left: 12px; bottom: 16px; z-index: 900; display: none; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+    #modHelpBack { position: fixed; right: 12px; bottom: 16px; z-index: 900; display: none; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+    .help-hl { outline: 3px solid var(--accent-color); outline-offset: 4px; border-radius: 8px; }
+    mark.srch-mark { background: rgba(250,204,21,0.45); color: inherit; border-radius: 3px; padding: 0 1px; }
+    .gloss-hl { outline: 2px solid #22d3ee; border-radius: 8px; background: rgba(34,211,238,0.12); }
   </style>
 </head>
 <body>
@@ -1590,6 +1626,7 @@
   <div class="speech-banner" id="speechBanner">
     📖 Wähle oben ein Modul aus, um zu beginnen.
   </div>
+  <button type="button" class="btn btn-secondary" id="modHelpBtn" style="display:none; margin:8px 0 0; padding:6px 12px; font-size:0.85rem;">📖 Anleitung zu diesem Modul</button>
 
   <div class="controls-panel">
     <div class="row">
@@ -1741,10 +1778,32 @@
   <div class="theory-box" id="instructionBox">
     <h2>Chronologische Anleitung zur Bedienung des Trainers</h2>
     <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt.</p>
+    <div id="anleitungToc" style="background:var(--card-bg, rgba(255,255,255,0.05)); border:1px solid var(--card-border, #444); border-radius:10px; padding:10px 12px; margin:12px 0; display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+      <strong style="margin-right:4px;">📑 Inhalt:</strong>
+      <button type="button" class="theory-chip" data-toc="imb1">🧭 Überblick</button>
+      <button type="button" class="theory-chip" data-toc="imb2">1 Anleitung</button>
+      <button type="button" class="theory-chip" data-toc="imb3">2 Wörterbuch</button>
+      <button type="button" class="theory-chip" data-toc="imb4">3 Musiktheorie</button>
+      <button type="button" class="theory-chip" data-toc="imb5">4 Griffbrett-Theorie</button>
+      <button type="button" class="theory-chip" data-toc="imb6">5 Alle Töne</button>
+      <button type="button" class="theory-chip" data-toc="imb7">6 Töne erraten</button>
+      <button type="button" class="theory-chip" data-toc="imb8">7 Noten lesen &amp; finden</button>
+      <button type="button" class="theory-chip" data-toc="imb9">8 Gehörbildung</button>
+      <button type="button" class="theory-chip" data-toc="imb10">9 Tonleitern</button>
+      <button type="button" class="theory-chip" data-toc="imb11">10 Akkord-Labor</button>
+      <button type="button" class="theory-chip" data-toc="imb12">11 Akkordfolgen erstellen</button>
+      <button type="button" class="theory-chip" data-toc="imb13">12 Akkordwechsel-Trainer</button>
+      <button type="button" class="theory-chip" data-toc="imb14">13 Beat &amp; Jam</button>
+      <button type="button" class="theory-chip" data-toc="imb15">14 Anschlag &amp; Zupfen</button>
+      <button type="button" class="theory-chip" data-toc="imb16">15 Stimmgerät</button>
+      <button type="button" class="theory-chip" data-toc="imb17">🎸 Saitenwechsel</button>
+      <button type="button" class="theory-chip" data-toc="imb18">16 Wochenplan</button>
+    </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb1">
       <div class="module-block-header"><span class="module-number-badge">🧭</span><h3>Wo finde ich was?</h3></div>
       <ul>
+        <li><strong>Etwas suchen (Akkord, Begriff, Muster, Modul):</strong> 🔍 Suchfeld oben auf der Startseite · oder ⚙️ → 🔍 Suchen</li>
         <li><strong>Akkord nachschlagen, Griffvarianten (Akkord-Lexikon):</strong> 🧪 Akkord-Labor, oben „Griffposition anzeigen“</li>
         <li><strong>Eigene Akkordfolge eintragen, anhören, als MIDI speichern:</strong> ✍️ Akkordfolgen erstellen</li>
         <li><strong>Akkordwechsel im Takt üben (auch mit deinen eigenen Akkordfolgen):</strong> 🔁 Akkordwechsel-Trainer</li>
@@ -1763,7 +1822,7 @@
     </div>
 
 
-    <div class="module-block">
+    <div class="module-block" id="imb2">
       <div class="module-block-header">
         <span class="module-number-badge">1</span>
         <h3>Anleitung</h3>
@@ -1773,16 +1832,31 @@
         <li><strong>🏠 Start (oben rechts):</strong> Öffnet die Startseite mit Kacheln für alle Module. Oben bringt dich „↪ Weiter mit“ zurück ins zuletzt benutzte Modul. Ganz unten stellst du ein, ob die App beim Öffnen die Startseite oder direkt das letzte Modul zeigt.</li>
         <li><strong>⏱ Übungs-Timer (oben rechts):</strong> <em>Countdown</em> (z. B. 10 Minuten, am Ende ein sanfter Ton – du kannst einfach weiterspielen), <em>Stoppuhr</em> (zählt nur mit) oder <em>Abschnitte</em> (z. B. 5 Min. Aufwärmen → 10 Min. Akkorde → 5 Min. Zupfen; auf Wunsch öffnet sich das passende Modul). Der Timer läuft weiter, wenn du das Modul wechselst; oben siehst du die Zeit. Die App speichert deine Übungsminuten dauerhaft. Unter „📈 Vergangene Tage &amp; Wochen“ siehst du die letzten 14 Tage, die letzten Wochen und Monate, die Gesamtzeit und was du am meisten geübt hast. Dieselbe Übersicht steht im Wochenplan unter „📊 Statistik“. Optional erinnert sie dich nach 25 Minuten an eine kleine Pause. Im Wochenplan startest du mit „⏱“ eine Übung direkt mit Timer und kannst sie am Ende abhaken.</li>
         <li><strong>✨ Neue Version:</strong> Liegt eine neuere App-Version bereit, erscheint oben ein grüner Hinweis. Mit „Jetzt aktualisieren“ wird sie geladen. Deine Daten bleiben dabei erhalten.</li>
+        <li><strong>🔍 Suchen (Startseite oben):</strong> Tippe ein Wort, zum Beispiel „Am7“, „Kapodaster“, „Pentatonik“ oder den Namen eines eigenen Beats. Die Treffer sind nach Arten sortiert (Akkorde, Module, Tonleitern, Wörterbuch, Muster, eigene Sachen, Werkzeuge). Unter „📄 In Texten“ findest du auch jedes Wort aus der Anleitung, der Musiktheorie, der Griffbrett-Theorie, den „Erste Schritte“ und den Hinweisen oben in den Modulen – mit einem Satzausschnitt, in dem das Wort gelb markiert ist. Ab 3 Buchstaben wird auch mitten im Wort gesucht („bass“ findet „Wechselbass“). Ein Tipp bringt dich direkt hin, die Stelle wird kurz markiert, und unten links führt „↩ Zurück zur Suche“ wieder zu den Treffern. Auch über ⚙️ → 🔍 Suchen.</li>
         <li><strong>⚙️ Einstellungen (oben rechts):</strong> Hier findest du Datensicherung, Schriftgröße, Hell/Dunkel und den Kammerton.</li>
         <li><strong>💾 Datensicherung (im ⚙️-Menü):</strong> „Alles sichern“ speichert <em>alle</em> Daten der App (Übungsplan, Beats, Einstellungen) in eine einzige Datei im Download-Ordner. Mit „Alles wiederherstellen“ spielst du sie zurück – z. B. auf einem neuen Gerät. Du kannst dort auch ältere Einzel-Dateien öffnen (Übungsplan-Export oder Beat-Dateien) – die App erkennt sie und lädt sie an der richtigen Stelle. Nach 30 Tagen ohne Sicherung erinnert dich die App freundlich („Später“ = eine Woche Ruhe).</li>
+        <li><strong>🕒 Anzeige später (im ⚙️-Menü, auch bei Beat &amp; Jam und Anschlag &amp; Zupfen):</strong> Die App wartet mit der Anzeige automatisch, bis der Ton wirklich aus dem Lautsprecher kommt. Läuft die Anzeige trotzdem vor (zum Beispiel mit Bluetooth-Lautsprecher), stell hier einen Zuschlag ein, etwa „+0,2 s“.</li>
         <li><strong>A+ Schriftgröße (im ⚙️-Menü):</strong> Drei Stufen – normal, groß, sehr groß. Gilt für die ganze App und wird gemerkt.</li>
         <li><strong>🌙 Hell / Dunkel (im ⚙️-Menü):</strong> Hell- oder Dunkel-Modus.</li>
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb3">
       <div class="module-block-header">
         <span class="module-number-badge">2</span>
+        <h3>Wörterbuch</h3>
+      </div>
+      <p>Begriffe rund um Gitarre und Musik in einfachen Worten – und alle Zeichen, die in Noten vorkommen.</p>
+      <ul>
+        <li><strong>🎸 Gitarre &amp; Musik:</strong> Begriffe von A bis Z. Mit den Buchstaben oben springst du direkt hin. Der Knopf „→ …“ führt in das Modul, in dem du es üben kannst.</li>
+        <li><strong>🎼 Noten &amp; Zeichen:</strong> Die Zeichen aus Noten, nach Themen sortiert und jeweils mit Bild. Tippe auf ein Thema, um es aufzuklappen.</li>
+        <li><strong>↩ Zurück:</strong> Öffnest du das Wörterbuch aus einer Übung heraus (⚙️-Menü oder Link), bringt dich der Knopf oben wieder dorthin.</li>
+      </ul>
+    </div>
+
+    <div class="module-block" id="imb4">
+      <div class="module-block-header">
+        <span class="module-number-badge">3</span>
         <h3>Musiktheorie</h3>
       </div>
       <p>Intervalllehre, Dreiklänge und Septakkorde, Tonleitern und Pentatoniken, Quintenzirkel sowie Kadenzen und Transponieren. Die Inhalte sind direkt mit dem Griffbrett verknüpft und können in kleinen interaktiven Beispielen erkundet werden.</p>
@@ -1795,33 +1869,33 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb5">
       <div class="module-block-header">
-        <span class="module-number-badge">3</span>
+        <span class="module-number-badge">4</span>
         <h3>Griffbrett-Theorie</h3>
       </div>
       <p>Hier findest du die musiktheoretischen Grundlagen (C-Dur-Tonleiter, Ganz- und Halbtöne, Vorzeichen #/b) sowie das genaue System des 4-Wochen-Übeplans mit Tageszeiten und Regeln, die Grundlage für das Modul „Alle Töne des Griffbretts lernen".</p>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb6">
       <div class="module-block-header">
-        <span class="module-number-badge">4</span>
+        <span class="module-number-badge">5</span>
         <h3>Alle Töne</h3>
       </div>
       <p>Führt dich schrittweise durch die einzelnen Saiten der Gitarre (Tiefe E, A, D, G, H, Hohe e & Gesamtes Griffbrett). Über die Schaltflächen oberhalb des Griffbretts wählst du, welchen der sechs Schritte du gerade übst, jeder hat seine eigene Timer-Länge. Ein grüner Haken markiert Schritte, die du in dieser Sitzung schon einmal bis zum Ablauf des Timers geübt hast. Du wählst oben den Notennamen aus und klickst die passenden Bünde auf dem Griffbrett an.</p>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb7">
       <div class="module-block-header">
-        <span class="module-number-badge">5</span>
+        <span class="module-number-badge">6</span>
         <h3>Töne erraten</h3>
       </div>
       <p>Das Programm markiert einen zufälligen Bund auf dem Griffbrett. Du wählst den richtigen Notennamen in der Auswahlleiste aus. Punkte belohnen richtige Antworten.</p>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb8">
       <div class="module-block-header">
-        <span class="module-number-badge">6</span>
+        <span class="module-number-badge">7</span>
         <h3>Noten lesen &amp; finden</h3>
       </div>
       <p>Wähle direkt im Notensystem eine beliebige Note mit der Maus oder dem Finger aus. Beim Anklicken erklingt der Ton sofort.</p>
@@ -1835,9 +1909,9 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb9">
       <div class="module-block-header">
-        <span class="module-number-badge">7</span>
+        <span class="module-number-badge">8</span>
         <h3>Gehörbildung</h3>
       </div>
       <p>Trainiere dein Gehör in Ruhe – du kannst jede Aufgabe so oft anhören, wie du magst.</p>
@@ -1853,9 +1927,9 @@
       <p>Das freie Erkunden (Bund antippen → Note sehen) findest du jetzt im Modul „Noten lesen &amp; finden“.</p>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb10">
       <div class="module-block-header">
-        <span class="module-number-badge">8</span>
+        <span class="module-number-badge">9</span>
         <h3>Tonleitern</h3>
       </div>
       <p>Wähle einen Grundton (alle 12 Töne) und einen Tonleiter-Typ (Dur, Moll, Dur-Pentatonik, Moll-Pentatonik oder Chromatisch für alle Töne). Ein eigenes Griffbrett-Raster zeigt dir alle passenden Positionen an, der Grundton ist orange hervorgehoben, alle übrigen Skalentöne blau.</p>
@@ -1869,9 +1943,9 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb11">
       <div class="module-block-header">
-        <span class="module-number-badge">9</span>
+        <span class="module-number-badge">10</span>
         <h3>Akkord-Labor</h3>
       </div>
       <p>Antippen von Bünden setzt Töne für Akkorde, die sofort im Notensystem erscheinen.</p>
@@ -1886,15 +1960,16 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb12">
       <div class="module-block-header">
-        <span class="module-number-badge">10</span>
+        <span class="module-number-badge">11</span>
         <h3>Akkordfolgen erstellen</h3>
       </div>
       <p>Trage deine eigenen Griffe ein und lass dir die Theorie dazu erklären.</p>
       <ul>
         <li><strong>Griffe eintragen:</strong> Punkt antippen = setzen/entfernen, über den Saiten ○ = leer, ✕ = nicht spielen. Mit ◀ ▶ verschiebst du das Griffbild am Hals. „📖 aus Liste“ setzt einen fertigen Griff ein, „🔁 Griff“ zeigt eine andere Griffvariante.</li>
         <li><strong>Erkennung:</strong> Die App zeigt Akkordname, Töne, Stufe und eine kurze Notenzeile. Darunter stehen Tonart, die Aufgabe jedes Akkords, bekannte Folgen und passende Tonleitern zum Improvisieren.</li>
+        <li><strong>✏️ Eigener Name:</strong> Wird ein Akkord nicht erkannt, steht dort „?“ und unter dem Diagramm erscheint ein kleines Textfeld. Tippe einen Namen ein (z. B. „Csus2“) – die App zeigt ihn statt des „?“, auch im Theorie-Kasten und in der großen Ansicht, und speichert ihn mit der Folge. Zum Spielen in Beat &amp; Jam oder Anschlag &amp; Zupfen muss die App den Akkord allerdings erkennen.</li>
         <li><strong>Anhören:</strong> Bei „Art“ einen einfachen Anschlag, ein einfaches Zupfen oder eines der Muster aus „Anschlag &amp; Zupfen“ wählen (auch deine eigenen). Bei einem Muster klingt jeder Akkord einen Takt lang in diesem Muster. Tempo einstellen und auf Wunsch „Wiederholen“ anhaken. Der Akkord, der gerade klingt, ist farbig umrandet. „🥁 Mit Schlagzeug anhören“ öffnet die Folge mit dem Muster in „Anschlag &amp; Zupfen“ – dort spielt ein Schlagzeug mit.</li>
         <li><strong>🔍 Große Ansicht:</strong> Helle, große Griffbilder zum Mitspielen. Mit „🖨️ Drucken“ kommt die Ansicht aufs Papier (oder als PDF). Klappt das Drucken nicht, speichert „💾 Als Datei speichern“ die Ansicht als Datei – die öffnest du in Chrome und druckst sie von dort.</li>
         <li><strong>🎼 Noten mit Namen:</strong> Zeigt unter jedem Akkord die gegriffenen Töne als Noten nebeneinander (tief → hoch) mit ihrem Namen. Antippen spielt den Akkord Ton für Ton. Gilt beim Erstellen und in der großen Ansicht.</li>
@@ -1903,17 +1978,17 @@
       </ul>
     </div>
 
-    <div class="module-block">
-      <div class="module-block-header">
-        <span class="module-number-badge">11</span>
-        <h3>Akkordwechsel-Trainer</h3>
-      </div>
-      <p>Hier übst du den Wechsel zwischen 2 bis 16 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück. <strong>Aus deinen Akkordfolgen:</strong> Über „📂 Aus meinen Akkordfolgen“ übernimmst du eine gespeicherte Folge mit deinen eigenen Griffen (bis zu 16 Akkorde). <strong>Art:</strong> „Anschlag“ oder „Zupfen (Arpeggio)“ – beim Zupfen klingen pro Schlag zwei einzelne Töne, vom Bass nach oben und zurück.</p>
-    </div>
-
-    <div class="module-block">
+    <div class="module-block" id="imb13">
       <div class="module-block-header">
         <span class="module-number-badge">12</span>
+        <h3>Akkordwechsel-Trainer</h3>
+      </div>
+      <p>Hier übst du den Wechsel zwischen 2 bis 16 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück. <strong>Aus deinen Akkordfolgen:</strong> Über „📂 Aus meinen Akkordfolgen“ übernimmst du eine gespeicherte Folge mit deinen eigenen Griffen (bis zu 16 Akkorde). Dort stehen unter „🥁 Meine Beats“ auch deine Beats aus „Beat &amp; Jam“: Ihre Akkorde kommen der Reihe nach in den Trainer, Wiederholungen werden zusammengefasst. <strong>Art:</strong> „Anschlag“ oder „Zupfen (Arpeggio)“ – beim Zupfen klingen pro Schlag zwei einzelne Töne, vom Bass nach oben und zurück.</p>
+    </div>
+
+    <div class="module-block" id="imb14">
+      <div class="module-block-header">
+        <span class="module-number-badge">13</span>
         <h3>Beat &amp; Jam</h3>
       </div>
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus dem Modul „Tonleitern“.</p>
@@ -1922,6 +1997,8 @@
         <li><strong>✏️ Griff eintragen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
         <li><strong>Leistung:</strong> Unter „🎚️ Lautstärke &amp; Klangfarbe“. „Automatisch“ rechnet auf Handys sparsamer, damit es nicht knackst oder aussetzt. Du kannst jederzeit von Hand „Sparsam“ oder „Hohe Qualität“ wählen – die Einstellung gilt nur für dieses Gerät.</li>
         <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie im Modul „Tonleitern“.</li>
+        <li><strong>🎸 Griffe zeigen:</strong> Unter den Takt-Knöpfen stehen alle Griffe des Songs nebeneinander, jeder Akkord einmal. Beim Abspielen leuchtet der aktuelle Griff, der nächste ist gestrichelt umrandet. Antippen: Akkord anhören. Kannst du die Griffe auswendig, nimm einfach das Häkchen weg.</li>
+        <li><strong>🎸 Gitarre spielt mit:</strong> Die App spielt ein Muster aus „Anschlag &amp; Zupfen“ (auch deine eigenen) mit den Akkorden der Takte und deinen ✏️-Griffen. Haken bei „Gitarre an“ setzen und ein Muster wählen. Zur Auswahl stehen die Muster, die zur Taktart des Beats passen. Lautstärke, Stumm (M) und Solo (S) unter „🎚️ Lautstärke &amp; Klangfarbe“. Die Gitarre wird mit dem Beat gespeichert und kommt beim WAV- und MIDI-Export mit.</li>
         <li><strong>⏱️ Timing &amp; Feeling:</strong> Swing (bis Triolen-Shuffle), Einzähler, Tap-Tempo, Humanize und der Tempo-Trainer (wird nach einstellbar vielen Durchläufen automatisch schneller, bis zum Zieltempo).</li>
         <li><strong>🛠️ Werkzeuge:</strong> Takt kopieren, 25 Song-Presets mit 4, 8 oder 12 Takten (z.B. 12-Takt-Blues, Kanon-Folge, Jazz ii–V–I, Bossa, Funk, House), zufällige Akkordfolge passend zur Tonart und automatisches Fill-in im letzten Loop-Takt.</li>
         <li><strong>M / S</strong> an jeder Instrumentenzeile: Stumm bzw. Solo.</li>
@@ -1933,6 +2010,9 @@
         <li><strong>Step-Sequenzer:</strong> Nummerierte Sechzehntel-Schritte pro Takt. Kästchen antippen schaltet den Schritt ein oder aus.</li>
         <li><strong>Takte:</strong> Über „Takte“ wählst du 4, 8, 12, 16, 24, 32, 48 oder 64 Takte (z.B. 12 für den kompletten Blues). Neue Takte übernehmen zunächst Muster und Akkorde der vorhandenen. Über die Reiter wechselst du zwischen den Takten, jeder Reiter zeigt seinen Akkord. Beim Abspielen laufen die Takte im Loop-Bereich hintereinander durch.</li>
         <li><strong>Loop-Bereich wählen:</strong> Legt fest, welcher Taktbereich in Dauerschleife läuft.</li>
+        <li><strong>📥 Aus meinen Akkordfolgen:</strong> Hast du in „Akkordfolgen erstellen“ eine Folge gespeichert, erscheint über den Takt-Knöpfen das Feld „📥 Aus meinen Akkordfolgen …“. Jeder Akkord der Folge wird ein Takt, deine eigenen Griffe werden übernommen, und der Loop läuft genau einmal durch die Folge. Danach kannst du alles wie gewohnt ändern.</li>
+        <li><strong>↔ Reihenfolge umsortieren:</strong> Gedrückt halten, ziehen, loslassen – in Beat &amp; Jam am Takt-Knopf, in Anschlag &amp; Zupfen am Diagramm (jeder Akkord der Folge hat dort ein eigenes Bild), in Akkordfolgen erstellen an der Karte (⠿ oben), im Akkordwechsel-Trainer am ⠿-Knopf vor dem Akkordfeld. Akkord, Griff und Muster wandern mit. In Beat zeigen die Diagramme unter „Griffe zeigen“ nur die Übersicht der vorkommenden Griffe; sortiert wird über die Takt-Knöpfe. Gespeicherte Folgen nach dem Sortieren erneut speichern.</li>
+        <li><strong>📖 Anleitung zu diesem Modul:</strong> Unter dem orangen Hinweis in jedem Modul sitzt der Knopf „📖 Anleitung zu diesem Modul“. Er öffnet diese Erklärung genau beim passenden Abschnitt und markiert ihn kurz. „↩ Zurück zu …“ unten rechts bringt dich zurück in dein Modul.</li>
         <li><strong>🧩 Song-Teile:</strong> Freiwillig. Gib Abschnitten Namen (Intro, Strophe, Refrain, Bridge …). Sie erscheinen als farbige Streifen über den Takten. „📋 Nochmal ans Ende“ kopiert einen Teil (z. B. den Refrain), „🔁 Nur diesen Teil üben“ wiederholt nur diesen Abschnitt. Bei vielen Takten scrollt der Takt-Kasten beim Abspielen mit.</li>
         <li><strong>💬 Freundliche Hinweise:</strong> Ab und zu ein netter Tipp (z. B. Pause nach längerem Spielen). Unter „⏱️ Timing &amp; Feeling“ abschaltbar.</li>
         <li><strong>Akkord & Bass:</strong> Für jeden Takt einzeln wählst du einen Akkord. Die Bass-Spur spielt automatisch den Grundton.</li>
@@ -1942,9 +2022,9 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb15">
       <div class="module-block-header">
-        <span class="module-number-badge">13</span>
+        <span class="module-number-badge">14</span>
         <h3>Anschlag &amp; Zupfen</h3>
       </div>
       <p>Lerne Anschlag- und Zupfmuster – vom einfachen Grundschlag bis Travis-Picking, Bossa Nova und ungeraden Taktarten (3/4, 6/8, 12/8, 5/4, 7/8).</p>
@@ -1954,6 +2034,8 @@
         <li><strong>Anzeige Zupfen:</strong> Die sechs Zeilen sind die Saiten (oben hohe e-Saite). Die Buchstaben sind die Finger der Anschlagshand: p = Daumen, i = Zeigefinger, m = Mittelfinger, a = Ringfinger. Die Saiten passen sich automatisch dem Akkord an.</li>
         <li><strong>Zählzeiten:</strong> Die obere Zeile zeigt, wie gezählt wird („1 + 2 +“ bzw. „1 e + e“ bei Sechzehnteln).</li>
         <li><strong>Akkorde:</strong> Einfach eintippen, z. B. „Am F C G“, oder einen Vorschlag antippen. „Takte pro Akkord“ legt fest, wie lange jeder Akkord bleibt.</li>
+        <li><strong>🎸 Griffe zeigen:</strong> Über „Jetzt“ stehen alle Griffe deiner Akkorde nebeneinander. Beim Abspielen leuchtet der aktuelle Griff, der nächste ist gestrichelt umrandet. Antippen: Akkord anhören. Das Häkchen schaltet die Leiste ab.</li>
+        <li><strong>🥁 Beats übernehmen:</strong> In derselben Auswahl wie die Akkordfolgen stehen unter „🥁 Meine Beats“ deine gespeicherten Beats und der aktuelle Beat. Übernommen werden die Akkorde mit deinen eigenen Griffen. Bleibt jeder Akkord 2 oder 4 Takte, wird „Takte pro Akkord“ passend eingestellt.</li>
         <li><strong>📥 Aus meinen Akkordfolgen:</strong> Holt eine selbst erstellte Folge – mit deinen eigenen Griffen. Beim Zupfen zeigt die Tab dann genau deine Saiten. Tippst du die Akkorde danach von Hand um, gelten wieder die normalen Griffe.</li>
         <li><strong>Akkord beim Zupfen:</strong> Neben der Tab (auf schmalen Bildschirmen darüber) stehen der aktuelle Akkord mit Griffbild und „danach: …“.</li>
         <li><strong>Abspielen:</strong> ▶ spielt das Muster mit Gitarrenklang, auf Wunsch mit Metronom-Klick und Einzähler. Bei „🥁 Schlagzeug“ kannst du eine Schlagzeug-Begleitung dazuschalten (z. B. Rock, Pop, Bossa Nova; bei Mustern, die nicht im 4/4-Takt sind, eine einfache passend zur Taktart). Die gerade gespielte Stelle leuchtet. Tipp: erst langsam, Tempo nur erhöhen, wenn es sich locker anfühlt.</li>
@@ -1962,9 +2044,9 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb16">
       <div class="module-block-header">
-        <span class="module-number-badge">14</span>
+        <span class="module-number-badge">15</span>
         <h3>Stimmgerät</h3>
       </div>
       <p>Stimmt deine Gitarre über das Mikrofon des Geräts.</p>
@@ -1977,7 +2059,7 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb17">
       <div class="module-block-header">
         <span class="module-number-badge">🎸</span>
         <h3>Saitenwechsel im Blick</h3>
@@ -1992,9 +2074,9 @@
       </ul>
     </div>
 
-    <div class="module-block">
+    <div class="module-block" id="imb18">
       <div class="module-block-header">
-        <span class="module-number-badge">15</span>
+        <span class="module-number-badge">16</span>
         <h3>Wochenplan</h3>
       </div>
       <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
@@ -2308,12 +2390,15 @@
     
     <div class="planner-header">
       <button class="btn" id="addExerciseBtn">+ Übung hinzufügen</button>
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <button class="btn btn-secondary" id="exportDataBtn">💾 Plan als Datei speichern</button>
-        <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">📂 Plan aus Datei laden</label>
-        <input type="file" id="importDataInput" style="display:none;">
-        <button class="btn btn-secondary" id="resetWeekBtn">Woche zurücksetzen</button>
-      </div>
+      <details id="plannerMoreDetails" style="display:inline-block;">
+        <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">… Mehr</summary>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+          <button class="btn btn-secondary" id="exportDataBtn">💾 Plan als Datei speichern</button>
+          <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">📂 Plan aus Datei laden</label>
+          <input type="file" id="importDataInput" style="display:none;">
+          <button class="btn btn-secondary" id="resetWeekBtn">Woche zurücksetzen</button>
+        </div>
+      </details>
     </div>
 
     <details id="plannerCalDet" class="prog-box" style="margin:6px 0 10px; max-width:420px;"><summary>📅 Kalender</summary><div id="plannerCal"></div></details>
@@ -2346,41 +2431,46 @@
 
   <div class="controls-panel" id="standardControls" style="display:none;">
     <div class="row">
-      <div class="toggle-group" id="accidentalGroup">
-        <input type="checkbox" id="accidentalsToggle">
-        <label for="accidentalsToggle">Vorzeichen (#/b)</label>
-      </div>
       <div class="toggle-group" id="autoCheckGroup">
         <input type="checkbox" id="autoCheckToggle" checked>
         <label for="autoCheckToggle">Auto Check</label>
-      </div>
-      <div class="toggle-group" id="showNotesGroup">
-        <input type="checkbox" id="showNotesToggle">
-        <label for="showNotesToggle">Töne anzeigen</label>
-      </div>
-      <div class="toggle-group" id="showFretNumGroup">
-        <input type="checkbox" id="showFretNumbersToggle" checked>
-        <label for="showFretNumbersToggle">Bünde nummerieren</label>
-      </div>
-      <div class="toggle-group" id="staffGroup">
-        <input type="checkbox" id="showStaffToggle" checked>
-        <label for="showStaffToggle">Notensystem</label>
-      </div>
-      <div class="toggle-group" id="staffNamesGroup">
-        <input type="checkbox" id="showStaffNamesToggle" checked>
-        <label for="showStaffNamesToggle">Notennamen anzeigen</label>
       </div>
       <div class="toggle-group" id="soundGroup">
         <input type="checkbox" id="soundToggle" checked>
         <label for="soundToggle">Ton abspielen</label>
       </div>
-      <div class="toggle-group" id="solveAllGroup" style="background: #312e81; border-color: #4338ca;">
-        <input type="checkbox" id="solveAllToggle">
-        <label for="solveAllToggle" style="color:#c7d2fe; font-weight:600;">Alles auflösen</label>
-      </div>
-      <button class="btn btn-secondary" id="resetBtn" style="margin-left:auto;">Zurücksetzen</button>
-      <button class="btn" id="manualCheckBtn" style="display:none;">Check</button>
     </div>
+    <details id="viewOptsDetails" style="margin-top:6px;">
+      <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">👁 Ansicht einstellen</summary>
+      <div class="row" style="margin-top:8px;">
+        <div class="toggle-group" id="accidentalGroup">
+          <input type="checkbox" id="accidentalsToggle">
+          <label for="accidentalsToggle">Vorzeichen (#/b)</label>
+        </div>
+        <div class="toggle-group" id="showNotesGroup">
+          <input type="checkbox" id="showNotesToggle">
+          <label for="showNotesToggle">Töne anzeigen</label>
+        </div>
+        <div class="toggle-group" id="showFretNumGroup">
+          <input type="checkbox" id="showFretNumbersToggle" checked>
+          <label for="showFretNumbersToggle">Bünde nummerieren</label>
+        </div>
+        <div class="toggle-group" id="staffGroup">
+          <input type="checkbox" id="showStaffToggle" checked>
+          <label for="showStaffToggle">Notensystem</label>
+        </div>
+        <div class="toggle-group" id="staffNamesGroup">
+          <input type="checkbox" id="showStaffNamesToggle" checked>
+          <label for="showStaffNamesToggle">Notennamen anzeigen</label>
+        </div>
+        <div class="toggle-group" id="solveAllGroup" style="background: #312e81; border-color: #4338ca;">
+          <input type="checkbox" id="solveAllToggle">
+          <label for="solveAllToggle" style="color:#c7d2fe; font-weight:600;">Alles auflösen</label>
+        </div>
+        <button class="btn btn-secondary" id="resetBtn" style="margin-left:auto;">Zurücksetzen</button>
+        <button class="btn" id="manualCheckBtn" style="display:none;">Check</button>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -2412,6 +2502,27 @@
     return m === 'low' || (m === 'auto' && jamIsPhone());
   }
   let audioCtxLowPerf = null;
+  // Der Ton kommt erst nach der Puffer-/Ausgabezeit aus dem Lautsprecher (auf Tablets größer,
+  // bei Bluetooth noch mehr). Die Anzeige wartet so lange mit – plus ein frei wählbarer Zuschlag.
+  const VISLAG_KEY = 'guitartrainer_vislag';
+  const VISLAG_OPTS = [['auto', 'Automatisch'], ['100', '+0,1 s'], ['200', '+0,2 s'], ['300', '+0,3 s'], ['400', '+0,4 s'], ['500', '+0,5 s'], ['600', '+0,6 s'], ['800', '+0,8 s']];
+  function visLagSetting() { try { const v = localStorage.getItem(VISLAG_KEY); return VISLAG_OPTS.some(o => o[0] === v) ? v : 'auto'; } catch (e) { return 'auto'; } }
+  function audioLagMs() {
+    let ms = 0;
+    if (audioCtx) { try { const l = (audioCtx.outputLatency || 0) + (audioCtx.baseLatency || 0); if (l > 0 && l < 1.5) ms = l * 1000; } catch (e) {} }
+    const v = visLagSetting(); if (v !== 'auto') ms += parseInt(v, 10) || 0;
+    return ms;
+  }
+  function visLagSelectHtml(style) {
+    const v = visLagSetting();
+    return `<label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;" title="Läuft die Anzeige dem Ton voraus, stell hier einen größeren Wert ein.">🕒 Anzeige später: <select class="vislag-sel" style="${style || ''}">${VISLAG_OPTS.map(([k, l]) => `<option value="${k}" ${k === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`;
+  }
+  document.addEventListener('change', e => {
+    const t = e.target; if (!t || !t.classList || !t.classList.contains('vislag-sel')) return;
+    try { localStorage.setItem(VISLAG_KEY, t.value); } catch (er) {}
+    document.querySelectorAll('.vislag-sel').forEach(x => { if (x !== t) x.value = t.value; });
+    showToast(t.value === 'auto' ? 'Anzeige: automatisch an den Ton angepasst' : 'Anzeige kommt ' + t.selectedOptions[0].text.replace('+', '') + ' später');
+  });
   function initAudio() {
     if (!audioCtx) {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -2879,9 +2990,10 @@
     { id: "bongoLo", label: "Bongo Tief" },
     { id: "bass", label: "Bass" },
     { id: "arp", label: "Arp (Lead)" },
-    { id: "pad", label: "Pad" }
+    { id: "pad", label: "Pad" },
+    { id: "gtr", label: "Gitarre" }
   ];
-  const JAM_DEFAULT_VOLUMES = { kick: 0.9, snare: 0.7, hihat: 0.5, crash: 0.7, bongoHi: 0.7, bongoLo: 0.7, bass: 0.8, arp: 0.6, pad: 0.6 };
+  const JAM_DEFAULT_VOLUMES = { kick: 0.9, snare: 0.7, hihat: 0.5, crash: 0.7, bongoHi: 0.7, bongoLo: 0.7, bass: 0.8, arp: 0.6, pad: 0.6, gtr: 0.7 };
   const JAM_STORAGE_KEY = 'guitartrainer_jam_patterns';
   const JAM_AUTOSAVE_KEY = 'guitartrainer_jam_autosave';
 
@@ -2944,7 +3056,10 @@
       kit: 'standard',   // Sound-Kit: standard | acoustic | 808 | lofi
       crackle: 0.5,      // Lo-Fi-Knistern 0–1
       stereo: true,      // Instrumente links/rechts verteilen
-      parts: []          // Song-Teile [{name, start, end}]
+      parts: [],         // Song-Teile [{name, start, end}]
+      gtrOn: false,      // Gitarre spielt ein Muster aus „Anschlag & Zupfen“
+      gtrPattern: null,  // Muster-Id
+      gtrPatCopy: null   // Kopie eines eigenen Musters (falls es später gelöscht wird oder auf einem anderen Gerät fehlt)
     };
 
     try {
@@ -4722,12 +4837,12 @@
   // Swing, Einzähler, Tap-Tempo, Mute/Solo, Takt kopieren, einklappbare Bereiche
   // =====================================================================
   const JAM_UI_KEY = 'guitartrainer_jam_ui';
-  const JAM_MUTE_KEYS = ['kick','snare','hihat','crash','bongoHi','bongoLo','bass','arp','pad'];
+  const JAM_MUTE_KEYS = ['kick','snare','hihat','crash','bongoHi','bongoLo','bass','arp','pad','gtr'];
 
   // Welche Bereiche sind aufgeklappt? (nur Oberfläche, getrennt von den Pattern-Daten gespeichert)
   function getJamUiOpen() {
-    try { return { improv:false, timing:false, tools:false, mixer:true, save:false, ...(JSON.parse(localStorage.getItem(JAM_UI_KEY) || '{}')) }; }
-    catch (e) { return { improv:false, timing:false, tools:false, mixer:true, save:false }; }
+    try { return { improv:false, timing:false, tools:false, mixer:false, save:false, ...(JSON.parse(localStorage.getItem(JAM_UI_KEY) || '{}')) }; }
+    catch (e) { return { improv:false, timing:false, tools:false, mixer:false, save:false }; }
   }
   function setJamUiOpen(key, open) {
     const ui = getJamUiOpen(); ui[key] = open;
@@ -4942,7 +5057,47 @@
     catch (e) { return iv.map(i => SCALE_VIEW_ROOTS[(pc + i) % 12]); }
   }
 
+  // ---------- Griff-Leiste: alle Griffe eines Songs auf einen Blick ----------
+  const GRIPSTRIP_KEY = 'guitartrainer_gripstrip';
+  function gripStripOn(which) { try { const o = JSON.parse(localStorage.getItem(GRIPSTRIP_KEY) || '{}') || {}; return o[which] !== false; } catch (e) { return true; } }
+  function gripStripSet(which, on) { let o = {}; try { o = JSON.parse(localStorage.getItem(GRIPSTRIP_KEY) || '{}') || {}; } catch (e) {} o[which] = !!on; try { localStorage.setItem(GRIPSTRIP_KEY, JSON.stringify(o)); } catch (e) {} }
+  // list: [{name, frets}] -> jeder Griff nur einmal; idxOf[i] = Position in der Leiste
+  function gripDistinct(list) {
+    const items = [], idxOf = [];
+    list.forEach(c => { const k = c.name + ':' + (c.frets || []).join(); let i = items.findIndex(x => x.k === k); if (i < 0) { i = items.length; items.push({ k, name: c.name, frets: c.frets }); } idxOf.push(i); });
+    return { items, idxOf };
+  }
+  function gripStripShellHtml(which) {
+    const on = gripStripOn(which);
+    return `<div class="grip-strip-wrap"><label class="grip-strip-head"><input type="checkbox" data-gripstrip="${which}" ${on ? 'checked' : ''}> 🎸 Griffe zeigen</label><div class="grip-strip" id="gripStrip_${which}" ${on ? '' : 'style="display:none;"'}></div></div>`;
+  }
+  function gripStripUpdate(which, items, cur, next) {
+    const box = document.getElementById('gripStrip_' + which); if (!box) return;
+    if (!gripStripOn(which) || !items.length) { box.style.display = 'none'; box.dataset.sig = ''; box.innerHTML = ''; return; }
+    box.style.display = '';
+    const sig = items.map(it => it.k).join('|');
+    if (box.dataset.sig !== sig) {
+      box.dataset.sig = sig; box._items = items;
+      box.innerHTML = items.map((it, i) => `<button type="button" class="grip-item" data-grip="${i}" title="Antippen: Akkord anhören"><span class="nm">${homeEsc(it.name)}</span>${it.frets ? renderJamChordDiagramSvg(it.frets) : '<span class="jam-hint" style="margin:4px;">kein Griffbild</span>'}</button>`).join('');
+    }
+    box.querySelectorAll('.grip-item').forEach((b, i) => { b.classList.toggle('cur', i === cur); b.classList.toggle('next', i === next && i !== cur); });
+  }
+  function gripStripBind(which, refresh) {
+    const box = document.getElementById('gripStrip_' + which); if (!box) return;
+    box.addEventListener('click', e => { if (Date.now() - holdDragEndAt < 500) return; const b = e.target.closest('[data-grip]'); if (!b || !box._items) return; const it = box._items[+b.dataset.grip]; if (it && it.frets) { try { initAudio(); progPlayChord({ frets: it.frets }, 0); } catch (er) {} } });
+    const cb = box.parentElement.querySelector('[data-gripstrip]');
+    if (cb) cb.addEventListener('change', () => { gripStripSet(which, cb.checked); refresh(); });
+  }
+  function updateJamGripStrip() {
+    const jam = state.jam; if (!jam || !document.getElementById('gripStrip_jam')) return;
+    const { items, idxOf } = gripDistinct(jam.bars.map(b => { const f = jamBarFingering(b); return { name: jamChordShort(b), frets: f ? f.frets : null }; }));
+    const curIdx = jam.playing ? jam.playingBar : jam.activeBar;
+    const nextBar = (curIdx + 1 > jam.loopEnd || curIdx < jam.loopStart) ? jam.loopStart : curIdx + 1;
+    gripStripUpdate('jam', items, idxOf[curIdx] ?? -1, jam.playing ? (idxOf[nextBar] ?? -1) : -1);
+  }
+
   function updateJamImprovPanel() {
+    try { updateJamGripStrip(); } catch (e) {}
     const box = document.getElementById('jamImprovBody');
     if (!box || !state.jam) return;
     const jam = state.jam;
@@ -5259,6 +5414,15 @@
     return d;
   }
   function progSave() { try { localStorage.setItem(PROG_KEY, JSON.stringify(progState)); } catch (e) {} }
+  function progReorder(from, over) {
+    if (!progState) progState = progLoad();
+    const dr = progState.draft;
+    if (from >= dr.chords.length || over >= dr.chords.length) return;
+    const moved = dr.chords.splice(from, 1)[0]; dr.chords.splice(over, 0, moved);
+    progSave(); progRender();
+    showToast(`↔ Akkord steht jetzt an Stelle ${over + 1}`);
+  }
+  function progChordName(c) { const n = c && typeof c.name === 'string' ? c.name.trim() : ''; return n || '?'; }
   function progDetect(c) {
     if (!c || !c.frets.some(f => f >= 0)) return null;
     const d = jamDetectPaintedChord(c.frets);
@@ -5480,9 +5644,10 @@
       if (d) tones = 'Töne: ' + jamChordToneNames(d.root, d.type).join(' – ');
       else if (played.length) tones = 'Töne: ' + [...new Set(played.map(p => SCALE_VIEW_ROOTS[p % 12]))].join(' – ');
       h += `<div class="prog-card">
-        <div class="prog-head"><span>Akkord ${ci + 1}</span><span>Bund <button type="button" class="prog-fretbtn" data-act="down" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">◀</button>${c.start}<button type="button" data-act="up" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">▶</button></span></div>
+        <div class="prog-head"><span title="Gedrückt halten und ziehen zum Umsortieren" style="cursor:grab;">⠿ Akkord ${ci + 1}</span><span>Bund <button type="button" class="prog-fretbtn" data-act="down" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">◀</button>${c.start}<button type="button" data-act="up" data-c="${ci}" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;">▶</button></span></div>
         ${g}
-        <div class="prog-name">${d ? homeEsc(progChordShort(d)) : (played.length ? '?' : '–')}</div>
+        <div class="prog-name">${d ? homeEsc(progChordShort(d)) : (played.length ? homeEsc(progChordName(c)) : '–')}</div>
+        ${!d && played.length ? `<input type="text" class="prog-cname" data-c="${ci}" value="${homeEsc((c.name || '').trim())}" placeholder="Eigener Name, z. B. Csus2" maxlength="24" aria-label="Eigener Akkordname" style="width:100%; margin-top:4px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:0.8rem;">` : ''}
         ${rm ? `<div class="prog-roman">Stufe ${rm.text}</div>` : ''}
         <div class="prog-tones">${tones}${d && d.missing ? ' <span title="Ein Akkordton fehlt">(ohne Quinte)</span>' : ''}</div>
         ${progState.notes ? `<div class="prog-staff-tap" data-act="arp" data-c="${ci}" title="Antippen: Ton für Ton anhören">${progStaffSvg(c, d, true)}</div>` : progStaffSvg(c, d)}
@@ -5496,6 +5661,7 @@
       </div>`;
     });
     h += `</div>`;
+    h += `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Karte gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>`;
     // Theorie
     const named = ds.filter(Boolean);
     h += `<div class="prog-theory">`;
@@ -5503,7 +5669,7 @@
       h += `<div style="color:var(--text-muted);">Sobald Akkorde erkannt sind, erscheint hier die Theorie zu deiner Folge.</div>`;
     } else {
       const kName = jamRootName(an.key.root, an.key.mode) + (an.key.mode === 'dur' ? '-Dur' : '-Moll');
-      h += `<div style="font-size:1rem;"><strong>Folge:</strong> ${ds.map(d => d ? homeEsc(progChordShort(d)) : '?').join(' – ')}</div>`;
+      h += `<div style="font-size:1rem;"><strong>Folge:</strong> ${ds.map((d, i) => d ? homeEsc(progChordShort(d)) : homeEsc(progChordName(dr.chords[i] || {}))).join(' – ')}</div>`;
       h += `<div><strong>Tonart:</strong> passt am besten zu <strong>${kName}</strong>${an.notes.length ? ' (mit Akkorden von außerhalb, siehe unten)' : ''}.</div>`;
       h += `<div><strong>Stufen:</strong> ${an.rms.map(r => r ? r.text : '?').join(' – ')}</div>`;
       h += `<h4>Was die Akkorde tun</h4><ul>`;
@@ -5520,6 +5686,7 @@
     }
     h += `</div>`;
     body.innerHTML = h;
+    holdDragBind(body.querySelector('.prog-cards'), '.prog-card', el => Array.prototype.indexOf.call(el.parentElement.children, el), progReorder, 'input, select, textarea');
     progMarkPlaying();
   }
   // ---------- Kurze Notenzeile unter jedem Akkordbild ----------
@@ -5733,7 +5900,7 @@
               else { strumDamp(audioCtx, t, ev.si); strumPluck(audioCtx, JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], t, ev.vel, ev.si, ev.sus); }
             } catch (e) {}
           });
-          progPlayer.tos.push(setTimeout(() => { progPlayer.cur = ci; progMarkPlaying(); }, Math.max(0, (t0 - audioCtx.currentTime) * 1000)));
+          progPlayer.tos.push(setTimeout(() => { progPlayer.cur = ci; progMarkPlaying(); }, Math.max(0, (t0 - audioCtx.currentTime) * 1000 + audioLagMs())));
         }
         progPlayer.next += bar; progPlayer.idx++;
       }
@@ -5842,7 +6009,7 @@
       });
     }
     progBigOpen._list = list.map(x => x.c);
-    const names = list.map(x => x.d ? progChordShort(x.d) : '?');
+    const names = list.map(x => x.d ? progChordShort(x.d) : progChordName(x.c));
     ov.innerHTML = `<div class="prog-big-top"><div class="prog-big-title">${homeEsc((dr.name || '').trim() || 'Meine Akkordfolge')}</div><button type="button" class="prog-big-close" id="progBigClose" data-big="close" aria-label="Schließen">✕</button></div>
       <div class="prog-big-actions">
         <button type="button" class="${progState.notes ? 'on' : ''}" data-big="notes" aria-pressed="${!!progState.notes}">🎼 Noten mit Namen</button>
@@ -5991,6 +6158,7 @@
     } else {
       const act = t.dataset.act;
       if (!act) return;
+      if (Date.now() - holdDragEndAt < 500) return;
       if (act === 'up' && c) c.start = Math.min(12, c.start + 1);
       else if (act === 'down' && c) c.start = Math.max(1, c.start - 1);
       else if (act === 'clear' && c) dr.chords[ci] = progEmptyChord();
@@ -6083,6 +6251,20 @@
   document.addEventListener('input', e => {
     if (e.target && e.target.id === 'progPlayBpm' && progState) { progPlayOpts().bpm = parseInt(e.target.value, 10); const v = document.getElementById('progBpmVal'); if (v) v.textContent = progPlayOpts().bpm; }
     if (e.target && e.target.id === 'progName' && progState) { progState.draft.name = e.target.value; progSave(); }
+    if (e.target && e.target.classList && e.target.classList.contains('prog-cname') && progState) {
+      const c = progState.draft.chords[+e.target.dataset.c];
+      if (c) {
+        c.name = e.target.value;
+        const card = e.target.closest('.prog-card'); const nm = card && card.querySelector('.prog-name');
+        if (nm) nm.textContent = progChordName(c);
+      }
+    }
+  });
+  document.addEventListener('change', e => {
+    if (e.target && e.target.classList && e.target.classList.contains('prog-cname') && progState) {
+      progSave();
+      try { progRender(); } catch (er) {}
+    }
   });
 
   // =================== Wochenplan ↔ Beat ===================
@@ -6163,6 +6345,137 @@
     jamPlanCtx.msg = msg;
     renderJamModule();
     window.scrollTo(0, 0);
+  }
+  // 📥 Gespeicherte Akkordfolge (inkl. eigener Griffe) in den Beat laden: 1 Akkord = 1 Takt
+  function jamImportProgApply(v) {
+    const jam = state.jam; if (!jam || v === '') return;
+    if (!progState) progState = progLoad();
+    let src = null, name = '';
+    if (v === 'draft') { const dr = progState.draft || { chords: [] }; src = dr.chords || []; name = (dr.name || '').trim() || 'Aktuelle Folge'; }
+    else { const q = (progState.saved || [])[+v]; if (!q) return; src = q.chords || []; name = q.name || 'Ohne Namen'; }
+    const chords = src.map(c => { const d = progDetect(c); return d ? { root: d.root, type: d.type, frets: (c.frets || []).slice() } : null; }).filter(Boolean).slice(0, JAM_MAX_BARS);
+    if (!chords.length) { showToast('⚠️ In dieser Folge sind keine erkennbaren Akkorde.'); return; }
+    stopJamPlayback();
+    jam.chordMode = 'free';
+    setJamBarCount(chords.length);
+    chords.forEach((c, i) => { const b = jam.bars[i]; b.chordRoot = c.root; b.chordType = c.type; b.ownFrets = c.frets.slice(); b.ownFretsFor = c.root + ':' + c.type; });
+    jam.parts = [];
+    jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
+    scheduleJamAutosave();
+    renderJamModule();
+    showToast(`📥 Folge „${name}“ übernommen (${chords.length} Takte)`);
+  }
+  // ↔ Generell: Element gedrückt halten, ziehen, loslassen = umsortieren
+  let holdDrag = null, holdDragEndAt = 0, holdDragScrollTimer = null;
+  function holdDragReset() {
+    if (holdDrag && holdDrag.timer) clearTimeout(holdDrag.timer);
+    if (holdDragScrollTimer) { clearInterval(holdDragScrollTimer); holdDragScrollTimer = null; }
+    document.querySelectorAll('.hdrag-src, .hdrag-over').forEach(x => x.classList.remove('hdrag-src', 'hdrag-over'));
+    holdDrag = null;
+  }
+  // Während des Ziehens am Fensterrand automatisch weiterscrollen
+  function holdDragScrollLoop() {
+    if (holdDragScrollTimer) return;
+    holdDragScrollTimer = setInterval(() => {
+      if (!holdDrag || !holdDrag.active || !holdDrag.lp) return;
+      const m = 70, sp = 16;
+      if (holdDrag.lp.y < m) window.scrollBy(0, -sp);
+      else if (holdDrag.lp.y > window.innerHeight - m) window.scrollBy(0, sp);
+    }, 50);
+  }
+  document.addEventListener('pointermove', e => {
+    if (!holdDrag || !holdDrag.active) return;
+    holdDrag.lp = { x: e.clientX, y: e.clientY };
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const t = el && el.closest ? el.closest(holdDrag.itemSel) : null;
+    if (t && t !== holdDrag.srcEl) {
+      const over = holdDrag.getIndex(t);
+      if (over !== holdDrag.over) {
+        document.querySelectorAll('.hdrag-over').forEach(x => x.classList.remove('hdrag-over'));
+        t.classList.add('hdrag-over'); holdDrag.over = over;
+      }
+    }
+  });
+  document.addEventListener('touchmove', e => { if (holdDrag && holdDrag.active) e.preventDefault(); }, { passive: false });
+  document.addEventListener('pointerup', () => {
+    if (!holdDrag) return;
+    const d = holdDrag; holdDragReset();
+    if (!d.active || d.over == null || d.over === d.from) return;
+    holdDragEndAt = Date.now();
+    d.onDrop(d.from, d.over);
+  });
+  document.addEventListener('pointercancel', holdDragReset);
+  function holdDragBind(box, itemSel, getIndex, onDrop, excludeSel) {
+    if (!box) return;
+    box.addEventListener('pointerdown', e => {
+      const item = e.target.closest(itemSel); if (!item || !box.contains(item) || holdDrag) return;
+      if (excludeSel && e.target.closest(excludeSel)) return;
+      const from = getIndex(item);
+      if (e.pointerType === 'mouse') { holdDrag = { itemSel, getIndex, onDrop, from, over: from, active: true, srcEl: item, timer: null, lp: null }; item.classList.add('hdrag-src'); holdDragScrollLoop(); }
+      else holdDrag = { itemSel, getIndex, onDrop, from, over: from, active: false, srcEl: item, lp: null, timer: setTimeout(() => { if (holdDrag) { holdDrag.active = true; item.classList.add('hdrag-src'); holdDragScrollLoop(); } }, 400) };
+    });
+    box.addEventListener('contextmenu', e => { if (holdDrag && holdDrag.active) e.preventDefault(); });
+  }
+  // ↔ Takte umsortieren: Takt-Knopf gedrückt halten, ziehen, loslassen
+  let jamTabDrag = null, jamDragEndAt = 0, jamDragScrollTimer = null;
+  function jamTabDragCleanup() {
+    if (jamTabDrag && jamTabDrag.timer) clearTimeout(jamTabDrag.timer);
+    if (jamDragScrollTimer) { clearInterval(jamDragScrollTimer); jamDragScrollTimer = null; }
+    document.querySelectorAll('.jam-bar-tab.drag-src, .jam-bar-tab.drag-over').forEach(x => x.classList.remove('drag-src', 'drag-over'));
+    jamTabDrag = null;
+  }
+  document.addEventListener('pointermove', e => {
+    if (!jamTabDrag || !jamTabDrag.active) return;
+    jamTabDrag.lp = { x: e.clientX, y: e.clientY };
+    if (!jamDragScrollTimer) jamDragScrollTimer = setInterval(() => {
+      if (!jamTabDrag || !jamTabDrag.active || !jamTabDrag.lp) return;
+      const m = 70, sp = 16;
+      if (jamTabDrag.lp.y < m) window.scrollBy(0, -sp);
+      else if (jamTabDrag.lp.y > window.innerHeight - m) window.scrollBy(0, sp);
+      const row = document.getElementById('jamBarTabsRow');
+      if (row && row.classList.contains('many')) {
+        const r = row.getBoundingClientRect();
+        if (jamTabDrag.lp.y > r.top && jamTabDrag.lp.y < r.top + 34) row.scrollBy(0, -14);
+        else if (jamTabDrag.lp.y > r.bottom - 34 && jamTabDrag.lp.y < r.bottom) row.scrollBy(0, 14);
+      }
+    }, 50);
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const t = el && el.closest ? el.closest('.jam-bar-tab') : null;
+    if (t) {
+      const over = +t.dataset.bar;
+      if (over !== jamTabDrag.over) {
+        document.querySelectorAll('.jam-bar-tab.drag-over').forEach(x => x.classList.remove('drag-over'));
+        t.classList.add('drag-over'); jamTabDrag.over = over;
+      }
+    }
+  });
+  document.addEventListener('touchmove', e => { if (jamTabDrag && jamTabDrag.active) e.preventDefault(); }, { passive: false });
+  document.addEventListener('pointerup', () => {
+    if (!jamTabDrag) return;
+    const d = jamTabDrag; jamTabDragCleanup();
+    if (!d.active || d.over == null || d.over === d.from) return;
+    const jam = state.jam; if (!jam) return;
+    stopJamPlayback();
+    const from = d.from, over = d.over;
+    const moved = jam.bars.splice(from, 1)[0];
+    jam.bars.splice(over, 0, moved);
+    if (jam.activeBar === from) jam.activeBar = over;
+    else if (from < over && jam.activeBar > from && jam.activeBar <= over) jam.activeBar--;
+    else if (from > over && jam.activeBar >= over && jam.activeBar < from) jam.activeBar++;
+    jamDragEndAt = Date.now();
+    scheduleJamAutosave();
+    renderJamModule();
+    showToast(`↔ Takt steht jetzt an Stelle ${over + 1}`);
+  });
+  document.addEventListener('pointercancel', jamTabDragCleanup);
+  function jamTabDragBind(row) {
+    row.addEventListener('pointerdown', e => {
+      const tab = e.target.closest('.jam-bar-tab'); if (!tab || jamTabDrag) return;
+      const from = +tab.dataset.bar;
+      if (e.pointerType === 'mouse') { jamTabDrag = { from, over: from, active: true, timer: null }; tab.classList.add('drag-src'); }
+      else jamTabDrag = { from, over: from, active: false, timer: setTimeout(() => { if (jamTabDrag) { jamTabDrag.active = true; tab.classList.add('drag-src'); } }, 400) };
+    });
+    row.addEventListener('contextmenu', e => { if (jamTabDrag && jamTabDrag.active) e.preventDefault(); });
   }
   function renderJamPlanBanner() {
     const c = jamPlanCtx;
@@ -6298,6 +6611,7 @@
     html += `</div>`;
 
     if (jamPlanCtx) html = renderJamPlanBanner() + html;
+    html += (() => { if (!progState) progState = progLoad(); const dr = progState.draft || { chords: [], name: '' }, hasDraft = (dr.chords || []).some(c => progDetect(c)); if (!hasDraft && !(progState.saved || []).length) return ''; return `<div class="row" style="margin-top:10px;"><select id="jamImportProg" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${(progState.saved || []).map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}</select></div>`; })();
     html += `<div class="row ${jam.bars.length > 16 ? 'many' : ''}" id="jamBarTabsRow" style="gap:6px; margin-top:12px;">`;
     for (let i = 0; i < jam.bars.length; i++) {
       const isActive = i === jam.activeBar;
@@ -6308,9 +6622,9 @@
       html += `<button type="button" class="btn ${isActive ? '' : 'btn-secondary'} jam-bar-tab" data-bar="${i}" style="${isPlaying ? 'box-shadow: 0 0 0 2px #22d3ee inset;' : ''} ${inLoop ? '' : 'opacity:0.45;'} ${part ? `border-top:4px solid ${jamPartColor(part.name)};` : ''}">${isPlaying ? '▶ ' : ''}Takt ${i + 1}<small class="jam-tab-chord">${jamChordShort(jam.bars[i])}${jamOwnFrets(jam.bars[i]) ? ' ✏️' : ''}</small></button>`;
     }
     html += `</div>`;
-    html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>`;
-    html += `<details class="jam-section" data-sec="parts" ${ui.parts ? 'open' : ''}><summary>🧩 Song-Teile${(jam.parts || []).length ? ` (${jam.parts.length})` : ''}</summary><div id="jamPartsBody">${renderJamPartsBody()}</div></details>`;
-
+    html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>
+    <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Takt-Knopf gedrückt halten, ziehen, loslassen = umsortieren · kurz antippen = Takt wechseln · die Diagramme darunter sind nur die Griff-Übersicht</div>`;
+    html += gripStripShellHtml('jam');
     html += `<div class="row" style="gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px;">`;
     if (jam.chordMode === 'free') {
       html += `<div class="toggle-group"><label style="font-weight:600;">Akkord Takt ${jam.activeBar + 1}:</label>
@@ -6332,9 +6646,34 @@
       <input type="checkbox" id="jamBassVariationCheckbox" ${jam.bassVariation ? 'checked' : ''}> Bass-Variation</label>`;
     html += `<button class="btn btn-secondary" id="jamResetBtn">Muster zurücksetzen</button>`;
     html += `<button class="btn btn-secondary" id="jamUndoBtn" ${jamLastCellChange ? '' : 'disabled'}>↩ Rückgängig</button>`;
+    html += `</div>`;    const totalSteps = getJamStepsCount();
+    const accentSteps = getJamAccentSteps();
+    html += `<div class="jam-row" id="jamStepHeader" style="grid-template-columns: 92px repeat(${totalSteps}, 1fr); margin-top:14px;"><div></div>`;
+    for (let s = 0; s < totalSteps; s++) {
+      html += `<div class="jam-step-num ${accentSteps.includes(s) ? 'accent' : ''}">${s + 1}</div>`;
+    }
     html += `</div>`;
 
+    html += `<div id="jamGridRows">`;
+    JAM_ROWS.forEach(row => {
+      html += `<div class="jam-row" style="grid-template-columns: 92px repeat(${totalSteps}, 1fr);">`;
+      const m = jam.mutes && jam.mutes[row.id], so = jam.solos && jam.solos[row.id];
+      html += `<div class="jam-row-label"><span>${row.icon}</span>${row.label}<span class="jam-ms"><button type="button" class="jam-ms-btn ${m ? 'on-m' : ''}" data-ms="m" data-key="${row.id}" title="Stumm">M</button><button type="button" class="jam-ms-btn ${so ? 'on-s' : ''}" data-ms="s" data-key="${row.id}" title="Solo">S</button></span></div>`;
+      for (let s = 0; s < totalSteps; s++) {
+        const active = bar.pattern[row.id] && bar.pattern[row.id][s] === 1;
+        const beatStart = accentSteps.includes(s);
+        const rowClass = row.id === 'bass' ? 'jam-bass' : (row.id === 'arp' ? 'jam-arp' : '');
+        html += `<button type="button" class="jam-cell ${active ? 'active' : ''} ${rowClass} ${beatStart ? 'beat-start' : ''}" data-row="${row.id}" data-step="${s}" aria-label="${row.label} Schritt ${s + 1}"></button>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div>`;
+
+    html += `<details class="jam-section" data-sec="parts" ${ui.parts ? 'open' : ''}><summary>🧩 Song-Teile${(jam.parts || []).length ? ` (${jam.parts.length})` : ''}</summary><div id="jamPartsBody">${renderJamPartsBody()}</div></details>`;
+
     // ---- Einklappbare Bereiche (standardmäßig zu, damit es übersichtlich bleibt) ----
+    jamGtrCache = null;
+    html += jamGtrHtml(jam, ui, sel);
     html += `<details class="jam-section" data-sec="improv" ${ui.improv ? 'open' : ''}><summary>🎸 Improvisieren</summary>
       <div id="jamImprovBody"></div></details>`;
     html += `<details class="jam-section" data-sec="paint" ${ui.paint ? 'open' : ''}><summary>✏️ Griff eintragen</summary>
@@ -6346,6 +6685,7 @@
           <span id="jamSwingLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:44px;">${Math.round((jam.swing || 0) * 100)} %</span></div>
         <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
           <input type="checkbox" id="jamCountInCheckbox" ${jam.countIn ? 'checked' : ''}> Einzählen (1 Takt Klicks vor dem Start)</label>
+        ${visLagSelectHtml('background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;')}
         <button class="btn btn-secondary" id="jamTapBtn" type="button">👆 Tap-Tempo</button>
         <div class="toggle-group"><label style="font-weight:600;">Humanize:</label>
           <input type="range" id="jamHumanizeRange" min="0" max="100" step="5" value="${Math.round((jam.humanize || 0) * 100)}" style="width:110px;">
@@ -6406,28 +6746,7 @@
       <div class="jam-hint" id="jamToolsMsg" style="font-size:0.82rem; color:var(--text-color);">${jamToolsMsg}</div>
     </details>`;
 
-    const totalSteps = getJamStepsCount();
-    const accentSteps = getJamAccentSteps();
-    html += `<div class="jam-row" id="jamStepHeader" style="grid-template-columns: 92px repeat(${totalSteps}, 1fr); margin-top:14px;"><div></div>`;
-    for (let s = 0; s < totalSteps; s++) {
-      html += `<div class="jam-step-num ${accentSteps.includes(s) ? 'accent' : ''}">${s + 1}</div>`;
-    }
-    html += `</div>`;
 
-    html += `<div id="jamGridRows">`;
-    JAM_ROWS.forEach(row => {
-      html += `<div class="jam-row" style="grid-template-columns: 92px repeat(${totalSteps}, 1fr);">`;
-      const m = jam.mutes && jam.mutes[row.id], so = jam.solos && jam.solos[row.id];
-      html += `<div class="jam-row-label"><span>${row.icon}</span>${row.label}<span class="jam-ms"><button type="button" class="jam-ms-btn ${m ? 'on-m' : ''}" data-ms="m" data-key="${row.id}" title="Stumm">M</button><button type="button" class="jam-ms-btn ${so ? 'on-s' : ''}" data-ms="s" data-key="${row.id}" title="Solo">S</button></span></div>`;
-      for (let s = 0; s < totalSteps; s++) {
-        const active = bar.pattern[row.id] && bar.pattern[row.id][s] === 1;
-        const beatStart = accentSteps.includes(s);
-        const rowClass = row.id === 'bass' ? 'jam-bass' : (row.id === 'arp' ? 'jam-arp' : '');
-        html += `<button type="button" class="jam-cell ${active ? 'active' : ''} ${rowClass} ${beatStart ? 'beat-start' : ''}" data-row="${row.id}" data-step="${s}" aria-label="${row.label} Schritt ${s + 1}"></button>`;
-      }
-      html += `</div>`;
-    });
-    html += `</div>`;
 
     html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}><summary>🎚️ Lautstärke &amp; Klangfarbe</summary>
       <div class="row" style="flex-wrap:wrap; gap:14px; margin-bottom:10px; align-items:center;">
@@ -6467,6 +6786,8 @@
             <span id="jamPadOctaveLabel" style="font-size:0.7rem; color:var(--text-muted); min-width:20px;">${jam.padOctave > 0 ? '+' + jam.padOctave : jam.padOctave}</span>
           </div>
         </div>`;
+      } else if (v.id === 'gtr') {
+        extraControlsHtml = jam.gtrOn ? '' : `<span style="font-size:0.68rem; color:var(--text-muted); max-width:120px;">aus – einschalten unter „🎸 Gitarre spielt mit“</span>`;
       } else if (v.id === 'arp') {
         extraControlsHtml = `<div style="display:flex; flex-direction:column; gap:2px;">
           <span style="font-size:0.62rem; color:var(--text-muted);">Klangfarbe</span>
@@ -6494,7 +6815,7 @@
       }
 
       html += `<div style="display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:8px 10px; border:1px solid var(--card-border); border-radius:8px;">
-        <label style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">${v.label}${v.id === 'pad' ? ` <span class="jam-ms"><button type="button" class="jam-ms-btn ${jam.mutes && jam.mutes.pad ? 'on-m' : ''}" data-ms="m" data-key="pad" title="Stumm">M</button><button type="button" class="jam-ms-btn ${jam.solos && jam.solos.pad ? 'on-s' : ''}" data-ms="s" data-key="pad" title="Solo">S</button></span>` : ''}</label>
+        <label style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">${v.label}${v.id === 'pad' || v.id === 'gtr' ? ` <span class="jam-ms"><button type="button" class="jam-ms-btn ${jam.mutes && jam.mutes[v.id] ? 'on-m' : ''}" data-ms="m" data-key="${v.id}" title="Stumm">M</button><button type="button" class="jam-ms-btn ${jam.solos && jam.solos[v.id] ? 'on-s' : ''}" data-ms="s" data-key="${v.id}" title="Solo">S</button></span>` : ''}</label>
         <div style="display:flex; flex-direction:column; gap:2px;">
           <span style="font-size:0.62rem; color:var(--text-muted);">Lautstärke</span>
           <input type="range" class="jam-volume-range" data-key="${v.id}" min="0" max="100" step="1" value="${Math.round((jam.volumes[v.id] || 0.5) * 100)}" style="width:80px;">
@@ -6532,6 +6853,8 @@
     bindJamExtraEvents();
     bindJamPartsEvents();
     bindJamPlanBannerEvents();
+    bindJamGtrEvents();
+    gripStripBind('jam', updateJamGripStrip);
     renderJamSavedList();
     updateJamImprovPanel();
   }
@@ -6973,6 +7296,7 @@
 
     document.querySelectorAll('.jam-bar-tab').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (Date.now() - jamDragEndAt < 500) return; // direkt nach einem Verschub nicht gleich den Takt wechseln
         jam.activeBar = parseInt(btn.dataset.bar, 10);
         renderJamModule();
       });
@@ -6989,6 +7313,10 @@
         updateJamBarTabIndicator();
       });
     }
+    const jamImportSel = document.getElementById('jamImportProg');
+    if (jamImportSel) jamImportSel.addEventListener('change', e => jamImportProgApply(e.target.value));
+    const jamTabsRowEl = document.getElementById('jamBarTabsRow');
+    if (jamTabsRowEl) jamTabDragBind(jamTabsRowEl);
     const chordRootSelect = document.getElementById('jamChordRootSelect');
     if (chordRootSelect) {
       chordRootSelect.addEventListener('change', (e) => {
@@ -7828,6 +8156,73 @@
     setVoice(voice);
   }
 
+  // ---------- Gitarre: Muster aus „Anschlag & Zupfen“ ----------
+  let jamGtrCache = null;
+  let GTR_MIX = 4.0; // Lautstärke der Gitarre im Verhältnis zur Band
+  function jamGtrPatternRaw() {
+    const jam = state.jam; if (!jam || !jam.gtrPattern) return null;
+    let p = null; try { p = strumAllPatterns().find(x => x.id === jam.gtrPattern) || null; } catch (e) {}
+    if (!p && jam.gtrPatCopy && jam.gtrPatCopy.id === jam.gtrPattern) p = jam.gtrPatCopy;
+    return p;
+  }
+  // nur, wenn die Taktart passt
+  function jamGtrPattern() {
+    const jam = state.jam; if (!jam || !jam.gtrPattern) return null;
+    const key = jam.gtrPattern + '|' + jam.timeSig;
+    if (!jamGtrCache || jamGtrCache.key !== key) { const p = jamGtrPatternRaw(); jamGtrCache = { key, p: p && p.sig === jam.timeSig ? p : null }; }
+    return jamGtrCache.p;
+  }
+  function jamGtrChord(bar) { const f = jamBarFingering(bar); return [bar.chordRoot || 0, bar.chordType, f ? f.frets : undefined]; }
+  function jamGtrHtml(jam, ui, sel) {
+    if (!strumState) strumState = loadStrumState();
+    const gp = jamGtrPatternRaw(), fit = !!(gp && gp.sig === jam.timeSig);
+    const all = strumAllPatterns(), ok = all.filter(x => x.sig === jam.timeSig), nOther = all.length - ok.length;
+    const opt = x => `<option value="${x.id}" ${gp && x.id === gp.id ? 'selected' : ''}>${homeEsc(x.name)}${x.custom ? '' : ' ' + (x.level === 4 ? '🎵' : '⭐'.repeat(x.level))}</option>`;
+    const grp = (label, arr) => arr.length ? `<optgroup label="${label}">${arr.map(opt).join('')}</optgroup>` : '';
+    let hint;
+    if (!gp) hint = `Wähle ein Muster aus „Anschlag &amp; Zupfen“ – auch deine eigenen. Die Gitarre spielt es mit den Akkorden der Takte, auch mit deinen ✏️-Griffen.`;
+    else if (!fit) hint = `⚠️ „${homeEsc(gp.name)}“ ist im ${gp.sig}-Takt, der Beat im ${jam.timeSig}-Takt. So spielt die Gitarre nicht mit – wähle ein anderes Muster oder stell die Taktart um.`;
+    else hint = `${gp.kind === 'pick' ? '✋ Zupfen' : '↕ Anschlag'} · ${homeEsc(gp.tip || '')} · Lautstärke unter „🎚️ Lautstärke &amp; Klangfarbe“.`;
+    return `<details class="jam-section" data-sec="gtr" ${ui.gtr ? 'open' : ''}><summary>🎸 Gitarre spielt mit${jam.gtrOn && fit ? ' <span style="font-weight:400; opacity:.8;">– an</span>' : ''}</summary>
+      <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
+        <label style="display:flex; gap:6px; align-items:center; font-weight:600;"><input type="checkbox" id="jamGtrOn" ${jam.gtrOn ? 'checked' : ''}> Gitarre an</label>
+        <select id="jamGtrSel" style="${sel} max-width:100%;"><option value="">– Muster wählen –</option>${!gp || fit ? '' : `<option value="${gp.id}" selected disabled>${homeEsc(gp.name)} (${gp.sig})</option>`}
+          ${grp('★ Favoriten', ok.filter(x => strumIsFav(x.id)))}${grp('✏️ Meine Muster', ok.filter(x => x.custom))}${grp('↕ Anschlag', ok.filter(x => !x.custom && x.kind === 'strum'))}${grp('✋ Zupfen', ok.filter(x => !x.custom && x.kind === 'pick'))}
+        </select></div>
+      <div class="jam-hint" style="color:var(--text-color);">${hint}</div>
+      <div class="jam-hint">Hier stehen nur Muster im ${jam.timeSig}-Takt${nOther ? ` (${nOther} weitere Muster haben eine andere Taktart)` : ''}.</div></details>`;
+  }
+  function bindJamGtrEvents() {
+    const jam = state.jam, on = document.getElementById('jamGtrOn'), sl = document.getElementById('jamGtrSel');
+    if (on) on.addEventListener('change', () => {
+      jam.gtrOn = on.checked;
+      if (jam.gtrOn && !jamGtrPattern()) showToast('Wähle noch ein passendes Muster aus.');
+      if (!jam.gtrOn && audioCtx) { try { strumDamp(audioCtx, audioCtx.currentTime); } catch (e) {} }
+      scheduleJamAutosave(); renderJamModule();
+    });
+    if (sl) sl.addEventListener('change', () => {
+      const p = strumAllPatterns().find(x => x.id === sl.value);
+      jam.gtrPattern = p ? p.id : null; jam.gtrPatCopy = p && p.custom ? JSON.parse(JSON.stringify(p)) : null; jamGtrCache = null;
+      if (p) jam.gtrOn = true;
+      scheduleJamAutosave(); renderJamModule();
+    });
+  }
+  // Töne eines Muster-Schritts (für den MIDI-Export; gleiche Regeln wie strumPlayStep)
+  function strumStepNoteList(p, chord, stepIdx) {
+    const tok = strumSteps(p)[stepIdx], frets = strumFingering(chord), pitch = i => STRUM_OPEN[i] + frets[i], first = stepIdx === 0, out = [];
+    if (p.kind === 'strum') {
+      if (!tok || tok === '-' || tok === 'x') return out;
+      if (tok === 'b' || tok === 'B') { const si = tok === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets); if (frets[si] >= 0) out.push({ k: 0, pitch: pitch(si), vel: first ? 1 : 0.85 }); return out; }
+      const down = tok === 'D' || tok === 'd', vel = (tok === 'D' || tok === 'U' ? 1 : 0.68) * (first ? 1.08 : 1) * (down ? 1 : 0.85);
+      let strs = [0, 1, 2, 3, 4, 5].filter(i => frets[i] >= 0);
+      if (!down) strs = strs.filter(i => i >= 2).reverse();
+      strs.forEach((si, k) => out.push({ k, pitch: pitch(si), vel }));
+    } else {
+      strumParsePick(tok).forEach(h => { const si = strumResolveString(h.s, frets); if (si >= 0) out.push({ k: 0, pitch: pitch(si), vel: (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1) }); });
+    }
+    return out;
+  }
+
   function jamScheduleStep(barIndex, step, time, opts = {}) {
     const bar = opts.bars ? opts.bars[barIndex] : state.jam.bars[barIndex];
     // Mute/Solo wirkt live und beim WAV-Export gleichermaßen
@@ -7881,6 +8276,20 @@
       });
     }
 
+    // Gitarre: Musterschritte, die in diesen 16tel-Schritt fallen (auch Triolen)
+    if ((opts.gtrOn !== undefined ? opts.gtrOn : state.jam.gtrOn) && vol.gtr > 0) {
+      const gp = jamGtrPattern(), gctx = ctx || audioCtx;
+      if (gp && gctx) {
+        const N = strumSteps(gp).length, sd = 60 / bpm / 4, sw = state.jam.swing || 0;
+        const base = time - getJamSwingOffset(step, sd, sw), chord = jamGtrChord(bar);
+        strumToJam = true;
+        try { for (let i = Math.ceil(step * N / stepsCount - 1e-9); i < (step + 1) * N / stepsCount - 1e-9; i++) {
+          const pos = i * stepsCount / N, whole = Math.abs(pos - Math.round(pos)) < 1e-6;
+          const tt = base + (pos - step) * sd + (whole ? getJamSwingOffset(Math.round(pos), sd, sw) : 0);
+          try { strumPlayStep(gctx, gp, chord, i, tt, vol.gtr * GTR_MIX); } catch (e) {}
+        } } finally { strumToJam = false; }
+      }
+    }
     if (step === 0) {
       const barDuration = (60 / bpm / 4) * stepsCount;
       jamHandlePadForBar(bar, time, barDuration, {
@@ -7924,7 +8333,7 @@
       if (jamCurrentStep === 0) jamCrashNext = false;
       const stepToShow = jamCurrentStep;
       const barToShow = state.jam.playingBar;
-      const delay = (jamNextNoteTime - audioCtx.currentTime) * 1000;
+      const delay = (jamNextNoteTime - audioCtx.currentTime) * 1000 + audioLagMs();
       setTimeout(() => {
         if (state.jam.playingBar === barToShow) highlightJamStep(stepToShow);
       }, Math.max(0, delay));
@@ -7974,6 +8383,7 @@
       jamScheduler();
     } else {
       clearTimeout(jamTimerId);
+      try { if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime); } catch (e) {}
       highlightJamStep(-1);
       if (jamPadVoice) { jamFadeOutPadVoice(jamPadVoice, audioCtx.currentTime); jamPadVoice = null; }
     }
@@ -7984,6 +8394,7 @@
     if (state.jam && state.jam.playing) {
       state.jam.playing = false;
       clearTimeout(jamTimerId);
+      try { if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime); } catch (e) {}
       if (jamPadVoice) { jamFadeOutPadVoice(jamPadVoice, audioCtx.currentTime); jamPadVoice = null; }
     }
   }
@@ -8176,6 +8587,8 @@
     push(0, -1, [0xC0, 33]); // Kanal 1: Bass -> Electric Bass (finger)
     push(0, -1, [0xC1, 80]); // Kanal 2: Arp  -> Lead 2 (sawtooth)
     push(0, -1, [0xC2, 89]); // Kanal 3: Pad  -> Pad 2 (warm)
+    push(0, -1, [0xC3, 24]); // Kanal 4: Gitarre -> Acoustic Guitar (nylon)
+    const midiGtr = jam.gtrOn ? jamGtrPattern() : null;
 
     const arpIndexRef = { current: 0 };
     let barCounter = 0;
@@ -8225,6 +8638,15 @@
           }
         }
 
+        if (midiGtr) {
+          const N = strumSteps(midiGtr).length, stepT = stepsCount * ticksPerStep / N, gap = Math.max(1, Math.round(0.011 * jam.bpm / 60 * JAM_MIDI_TICKS_PER_QUARTER));
+          const chord = jamGtrChord(bar), gv = jam.volumes.gtr ?? 0.7;
+          for (let i = 0; i < N; i++) strumStepNoteList(midiGtr, chord, i).forEach(n => {
+            const t0 = Math.round(barStartTick + i * stepT + n.k * gap);
+            push(t0, 1, [0x93, n.pitch, midiVelocity(Math.min(1, gv * n.vel))]);
+            push(t0 + Math.max(10, Math.round(stepT * 0.95) - n.k * gap), 0, [0x83, n.pitch, 0]);
+          });
+        }
         if (bar.padOn) {
           let basePitch = 52;
           while (basePitch % 12 !== bar.chordRoot) basePitch++;
@@ -8348,6 +8770,9 @@
       crackle: state.jam.crackle ?? 0.5,
       stereo: state.jam.stereo !== false,
       parts: JSON.parse(JSON.stringify(state.jam.parts || [])),
+      gtrOn: !!state.jam.gtrOn,
+      gtrPattern: state.jam.gtrPattern || null,
+      gtrPatCopy: state.jam.gtrPatCopy ? JSON.parse(JSON.stringify(state.jam.gtrPatCopy)) : null,
       bars: JSON.parse(JSON.stringify(state.jam.bars))
     };
   }
@@ -8369,6 +8794,7 @@
     state.jam.arpOctave = data.arpOctave ?? 0;
     state.jam.arpTranspose = data.arpTranspose ?? 0;
     state.jam.volumes = { ...JAM_DEFAULT_VOLUMES, ...(data.volumes || {}) };
+    state.jam.gtrOn = !!data.gtrOn; state.jam.gtrPattern = data.gtrPattern || null; state.jam.gtrPatCopy = data.gtrPatCopy || null; jamGtrCache = null;
     state.jam.tones = { kick: 0.5, snare: 0.5, hihat: 0.5, crash: 0.5, bongoHi: 0.5, bongoLo: 0.5, bass: 0.5, arp: 0.5, ...(data.tones || {}) };
     state.jam.loopStart = data.loopStart ?? 0;
     state.jam.loopEnd = data.loopEnd ?? ((Array.isArray(data.bars) ? data.bars.length : state.jam.bars.length) - 1);
@@ -9544,6 +9970,7 @@
 
   function updateModule() {
     const prevMod = state.lastShownMod, cameFromHome = !!state.homeWasShown;
+    if (!srchNav) { try { srchBackHide(); } catch (e) {} }
     state.lastShownMod = parseInt(moduleSelectEl.value);
     state.homeWasShown = false;
     state.currentModule = parseInt(moduleSelectEl.value);
@@ -9897,12 +10324,14 @@
   let strumPlaying = false, strumTimer = null, strumNext = 0, strumStep = 0, strumBar = 0, strumVoices = [], strumOut = null, strumOutCtx = null;
 
   function loadStrumState() {
-    const d = { kind: 'strum', id: 's_pop', chords: 'C Am F G', bpc: 1, bpm: null, click: true, countIn: true, drum: 'off' };
+    const d = { kind: 'strum', id: 's_pop', chords: 'C Am F G', bpc: 1, bpm: null, click: true, countIn: true, drum: 'off', begOpen: false };
     try { Object.assign(d, JSON.parse(localStorage.getItem(STRUM_KEY) || '{}')); } catch (e) {}
     if (!strumAllPatterns().find(p => p.id === d.id)) d.id = 's_pop';
     return d;
   }
   function saveStrumState() { try { localStorage.setItem(STRUM_KEY, JSON.stringify(strumState)); } catch (e) {} }
+  // Merken, ob die Box "Begleitung & Anzeige" offen ist (sonst klappt sie beim Neuzeichnen zu)
+  document.addEventListener('toggle', function (ev) { const d = ev.target; if (d && d.id === 'strumBegDetails' && strumState) { strumState.begOpen = !!d.open; saveStrumState(); } }, true);
   function strumPattern() { if (strumEdit) return strumEdit.draft; return strumAllPatterns().find(p => p.id === strumState.id) || STRUM_PATTERNS[0]; }
 
   // ---------- Eigene Muster ----------
@@ -10094,6 +10523,64 @@
     const ch = strumChords() || [[0, 'dur']], b = Math.max(0, bar || 0);
     return renderStrumGrid(strumChordAt(ch, b), ch.length > 1 ? strumChordAt(ch, b + (strumState.bpc || 1)) : null);
   }
+  // ---------- Beats aus „Beat & Jam“ in anderen Modulen auswählen ----------
+  function jamSongSources() {
+    const out = [];
+    try {
+      const cur = state.jam ? getJamExportData() : JSON.parse(localStorage.getItem(JAM_AUTOSAVE_KEY) || 'null');
+      if (cur && Array.isArray(cur.bars) && cur.bars.length) out.push({ label: 'Aktueller Beat', cur: true, data: cur });
+    } catch (e) {}
+    const saved = getSavedJamPatterns();
+    Object.keys(saved).sort((a, b) => a.localeCompare(b, 'de')).forEach(n => { const d = saved[n]; if (d && Array.isArray(d.bars) && d.bars.length) out.push({ label: n, data: d }); });
+    return out;
+  }
+  function jamSongChords(d) {
+    return (d && Array.isArray(d.bars) ? d.bars : []).map(b => {
+      const bb = { chordRoot: b.chordRoot || 0, chordType: b.chordType && JAM_CHORD_INTERVALS[b.chordType] ? b.chordType : 'dur', ownFrets: b.ownFrets, ownFretsFor: b.ownFretsFor };
+      const f = jamBarFingering(bb);
+      return { root: bb.chordRoot, type: bb.chordType, frets: f ? f.frets.slice() : null, own: !!(f && f.own), name: jamChordShort(bb) };
+    });
+  }
+  function jamChordKey(c) { return c.root + ':' + c.type + ':' + (c.frets || []).join(); }
+  // Kürzeste Wiederholung: „Am F C G Am F C G“ -> 4
+  function chordPeriod(keys) { const n = keys.length; for (let p = 1; p < n; p++) { if (n % p) continue; if (keys.every((k, i) => k === keys[i % p])) return p; } return n; }
+  function impBeatOptionsHtml() {
+    let src = []; try { src = jamSongSources(); } catch (e) {}
+    if (!src.length) return '';
+    return `<optgroup label="🥁 Meine Beats">${src.map((x, i) => `<option value="jb:${i}">${x.cur ? '🥁 Aktueller Beat' : homeEsc(x.label)} (${x.data.bars.length} Takte)</option>`).join('')}</optgroup>`;
+  }
+  function jamSrcName(src) { return src.cur ? 'Dein aktueller Beat' : '„' + src.label + '“'; }
+  function strumImportJam(src) {
+    const list = jamSongChords(src.data); if (!list.length) return false;
+    const runs = [];
+    list.forEach(c => { const l = runs[runs.length - 1]; if (l && l.k === jamChordKey(c)) l.n++; else runs.push({ k: jamChordKey(c), c, n: 1 }); });
+    let bpc = 1, seq = list;
+    if (runs.length === 1) seq = [runs[0].c];
+    else if ([2, 4].includes(runs[0].n) && runs.every(r => r.n === runs[0].n)) { bpc = runs[0].n; seq = runs.map(r => r.c); }
+    seq = seq.slice(0, chordPeriod(seq.map(jamChordKey)));
+    strumState.chords = seq.map(c => c.name).join(' ');
+    strumState.imp = { text: strumState.chords, chords: seq.map(c => [c.root, c.type, c.frets ? c.frets.slice() : strumFingering([c.root, c.type]), c.name]) };
+    strumState.bpc = bpc;
+    saveStrumState();
+    if (typeof strumPlaying !== 'undefined' && strumPlaying) { try { stopStrum(); } catch (e) {} }
+    renderStrum();
+    showToast(`${jamSrcName(src)} ist übernommen ✔` + (seq.some(c => c.own) ? ' – mit deinen Griffen' : '') + (bpc > 1 ? ` (${bpc} Takte pro Akkord)` : ''));
+    return true;
+  }
+  function chgImportJam(src) {
+    if (!chgState) chgState = chgLoad();
+    let seq = [];
+    jamSongChords(src.data).forEach(c => { const l = seq[seq.length - 1]; if (!l || jamChordKey(l) !== jamChordKey(c)) seq.push(c); });
+    if (seq.length > 1 && jamChordKey(seq[0]) === jamChordKey(seq[seq.length - 1])) seq.pop();
+    seq = seq.slice(0, chordPeriod(seq.map(jamChordKey))).slice(0, 16);
+    if (new Set(seq.map(jamChordKey)).size < 2) { showToast('Für den Wechsel-Trainer braucht der Beat mindestens zwei verschiedene Akkorde.'); return false; }
+    chgStop();
+    chgState.chords = seq.map(c => c.name);
+    chgState.grips = seq.map(c => ({ frets: c.frets ? c.frets.slice() : strumFingering([c.root, c.type]), root: c.root, type: c.type }));
+    chgSave(); chgRender();
+    showToast(`${jamSrcName(src)} ist im Wechsel-Trainer ✔`);
+    return true;
+  }
   // Eigene Akkordfolge übernehmen (mit den eigenen Griffen)
   function strumImportFrom(p) {
     const filled = p.chords.filter(c => c.frets.some(f => f >= 0));
@@ -10136,7 +10623,15 @@
   function strumChordAt(chords, bar) { return chords[Math.floor(bar / (strumState.bpc || 1)) % chords.length]; }
 
   // ---------- Klang ----------
+  // Im Beat-Modul läuft die Gitarre über den Ausgang der Band (Begrenzer, Hall) – so übersteuert nichts
+  let strumToJam = false;
+  const strumJamOuts = new WeakMap();
   function strumGetOut(ctx) {
+    if (strumToJam) {
+      let n = strumJamOuts.get(ctx);
+      if (!n) { n = ctx.createGain(); n.gain.value = 0.55; try { n.connect(jamOut(ctx, 0.12, 0.2)); } catch (e) { n.connect(ctx.destination); } strumJamOuts.set(ctx, n); }
+      return n;
+    }
     if (strumOut && strumOutCtx === ctx) return strumOut;
     const g = ctx.createGain(); g.gain.value = 0.55;
     const comp = ctx.createDynamicsCompressor();
@@ -10255,20 +10750,20 @@
       } catch (e) {}
     }
   }
-  function strumPlayStep(ctx, p, chord, stepIdx, t) {
+  function strumPlayStep(ctx, p, chord, stepIdx, t, g = 1) {
     const tok = strumSteps(p)[stepIdx];
     const frets = strumFingering(chord);
     const pitch = i => STRUM_OPEN[i] + frets[i];
     const first = stepIdx === 0;
     if (p.kind === 'strum') {
       if (tok === '-') return;
-      if (tok === 'x') { strumDamp(ctx, t); strumChuck(ctx, t, 0.8); return; }
+      if (tok === 'x') { strumDamp(ctx, t); strumChuck(ctx, t, 0.8 * g); return; }
       if (tok === 'b' || tok === 'B') {
         const s = tok === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets);
-        strumDamp(ctx, t, s); strumPluck(ctx, pitch(s), t, first ? 1 : 0.85, s, 1.8); return;
+        strumDamp(ctx, t, s); strumPluck(ctx, pitch(s), t, (first ? 1 : 0.85) * g, s, 1.8); return;
       }
       const down = tok === 'D' || tok === 'd';
-      const vel = (tok === 'D' || tok === 'U' ? 1 : 0.68) * (first ? 1.08 : 1);
+      const vel = (tok === 'D' || tok === 'U' ? 1 : 0.68) * (first ? 1.08 : 1) * g;
       let strs = [0, 1, 2, 3, 4, 5].filter(i => frets[i] >= 0);
       if (!down) strs = strs.filter(i => i >= 2).reverse();
       const gap = jamLowPerf() ? 0.016 : 0.011;
@@ -10278,7 +10773,7 @@
         const si = strumResolveString(h.s, frets);
         if (si < 0) return;
         strumDamp(ctx, t, si);
-        strumPluck(ctx, pitch(si), t, (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1), si, 2.0);
+        strumPluck(ctx, pitch(si), t, (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1) * g, si, 2.0);
       });
     }
   }
@@ -10307,7 +10802,7 @@
       strumPlayStep(audioCtx, p, chord, strumStep, strumNext);
       if (!strumPreview) strumDrumStep(audioCtx, p, steps.length, strumStep, strumNext, sd);
       if (strumState.click && strumIsBeat(p, strumStep)) strumClick(audioCtx, strumNext, strumStep === 0);
-      const st = strumStep, bar = strumBar, delay = Math.max(0, (strumNext - audioCtx.currentTime) * 1000);
+      const st = strumStep, bar = strumBar, delay = Math.max(0, (strumNext - audioCtx.currentTime) * 1000 + audioLagMs());
       setTimeout(() => { if (strumPlaying) strumShowStep(st, bar); }, delay);
       strumNext += sd;
       strumStep++;
@@ -10600,6 +11095,13 @@
     const box = document.getElementById('strumNow');
     if (!box) return;
     const chords = strumChords();
+    try {
+      if (!chords) gripStripUpdate('strum', [], -1, -1);
+      else {
+        const k = Math.floor(Math.max(0, bar) / (strumState.bpc || 1)) % chords.length;
+        gripStripUpdate('strum', chords.map((c, i) => ({ k: i + ':' + strumChordName(c), name: strumChordName(c), frets: strumFingering(c) })), k, strumPlaying && chords.length > 1 ? (k + 1) % chords.length : -1);
+      }
+    } catch (e) {}
     if (!chords) { box.innerHTML = '<div class="jam-hint">Akkorde nicht erkannt. Beispiel: „Am F C G“ (Leerzeichen dazwischen; B oder H = H, Bb = B♭).</div>'; return; }
     const cur = strumChordAt(chords, bar), nxt = strumChordAt(chords, bar + (strumState.bpc || 1));
     const nm = c => homeEsc(strumChordName(c));
@@ -10610,6 +11112,16 @@
       const wrap = document.getElementById('strumGridWrap');
       if (wrap) { wrap.innerHTML = strumGridAt(bar); }
     }
+  }
+  function strumReorder(from, over) {
+    const arr = String(strumState.chords || '').trim().split(/\s+/).filter(Boolean);
+    if (!arr.length || from >= arr.length || over >= arr.length) return;
+    const moved = arr.splice(from, 1)[0]; arr.splice(over, 0, moved);
+    strumState.chords = arr.join(' ');
+    saveStrumState();
+    renderStrum();
+    renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0);
+    showToast(`↔ Akkord steht jetzt an Stelle ${over + 1}`);
   }
   function renderStrum() {
     if (!strumState) strumState = loadStrumState();
@@ -10655,7 +11167,13 @@
         <button type="button" class="strum-chip" id="strumTempoReset" title="Zurück auf das normale Tempo (${p.bpm} BPM)" style="visibility:${!strumEdit && strumBpm() !== p.bpm ? 'visible' : 'hidden'};">↺</button></div>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
-      <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;">🥁 Schlagzeug: <select id="strumDrum" style="${sel}">${STRUM_DRUM_STYLES.filter(x => p.sig === '4/4' || x[0] === 'off' || x[0] === 'default').map(([v, l]) => `<option value="${v}" ${v === (p.sig === '4/4' || strumState.drum === 'off' ? (strumState.drum || 'off') : 'default') ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <details id="strumBegDetails" ${strumState.begOpen ? 'open' : ''} style="display:inline-block;">
+        <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🥁 Begleitung &amp; Anzeige</summary>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:8px;">
+          ${visLagSelectHtml(sel)}
+          <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;">🥁 Schlagzeug: <select id="strumDrum" style="${sel}">${STRUM_DRUM_STYLES.filter(x => p.sig === '4/4' || x[0] === 'off' || x[0] === 'default').map(([v, l]) => `<option value="${v}" ${v === (p.sig === '4/4' || strumState.drum === 'off' ? (strumState.drum || 'off') : 'default') ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+        </div>
+      </details>
     </div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:12px;">
       <label style="font-weight:600;">Akkorde:</label>
@@ -10663,8 +11181,10 @@
       <label style="font-size:0.88rem;">Takte pro Akkord:</label>
       <select id="strumBpc" style="${sel}">${[1, 2, 4].map(n => `<option value="${n}" ${n === (strumState.bpc || 1) ? 'selected' : ''}>${n}</option>`).join('')}</select>
     </div>
-    ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)); if (!hasDraft && !progState.saved.length) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}</select></div>`; })()}
+    ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
+    h += gripStripShellHtml('strum');
+    h += `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Diagramm gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>`;
     h += `<div class="strum-now" id="strumNow"></div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
       <button type="button" class="btn btn-secondary" id="strumToBeatBtn">🥁 Im Beat-Modul üben</button>
@@ -10672,6 +11192,8 @@
     h += `<div class="jam-hint" style="margin-top:10px;">Tipp: Erst ohne Ton nur die Handbewegung, dann langsam mit Akkord. Schneller erst, wenn es sich locker anfühlt – ganz ohne Eile. 🙂</div>`;
     h += `</div>`;
     root.innerHTML = h;
+    gripStripBind('strum', () => renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0));
+    holdDragBind(document.getElementById('gripStrip_strum'), '.grip-item', el => Array.prototype.indexOf.call(el.parentElement.children, el), strumReorder, null);
     renderStrumNow(0);
     bindStrumEvents();
     if (strumEdit) bindStrumEditorEvents();
@@ -10718,7 +11240,7 @@
     ci.addEventListener('change', applyChords);
     { const sb = document.getElementById('strumStyleChordsBtn'); if (sb) sb.addEventListener('click', () => { ci.value = strumPattern().chords; applyChords(); }); }
     root.querySelectorAll('[data-schords]').forEach(b => b.addEventListener('click', () => { ci.value = b.dataset.schords; applyChords(); }));
-    { const im = document.getElementById('strumImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; const q = v === 'draft' ? progState.draft : progState.saved[+v]; if (!q || !strumImportFrom(q)) im.value = ''; }); }
+    { const im = document.getElementById('strumImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; if (v.startsWith('jb:')) { const sb = jamSongSources()[+v.slice(3)]; if (!sb || !strumImportJam(sb)) im.value = ''; return; } const q = v === 'draft' ? progState.draft : progState.saved[+v]; if (!q || !strumImportFrom(q)) im.value = ''; }); }
     document.getElementById('strumBpc').addEventListener('change', e => { strumState.bpc = parseInt(e.target.value, 10); saveStrumState(); restart(); });
     document.getElementById('strumToBeatBtn').addEventListener('click', strumSendToBeat);
   }
@@ -10746,11 +11268,12 @@
     jam.bpm = Math.max(60, Math.min(160, Math.round(strumBpm() * factor)));
     jam.swing = (p.unit === 3 && p.sig === '4/4') ? 1 : 0;
     jam.loopStart = 0; jam.loopEnd = jam.bars.length - 1; jam.activeBar = 0;
+    jam.gtrPattern = p.id; jam.gtrPatCopy = p.custom ? JSON.parse(JSON.stringify(p)) : null; jamGtrCache = null;
     scheduleJamAutosave();
     switchToModule(9);
     renderJamModule();
     window.scrollTo(0, 0);
-    showToast(`„${p.name}“: Akkorde, Tempo und Taktart übernommen – viel Spaß beim Mitspielen! 🎸`);
+    showToast(`„${p.name}“: Akkorde, Tempo und Taktart übernommen – viel Spaß beim Mitspielen! 🎸 Unter „🎸 Gitarre spielt mit“ kann die App das Muster auch selbst spielen.`);
   }
 
   // =================== Startseite mit Kacheln ===================
@@ -10770,6 +11293,280 @@
   function homeEsc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   const HOME_TIPS = ["Wer länger langsam spielt, spielt schneller schnell.", "Schon 10 Minuten täglich bringen mehr als 2 Stunden am Sonntag.", "Sag beim Greifen die Tonnamen laut mit – so merkst du sie dir schneller.", "Locker bleiben: Daumen hinter dem Hals, Schultern unten.", "Drück nur so fest, wie nötig – dicht hinter dem Bundstäbchen klingt es am saubersten.", "Erst sauber, dann schnell. Tempo kommt von ganz allein.", "Ein schwieriger Akkordwechsel? Übe nur diese zwei Griffe hin und her.", "Die Oktave eines Tons liegt meist zwei Saiten höher und zwei Bünde weiter – über die H-Saite hinweg sind es drei Bünde.", "Ein Metronom ist kein Gegner, sondern ein Freund, der nie aus dem Takt kommt.", "Pausen gehören zur Musik – und zum Üben.", "Hör dir zu: Nimm dich ab und zu mit dem Handy auf.", "Fehler sind Wegweiser. Sie zeigen dir, was du als Nächstes üben kannst.", "Der Grundton ist dein Anker – such ihn zuerst.", "Dur klingt hell, Moll klingt weich. Der Unterschied ist nur ein Halbton.", "Zwischen H und C sowie zwischen E und F liegt nur ein Halbton.", "Die Pentatonik hat fünf Töne – und fast keine falschen.", "Übe lieber kurz und oft als lang und selten.", "Zupfen mit p i m a: Daumen für den Bass, Finger für die Melodie.", "Gleichmäßiger Rhythmus ist wichtiger als viele Töne.", "Wärme deine Finger ein paar Minuten auf, bevor es schwierig wird.", "Spiel ein Lied, das du magst – Freude ist der beste Lehrer.", "Am 12. Bund beginnt das Griffbrett von vorn – nur eine Oktave höher.", "Die Hand beim Schlagen weiter pendeln lassen, auch wenn du nicht triffst.", "Kleine Schritte sind auch Schritte.", "Zähl laut mit – dann sitzt der Rhythmus.", "Ein Akkord klingt schief? Spiel jede Saite einzeln und hör, welche stört.", "Die Fingerkuppen werden mit der Zeit härter. Dranbleiben lohnt sich.", "Musik lernt man mit den Ohren, nicht nur mit den Fingern.", "Wiederholung ist die Mutter des Könnens.", "Heute schon etwas Neues ausprobiert? Ein neues Zupfmuster vielleicht?", "Ein Quintenzirkel-Schritt im Uhrzeigersinn bringt ein ♯ dazu.", "Lass offene Saiten ruhig mitklingen – das macht den Klang voll.", "Stimm deine Gitarre vor dem Üben. Sauber klingt einfach schöner.", "Langsam ist nicht langweilig – langsam ist gründlich.", "Jeder Profi hat mal mit drei Akkorden angefangen.", "Atme ruhig weiter, auch bei schwierigen Stellen.", "Dein Gehör wird mit jedem Tag besser – auch wenn du es nicht sofort merkst.", "Ein Lied in Teile zerlegen: erst den Refrain, dann den Rest.", "Spiel mit Gefühl: mal leise, mal laut.", "Die Terz entscheidet, ob ein Akkord Dur oder Moll ist.", "Beim Barré hilft es, den Zeigefinger leicht zur Seite zu kippen.", "Übung macht nicht den Meister – gute Übung macht den Meister.", "Gönn dir Erfolgserlebnisse: Beende das Üben mit etwas, das du schon kannst.", "Der Weg ist das Ziel – genieß jeden Ton."];
   function homeTipOfDay() { const d = new Date(), start = new Date(d.getFullYear(), 0, 0); const n = Math.floor((d - start) / 86400000); return HOME_TIPS[(n + d.getFullYear()) % HOME_TIPS.length]; }
+  // =================== 🔍 Suche (Startseite) ===================
+  let srchQ = '', srchMore = {}, srchList = [], srchBackQ = '', srchNav = false;
+  const SRCH_MOD_WORDS = {
+    0: 'hilfe bedienung erklaerung wo finde ich was', 15: 'begriffe lexikon glossar notenzeichen zeichen',
+    2: 'intervalle quintenzirkel stufenakkorde kadenz transponieren quiz dreiklang septakkord umkehrung theorie',
+    1: 'theorie griffbrett oktaven', 3: 'saite saiten toene griffbrett lernen', 4: 'spiel quiz raten',
+    5: 'noten lesen notensystem finden', 6: 'hoeren gehoer intervalle dur moll erkennen',
+    7: 'tonleiter skala skalen pentatonik caged positionen modi kirchentonarten', 8: 'akkord akkorde griff griffe nachschlagen lexikon griffvarianten erkennen',
+    13: 'akkordfolge song lied midi eintragen grosse ansicht drucken', 14: 'wechsel wechseln akkordwechsel',
+    9: 'schlagzeug drums begleitung band rhythmus stil improvisieren songteile wav beat', 12: 'strumming picking fingerpicking zupfmuster schlagmuster rhythmus',
+    11: 'stimmen tuner mikrofon saitenwechsel saiten', 10: 'plan kalender statistik uebungen'
+  };
+  const SRCH_SCALE_WORDS = { dur: 'ionisch major durtonleiter', moll: 'aeolisch minor natuerlich molltonleiter', harmoll: 'harmonisch', melmoll: 'melodisch jazz', durPenta: 'pentatonik penta major', mollPenta: 'pentatonik penta blues minor', dorisch: 'kirchentonart modus modi', phrygisch: 'kirchentonart modus modi', lydisch: 'kirchentonart modus modi', mixolydisch: 'kirchentonart modus modi', lokrisch: 'kirchentonart modus modi', chromatic: 'chromatisch alle' };
+  const SRCH_GROUPS = [['chord', '🎸 Akkorde'], ['mod', '📦 Module'], ['scale', '🪜 Tonleitern'], ['gloss', '📖 Wörterbuch'], ['pat', '🪕 Anschlag- & Zupfmuster'], ['mine', '⭐ Meine Sachen'], ['text', '📄 In Texten'], ['tool', '🧰 Werkzeuge & Einstellungen']];
+  function srchNorm(t) { return String(t || '').toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/♯/g, '#').replace(/♭/g, 'b').replace(/[^a-z0-9#]+/g, ' ').trim(); }
+  function srchCut(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, '') + ' …' : t; }
+  // Punkte: Wort im Titel 3, Titel-Wortanfang 2, sonst Wortanfang im Text 1; jedes Suchwort muss passen
+  function srchScore(qw, title, rest) {
+    const tw = srchNorm(title).split(' '), aw = tw.concat(srchNorm(rest).split(' '));
+    let sc = 0;
+    for (const w of qw) {
+      if (tw.includes(w)) sc += 3;
+      else if (w.length > 1 && tw.some(x => x.startsWith(w))) sc += 2;
+      else if (aw.includes(w) || (w.length > 1 && aw.some(x => x.startsWith(w)))) sc += 1;
+      else return 0;
+    }
+    return sc;
+  }
+  // Deutscher Tonname als Wort: c, cis, des, es, fis, as, b (= B♭), h …
+  function srchRootWord(w) {
+    const m = String(w).match(/^([a-h])(is|es|s|#|b)?$/); if (!m) return null;
+    let pc = { c: 0, d: 2, e: 4, f: 5, g: 7, a: 9, b: 10, h: 11 }[m[1]];
+    if (m[1] === 'b' && m[2]) return null;
+    if (m[2] === 'is' || m[2] === '#') pc++; else if (m[2]) pc--;
+    return (pc + 12) % 12;
+  }
+  function srchParseChord(q) {
+    const n = srchNorm(q);
+    const m = n.match(/^(\S+) ?(dur|moll)$/);
+    if (m) { const pc = srchRootWord(m[1]); if (pc !== null) return [pc, m[2]]; }
+    const t = String(q).trim();
+    if (!t || /\s/.test(t)) return null;
+    const p = parsePlanChords(t[0].toUpperCase() + t.slice(1));
+    return p && p.length === 1 ? p[0] : null;
+  }
+  function srchCollect(q) {
+    const out = [], qw = srchNorm(q).split(' ').filter(Boolean);
+    if (!qw.length) return out;
+    const add = (g, icon, title, sub, sc, open, keep, txt) => { if (sc > 0) out.push({ g, icon, title, sub, sc, open, keep: !!keep, txt: txt || '' }); };
+    // Akkord
+    const ch = srchParseChord(q);
+    if (ch) {
+      const [pc, type] = ch, nm = jamChordShort({ chordRoot: pc, chordType: type });
+      add('chord', '🎸', nm, 'Griff im Akkord-Labor zeigen', 9, () => { hideHome(); switchToModule(8); try { initChordLookup(); chordLookupRootSelect.value = String(pc); chordLookupTypeSelect.value = type; if (chordLookupTypeSelect.value === type) handleChordLookup(); } catch (e) {} window.scrollTo(0, 0); });
+      if (type === 'dur' || type === 'moll') add('scale', '🪜', `${jamRootName(pc, type)}-${type === 'dur' ? 'Dur' : 'Moll'}-Tonleiter`, 'Im Modul „Tonleitern“ zeigen', 9, () => { state.scaleViewRoot = pc; state.scaleViewType = type; hideHome(); switchToModule(7); window.scrollTo(0, 0); });
+    }
+    // Module
+    HOME_GROUPS.forEach(g => g.items.forEach(([v, icon, nm, desc]) => add('mod', icon === 'GTR' ? '🎸' : icon, `${homeModuleNo(v)}. ${nm}`, desc, srchScore(qw, nm, desc + ' ' + (SRCH_MOD_WORDS[v] || '')), () => { hideHome(); switchToModule(v); window.scrollTo(0, 0); })));
+    // Tonleitern (optional mit Grundton davor, z. B. „a dorisch“)
+    { const r0 = qw.length > 1 ? srchRootWord(qw[0]) : null, rw = r0 !== null ? qw.slice(1) : qw;
+      Object.keys(SCALE_VIEW_TYPES).forEach(k => {
+        const lab = SCALE_VIEW_TYPES[k].label;
+        if (ch && (k === 'dur' || k === 'moll') && ch[1] === k && (r0 === null || r0 === ch[0])) return;
+        const sc = srchScore(rw, lab, 'tonleiter tonleitern skala ' + (SRCH_SCALE_WORDS[k] || ''));
+        const root = r0 !== null ? r0 : (state.scaleViewRoot || 0), minorish = /moll|dorisch|phryg|lokrisch/i.test(k);
+        add('scale', '🪜', r0 !== null ? `${jamRootName(root, minorish ? 'moll' : 'dur')} ${lab}` : lab, 'Im Modul „Tonleitern“ zeigen', sc, () => { state.scaleViewRoot = root; state.scaleViewType = k; hideHome(); switchToModule(7); window.scrollTo(0, 0); });
+      }); }
+    // Wörterbuch
+    const sc2 = (title, rest) => srchScore(qw, title, rest) || (srchTextMatch(qw, srchNorm(title + ' ' + rest)) ? 0.5 : 0);
+    GLOSSARY.forEach(([t, txt]) => add('gloss', '📖', t, 'Gitarre & Musik', sc2(t, txt), () => { glossTab = 'base'; glossFocus = t; hideHome(); glossOpen(); }, false, txt));
+    GLOSS_NOTES.forEach(sec => sec.items.forEach(([t, txt]) => add('gloss', sec.icon, t, 'Noten & Zeichen · ' + sec.title, sc2(t, txt + ' ' + sec.title), () => { glossTab = 'notes'; glossFocus = t; hideHome(); glossOpen(); }, false, txt)));
+    // Muster
+    try { strumAllPatterns().forEach(p => {
+      const lv = p.custom ? 'eigenes meine' : ['', 'einfach', 'mittel', 'fortgeschritten', 'stil'][p.level] || '';
+      add('pat', p.kind === 'pick' ? '✋' : '↕', p.name, `${p.kind === 'pick' ? 'Zupfen' : 'Anschlag'} · ${p.sig} · ${p.custom ? '✏️ eigenes Muster' : p.level === 4 ? '🎵 Stil' : '⭐'.repeat(p.level)}`,
+        sc2(p.name, (p.tip || '') + ' ' + (p.kind === 'pick' ? 'zupfen zupfmuster picking' : 'anschlag anschlagen strumming schlagmuster') + ' ' + p.sig + ' ' + lv + ' muster'),
+        () => { if (!strumState) strumState = loadStrumState(); strumState.kind = p.kind; strumState.id = p.id; saveStrumState(); hideHome(); switchToModule(12); window.scrollTo(0, 0); }, false, p.tip || '');
+    }); } catch (e) {}
+    // Meine Sachen
+    try { if (!progState) progState = progLoad();
+      progState.saved.forEach((p, i) => {
+        const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' ');
+        add('mine', '✍️', p.name || 'Ohne Namen', 'Akkordfolge · ' + srchCut(names, 60), srchScore(qw, p.name || '', names + ' akkordfolge akkordfolgen meine'), () => {
+          const dr = progState.draft, dirty = dr.chords.some(c => progDetect(c)) && !progState.saved.some(x => JSON.stringify(x) === JSON.stringify(dr));
+          if (dirty && !confirm('Deine aktuelle Folge in „Akkordfolgen erstellen“ ist nicht gespeichert und wird ersetzt.\n\nTrotzdem öffnen?')) return;
+          progSelIdx = i; progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); progSave(); hideHome(); switchToModule(13); try { progRender(); } catch (e) {} window.scrollTo(0, 0);
+        });
+      }); } catch (e) {}
+    try { const sv = getSavedJamPatterns(); Object.keys(sv).forEach(n => {
+      const d = sv[n], names = jamSongChords(d).map(c => c.name);
+      add('mine', '🥁', n, `Beat · ${(d.bars || []).length} Takte · ` + srchCut([...new Set(names)].join(' '), 50), srchScore(qw, n, names.join(' ') + ' beat beats meine'), () => { hideHome(); switchToModule(9); try { loadJamPattern(n); } catch (e) {} window.scrollTo(0, 0); });
+    }); } catch (e) {}
+    // Alle Texte: Anleitung, Theorie, Erste Schritte, Hinweise der Module
+    try {
+      if (!srchTextIdx) srchTextIdx = srchBuildTextIdx();
+      srchTextIdx.forEach(u => { if (srchTextMatch(qw, u.norm)) add('text', u.icon, u.where, '', 1, u.open ? u.open : () => { hideHome(); switchToModule(u.mod); window.scrollTo(0, 0); srchReveal(u, qw); }, !!u.keep, u.txt); });
+    } catch (e) {}
+    // Werkzeuge
+    const clk = id => () => { const b = document.getElementById(id); if (b) b.click(); };
+    [['⏱', 'Übungs-Timer & Übungszeit', 'timer stoppuhr countdown uebungszeit zeit abschnitte', () => ptOpen()],
+     ['📓', 'Übungs-Tagebuch', 'tagebuch notizen notiz', () => diaryOpen()],
+     ['🚀', 'Erste Schritte', 'anfangen anfaenger einstieg lernpfad start', () => pathOpen()],
+     ['🎸', 'Saitenwechsel im Blick', 'saiten saitenwechsel wechseln neue', () => strOpen()],
+     ['💾', 'Datensicherung', 'backup sichern sicherung wiederherstellen export import', clk('backupBtn')],
+     ['A+', 'Schriftgröße', 'schrift groesse text gross lesen', clk('fontSizeBtn')],
+     ['🌙', 'Hell / Dunkel', 'dunkel hell modus farbe nacht', clk('themeToggleBtn')],
+     ['🎵', 'Kammerton', 'kammerton 440 432 442 stimmung hz', () => { const a = document.getElementById('homeA4Select'); srchQ = ''; srchShow(); if (a) { a.scrollIntoView({ block: 'center' }); a.focus(); } }],
+     ['🔄', 'Nach Updates suchen', 'update version aktualisieren neu', () => appManualCheck()]
+    ].forEach(([ic, t, kw, fn]) => add('tool', ic, t, '', srchScore(qw, t, kw), fn, true));
+    return out;
+  }
+  function srchBoxHtml() {
+    return `<div class="home-search"><input type="text" inputmode="search" id="homeSearch" placeholder="🔍 Suchen: Akkord, Begriff, Muster …" value="${homeEsc(srchQ)}" autocomplete="off" enterkeyhint="search" aria-label="Suchen"><button type="button" class="btn btn-secondary" id="homeSearchClear" title="Suche leeren" style="${srchQ ? '' : 'display:none;'}">✕</button></div><div id="homeSearchRes"></div>`;
+  }
+  function srchShow() {
+    const box = document.getElementById('homeScreen'), res = document.getElementById('homeSearchRes'); if (!box || !res) return;
+    const clr = document.getElementById('homeSearchClear'); if (clr) clr.style.display = srchQ ? '' : 'none';
+    const q = srchQ.trim();
+    if (!q) { box.classList.remove('searching'); res.innerHTML = ''; srchList = []; return; }
+    box.classList.add('searching');
+    const all = srchCollect(q), qw = srchNorm(q).split(' ').filter(Boolean);
+    srchList = [];
+    let h = '';
+    SRCH_GROUPS.forEach(([g, title]) => {
+      const it = all.filter(x => x.g === g).sort((a, b) => b.sc - a.sc);
+      if (!it.length) return;
+      const lim = srchMore[g] ? it.length : 6;
+      h += `<div class="srch-group">${title} <span style="font-weight:400; opacity:.7;">(${it.length})</span></div>`;
+      it.slice(0, lim).forEach(x => { srchList.push(x); h += `<button type="button" class="srch-item" data-si="${srchList.length - 1}"><span class="ic">${homeEsc(x.icon)}</span><span><b>${homeEsc(x.title)}</b>${srchSubHtml(x, qw)}</span></button>`; });
+      if (it.length > lim) h += `<button type="button" class="srch-more" data-smore="${g}">… ${it.length - lim} weitere zeigen</button>`;
+    });
+    res.innerHTML = h || `<div class="srch-none">Nichts gefunden. Versuch ein anderes Wort, zum Beispiel „Am“, „Pentatonik“ oder „Kapodaster“.</div>`;
+  }
+  // ---------- Volltext: alle Texte der App ----------
+  let srchTextIdx = null;
+  const SRCH_TEXT_SEL = 'p, li, h2, h3, h4, summary, td, th';
+  const SRCH_BANNERS = [[0, "📖 Lerne hier die Funktionen und Steuerungselemente kennen."], [1, "🧭 Wie die Töne auf dem Griffbrett liegen – oben das Wichtigste in Kürze, darunter der Übeplan."], [2, "🎓 Musiktheorie zum Mitdenken: Tippe dich durch Intervalle, Akkorde, Tonleitern und den Quintenzirkel."], [6, "👂 Gehörbildung: Hör genau hin und tippe deine Antwort – ganz in Ruhe, so oft du magst."], [15, "📖 Wörterbuch: Begriffe rund um Gitarre und Musik – und unter „🎼 Noten & Zeichen“ alle Zeichen, die in Noten vorkommen."], [7, "🎼 Wähle Grundton und Tonleiter-Typ, um alle passenden Positionen auf dem Griffbrett zu sehen!"], [9, "🥁 Wähle einen Rhythmus-Stil und einen Akkord, drück ▶ Start und spiel zur Begleitung mit. Alles Weitere kannst du später entdecken."], [4, "🎮 Spielmodus: Welcher Ton ist auf dem Griffbrett markiert? Tippe oben den passenden Ton an."], [12, "🪕 Anschlag & Zupfen: Muster wählen, Akkorde eintragen, ▶ drücken und mitspielen – ganz ohne Zeitdruck."], [11, "🎚️ Stimmgerät: Tippe auf „Mikrofon starten“ und zupfe eine Saite. Die Nadel zeigt, ob der Ton zu tief oder zu hoch ist."], [10, "📅 Trag deine Übungen ein und hake ab, an welchen Tagen du sie geübt hast. Mit ▶ Üben oder ⏱ legst du direkt los."], [13, "✍️ Akkordfolgen erstellen: Griffe in die Diagramme tippen – die App erkennt die Akkorde und erklärt die Theorie dazu."], [14, "🔁 Akkordwechsel-Trainer: Akkorde wählen, Tempo einstellen und ▶ Start drücken."], [8, "🎸 Tippe die Töne eines Akkords aufs Griffbrett – die App erkennt ihn. Oder schlag bei „Akkord nachschlagen“ einen Akkord nach."]];
+  function srchBuildTextIdx() {
+    const out = [];
+    [['instructionBox', 0, 'Anleitung'], ['theoryBox', 1, 'Griffbrett-Theorie'], ['theoryProBox', 2, 'Musiktheorie']].forEach(([id, mod, nm]) => {
+      const box = document.getElementById(id); if (!box) return;
+      box.querySelectorAll(SRCH_TEXT_SEL).forEach(el => {
+        if (el.closest('select, button, script, style')) return;
+        const par = el.parentElement && el.parentElement.closest(SRCH_TEXT_SEL); if (par && box.contains(par)) return;
+        const txt = (el.textContent || '').replace(/\s+/g, ' ').trim(); if (txt.length < 3) return;
+        const blk = el.closest('.module-block'), h = blk && blk.querySelector('h3');
+        out.push({ el, txt, norm: srchNorm(txt), mod, sel: id, icon: '📄', where: nm + (h && h !== el ? ' · ' + h.textContent.replace(/\s+/g, ' ').trim() : '') });
+      });
+    });
+    try { PATH_STEPS.forEach(st => { const txt = st.title + ': ' + st.text; out.push({ txt, norm: srchNorm(txt), icon: '🚀', where: 'Erste Schritte · ' + st.title, keep: true, open: () => pathOpen() }); }); } catch (e) {}
+    SRCH_BANNERS.forEach(([mod, txt]) => { const mi = homeModuleInfo(mod); out.push({ txt, norm: srchNorm(txt), mod, icon: '💬', where: 'Hinweis im Modul · ' + (mi ? mi[2] : '') }); });
+    return out;
+  }
+  // Wörter ab 3 Buchstaben dürfen auch mitten im Wort stehen („bass“ findet „Wechselbass“)
+  function srchTextMatch(qw, norm) {
+    const n = ' ' + norm + ' ';
+    return qw.length > 0 && qw.every(w => w.length >= 3 ? n.includes(w) : (n.includes(' ' + w + ' ') || (w.length === 2 && n.includes(' ' + w))));
+  }
+  function srchWordRe(w) {
+    return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ae/g, '(?:ae|ä)').replace(/oe/g, '(?:oe|ö)').replace(/ue/g, '(?:ue|ü)').replace(/ss/g, '(?:ss|ß)').replace(/#/g, '(?:#|♯)');
+  }
+  function srchHlRe(qw) {
+    const B = '[A-Za-zÄÖÜäöüß0-9]';
+    const parts = qw.filter(Boolean).map(w => w.length >= 3 ? srchWordRe(w) : `(?<!${B})${srchWordRe(w)}${w.length === 1 ? `(?!${B})` : ''}`);
+    if (!parts.length) return null;
+    try { return new RegExp('(?:' + parts.join('|') + ')', 'gi'); } catch (e) { return null; }
+  }
+  function srchSnippetHtml(text, qw) {
+    const re = srchHlRe(qw); if (!re) return '';
+    const m = re.exec(text); if (!m) return '';
+    let a = Math.max(0, m.index - 40), b = Math.min(text.length, m.index + 90);
+    if (a > 0) { const sp = text.indexOf(' ', a); if (sp > 0 && sp < m.index) a = sp + 1; }
+    if (b < text.length) { const sp = text.lastIndexOf(' ', b); if (sp > m.index + m[0].length) b = sp; }
+    const part = text.slice(a, b);
+    let h = '', last = 0, mm; re.lastIndex = 0;
+    while ((mm = re.exec(part))) { if (!mm[0].length) { re.lastIndex++; continue; } h += homeEsc(part.slice(last, mm.index)) + '<mark class="srch-mark">' + homeEsc(mm[0]) + '</mark>'; last = mm.index + mm[0].length; }
+    h += homeEsc(part.slice(last));
+    return (a > 0 ? '… ' : '') + h + (b < text.length ? ' …' : '');
+  }
+  // Untertitel: bei Treffern im Text ein Satzausschnitt mit markiertem Wort
+  function srchSubHtml(x, qw) {
+    let sn = '';
+    if (x.txt) { sn = srchSnippetHtml(x.txt, qw) || homeEsc(srchCut(x.txt, 90)); }
+    const parts = [x.sub ? homeEsc(x.sub) : '', sn].filter(Boolean);
+    return parts.length ? `<small>${parts.join(' · ')}</small>` : '';
+  }
+  // Fundstelle öffnen, hinscrollen, Wort kurz markieren
+  function srchReveal(u, qw) {
+    let el = u.el;
+    if (!el || !el.isConnected) { const box = document.getElementById(u.sel); el = box ? [...box.querySelectorAll(SRCH_TEXT_SEL)].find(x => (x.textContent || '').replace(/\s+/g, ' ').trim() === u.txt) : null; }
+    if (!el) return;
+    let d = el.closest('details'); while (d) { d.open = true; d = d.parentElement ? d.parentElement.closest('details') : null; }
+    el.classList.add('gloss-hl');
+    const marks = srchMarkIn(el, qw);
+    setTimeout(() => { try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }, 150);
+    setTimeout(() => { el.classList.remove('gloss-hl'); marks.forEach(mk => { try { mk.replaceWith(document.createTextNode(mk.textContent)); } catch (e) {} }); try { el.normalize(); } catch (e) {} }, 5000);
+  }
+  function srchMarkIn(el, qw) {
+    const re = srchHlRe(qw), out = []; if (!re) return out;
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = []; let n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(t => {
+      if (t.parentElement && t.parentElement.closest('select, option, script, style')) return;
+      const str = t.nodeValue; re.lastIndex = 0; let m, last = 0, any = false; const frag = document.createDocumentFragment();
+      while ((m = re.exec(str))) { if (!m[0].length) { re.lastIndex++; continue; } any = true; frag.appendChild(document.createTextNode(str.slice(last, m.index))); const mk = document.createElement('mark'); mk.className = 'srch-mark'; mk.textContent = m[0]; frag.appendChild(mk); out.push(mk); last = m.index + m[0].length; }
+      if (any) { frag.appendChild(document.createTextNode(str.slice(last))); t.replaceWith(frag); }
+    });
+    return out;
+  }
+  function srchBind() {
+    srchTextIdx = null;
+    const inp = document.getElementById('homeSearch'), res = document.getElementById('homeSearchRes'); if (!inp || !res) return;
+    inp.addEventListener('input', () => { srchQ = inp.value; srchMore = {}; srchShow(); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
+    const clr = document.getElementById('homeSearchClear');
+    if (clr) clr.addEventListener('click', () => { srchQ = ''; inp.value = ''; srchShow(); inp.focus(); });
+    res.addEventListener('click', e => {
+      const m = e.target.closest('[data-smore]'); if (m) { srchMore[m.dataset.smore] = true; srchShow(); return; }
+      const b = e.target.closest('[data-si]'); if (!b) return;
+      const it = srchList[+b.dataset.si]; if (!it) return;
+      if (it.keep) { it.open(); return; }
+      const q = srchQ; srchQ = ''; srchMore = {}; srchNav = true;
+      try { it.open(); } catch (er) {} finally { srchNav = false; }
+      if (!document.body.classList.contains('home-mode')) srchBackShow(q); else srchQ = q;
+    });
+    srchShow();
+  }
+  function srchOpen() { srchBackHide(); showHome(); setTimeout(() => { const i = document.getElementById('homeSearch'); if (i) i.focus(); }, 60); }
+  // 📖 Sprung aus einem Modul direkt in den passenden Anleitung-Abschnitt
+  const MOD_HELP_SECT = { 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18' };
+  let modHelpBackMod = null;
+  function modHelpUpdate() {
+    const hb = document.getElementById('modHelpBtn'); if (!hb) return;
+    const imb = MOD_HELP_SECT[state.currentModule];
+    if (imb) { hb.style.display = 'inline-block'; hb.setAttribute('data-helpmod', String(state.currentModule)); }
+    else { hb.style.display = 'none'; hb.removeAttribute('data-helpmod'); }
+  }
+  function modHelpSync() { modHelpUpdate(); if (state.currentModule !== 0) modHelpBackHide(); }
+  function modHelpBackShow(m) {
+    let b = document.getElementById('modHelpBack');
+    if (!b) {
+      b = document.createElement('button'); b.type = 'button'; b.id = 'modHelpBack'; b.className = 'btn';
+      b.addEventListener('click', () => { const m2 = modHelpBackMod; modHelpBackHide(); if (m2 != null) { switchToModule(m2); window.scrollTo(0, 0); } });
+      document.body.appendChild(b);
+    }
+    const mi = homeModuleInfo(m);
+    b.textContent = '↩ Zurück zu ' + (mi ? mi[2] : 'Modul');
+    b.style.display = 'block';
+  }
+  function modHelpBackHide() { const b = document.getElementById('modHelpBack'); if (b) b.style.display = 'none'; }
+  function modHelpOpen(m) {
+    const imb = MOD_HELP_SECT[m]; if (!imb) return;
+    modHelpBackMod = m;
+    hideHome(); switchToModule(0); window.scrollTo(0, 0);
+    setTimeout(() => {
+      const el = document.getElementById(imb);
+      if (el) {
+        el.classList.add('help-hl');
+        try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+        setTimeout(() => el.classList.remove('help-hl'), 5000);
+      }
+      modHelpBackShow(m);
+    }, 150);
+  }
+  function srchBackShow(q) {
+    let b = document.getElementById('srchBack');
+    if (!b) {
+      b = document.createElement('button'); b.type = 'button'; b.id = 'srchBack'; b.className = 'btn'; b.textContent = '↩ Zurück zur Suche';
+      b.addEventListener('click', () => { const q2 = srchBackQ; srchBackHide(); srchQ = q2; showHome(); });
+      document.body.appendChild(b);
+    }
+    srchBackQ = q; b.style.display = 'block';
+  }
+  function srchBackHide() { const b = document.getElementById('srchBack'); if (b) b.style.display = 'none'; }
   function renderHome() {
     const box = document.getElementById('homeScreen');
     if (!box) return;
@@ -10778,7 +11575,7 @@
     const hr = new Date().getHours();
     const greet = hr < 11 ? 'Guten Morgen' : hr < 18 ? 'Hallo' : 'Guten Abend';
     const ic = x => x === 'GTR' ? HOME_GUITAR_SVG : x;
-    let h = `<div class="home-hero">${HOME_GUITAR_SVG.replace('<img ', '<img class="gtr" aria-hidden="true" ')}
+    let h = srchBoxHtml() + `<div class="home-hero">${HOME_GUITAR_SVG.replace('<img ', '<img class="gtr" aria-hidden="true" ')}
       <div class="hi">${greet}! 👋</div><h2>Gitarren-Griffbrett-Trainer</h2>
       <div class="sub">Griffbrett, Akkorde, Rhythmus – Schritt für Schritt.</div>
       <div class="tip"><strong>💡 Tipp des Tages</strong><br>${homeEsc(homeTipOfDay())}</div>
@@ -10804,6 +11601,7 @@
       <select id="homeA4Select">${APP_A4_LIST.map(v => `<option value="${v}" ${v === appA4() ? 'selected' : ''}>${v} Hz${v === 440 ? ' (normal)' : ''}</option>`).join('')}</select></div>`;
     h += `<div class="home-ver"><span>${appVersionText()}</span><button type="button" id="homeUpdBtn">🔄 Nach Updates suchen</button></div>`;
     box.innerHTML = h;
+    try { srchBind(); } catch (e) {}
     { const ub = document.getElementById('homeUpdBtn'); if (ub) ub.addEventListener('click', appManualCheck); }
     { const a = document.getElementById('homeA4Select'); if (a) a.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); }); }
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
@@ -10815,6 +11613,7 @@
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
   }
   function showHome() {
+    try { srchBackHide(); } catch (e) {}
     try { stopJamPlayback(); } catch (e) {}
     try { stopTuner(); } catch (e) {}
     try { stopStrum(); } catch (e) {}
@@ -11326,7 +12125,8 @@
   }
 
   function setupEventListeners() {
-    moduleSelectEl.addEventListener('change', updateModule);
+    moduleSelectEl.addEventListener('change', () => { updateModule(); modHelpSync(); });
+    modHelpSync();
     const pstDet = document.getElementById('plannerStatsDetails');
     if (pstDet) pstDet.addEventListener('toggle', renderPlannerStats);
 
@@ -12358,9 +13158,11 @@
   function setMenuInit() {
     const btn = document.getElementById('settingsBtn'); if (!btn || document.getElementById('setMenu')) return;
     const m = document.createElement('div'); m.id = 'setMenu'; m.className = 'set-menu';
-    m.innerHTML = `<button type="button" data-setfn="path">🚀 Erste Schritte</button><button type="button" data-setfn="gloss">📖 Wörterbuch</button><button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>
+    m.innerHTML = `<button type="button" data-setfn="search">🔍 Suchen</button><button type="button" data-setfn="path">🚀 Erste Schritte</button><button type="button" data-setfn="gloss">📖 Wörterbuch</button><button type="button" data-setgo="backupBtn">💾 Datensicherung</button><button type="button" data-setgo="fontSizeBtn">A+ Schriftgröße</button><button type="button" data-setgo="themeToggleBtn">🌙 Hell / Dunkel</button>
       <div style="padding:8px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;"><label for="setA4Select">🎵 Kammerton</label>
-      <select id="setA4Select" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px;">${APP_A4_LIST.map(v => `<option value="${v}">${v} Hz</option>`).join('')}</select></div>`;
+      <select id="setA4Select" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px;">${APP_A4_LIST.map(v => `<option value="${v}">${v} Hz</option>`).join('')}</select></div>
+      <div style="padding:4px 12px 8px;">${visLagSelectHtml('background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px;')}</div>`;
+    m.querySelectorAll('.vislag-sel').forEach(x => x.addEventListener('click', e => e.stopPropagation()));
     const sa = m.querySelector('#setA4Select'); sa.value = String(appA4());
     sa.addEventListener('click', e => e.stopPropagation());
     sa.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); });
@@ -12374,7 +13176,7 @@
       m.style.top = (r.bottom + 6) + 'px'; m.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
       m.classList.add('open');
     });
-    m.querySelectorAll('[data-setfn]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('open'); if (b.dataset.setfn === 'path') pathOpen(); else glossOpen(); }));
+    m.querySelectorAll('[data-setfn]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('open'); if (b.dataset.setfn === 'path') pathOpen(); else if (b.dataset.setfn === 'search') srchOpen(); else glossOpen(); }));
     m.querySelectorAll('[data-setgo]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); m.classList.remove('open'); const t = document.getElementById(b.dataset.setgo); if (t) t.click(); }));
     document.addEventListener('click', () => m.classList.remove('open'));
   }
@@ -12478,8 +13280,11 @@
     if (e.target && e.target.id === 'moduleSelect' && pathBarIdx >= 0 && +e.target.value !== PATH_STEPS[pathBarIdx].mod) pathBarHide();
   });
   document.addEventListener('click', e => {
-    const t = e.target && e.target.closest && e.target.closest('[data-path], [data-open-path], [data-open-gloss], [data-gloss]');
+    const t = e.target && e.target.closest && e.target.closest('[data-path], [data-open-path], [data-open-gloss], [data-gloss], [data-toc], [data-helpmod]');
     if (!t) return;
+    const tocBtn = t.closest ? t.closest('[data-toc]') : null;
+    if (tocBtn) { const el = document.getElementById(tocBtn.getAttribute('data-toc')); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (t.hasAttribute && t.hasAttribute('data-helpmod')) { modHelpOpen(parseInt(t.getAttribute('data-helpmod'), 10)); return; }
     if (t.hasAttribute('data-open-path')) { pathOpen(); return; }
     if (t.hasAttribute('data-open-gloss')) { glossOpen(); return; }
     if (t.dataset.gloss) {
@@ -12759,7 +13564,7 @@
       sec.items.forEach(([t, txt, ic, mod]) => {
         let svg = '';
         try { svg = ic.startsWith('w:') ? glWord(ic.slice(2)) : (GL_ICONS[ic] ? GL_ICONS[ic]() : ''); } catch (e) { svg = ''; }
-        h += `<div class="gloss-n">${svg}<div><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div></div>`;
+        h += `<div class="gloss-n" data-gt="${homeEsc(t)}">${svg}<div><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div></div>`;
       });
       h += `</div></details>`;
     });
@@ -12780,16 +13585,28 @@
     const backName = glossBackMod !== null && mods[glossBackMod] ? mods[glossBackMod] : '';
     let h = `${backName ? `<div style="margin-bottom:6px;"><button type="button" class="btn btn-secondary" data-gloss="back">↩ Zurück zu ${homeEsc(backName)}</button></div>` : ''}
       <div class="gloss-tabs"><button type="button" class="btn ${glossTab === 'base' ? '' : 'btn-secondary'}" data-gloss="tab" data-t="base">🎸 Gitarre &amp; Musik</button><button type="button" class="btn ${glossTab === 'notes' ? '' : 'btn-secondary'}" data-gloss="tab" data-t="notes">🎼 Noten &amp; Zeichen</button></div>`;
-    if (glossTab === 'notes') { box.innerHTML = `<div class="gloss-card">${h}${glossNotesHtml(mods)}</div>`; return; }
+    if (glossTab === 'notes') { box.innerHTML = `<div class="gloss-card">${h}${glossNotesHtml(mods)}</div>`; glossApplyFocus(); return; }
     h += `<p style="margin:8px 0;">Die wichtigsten Begriffe rund um Gitarre und Musik – in einfachen Worten.</p>
       <div class="gloss-letters">${letters.map(l => `<button type="button" data-gloss="letter" data-l="${l}">${l}</button>`).join('')}</div><div class="gloss-list">`;
     let cur = '';
     list.forEach(([t, txt, mod]) => {
       const L = t[0].toUpperCase();
       if (L !== cur) { cur = L; h += `<div class="gloss-L" id="gloss-L-${L}">${L}</div>`; }
-      h += `<div class="gloss-item"><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div>`;
+      h += `<div class="gloss-item" data-gt="${homeEsc(t)}"><b>${homeEsc(t)}</b><p>${homeEsc(txt)}${mod !== null && mods[mod] ? ` <button type="button" class="theory-chip" data-gloss="go" data-mod="${mod}">→ ${homeEsc(mods[mod])}</button>` : ''}</p></div>`;
     });
     box.innerHTML = `<div class="gloss-card">${h}</div></div>`;
+    glossApplyFocus();
+  }
+  let glossFocus = null;
+  function glossApplyFocus() {
+    if (!glossFocus) return;
+    const term = glossFocus; glossFocus = null;
+    const box = document.getElementById('glossRoot'); if (!box) return;
+    const el = [...box.querySelectorAll('[data-gt]')].find(x => x.dataset.gt === term); if (!el) return;
+    const det = el.closest('details'); if (det) det.open = true;
+    el.classList.add('gloss-hl');
+    setTimeout(() => { try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }, 120);
+    setTimeout(() => el.classList.remove('gloss-hl'), 3500);
   }
 
 
@@ -13034,6 +13851,13 @@
     if (d.style !== 'arp') d.style = 'strum';
     return d;
   }
+  function chgReorder(from, over) {
+    if (from >= chgState.chords.length || over >= chgState.chords.length) return;
+    const moved = chgState.chords.splice(from, 1)[0]; chgState.chords.splice(over, 0, moved);
+    if (Array.isArray(chgState.grips) && chgState.grips.length) { const g = chgState.grips.splice(from, 1)[0]; chgState.grips.splice(over, 0, g); }
+    chgSave(); chgRender();
+    showToast(`↔ Akkord steht jetzt an Stelle ${over + 1}`);
+  }
   function chgSave() { try { localStorage.setItem(CHG_KEY, JSON.stringify(chgState)); } catch (e) {} }
   function chgKey() { return chgState.chords.join(' '); }
   function chgBpm() { return Math.max(30, Math.min(160, (chgState.tempos || {})[chgKey()] || 60)); }
@@ -13074,10 +13898,11 @@
     const n = chgState.chords.length, bpm = chgBpm();
     let h = `<div class="chg-card"><h3>🔁 Akkordwechsel-Trainer</h3>
       <div class="jam-hint" style="margin:0 0 6px;">Übe den Wechsel zwischen zwei bis 16 Akkorden im Takt.</div>
-      ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.filter(c => progDetect(c)).length >= 2; if (!hasDraft && !progState.saved.length) return ''; return `<div class="row" style="margin:0 0 6px;"><select id="chgImport" style="${sel}"><option value="">📂 Aus meinen Akkordfolgen …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></div>`; })()}
+      ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.filter(c => progDetect(c)).length >= 2, jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin:0 0 6px;"><select id="chgImport" style="${sel}"><option value="">📂 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
       <div class="row" style="flex-wrap:wrap; gap:6px;">${CHG_QUICK.map(q => `<button type="button" class="strum-chip" data-chgq="${q}">${q.split(' ').join(q.split(' ').length === 2 ? ' ↔ ' : ' → ')}</button>`).join('')}</div>
-      <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
+      <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip chg-grip" data-chgdrag="${i}" title="Gedrückt halten und ziehen zum Umsortieren" aria-label="Akkord ${i + 1} verschieben">⠿</button><input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
         ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
+      <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 ⠿ gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="font-weight:600;">Schläge pro Akkord:</label>
         <select id="chgBeats" style="${sel}">${[4, 2, 1].map(b => `<option value="${b}" ${b === chgState.beats ? 'selected' : ''}>${b}</option>`).join('')}</select>
@@ -13094,7 +13919,8 @@
     chgShow(0, -1);
     const restart = () => { if (chgPlaying) { chgStop(); chgStart(); } };
     box.querySelectorAll('[data-chgq]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords = b.dataset.chgq.split(' '); chgState.grips = []; chgSave(); chgRender(); }));
-    { const im = document.getElementById('chgImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; const p = v === 'draft' ? progState.draft : progState.saved[+v]; if (p) chgImportFrom(p); else im.value = ''; }); }
+    holdDragBind(box.querySelector('.chg-chords'), '[data-chgdrag]', el => +el.dataset.chgdrag, chgReorder, null);
+    { const im = document.getElementById('chgImport'); if (im) im.addEventListener('change', () => { const v = im.value; if (v === '') return; if (v.startsWith('jb:')) { const sb = jamSongSources()[+v.slice(3)]; if (!sb || !chgImportJam(sb)) im.value = ''; return; } const p = v === 'draft' ? progState.draft : progState.saved[+v]; if (p) chgImportFrom(p); else im.value = ''; }); }
     { const cs = document.getElementById('chgStyle'); if (cs) cs.addEventListener('change', () => { chgState.style = cs.value === 'arp' ? 'arp' : 'strum'; chgSave(); }); }
     box.querySelectorAll('[data-chgi]').forEach(inp => inp.addEventListener('change', () => {
       const v = inp.value.trim(); const p = parsePlanChords(v);
@@ -13132,7 +13958,7 @@
       const ci = Math.floor(chgBeat / per) % n, b = chgBeat % per;
       chgPlayBeat(P, ci, b, chgNext);
       if (chgState.click) strumClick(audioCtx, chgNext, b === 0);
-      const delay = Math.max(0, (chgNext - audioCtx.currentTime) * 1000);
+      const delay = Math.max(0, (chgNext - audioCtx.currentTime) * 1000 + audioLagMs());
       setTimeout(() => { if (chgPlaying) chgShow(ci, b); }, delay);
       chgNext += bd; chgBeat++;
     }
@@ -13414,7 +14240,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-21-1';
+  const APP_VERSION = '2026-10-24-9';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -13482,5 +14308,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e25a632ca0d3ac',t:'MTc5MjYwNzYzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4f84277c8d86c5f',t:'MTc5MjgzNzMzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
