@@ -1420,6 +1420,15 @@
     #ptBtn.pt-on { background: var(--primary-color, #3b82f6); color: #fff; font-variant-numeric: tabular-nums; }
     .pt-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
     .pt-overlay.open { display: flex; }
+    .pt-room { position: fixed; inset: 0; z-index: 3050; display: none; background: #e5533d; }
+    .pt-room.open { display: block; }
+    .pt-room svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .pt-room-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; padding: 12px 10px calc(12px + env(safe-area-inset-bottom, 0px)); background: rgba(60,20,10,.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: transform .25s ease, opacity .25s ease; }
+    .pt-room-bar.hide { transform: translateY(110%); opacity: 0; }
+    .pt-room-bar button { font: inherit; font-weight: 700; font-size: 1rem; color: #5b2410; background: #fff7e0; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(40,10,5,.25); }
+    .pt-room-bar button.sec { background: rgba(255,247,224,.28); color: #fff7e0; }
+    .pt-room-bar button:active { transform: scale(.97); }
+    #rmGuitar { cursor: pointer; }
     .str-bar { height: 8px; border-radius: 6px; background: var(--card-border); overflow: hidden; margin-top: 6px; }
     .str-bar > i { display: block; height: 100%; background: #22c55e; }
     .str-bar.soon > i { background: #f59e0b; }
@@ -12985,7 +12994,7 @@
   }
   function ptGoModule(v) {
     try { hideHome(); switchToModule(v); window.scrollTo(0, 0); } catch (e) {}
-    ptClose();
+    ptRoomClose(); ptClose();
   }
   function ptStart() {
     ptData.set.mode = pt.mode;
@@ -13081,6 +13090,7 @@
     }
     h += `<div class="pt-ctrl">` + (!r ? `<button type="button" class="btn" id="ptStartBtn">▶ Start</button>` :
       (pt.paused ? `<button type="button" class="btn" id="ptResumeBtn">▶ Weiter</button>` : `<button type="button" class="btn" id="ptPauseBtn">⏸ Pause</button>`) + `<button type="button" class="btn btn-secondary" id="ptStopBtn">⏹ Beenden</button>`) + `</div>`;
+    h += `<div style="text-align:center; margin-top:10px;"><button type="button" class="btn btn-secondary" id="ptRoomBtn">🛋️ Raumansicht</button></div>`;
     if (r && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; if (c && c.mod >= 0) h += `<div style="text-align:center;"><button type="button" class="btn btn-secondary" id="ptOpenMod">📂 ${homeEsc(ptModName(+c.mod))} öffnen</button></div>`; }
     h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div>
       <div class="pt-week">${s.days.map((d, i) => `<div class="${d.today ? 'today' : ''}"><i style="height:${Math.round(48 * d.v / max)}px"></i>${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][i]}<br>${Math.floor(d.v / 60)}</div>`).join('')}</div>
@@ -13115,10 +13125,263 @@
     on('ptSecSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); });
     on('ptOpenMod', () => { const c = ptData.sections[pt.secIdx]; if (c) ptGoModule(+c.mod); });
     on('ptStartBtn', ptStart); on('ptPauseBtn', ptPause); on('ptResumeBtn', ptResume); on('ptStopBtn', ptStop);
+    on('ptRoomBtn', ptRoomOpen);
     on('ptChime', e => { ptData.set.chime = e.target.checked; ptSave(); }, 'change');
     on('ptBrk', e => { ptData.set.brk = e.target.checked; ptSave(); }, 'change');
     on('ptBrkMin', e => { const v = Math.round(+e.target.value); if (v >= 5 && v <= 120) { ptData.set.brkMin = v; ptSave(); } }, 'change');
     ptUpdateLive();
+  }
+  // =================== Raumansicht: der Timer als ganzes Zimmer ===================
+  const PT_ROOM_SEC_COLORS = ['#ffcf6e', '#ffb35c', '#ff9040', '#e5533d', '#d4452f', '#c63d3d'];
+  let ptRoomEndGlow = false, ptRoomWasRunning = false, ptRoomBarKey = '';
+  const PT_ROOM_STAT_KEY = 'guitartrainer_ptroomstat';
+  function ptRoomStatOn() { try { return localStorage.getItem(PT_ROOM_STAT_KEY) !== '0'; } catch (e) { return true; } }
+  function ptRoomStatToggle() { try { localStorage.setItem(PT_ROOM_STAT_KEY, ptRoomStatOn() ? '0' : '1'); } catch (e) {} ptRoomBarKey = ''; ptRoomTick(); }
+  function ptRoomFmt(ms) {
+    const t = Math.max(0, Math.round(ms / 1000)), m = Math.floor(t / 60), ss = String(t % 60).padStart(2, '0');
+    if (m >= 60) return Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') + ':' + ss;
+    return String(m).padStart(2, '0') + ':' + ss;
+  }
+  function ptRoomHtml() {
+    return `<svg id="ptRoomSvg" viewBox="0 0 900 560" preserveAspectRatio="xMidYMax slice" aria-label="Zimmer mit Gitarre, Schränkchen und Stuhl – deine Übungszeit">
+  <defs>
+    <linearGradient id="rmWall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd75e"/><stop offset=".55" stop-color="#ff9040"/><stop offset="1" stop-color="#e5533d"/>
+    </linearGradient>
+    <linearGradient id="rmSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#ffb35c"/>
+    </linearGradient>
+    <radialGradient id="rmGlow"><stop offset="0" stop-color="#fff7e0" stop-opacity=".95"/><stop offset="1" stop-color="#fff7e0" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="900" height="430" fill="url(#rmWall)"/>
+  <rect y="430" width="900" height="130" fill="#9c5a33"/>
+  <g stroke="#7c4426" stroke-width="3" opacity=".6">
+    <line x1="0" y1="462" x2="900" y2="462"/><line x1="0" y1="500" x2="900" y2="500"/><line x1="0" y1="536" x2="900" y2="536"/>
+  </g>
+  <g transform="translate(30,0)">
+    <rect x="60" y="60" width="180" height="150" rx="8" fill="url(#rmSky)" stroke="#7a3b22" stroke-width="9"/>
+    <line x1="150" y1="64" x2="150" y2="206" stroke="#7a3b22" stroke-width="6"/>
+    <line x1="64" y1="135" x2="236" y2="135" stroke="#7a3b22" stroke-width="6"/>
+    <circle id="rmSunGlow" cx="112" cy="102" r="40" fill="url(#rmGlow)"/>
+    <circle id="rmSun" cx="112" cy="102" r="24" fill="#fff3c4"/>
+  </g>
+  <g>
+    <circle cx="460" cy="105" r="48" fill="#fffdf4" stroke="#4a2113" stroke-width="9"/>
+    <circle cx="460" cy="105" r="40" fill="none" stroke="#e3d2ac" stroke-width="1.5"/>
+    <g stroke="#4a2113" stroke-width="2" opacity=".6">
+      <line x1="480.5" y1="69.5" x2="478.5" y2="73"/><line x1="495.5" y1="84.5" x2="492" y2="86.5"/>
+      <line x1="495.5" y1="125.5" x2="492" y2="123.5"/><line x1="480.5" y1="140.5" x2="478.5" y2="137"/>
+      <line x1="439.5" y1="140.5" x2="441.5" y2="137"/><line x1="424.5" y1="125.5" x2="428" y2="123.5"/>
+      <line x1="424.5" y1="84.5" x2="428" y2="86.5"/><line x1="439.5" y1="69.5" x2="441.5" y2="73"/>
+    </g>
+    <g stroke="#4a2113" stroke-width="4.5" stroke-linecap="round">
+      <line x1="460" y1="64" x2="460" y2="72"/><line x1="460" y1="138" x2="460" y2="146"/>
+      <line x1="419" y1="105" x2="427" y2="105"/><line x1="493" y1="105" x2="501" y2="105"/>
+    </g>
+    <line id="rmClkH" x1="460" y1="105" x2="460" y2="78" stroke="#2e1408" stroke-width="7" stroke-linecap="round"/>
+    <line id="rmClkM" x1="460" y1="105" x2="460" y2="67" stroke="#2e1408" stroke-width="4.5" stroke-linecap="round"/>
+    <line id="rmClkS" x1="460" y1="112" x2="460" y2="63" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="460" cy="105" r="5.5" fill="#2e1408"/><circle cx="460" cy="105" r="2" fill="#fffdf4"/>
+  </g>
+  <g>
+    <rect x="640" y="78" width="92" height="72" rx="6" fill="#ffcf6e" stroke="#7a3b22" stroke-width="7"/>
+    <path d="M650 132 L676 100 L692 118 L706 96 L724 132 Z" fill="#e58b3c"/>
+    <circle cx="712" cy="94" r="7" fill="#fff3c4"/>
+  </g>
+  <g>
+    <ellipse cx="465" cy="232" rx="170" ry="95" fill="url(#rmGlow)" opacity=".45"/>
+    <text id="rmDigits" x="465" y="242" text-anchor="middle" font-size="78" font-weight="800"
+          fill="#5b2410" stroke="#ffe9b0" stroke-opacity=".85" stroke-width="6"
+          paint-order="stroke" stroke-linejoin="round">00:00</text>
+    <text id="rmCap" x="465" y="270" text-anchor="middle" font-size="15" font-weight="600" fill="#6b2a12">bereit · ▶ startet unten</text>
+    <rect x="372" y="280" width="186" height="7" rx="3.5" fill="#5b2410" opacity=".3"/>
+    <rect id="rmFill" x="372" y="280" width="0" height="7" rx="3.5" fill="#fff7e0"/>
+  </g>
+  <g id="rmGuitar">
+    <line x1="262" y1="430" x2="288" y2="330" stroke="#5b2d16" stroke-width="6"/>
+    <line x1="318" y1="430" x2="292" y2="330" stroke="#5b2d16" stroke-width="6"/>
+    <rect x="283" y="196" width="14" height="118" rx="4" fill="#7a4a26"/>
+    <rect x="278" y="172" width="24" height="30" rx="6" fill="#5b2d16"/>
+    <circle cx="290" cy="382" r="46" fill="#c97b3f"/>
+    <circle cx="290" cy="332" r="33" fill="#c97b3f"/>
+    <circle cx="290" cy="356" r="15" fill="#5b2d16"/>
+    <rect x="278" y="392" width="24" height="7" rx="3" fill="#5b2d16"/>
+    <g stroke="#fff7e0" stroke-width="1.4" opacity=".8">
+      <line x1="286" y1="200" x2="286" y2="392"/><line x1="290" y1="200" x2="290" y2="392"/><line x1="294" y1="200" x2="294" y2="392"/>
+    </g>
+  </g>
+  <g>
+    <path d="M180 402 C168 372 172 352 186 336 C190 356 190 372 188 402 Z" fill="#5f8f4a"/>
+    <path d="M192 402 C196 368 208 352 224 344 C216 366 206 384 200 402 Z" fill="#6fa056"/>
+    <path d="M176 402 C160 384 152 368 152 350 C166 362 176 380 182 402 Z" fill="#4e7d3c"/>
+    <path d="M168 400 h44 l-6 36 h-32 Z" fill="#b3542c"/>
+  </g>
+  <g>
+    <rect x="392" y="318" width="16" height="112" rx="6" fill="#8a4b2f"/>
+    <rect x="392" y="372" width="86" height="16" rx="7" fill="#8a4b2f"/>
+    <rect x="400" y="360" width="72" height="14" rx="7" fill="#ffcf6e"/>
+    <rect x="462" y="380" width="14" height="50" rx="6" fill="#8a4b2f"/>
+    <rect x="398" y="386" width="14" height="44" rx="6" fill="#8a4b2f"/>
+  </g>
+  <g>
+    <rect x="560" y="330" width="220" height="96" rx="10" fill="#a05a2c"/>
+    <line x1="670" y1="336" x2="670" y2="420" stroke="#7c4426" stroke-width="4"/>
+    <circle cx="652" cy="378" r="5" fill="#ffcf6e"/><circle cx="688" cy="378" r="5" fill="#ffcf6e"/>
+    <rect x="572" y="426" width="14" height="26" rx="5" fill="#7c4426"/>
+    <rect x="754" y="426" width="14" height="26" rx="5" fill="#7c4426"/>
+    <rect x="568" y="300" width="70" height="30" rx="6" fill="#6b3a1f"/>
+    <circle cx="582" cy="315" r="7" fill="#ffcf6e"/>
+    <g stroke="#ffcf6e" stroke-width="2.5"><line x1="596" y1="308" x2="630" y2="308"/><line x1="596" y1="315" x2="630" y2="315"/><line x1="596" y1="322" x2="630" y2="322"/></g>
+    <ellipse cx="692" cy="332" rx="54" ry="10" fill="url(#rmGlow)" opacity=".3"/>
+    <rect x="648" y="292" width="88" height="40" rx="9" fill="#4a2113"/>
+    <rect x="654" y="298" width="76" height="28" rx="6" fill="#26100a"/>
+    <ellipse cx="692" cy="312" rx="34" ry="11" fill="url(#rmGlow)" opacity=".22"/>
+    <text id="rmDig" x="692" y="319" text-anchor="middle" font-size="21" font-weight="700"
+          fill="#ffd75e" letter-spacing="1">--:--</text>
+    <g>
+      <line x1="740" y1="298" x2="776" y2="298" stroke="#7a3b22" stroke-width="5"/>
+      <line x1="740" y1="336" x2="776" y2="336" stroke="#7a3b22" stroke-width="5"/>
+      <path d="M746 300 h24 l-12 17 l12 17 h-24 l12 -17 Z" fill="none" stroke="#fff7e0" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M750 303 h16 l-8 10 Z" fill="#ffcf6e"/>
+      <path d="M754 331 h8 l-4 -6 Z" fill="#ffcf6e"/>
+    </g>
+  </g>
+  <g id="rmStats">
+    <text id="rmStatTxt" x="450" y="450" text-anchor="middle" font-size="15" font-weight="600" fill="#fff7e0" opacity=".95"></text>
+    <line x1="329" y1="484" x2="571" y2="484" stroke="#fff7e0" stroke-opacity=".4" stroke-width="2"/>
+    <rect id="rmBar0" x="329" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar1" x="365" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar2" x="401" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar3" x="437" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar4" x="473" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar5" x="509" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <rect id="rmBar6" x="545" y="482" width="26" height="2" rx="1" fill="#fff7e0" fill-opacity=".8"/>
+    <text id="rmLab0" x="342" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Mo</text>
+    <text id="rmLab1" x="378" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Di</text>
+    <text id="rmLab2" x="414" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Mi</text>
+    <text id="rmLab3" x="450" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Do</text>
+    <text id="rmLab4" x="486" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Fr</text>
+    <text id="rmLab5" x="522" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Sa</text>
+    <text id="rmLab6" x="558" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">So</text>
+  </g>
+  <g transform="translate(-46,0)">
+    <line x1="836" y1="430" x2="836" y2="352" stroke="#5b2d16" stroke-width="6"/>
+    <path id="rmLampShade" d="M812 352 h48 l-10 -26 h-28 Z" fill="#ffcf6e"/>
+    <circle id="rmLampGlow" cx="836" cy="344" r="26" fill="url(#rmGlow)" opacity=".35"/>
+    <path d="M820 430 h32 l-6 -14 h-20 Z" fill="#5b2d16"/>
+  </g>
+</svg>
+<div class="pt-room-bar" id="ptRoomBar"></div>`;
+  }
+  function ptRoomOpen() {
+    const r = document.getElementById('ptRoom'); if (!r) return;
+    ptRoomEndGlow = false; ptRoomWasRunning = pt.running; ptRoomBarKey = '';
+    r.classList.add('open');
+    const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.remove('hide');
+    ptRoomTick();
+  }
+  function ptRoomClose() { const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open'); }
+  function ptRoomBarRender() {
+    const bar = document.getElementById('ptRoomBar'); if (!bar) return;
+    const r = pt.running, paused = pt.paused;
+    const showPlus = (r && pt.mode !== 'up') || (!r && pt.mode === 'down');
+    let h = r ? (paused ? '<button type="button" id="rmMain">▶ Weiter</button>' : '<button type="button" id="rmMain">⏸ Pause</button>')
+              : '<button type="button" id="rmMain">▶ Start</button>';
+    if (showPlus) h += '<button type="button" class="sec" id="rmPlus">+5 Min</button>';
+    if (!r) h += '<button type="button" class="sec" id="rmMode">' + (pt.mode === 'down' ? '⏳ Countdown' : pt.mode === 'up' ? '⏱ Stoppuhr' : '🧩 Abschnitte') + '</button>';
+    else if (pt.mode === 'sec') h += '<button type="button" class="sec" id="rmSkip">⏭ Nächster Teil</button>';
+    h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
+    h += '<button type="button" class="sec" id="rmBack">↩ Zurück</button>';
+    bar.innerHTML = h;
+    const on = (id, f) => { const el = document.getElementById(id); if (el) el.addEventListener('click', f); };
+    on('rmMain', () => { if (!pt.running) ptStart(); else if (pt.paused) ptResume(); else ptPause(); ptRoomBarRender(); ptRoomTick(); });
+    on('rmPlus', () => {
+      if (pt.running && pt.mode === 'down') pt.target += 300000;
+      else if (pt.running && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; if (c) { c.min = Math.min(120, (+c.min || 1) + 5); ptSave(); } }
+      else if (!pt.running && pt.mode === 'down') { ptData.set.downMin = Math.min(180, (+ptData.set.downMin || 10) + 5); ptSave(); ptRender(); }
+      ptRoomTick();
+    });
+    on('rmMode', () => { pt.mode = pt.mode === 'down' ? 'up' : pt.mode === 'up' ? 'sec' : 'down'; ptData.set.mode = pt.mode; ptSave(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
+    on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
+    on('rmBack', () => { ptRoomClose(); ptOpen(); });
+    on('rmStat', ptRoomStatToggle);
+    ptRoomBarKey = [r, paused, pt.mode, showPlus].join('|');
+  }
+  function ptRoomTick() {
+    const rm = document.getElementById('ptRoom');
+    if (!rm || !rm.classList.contains('open')) return;
+    if (pt.running) ptRoomEndGlow = false;
+    else if (ptRoomWasRunning) ptRoomEndGlow = true;
+    ptRoomWasRunning = pt.running;
+    const el = ptElapsed(), tgt = ptCurTarget(), r = pt.running;
+    const dg = document.getElementById('rmDigits');
+    if (dg) {
+      if (ptRoomEndGlow) dg.textContent = '00:00';
+      else if (r) dg.textContent = ptRoomFmt(tgt ? tgt - el : el);
+      else dg.textContent = ptRoomFmt(pt.mode === 'down' ? Math.max(1, +ptData.set.downMin || 10) * 60000 : pt.mode === 'sec' ? Math.max(1, +(ptData.sections[0] || {}).min || 1) * 60000 : 0);
+    }
+    const cap = document.getElementById('rmCap');
+    if (cap) {
+      let t;
+      if (ptRoomEndGlow) t = 'geschafft · schön geübt 🎸';
+      else if (!r) t = 'bereit · ▶ startet unten';
+      else if (pt.paused) t = '⏸ Pause · ' + (pt.mode === 'down' ? 'noch übrig' : pt.mode === 'sec' ? 'aktueller Teil' : 'deine Übungszeit');
+      else if (pt.mode === 'down') t = 'übrig · dann sanfter Ton';
+      else if (pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; t = 'Teil ' + (pt.secIdx + 1) + '/' + ptData.sections.length + ': ' + (c ? c.name || 'Abschnitt' : 'Abschnitt'); }
+      else t = 'so lange übst du schon';
+      cap.textContent = t;
+    }
+    const fill = document.getElementById('rmFill');
+    if (fill) {
+      let p = 0;
+      if (ptRoomEndGlow) p = 1;
+      else if (r && tgt) p = Math.min(1, el / tgt);
+      else if (r && pt.mode === 'up') p = (el % 3600000) / 3600000;
+      fill.setAttribute('width', String(Math.round(186 * p)));
+    }
+    // Wanduhr: echte Uhrzeit (wie eine richtige Zimmeruhr)
+    const d = new Date(), rsec = d.getSeconds(), rmin = d.getMinutes() + rsec / 60, rhr = (d.getHours() % 12) + rmin / 60;
+    const setH = (id, deg) => { const e2 = document.getElementById(id); if (e2) e2.setAttribute('transform', 'rotate(' + deg.toFixed(2) + ' 460 105)'); };
+    setH('rmClkS', rsec * 6); setH('rmClkM', rmin * 6); setH('rmClkH', rhr * 30);
+    // Sonne wandert mit der Übungszeit übers Fenster
+    const es = Math.floor(el / 1000);
+    const p2 = Math.min(1, el / 2700000);
+    const sx = 84 + 132 * p2, sy = 165 - Math.sin(Math.PI * p2) * 62;
+    const sun = document.getElementById('rmSun'), sung = document.getElementById('rmSunGlow');
+    if (sun) { sun.setAttribute('cx', sx.toFixed(1)); sun.setAttribute('cy', sy.toFixed(1)); }
+    if (sung) { sung.setAttribute('cx', sx.toFixed(1)); sung.setAttribute('cy', sy.toFixed(1)); }
+    // Digitaluhr auf dem Schränkchen: echte Uhrzeit
+    const dig = document.getElementById('rmDig');
+    if (dig) dig.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    // Lampe: leuchtet warm auf, wenn die Zeit um ist; Abschnitte färben sie
+    const glow = document.getElementById('rmLampGlow'), shade = document.getElementById('rmLampShade');
+    if (glow) glow.setAttribute('opacity', ptRoomEndGlow ? '0.95' : '0.35');
+    if (shade) shade.setAttribute('fill', ptRoomEndGlow ? '#fff3c4' : (pt.mode === 'sec' && r ? PT_ROOM_SEC_COLORS[pt.secIdx % PT_ROOM_SEC_COLORS.length] : '#ffcf6e'));
+    // Übungszeit auf dem Boden (optional)
+    const st = document.getElementById('rmStats');
+    if (st) {
+      const showStat = ptRoomStatOn();
+      st.setAttribute('display', showStat ? '' : 'none');
+      if (showStat) {
+        const s2 = ptStats();
+        const txt = document.getElementById('rmStatTxt');
+        if (txt) txt.textContent = 'Heute: ' + ptFmtMin(s2.today) + ' · Diese Woche: ' + ptFmtMin(s2.week);
+        const max = Math.max(60, ...s2.days.map(d => d.v));
+        const ti = (new Date().getDay() + 6) % 7;
+        s2.days.forEach((d, i) => {
+          const bar = document.getElementById('rmBar' + i), lab = document.getElementById('rmLab' + i);
+          if (bar) {
+            const h = d.v > 0 ? Math.max(3, Math.round(26 * d.v / max)) : 2;
+            bar.setAttribute('y', String(484 - h)); bar.setAttribute('height', String(h));
+            bar.setAttribute('fill', i === ti ? '#ffd75e' : '#fff7e0');
+            bar.setAttribute('fill-opacity', i === ti ? '1' : '.8');
+          }
+          if (lab) { lab.setAttribute('fill', i === ti ? '#ffd75e' : '#fff7e0'); lab.setAttribute('font-weight', i === ti ? '700' : '400'); }
+        });
+      }
+    }
+    const key = [r, pt.paused, pt.mode, (r && pt.mode !== 'up') || (!r && pt.mode === 'down'), ptRoomStatOn()].join('|');
+    if (key !== ptRoomBarKey) ptRoomBarRender();
   }
   function ptInit() {
     if (document.getElementById('ptOverlay')) return;
@@ -13127,6 +13390,14 @@
     o.addEventListener('click', e => { if (e.target === o) ptClose(); });
     o.addEventListener('toggle', e => { if (e.target && e.target.id === 'ptHistDet') ptHistOpen = e.target.open; if (e.target && e.target.id === 'ptClockDet') { try { localStorage.setItem(PT_CLOCK_KEY, e.target.open ? '1' : '0'); } catch (err) {} ptClockTick(); } }, true);
     document.body.appendChild(o);
+    const rmDiv = document.createElement('div'); rmDiv.id = 'ptRoom'; rmDiv.className = 'pt-room';
+    rmDiv.innerHTML = ptRoomHtml();
+    document.body.appendChild(rmDiv);
+    const gtr = rmDiv.querySelector('#rmGuitar');
+    if (gtr) gtr.addEventListener('click', e => { e.stopPropagation(); ptRoomClose(); ptClose(); try { hideHome(); switchToModule(11); window.scrollTo(0, 0); } catch (err) {} });
+    const rsvg = rmDiv.querySelector('#ptRoomSvg');
+    if (rsvg) rsvg.addEventListener('click', () => { const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.toggle('hide'); });
+    setInterval(ptRoomTick, 1000);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
     // Beim Schließen/Wechseln der App die Zeit sichern
@@ -14240,7 +14511,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-24-9';
+  const APP_VERSION = '2026-10-25-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -14308,5 +14579,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4f84277c8d86c5f',t:'MTc5MjgzNzMzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a503cb236ebae5da',t:'MTc5Mjk1ODI4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
