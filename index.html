@@ -491,6 +491,9 @@
       flex-shrink: 0;
     }
 
+    .module-block-header[data-goto-mod] { cursor: pointer; }
+    .module-block-header[data-goto-mod]:active { opacity: .7; }
+    .module-block-header[data-goto-mod] h3::after { content: " ↗"; font-size: .75em; opacity: .65; }
     .module-block-header h3 {
       font-size: 1.08rem;
       color: var(--text-color);
@@ -1429,6 +1432,10 @@
     .pt-room-bar button.sec { background: rgba(255,247,224,.28); color: #fff7e0; }
     .pt-room-bar button:active { transform: scale(.97); }
     #rmGuitar { cursor: pointer; }
+    .rm-lava { animation: rmLava 7s ease-in-out infinite alternate; }
+    @keyframes rmLava { from { transform: translateY(5px); } to { transform: translateY(-13px); } }
+    .rm-catbody { animation: rmCatBob .5s ease-in-out infinite alternate; }
+    @keyframes rmCatBob { from { transform: translateY(0); } to { transform: translateY(-2px); } }
     .str-bar { height: 8px; border-radius: 6px; background: var(--card-border); overflow: hidden; margin-top: 6px; }
     .str-bar > i { display: block; height: 100%; background: #22c55e; }
     .str-bar.soon > i { background: #f59e0b; }
@@ -1786,7 +1793,7 @@
 
   <div class="theory-box" id="instructionBox">
     <h2>Chronologische Anleitung zur Bedienung des Trainers</h2>
-    <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt.</p>
+    <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt. Und praktisch: <strong>Tippe einfach auf eine Überschrift</strong>, um das passende Modul direkt zu öffnen.</p>
     <div id="anleitungToc" style="background:var(--card-bg, rgba(255,255,255,0.05)); border:1px solid var(--card-border, #444); border-radius:10px; padding:10px 12px; margin:12px 0; display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
       <strong style="margin-right:4px;">📑 Inhalt:</strong>
       <button type="button" class="theory-chip" data-toc="imb1">🧭 Überblick</button>
@@ -11532,6 +11539,15 @@
   function srchOpen() { srchBackHide(); showHome(); setTimeout(() => { const i = document.getElementById('homeSearch'); if (i) i.focus(); }, 60); }
   // 📖 Sprung aus einem Modul direkt in den passenden Anleitung-Abschnitt
   const MOD_HELP_SECT = { 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18' };
+  // Überschriften der Anleitung anklickbar machen: Tipp = Modul öffnen
+  function anleitungHeaderLinks() {
+    for (const m in MOD_HELP_SECT) {
+      const blk = document.getElementById(MOD_HELP_SECT[m]); if (!blk) continue;
+      const hd = blk.querySelector('.module-block-header'); if (!hd) continue;
+      hd.setAttribute('data-goto-mod', m);
+      hd.setAttribute('title', 'Modul öffnen');
+    }
+  }
   let modHelpBackMod = null;
   function modHelpUpdate() {
     const hb = document.getElementById('modHelpBtn'); if (!hb) return;
@@ -13152,6 +13168,8 @@
       <stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#ffb35c"/>
     </linearGradient>
     <radialGradient id="rmGlow"><stop offset="0" stop-color="#fff7e0" stop-opacity=".95"/><stop offset="1" stop-color="#fff7e0" stop-opacity="0"/></radialGradient>
+    <clipPath id="rmWinClip"><rect x="64" y="64" width="172" height="142" rx="4"/></clipPath>
+    <clipPath id="rmLavaClip"><path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z"/></clipPath>
   </defs>
   <rect width="900" height="430" fill="url(#rmWall)"/>
   <rect y="430" width="900" height="130" fill="#9c5a33"/>
@@ -13160,10 +13178,12 @@
   </g>
   <g transform="translate(30,0)">
     <rect x="60" y="60" width="180" height="150" rx="8" fill="url(#rmSky)" stroke="#7a3b22" stroke-width="9"/>
+    <g clip-path="url(#rmWinClip)">
+      <circle id="rmSunGlow" cx="112" cy="102" r="40" fill="url(#rmGlow)"/>
+      <circle id="rmSun" cx="112" cy="102" r="24" fill="#fff3c4"/>
+    </g>
     <line x1="150" y1="64" x2="150" y2="206" stroke="#7a3b22" stroke-width="6"/>
     <line x1="64" y1="135" x2="236" y2="135" stroke="#7a3b22" stroke-width="6"/>
-    <circle id="rmSunGlow" cx="112" cy="102" r="40" fill="url(#rmGlow)"/>
-    <circle id="rmSun" cx="112" cy="102" r="24" fill="#fff3c4"/>
   </g>
   <g>
     <circle cx="460" cy="105" r="48" fill="#fffdf4" stroke="#4a2113" stroke-width="9"/>
@@ -13217,11 +13237,13 @@
     <path d="M168 400 h44 l-6 36 h-32 Z" fill="#b3542c"/>
   </g>
   <g>
-    <rect x="392" y="318" width="16" height="112" rx="6" fill="#8a4b2f"/>
-    <rect x="392" y="372" width="86" height="16" rx="7" fill="#8a4b2f"/>
-    <rect x="400" y="360" width="72" height="14" rx="7" fill="#ffcf6e"/>
-    <rect x="462" y="380" width="14" height="50" rx="6" fill="#8a4b2f"/>
-    <rect x="398" y="386" width="14" height="44" rx="6" fill="#8a4b2f"/>
+    <rect x="388" y="296" width="30" height="112" rx="14" fill="#a04a2e"/>
+    <rect x="388" y="372" width="104" height="36" rx="12" fill="#a04a2e"/>
+    <rect x="398" y="354" width="88" height="22" rx="11" fill="#ffcf6e"/>
+    <rect x="402" y="336" width="92" height="16" rx="8" fill="#b3542c"/>
+    <rect x="478" y="344" width="16" height="46" rx="8" fill="#b3542c"/>
+    <rect x="396" y="406" width="12" height="26" rx="5" fill="#5b2d16"/>
+    <rect x="472" y="406" width="12" height="26" rx="5" fill="#5b2d16"/>
   </g>
   <g>
     <rect x="560" y="330" width="220" height="96" rx="10" fill="#a05a2c"/>
@@ -13239,11 +13261,16 @@
     <text id="rmDig" x="692" y="319" text-anchor="middle" font-size="21" font-weight="700"
           fill="#ffd75e" letter-spacing="1">--:--</text>
     <g>
-      <line x1="740" y1="298" x2="776" y2="298" stroke="#7a3b22" stroke-width="5"/>
-      <line x1="740" y1="336" x2="776" y2="336" stroke="#7a3b22" stroke-width="5"/>
-      <path d="M746 300 h24 l-12 17 l12 17 h-24 l12 -17 Z" fill="none" stroke="#fff7e0" stroke-width="3.5" stroke-linejoin="round"/>
-      <path d="M750 303 h16 l-8 10 Z" fill="#ffcf6e"/>
-      <path d="M754 331 h8 l-4 -6 Z" fill="#ffcf6e"/>
+      <ellipse cx="758" cy="308" rx="26" ry="20" fill="url(#rmGlow)" opacity=".22"/>
+      <path d="M748 330 h20 l-3 -8 h-14 Z" fill="#4a2113"/>
+      <path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z" fill="#fff7e0" opacity=".3"/>
+      <g clip-path="url(#rmLavaClip)">
+        <circle class="rm-lava" cx="758" cy="316" r="4.5" fill="#e5533d"/>
+        <circle class="rm-lava" cx="755" cy="306" r="3.2" fill="#ff9040"/>
+        <circle class="rm-lava" cx="761" cy="311" r="2.6" fill="#c63d3d"/>
+      </g>
+      <path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z" fill="none" stroke="#fff7e0" stroke-opacity=".4" stroke-width="1.5"/>
+      <path d="M752 294 h12 l-2 -6 h-8 Z" fill="#4a2113"/>
     </g>
   </g>
   <g id="rmStats">
@@ -13264,11 +13291,24 @@
     <text id="rmLab5" x="522" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">Sa</text>
     <text id="rmLab6" x="558" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">So</text>
   </g>
-  <g transform="translate(-46,0)">
-    <line x1="836" y1="430" x2="836" y2="352" stroke="#5b2d16" stroke-width="6"/>
-    <path id="rmLampShade" d="M812 352 h48 l-10 -26 h-28 Z" fill="#ffcf6e"/>
-    <circle id="rmLampGlow" cx="836" cy="344" r="26" fill="url(#rmGlow)" opacity=".35"/>
-    <path d="M820 430 h32 l-6 -14 h-20 Z" fill="#5b2d16"/>
+  <g id="rmCat" style="display:none">
+    <g class="rm-catbody">
+      <path d="M-26 486 q-10 -2 -8 -14 q6 2 8 6 Z" fill="#4a2113"/>
+      <ellipse cx="0" cy="486" rx="24" ry="11" fill="#4a2113"/>
+      <rect x="-16" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
+      <rect x="-6" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
+      <rect x="4" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
+      <rect x="12" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
+      <circle cx="22" cy="472" r="10" fill="#4a2113"/>
+      <path d="M14 466 l-2 -9 l8 4 Z" fill="#4a2113"/>
+      <path d="M26 464 l4 -8 l4 8 Z" fill="#4a2113"/>
+    </g>
+  </g>
+  <g>
+    <line x1="832" y1="430" x2="832" y2="322" stroke="#5b2d16" stroke-width="6"/>
+    <path id="rmLampShade" d="M808 322 h48 l-10 -28 h-28 Z" fill="#ffcf6e"/>
+    <circle id="rmLampGlow" cx="832" cy="312" r="30" fill="url(#rmGlow)" opacity=".35"/>
+    <path d="M816 430 h32 l-6 -14 h-20 Z" fill="#5b2d16"/>
   </g>
 </svg>
 <div class="pt-room-bar" id="ptRoomBar"></div>`;
@@ -13278,9 +13318,34 @@
     ptRoomEndGlow = false; ptRoomWasRunning = pt.running; ptRoomBarKey = '';
     r.classList.add('open');
     const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.remove('hide');
+    // Lavalampe: jedes Mal zufällig blubbern lassen
+    r.querySelectorAll('.rm-lava').forEach(el => {
+      el.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
+      el.style.animationDelay = (-Math.random() * 6).toFixed(2) + 's';
+    });
+    // Katze: alle 5 Minuten durch den Raum
+    clearInterval(ptRoomCatTimer); ptRoomCatTimer = setInterval(ptRoomCatWalk, 300000);
     ptRoomTick();
   }
-  function ptRoomClose() { const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open'); }
+  function ptRoomClose() {
+    const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open');
+    clearInterval(ptRoomCatTimer); ptRoomCatTimer = null;
+    const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; }
+  }
+  let ptRoomCatTimer = null;
+  function ptRoomCatWalk() {
+    const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
+    const cat = document.getElementById('rmCat'); if (!cat) return;
+    const ltr = Math.random() < 0.5, dir = ltr ? 1 : -1;
+    const from = ltr ? -90 : 990, to = ltr ? 990 : -90;
+    cat.style.display = '';
+    cat.style.transition = 'none';
+    cat.style.transform = 'translate(' + from + 'px,0px) scaleX(' + dir + ')';
+    void cat.getBoundingClientRect();
+    cat.style.transition = 'transform 11s linear';
+    cat.style.transform = 'translate(' + to + 'px,0px) scaleX(' + dir + ')';
+    setTimeout(() => { cat.style.display = 'none'; cat.style.transition = 'none'; }, 11500);
+  }
   function ptRoomBarRender() {
     const bar = document.getElementById('ptRoomBar'); if (!bar) return;
     const r = pt.running, paused = pt.paused;
@@ -14511,7 +14576,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-25-3';
+  const APP_VERSION = '2026-10-27-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -14559,7 +14624,7 @@
     setTimeout(() => appCheckUpdate(true), 3000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) appCheckUpdate(false); });
   }
-  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} });
+  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} try { anleitungHeaderLinks(); } catch (e) {} });
 
   window.addEventListener('load', init);
 
@@ -14579,5 +14644,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a503cb236ebae5da',t:'MTc5Mjk1ODI4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5130b2a0b3e380f',t:'MTc5MzExODE4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
