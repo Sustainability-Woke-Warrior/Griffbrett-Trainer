@@ -1432,6 +1432,15 @@
     .pt-room-bar button.sec { background: rgba(255,247,224,.28); color: #fff7e0; }
     .pt-room-bar button:active { transform: scale(.97); }
     #rmGuitar { cursor: pointer; }
+    .ueb-card { background: var(--card-bg, rgba(255,255,255,.05)); border: 1px solid var(--card-border, #444); border-radius: 12px; padding: 10px 12px; }
+    .ueb-gold { border: 2px solid #f59e0b; border-radius: 14px; padding: 12px 14px; margin: 12px 0; background: var(--card-bg, rgba(255,255,255,.05)); }
+    .ueb-try { border: 1px dashed var(--card-border, #555); border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
+    .ueb-det > summary { cursor: pointer; list-style: none; }
+    .ueb-det > summary::-webkit-details-marker { display: none; }
+    .ueb-det .ueb-core { opacity: .78; font-size: .9rem; margin: 6px 0 2px; }
+    .ueb-ask { opacity: .8; }
+    .ueb-flash { animation: uebFlash 1.4s ease; }
+    @keyframes uebFlash { 0% { box-shadow: 0 0 0 4px #f59e0b; } 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); } }
     .rm-lava { animation: rmLava 7s ease-in-out infinite alternate; }
     @keyframes rmLava { from { transform: translateY(5px); } to { transform: translateY(-13px); } }
     .rm-catbody { animation: rmCatBob .5s ease-in-out infinite alternate; }
@@ -1653,6 +1662,7 @@
           <option value="15">2. Wörterbuch</option>
           <option value="2">3. Musiktheorie</option>
           <option value="1">4. Griffbrett-Theorie</option>
+          <option value="16">17. Effektiv üben</option>
         </optgroup>
         <optgroup label="Griffbrett üben">
           <option value="3">5. Alle Töne</option>
@@ -1791,6 +1801,194 @@
   <div id="earRoot" style="display:none;"></div>
   <div id="glossRoot" style="display:none;"></div>
 
+  <div class="theory-box" id="uebeBox" style="display:none;">
+    <h2>🎯 Effektiv üben</h2>
+    <p>Sauber, entspannt und kreativ üben: Dieses Modul bündelt, was sich in Lernforschung, Bewegungslehre und Musikpädagogik bewährt hat – kurz, alltagstauglich und ohne Druck. Alles hier sind Angebote für dich, keine Pflichten.</p>
+    <div class="ueb-gold"><strong>🐢 Die Zeitlupen-Regel – der wichtigste Satz im ganzen Modul:</strong><br>Erst langsam sauber, dann schnell. Was du in Zeitlupe nicht sauber spielen kannst, kannst du im Tempo erst recht nicht sauber spielen. Dein Tempo darf erst mitwachsen, wenn die Zeitlupe sitzt – so einfach, so wirksam.</div>
+    <div class="ueb-card" id="uebTest">
+      <strong>🪞 Wo stehst du gerade?</strong> <span style="opacity:.8;">Tippe, was am ehesten nach dir klingt – das Modul öffnet dir das passende Kapitel.</span>
+      <div style="display:grid; gap:6px; margin-top:8px;">
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb1">Ich übe lang am Stück und werde zum Ende hin unsauber.</button>
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb2">Bei schweren Griffen halte ich die Luft an oder spanne an.</button>
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb3">Ich ärgere mich über mich selbst und setze mich unter Druck.</button>
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb6">Ich spiele mein Repertoire jeden Tag komplett durch.</button>
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb5">Mir fehlt das Freie – ich klinge manchmal mechanisch.</button>
+        <button type="button" class="btn btn-secondary" data-uebgo="ueb1">Irgendwie klemmt es, ich weiß nicht recht wo.</button>
+      </div>
+      <div id="uebTestEcho" class="ueb-try" style="display:none;"></div>
+    </div>
+    <div style="display:flex; gap:8px; margin:10px 0; flex-wrap:wrap;">
+      <button type="button" class="btn btn-secondary" id="uebAllOpen">📖 Alle aufklappen</button>
+      <button type="button" class="btn btn-secondary" id="uebAllClose">📕 Alle zuklappen</button>
+    </div>
+
+    <details class="module-block ueb-det" id="ueb1">
+      <summary><div class="module-block-header"><span class="module-number-badge">1</span><h3>Warum es manchmal unsauber wird</h3></div>
+      <div class="ueb-core">Kernsatz: Unsauber ist kein Talentproblem – meist sind es Kaltstart, Anspannung, zu lange Blöcke und müdes Wiederholen.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Wann hat es zuletzt unsauber geklungen – und was war in den Minuten davor los?</em></p>
+      <p>Unsauber zu spielen ist kein Charakterfehler und kein Zeichen von fehlendem Talent. Meist stecken ganz alltägliche Ursachen dahinter – und jede davon kann man freundlich angehen:</p>
+      <ul>
+        <li><strong>Kalter Start:</strong> Zu Beginn einer Einheit klingt es bei den meisten erst einmal unsauber – Muskeln, Durchblutung und Aufmerksamkeit kommen langsam hoch. Deshalb zuerst locker warm spielen und erst dann an die schwere Stelle. Genau darum spielen sich auch Profis immer erst ein.</li>
+        <li><strong>Anspannung:</strong> Wenn ein schwieriger Griff naht, halten viele unbewusst die Luft an und spannen an. Verkrampfte Muskeln verlieren aber ihr feines Gefühl für die Abstände auf dem Griffbrett – die Finger landen knapp daneben, was die Anspannung weiter verstärkt. Atmen und Lockerheit sind deshalb kein Beiwerk, sondern Teil der Technik.</li>
+        <li><strong>Zu lange Blöcke:</strong> Konzentration und Handmuskulatur ermüden unbemerkt. Die Lernforschung kennt das seit langem als „verteiltes Üben“: mehrere kürzere Einheiten mit Pausen wirken meist besser als eine einzige Mammutsitzung.</li>
+        <li><strong>Fehler im Müden einprogrammieren:</strong> Was du wiederholst, das verstärkst du – auch die Schlampigkeit im erschöpften Zustand. Lieber früher aufhören und morgen frisch wiederholen, als heute den Fehler zehnmal zu festigen.</li>
+      </ul>
+      <svg viewBox="0 0 340 124" style="width:100%; max-width:430px; display:block; margin:10px auto;" role="img" aria-label="Kreislauf der Anspannung">
+      <g font-size="12" fill="var(--text-color,#eee)" text-anchor="middle">
+        <rect x="10" y="8" width="140" height="32" rx="8" fill="rgba(255,255,255,.07)" stroke="#f59e0b"/><text x="80" y="28">Schwerer Griff naht</text>
+        <rect x="190" y="8" width="140" height="32" rx="8" fill="rgba(255,255,255,.07)" stroke="#f59e0b"/><text x="260" y="28">Anspannung, Luft an</text>
+        <rect x="190" y="84" width="140" height="32" rx="8" fill="rgba(255,255,255,.07)" stroke="#f59e0b"/><text x="260" y="104">Feines Gefühl sinkt</text>
+        <rect x="10" y="84" width="140" height="32" rx="8" fill="rgba(255,255,255,.07)" stroke="#f59e0b"/><text x="80" y="104">Verspieler → mehr Angst</text>
+      </g>
+      <g stroke="#f59e0b" stroke-width="2" fill="#f59e0b">
+        <line x1="152" y1="24" x2="184" y2="24"/><path d="M188 24 l-8 -4 v8 Z"/>
+        <line x1="260" y1="42" x2="260" y2="78"/><path d="M260 82 l-4 -8 h8 Z"/>
+        <line x1="188" y1="100" x2="156" y2="100"/><path d="M152 100 l8 -4 v8 Z"/>
+        <line x1="80" y1="82" x2="80" y2="46"/><path d="M80 42 l-4 8 h8 Z"/>
+      </g>
+    </svg>
+    <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Spiele in deiner nächsten Einheit die ersten fünf Minuten bewusst halb so schnell wie gewohnt und beobachte dich dabei: Wo hältst du die Luft an? Wo werden Schultern, Kiefer oder Daumen fest? Merke dir nur eine einzige dieser Stellen – sie ist dein Einstieg in die Zeitlupe.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: erste 5 Min. halb so schnell starten und Anspannung beobachten">📌 Als Wochenfokus übernehmen</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb2">
+      <summary><div class="module-block-header"><span class="module-number-badge">2</span><h3>Dein Werkzeugkasten: sechs konkrete Schritte</h3></div>
+      <div class="ueb-core">Kernsatz: Sechs Werkzeuge für sofort – einspielen, kurz üben, atmen, Zeitlupe, Saiten-Check, Fehler als Information.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Welches dieser Werkzeuge fehlt dir heute am meisten?</em></p>
+      <p>Sechs Werkzeuge, die sich in der Praxis bewährt haben. Such dir eins pro Einheit aus – nicht alle auf einmal:</p>
+      <div style="display:grid; gap:8px; margin:10px 0;">
+        <div class="ueb-card"><strong>🌡️ Einspiel-Ritual</strong><br>Beginne jede Einheit mit 5–10 Minuten von dem, was du im Schlaf kannst (leichte Akkorde, ein bekanntes Muster). Hier kommt nichts Neues hinein – nur ankommen, Lockerheit spüren, hineinhören.</div>
+        <div class="ueb-card"><strong>⏳ Kurz-Blöcke statt Marathon</strong><br>Übe pro Einheit etwa 20–30 Minuten konzentriert und leg die Gitarre dann bewusst weg. Wer mehr Zeit hat: lieber über den Tag verteilen. Frische Hand, klarer Kopf – das ist kein Zufall, sondern verteiltes Üben.</div>
+        <div class="ueb-card"><strong>🌬️ Atmen beim Wechsel</strong><br>Vor einem schwierigen Wechsel kurz einatmen und genau dann ausatmen, wenn die Finger loswandern. Ein einfacher, wirksamer Trick gegen unbewusstes Luftanhalten – und damit gegen Verkrampfung.</div>
+        <div class="ueb-card"><strong>🐢 Zeitlupe mit Blick – das Herzstück dieses Moduls</strong><br>Schwierige Wechsel zuerst extrem langsam und bewusst mit den Augen üben: Nehmen die Finger den kürzesten, entspanntesten Weg? Erst wenn der Wechsel mehrmals hintereinander sauber sitzt, das Tempo in kleinen Schritten erhöhen. <strong>Merksatz: Erst langsam sauber, dann schnell – siehe die goldene Zeitlupen-Regel ganz oben.</strong></div>
+        <div class="ueb-card"><strong>🔍 Saiten-Check</strong><br>Klingt ein Akkord unsauber: Jede Saite einzeln anschlagen. Den einen Finger finden, der schnarrt oder dämpft, und nur diesen justieren – dichter ans Bundstäbchen, steiler aufsetzen, weniger Druck. Loslassen, ausschütteln, neu greifen.</div>
+        <div class="ueb-card"><strong>💛 Fehler = Information</strong><br>Ein Verspieler ist kein Urteil über dich, sondern ein Hinweis, was als Nächstes geübt werden will. Betrachte es wie eine freundliche Lehrperson („aha, der Ringfinger war zu weit hinten“) und korrigiere in Ruhe, nachdem du gelandet bist.</div>
+      </div>
+      <p><strong>Ein Beispiel aus dem Übezimmer:</strong> Der Wechsel von Am zu E klappt schnell nur „meistens"? Dann ist er noch nicht fertig gelernt – „meistens" heißt im Tempo: manchmal eben nicht. Spiele ihn zehnmal so langsam, dass du zwischen den Griffen einmal ruhig ein- und ausatmen kannst. Erst wenn zehn Wiederholungen sauber sitzen, kommt eine kleine Tempostufe dazu – entschieden nach Sauberkeit, nicht nach Gefühl.</p>
+      <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Wähle einen einzigen Wechsel, der dich ärgert. Zeitlupe an, Blick auf die Finger, zehn saubere Wiederholungen – dann erst eine Tempostufe höher. Und merk dir: Die Zeitlupe ist kein Notnagel für Schweres, sondern die eigentliche Methode für alles Neue.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: ein Ärger-Wechsel – 10 saubere Zeitlupen-Wiederholungen mit Atem">📌 Als Wochenfokus übernehmen</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb3">
+      <summary><div class="module-block-header"><span class="module-number-badge">3</span><h3>Kopf &amp; Gefühl: die Psychologie des Übens</h3></div>
+      <div class="ueb-core">Kernsatz: Wie du mit dir selbst sprichst, bestimmt, wie sich dein Körper beim Üben anfühlt.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Was sagst du innerlich, wenn ein Griff danebengeht – ganz wörtlich?</em></p>
+      <p>Wie du beim Üben mit dir selbst sprichst, entscheidet mit, wie sich dein Körper anfühlt. Ein paar Erkenntnisse aus Lern- und Sportpsychologie, übersetzt ins Übezimmer:</p>
+      <ul>
+        <li><strong>Innerer Trainer statt innerer Kritiker:</strong> Ermutigende, konkrete Sätze („beim nächsten Mal atme ich beim Wechsel aus“) wirken besser als Schimpfen. Sprich mit dir, wie du mit einem guten Freund sprechen würdest, der etwas lernt.</li>
+        <li><strong>Plateaus sind normal:</strong> Fortschritt kommt in Stufen. Phasen, in denen scheinbar nichts weitergeht, sind kein Rückschritt – oft festigt sich dabei im Hintergrund, was du gelernt hast. Auch ein Delle-Tag nach einem guten Tag gehört dazu.</li>
+        <li><strong>Der einzige faire Vergleich:</strong> du selbst vor einer Woche. Andere im Internet zeigen ihre Höhepunkte – nicht ihre Übezimmer.</li>
+        <li><strong>Gewohnheit schlägt Motivation:</strong> Motivation schwankt, ein fester Auslöser nicht: z. B. „nach dem Abendessen steht die Gitarre schon gegriffbereit“. Dazu der „Nur-5-Minuten“-Trick: Nur starten, nichts versprechen. Meist wird mehr daraus – und wenn nicht, zählen die 5 Minuten trotzdem.</li>
+        <li><strong>Pausen &amp; Schlaf üben mit:</strong> Das Gehirn festigt gelernte Bewegungsabläufe besonders in Ruhe und im Schlaf. Ein tagfreier Tag ist also kein verlorener Tag – manchmal bringt erst er den nächsten Schritt.</li>
+        <li><strong>Gefühle erlaubt:</strong> Frust zeigt nur, dass dir etwas wichtig ist. Kurz wahrnehmen, einmal ausatmen, dann den nächstkleinsten Schritt nehmen – so kommt der Kopf wieder zur Sache.</li>
+      </ul>
+      <p><strong>Ein Beispiel:</strong> Aus „Ich kann das nicht" wird innerlich: „Noch nicht – welcher kleine Schritt bringt mich weiter?" Das klingt banal, verändert aber spürbar, wie du mit Fehlern umgehst: Wer sie als Information liest, bleibt länger dran, atmet weiter und übt entspannter – und entspannter heißt: genauer.</p>
+      <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Sag am Ende einer Einheit einen einzigen Satz laut oder innerlich: „Heute ist mir aufgefallen, dass …" – ohne Bewertung, nur Beobachtung. Nach zwei Wochen kannst du nachlesen bzw. erinnern, wie viel sich wirklich bewegt hat. Plateaus inklusive, und genau die sind der Beweis, dass du dranbleibst.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: am Ende der Einheit einen Beobachtungs-Satz sagen">📌 Als Wochenfokus übernehmen</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb4">
+      <summary><div class="module-block-header"><span class="module-number-badge">4</span><h3>Wie übt man richtig? Handwerk statt Hoffnung</h3></div>
+      <div class="ueb-core">Kernsatz: Regelmäßigkeit schlägt Länge – und langsam schlägt schnell.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Wie lang war deine letzte Übeeinheit wirklich – und wie frisch war am Ende die Hand?</em></p>
+      <ul>
+        <li><strong>Langsam ist schnell – die Zeitlupen-Regel in einem Satz:</strong> Tempo erst, wenn es in Zeitlupe sauber sitzt. Wer schnell unsauber spielt, übt schnell unsauber. Lies bei Bedarf die goldene Regel ganz oben noch einmal – sie ist der kürzeste Weg zu sauberem Spiel.</li>
+        <li><strong>Häppchen statt Durchspielen:</strong> Loop die schwierigsten 2–4 Takte, statt immer von vorn durchzuspielen. Durchspielen ist der Test, nicht das Lernen.</li>
+        <li><strong>Ein Ziel pro Durchgang:</strong> „Diesmal achte ich nur auf den Wechsel von Takt 2 zu 3.“ Ein klarer Fokus bringt mehr als zehn vage Wiederholungen.</li>
+        <li><strong>Regelmäßigkeit schlägt Länge:</strong> 15 Minuten täglich wirken stärker als 2 Stunden am Samstag – einer der robustesten Befunde der Lernforschung.</li>
+        <li><strong>Freundlicher Spiegel:</strong> Nimm dich ab und zu mit dem Handy auf – du hörst darin mehr, als du beim Spielen fühlst. Und: Eine Stelle nur lebhaft vorzustellen (mentales Üben) festigt sie nachweislich mit – so wird Wartezeit zur Übezeit.</li>
+        <li><strong>Mit Erfolg aufhören:</strong> Die letzten Minuten gehören etwas, das du kannst. Das beendet die Einheit mit einem guten Gefühl – und morgen freut sich der Einstieg.</li>
+      </ul>
+      <svg viewBox="0 0 340 96" style="width:100%; max-width:430px; display:block; margin:10px auto;" role="img" aria-label="Ein langer Block gegen vier kurze Blöcke">
+      <rect x="15" y="10" width="310" height="20" rx="6" fill="rgba(255,255,255,.07)" stroke="#ef4444"/>
+      <line x1="15" y1="20" x2="325" y2="20" stroke="#ef4444" stroke-width="2"/>
+      <text x="170" y="24" font-size="12" fill="var(--text-color,#eee)" text-anchor="middle">2 Std. am Stück: Kraft &amp; Konzentration sinken</text>
+      <g fill="rgba(45,212,191,.25)" stroke="#2dd4bf">
+        <rect x="15" y="52" width="66" height="20" rx="6"/><rect x="97" y="52" width="66" height="20" rx="6"/><rect x="179" y="52" width="66" height="20" rx="6"/><rect x="261" y="52" width="64" height="20" rx="6"/>
+      </g>
+      <text x="170" y="66" font-size="12" fill="var(--text-color,#eee)" text-anchor="middle">4 kurze Blöcke über den Tag: jedes Mal frisch</text>
+      <text x="48" y="88" font-size="10" fill="var(--text-color,#eee)" opacity=".7" text-anchor="middle">morgens</text><text x="130" y="88" font-size="10" fill="var(--text-color,#eee)" opacity=".7" text-anchor="middle">mittags</text><text x="212" y="88" font-size="10" fill="var(--text-color,#eee)" opacity=".7" text-anchor="middle">nachm.</text><text x="293" y="88" font-size="10" fill="var(--text-color,#eee)" opacity=".7" text-anchor="middle">abends</text>
+    </svg>
+    <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Nimm ein Stück, das du „eigentlich" kannst, und spiele es einmal bewusst in halbem Tempo mit Metronom. Hör genau hin: Welche Stelle stolpert trotzdem? Genau dort gehört die Zeitlupe hin – nicht im ganzen Stück, sondern präzise an der einen Stelle.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: ein „gekonntes“ Stück in halbem Tempo prüfen, Stolperstelle in Zeitlupe">📌 Als Wochenfokus übernehmen</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb5">
+      <summary><div class="module-block-header"><span class="module-number-badge">5</span><h3>Frei spielen &amp; rumklampfen: der Sinn des Ganzen</h3></div>
+      <div class="ueb-core">Kernsatz: Frei spielen ist kein Bonus nach der Pflicht, sondern der Ort, wo Können entsteht.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Wann hast du zuletzt nur gespielt, ohne zu üben?</em></p>
+      <p>Freies Spielen – dudeln, probieren, begleiten – ist keine Belohnung für nach der „echten Übung“. Es ist der Ort, an dem Gelerntes zu deinem eigenen Können wird:</p>
+      <ul>
+        <li>Freude und Neugier sind der dauerhafteste Antrieb: Was du gern spielst, spielst du öfter – und Wiederholung ist der eigentliche Baustoff des Könnens.</li>
+        <li>Ohne Ziel, Metronom und „richtig/falsch“ trainierst du Gehör, Griff-Intuition und eigene Ideen – genau die Dinge, die keine Übung allein beibringen kann.</li>
+        <li>Gelerntes wird erst im Anwenden fest: bekannte Akkorde in einem eigenen Lied, eine Pentatonik über einem Beat, eine Melodie nach Gehör.</li>
+      </ul>
+      <p><strong>Ideen zum Anfangen:</strong></p>
+      <ul>
+        <li><strong>5-Minuten-Spielplatz:</strong> Am Ende jeder Einheit – kein Ziel, nur Klang.</li>
+        <li><strong>Dazu dudeln:</strong> Lieblingslied an, zwei bis drei Akkorde mitgespielt – auch wenn es wackelt. Gerade dann lernt das Ohr.</li>
+        <li><strong>Mini-Riff des Tages:</strong> Erfinde vier Töne, die dir gefallen. Behalten oder verwerfen – beides zählt als Kreativtraining.</li>
+        <li><strong>Erst singen, dann suchen:</strong> Sing eine kurze Melodie und finde sie danach auf dem Griffbrett. Das verbindet Ohr und Finger.</li>
+      </ul>
+      <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Fünf Minuten „Spielplatz" am Ende der nächsten Einheit: kein Ziel, kein Metronom – nur du, zwei bis drei Akkorde und ein Lied, das du magst. Erlaubt ist alles, was klingt. Und wenn du danebengreifst: weiterspielen. Beim freien Spielen gibt es keine Fehler, nur Varianten.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: 5 Min. Spielplatz am Ende der Einheit – kein Ziel, nur Klang">📌 Als Wochenfokus übernehmen</button></div>
+      <div class="prog-row" style="margin:6px 0;"><button type="button" class="btn btn-secondary" data-goto-mod="9">🥁 Beat &amp; Jam öffnen (dazu spielen)</button><button type="button" class="btn btn-secondary" data-goto-mod="1">🎸 Frei ausprobieren (Griffbrett-Modul)</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb6">
+      <summary><div class="module-block-header"><span class="module-number-badge">6</span><h3>Repertoire rotieren &amp; die runde Übeeinheit</h3></div>
+      <div class="ueb-core">Kernsatz: Rotation statt Durchspielen – weniger Stücke pro Tag, dafür aufmerksam, plus eine runde Übeeinheit.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Wie viele Stücke spielst du täglich durch – und wofür reicht die Kraft danach noch?</em></p>
+      <p>Wer täglich das gesamte Repertoire durchspielt, übt nicht mehr, sondern verwaltet. Rotation schafft Platz für Neues und Erholung für die Hand:</p>
+      <ul>
+        <li>Teile deine bekannten Stücke in Gruppen (z. B. A am Montag &amp; Donnerstag, B am Dienstag &amp; Freitag).</li>
+        <li>Spiele pro Tag bewusst nur eine Gruppe – dafür wirklich aufmerksam.</li>
+        <li>Stoppe, sobald du merkst, dass die Hände müde werden oder Schlampigkeit einsetzt. Das ist Disziplin, nicht Schwäche.</li>
+      </ul>
+      <p><strong>Ein Vorschlag für eine runde Übeeinheit</strong> (als Angebot, nicht als Pflicht):</p>
+      <ul>
+        <li><strong>Teil 1: Warm-up &amp; Technik (10 Min.)</strong> Keine Stücke. Nur Tonleitern, Zupf- oder Anschlagsübungen – in absoluter Zeitlupe und mit maximaler Entspannung.</li>
+        <li><strong>Teil 2: Das neue Stück vom Blatt (15–20 Min.)</strong> Frischer Kopf, hoch konzentriert, in winzigen Abschnitten und im Super-Slow-Motion-Tempo. Die Zeitlupe ist hier kein Sparmodus, sondern die eigentliche Methode: Was langsam nicht sauber sitzt, sitzt schnell erst recht nicht.</li>
+        <li><strong>Teil 3: Rotierendes Repertoire (20–30 Min.)</strong> Nur einen Teil deiner bekannten Stücke pro Tag – bewusst gespielt und gestoppt, sobald Müdigkeit oder Schlampigkeit einsetzen.</li>
+      </ul>
+      <div class="prog-row" style="margin:6px 0;"><button type="button" class="btn" id="uebeTimerBtn">🧩 Die drei Teile als Timer-Abschnitte anlegen</button><button type="button" class="btn btn-secondary" data-goto-mod="10">📅 Im Wochenplan öffnen</button></div>
+      <svg viewBox="0 0 340 64" style="width:100%; max-width:430px; display:block; margin:10px auto;" role="img" aria-label="Rotationsplan: Gruppe A und B im Wechsel">
+      <g font-size="11" fill="var(--text-color,#eee)" text-anchor="middle">
+        <rect x="10" y="8" width="40" height="26" rx="6" fill="rgba(245,158,11,.3)" stroke="#f59e0b"/><text x="30" y="25">A</text><text x="30" y="50">Mo</text>
+        <rect x="58" y="8" width="40" height="26" rx="6" fill="rgba(45,212,191,.25)" stroke="#2dd4bf"/><text x="78" y="25">B</text><text x="78" y="50">Di</text>
+        <rect x="106" y="8" width="40" height="26" rx="6" fill="rgba(245,158,11,.3)" stroke="#f59e0b"/><text x="126" y="25">A</text><text x="126" y="50">Mi</text>
+        <rect x="154" y="8" width="40" height="26" rx="6" fill="rgba(45,212,191,.25)" stroke="#2dd4bf"/><text x="174" y="25">B</text><text x="174" y="50">Do</text>
+        <rect x="202" y="8" width="40" height="26" rx="6" fill="rgba(245,158,11,.3)" stroke="#f59e0b"/><text x="222" y="25">A</text><text x="222" y="50">Fr</text>
+        <rect x="250" y="8" width="40" height="26" rx="6" fill="rgba(45,212,191,.25)" stroke="#2dd4bf"/><text x="270" y="25">B</text><text x="270" y="50">Sa</text>
+        <rect x="298" y="8" width="32" height="26" rx="6" fill="rgba(255,255,255,.06)" stroke="var(--card-border,#555)"/><text x="314" y="25">–</text><text x="314" y="50">So</text>
+      </g>
+    </svg>
+    <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Baue dir diese Woche genau eine Übeeinheit aus den drei Teilen – den Timer dafür legt dir der Knopf darüber mit einem Tipp an. Danach kurz innehalten: Welcher Teil hat dir Energie gegeben, welcher hat Kraft gekostet? So wird aus dem Vorschlag Schritt für Schritt dein eigener Plan.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: eine Übeeinheit aus drei Teilen bauen (Timer-Knopf in Modul 17)">📌 Als Wochenfokus übernehmen</button></div>
+    </details>
+
+    <details class="module-block ueb-det" id="ueb7">
+      <summary><div class="module-block-header"><span class="module-number-badge">💛</span><h3>Zum Schluss: ehrlich bleiben</h3></div>
+      <div class="ueb-core">Kernsatz: Keine Wundermittel, keine Diagnosen – bei anhaltenden Beschwerden hilft eine Fachperson.</div></summary>
+      <p class="ueb-ask"><em>Bevor du liest: Was hat dir in diesem Modul bis hierher gefehlt – und was war hilfreich?</em></p>
+      <p>Alle Tipps in diesem Modul stammen aus Lern- und Bewegungsforschung, Musikpädagogik und langer Übe-Praxis – bewusst ohne Wundermittel, Mythen und Heilsversprechen. Was dir nach zwei Wochen nichts bringt, darfst du getrost wieder weglegen.</p>
+      <p>Und wichtig: Bei anhaltendem Verkrampfen, Blockaden oder Schmerzen beim Spielen ist eine gute Lehrperson oder ärztliche Fachperson die richtige Adresse. Diese App stellt bewusst keine Diagnosen.</p>
+    </details>
+
+    <div class="ueb-gold" id="uebMerke">
+      <strong>🎒 Deine drei Sätze zum Mitnehmen:</strong>
+      <ul style="margin:6px 0 0; padding-left:20px;">
+        <li>Erst langsam sauber, dann schnell.</li>
+        <li>Kurz und regelmäßig schlägt lang und selten – Pausen üben mit.</li>
+        <li>Frei spielen ist kein Bonus, sondern der Sinn: Freude baut Können.</li>
+      </ul>
+    </div>
+    <div class="ueb-card">
+      <strong>✨ Woran du merkst, dass es wirkt:</strong>
+      <ul style="margin:6px 0 0; padding-left:20px;">
+        <li>Dein Atem fließt weiter, auch wenn ein schwerer Griff kommt.</li>
+        <li>Das Tempo steigt von selbst – ohne dass die Sauberkeit leidet.</li>
+        <li>Ein Fehler bedeutet kurzes Innehalten und Korrigieren, nicht Abbruch oder Ärger.</li>
+        <li>Die Hand ist am Ende einer Einheit warm und locker statt müde und fest.</li>
+        <li>Du freust dich auf die nächste Einheit – zumindest auf einen Teil davon.</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="theory-box" id="instructionBox">
     <h2>Chronologische Anleitung zur Bedienung des Trainers</h2>
     <p>Willkommen beim Gitarren-Griffbrett-Trainer. Dieses Programm unterstützt dich dabei, das Griffbrett schrittweise und strukturiert zu erlernen. Nachfolgend findest du alle Module und deren Funktionen der Reihe nach erklärt. Und praktisch: <strong>Tippe einfach auf eine Überschrift</strong>, um das passende Modul direkt zu öffnen.</p>
@@ -1814,6 +2012,7 @@
       <button type="button" class="theory-chip" data-toc="imb16">15 Stimmgerät</button>
       <button type="button" class="theory-chip" data-toc="imb17">🎸 Saitenwechsel</button>
       <button type="button" class="theory-chip" data-toc="imb18">16 Wochenplan</button>
+      <button type="button" class="theory-chip" data-toc="imb19">17 Effektiv üben</button>
     </div>
 
     <div class="module-block" id="imb1">
@@ -2103,6 +2302,19 @@
         <li><strong>▶ Üben:</strong> Neben jeder Übung. Öffnet das Beat-Modul: Ein verknüpfter Beat wird geladen. Besteht der Name aus Akkorden (z. B. „Am F C G“), werden sie eingestellt, sonst wird ein passendes Song-Preset gesucht. Mit „🔗 Mit Übung verknüpfen“ merkt sich die App deinen Beat, mit „✓ Heute geübt“ wird der heutige Tag abgehakt. Es gibt keinen Timer.</li>
         <li><strong>Plan als Datei speichern / laden:</strong> Sichere deine Pläne als Datei auf deinem Gerät oder lade einen gesicherten Plan wieder.</li>
         <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Ganz oben steht deine Übungszeit mit dem ⏱-Timer (Tage, Wochen, Monate, insgesamt). Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
+      </ul>
+    </div>
+
+    <div class="module-block" id="imb19">
+      <div class="module-block-header">
+        <span class="module-number-badge">17</span>
+        <h3>Effektiv üben</h3>
+      </div>
+      <p>Dieses Modul sammelt Übe-Tipps aus Lernforschung, Bewegungslehre und Musikpädagogik – in sieben kurzen Kapiteln: warum es manchmal unsauber wird, ein Werkzeugkasten mit sechs konkreten Schritten, die Psychologie des Übens, Handwerkstipps, das freie Spielen, Repertoire-Rotation mit einer runden Übeeinheit und ein sanfter Hinweis zum Schluss.</p>
+      <ul>
+        <li><strong>Lesen &amp; stöbern:</strong> Die Kapitel sind Angebote, keine Pflicht – und standardmäßig zugeklappt, mit je einem Kernsatz als Vorgeschmack. „📖 Alle aufklappen“ zeigt alles auf einmal. Oben hilft ein kleiner Selbsttest („Wo stehst du gerade?“) beim Einstieg: Ein Tipp öffnet das passende Kapitel. In den „Probier doch mal“-Kästchen schreibt „📌 Als Wochenfokus übernehmen“ den Tipp direkt in deinen Wochenplan.</li>
+        <li><strong>Knöpfe mit Wirkung:</strong> „🧩 Die drei Teile als Timer-Abschnitte anlegen“ füllt den Timer-Abschnitte-Modus mit einer beispielhaften Übeeinheit (Warm-up, neues Stück, rotierendes Repertoire). Die anderen Knöpfe springen direkt in passende Module (z. B. Beat &amp; Jam oder Wochenplan).</li>
+        <li><strong>Keine Diagnosen:</strong> Die App stellt keine medizinischen Aussagen. Bei anhaltendem Verkrampfen, Blockaden oder Schmerzen sprich mit einer Lehrperson oder ärztlichen Fachperson.</li>
       </ul>
     </div>
   </div>
@@ -2619,7 +2831,8 @@
     { name: "Anschlag & Zupfen", stringIdx: -1, time: 0, type: "strum" },
     { name: "Akkordfolgen erstellen", stringIdx: -1, time: 0, type: "progmod" },
     { name: "Akkordwechsel-Trainer", stringIdx: -1, time: 0, type: "chgmod" },
-    { name: "Wörterbuch", stringIdx: -1, time: 0, type: "glossary" }
+    { name: "Wörterbuch", stringIdx: -1, time: 0, type: "glossary" },
+    { name: "Effektiv üben", stringIdx: -1, time: 0, type: "uebe" }
   ];
 
   const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "H"];
@@ -3546,6 +3759,7 @@
   const theoryBox = document.getElementById('theoryBox');
   const theoryProBox = document.getElementById('theoryProBox');
   const instructionBox = document.getElementById('instructionBox');
+  const uebeBox = document.getElementById('uebeBox');
   const fretboardWrapper = document.getElementById('fretboardWrapper');
   const gameLevelRow = document.getElementById('gameLevelRow');
   const gameLevelSelect = document.getElementById('gameLevelSelect');
@@ -4053,7 +4267,7 @@
     notePickerEl.innerHTML = '';
     const modType = curModType();
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain' || modType === 'glossary') {
+    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain' || modType === 'glossary' || modType === 'uebe') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -5700,8 +5914,10 @@
       const m8 = an.key.mode === 'dur' ? 'dur' : 'moll', pen = an.key.mode === 'dur' ? 'durPenta' : 'mollPenta';
       h += `<h4>Improvisieren</h4><div>Über die ganze Folge passt die Tonleiter der Tonart: <button type="button" class="theory-chip" data-act="scale" data-m8="${m8}" data-root="${an.key.root}">${kName}</button> <button type="button" class="theory-chip" data-act="scale" data-m8="${pen}" data-root="${an.key.root}">${jamRootName(an.key.root, an.key.mode)}-${an.key.mode === 'dur' ? 'Dur' : 'Moll'}-Pentatonik</button></div>`;
     }
+    h += scaleHintBoxHtml((ds || []).map(d => d ? { root: d.root, type: d.type, name: progChordShort(d) } : null).filter(Boolean).slice(0, 8), 'progScaleHint');
     h += `</div>`;
     body.innerHTML = h;
+    bindScaleHintChips(body);
     holdDragBind(body.querySelector('.prog-cards'), '.prog-card', el => Array.prototype.indexOf.call(el.parentElement.children, el), progReorder, 'input, select, textarea');
     progMarkPlaying();
   }
@@ -9803,6 +10019,7 @@
         <button type="button" class="tuner-str ${tuner.target === 'auto' ? 'active' : ''}" data-t="auto">Auto<small>erkennen</small></button>
         ${strs.map(st => `<button type="button" class="tuner-str ${tuner.target === st.idx ? 'active' : ''} ${tuner.tunedStrings[st.idx] ? 'tuned' : ''}" data-t="${st.idx}">${st.name}<small>${6 - st.idx}. Saite</small></button>`).join('')}
       </div>
+      <div id="tunerMeterZone" style="cursor:pointer;">
       <svg class="tuner-svg" viewBox="0 0 300 170" aria-hidden="true">
         <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="rgba(127,127,127,0.35)" stroke-width="10" stroke-linecap="round"/>
         <path d="M ${150 - 120 * Math.sin(5 / 50 * Math.PI / 2 * 0.8)} ${150 - 120 * Math.cos(5 / 50 * Math.PI / 2 * 0.8)} A 120 120 0 0 1 ${150 + 120 * Math.sin(5 / 50 * Math.PI / 2 * 0.8)} ${150 - 120 * Math.cos(5 / 50 * Math.PI / 2 * 0.8)}" fill="none" stroke="#22c55e" stroke-width="10"/>
@@ -9816,6 +10033,7 @@
       </svg>
       <div class="tuner-note" id="tunerNote">–</div>
       <div class="tuner-freq" id="tunerFreq">&nbsp;</div>
+      </div>
       <div class="tuner-msg" id="tunerMsg"></div>
       <div class="tuner-level"><div id="tunerLevel"></div></div>
       <div class="tuner-row">
@@ -9830,6 +10048,8 @@
     document.getElementById('tunerA4Select').addEventListener('change', (e) => {
       appSetA4(parseFloat(e.target.value) || 440);
     });
+    const mz = document.getElementById('tunerMeterZone');
+    if (mz) mz.addEventListener('click', () => { ptRoomOpen(); });
     document.querySelectorAll('#tunerStrings .tuner-str').forEach(b => b.addEventListener('click', () => {
       tuner.target = b.dataset.t === 'auto' ? 'auto' : parseInt(b.dataset.t, 10);
       tuner.history = [];
@@ -10004,6 +10224,7 @@
     state.finderFound = {};
 
     instructionBox.style.display = 'none';
+    uebeBox.style.display = 'none';
     theoryBox.style.display = 'none';
     theoryProBox.style.display = 'none';
     plannerContainer.style.display = 'none';
@@ -10037,6 +10258,13 @@
       standardControls.style.display = 'none';
       speechBannerEl.textContent = "📖 Lerne hier die Funktionen und Steuerungselemente kennen.";
       instructionBox.style.display = 'block';
+    } else if (mod.type === 'uebe') {
+      fretboardWrapper.style.display = 'none';
+      staffContainer.style.display = 'none';
+      timerContainerEl.style.display = 'none';
+      standardControls.style.display = 'none';
+      speechBannerEl.textContent = "🎯 Sauber, entspannt und kreativ üben – Tipps aus Lernforschung und Musikpädagogik. Alles Angebote, nichts davon ist Pflicht.";
+      uebeBox.style.display = 'block';
     } else if (mod.type === 'theory') {
       fretboardWrapper.style.display = 'none';
       staffContainer.style.display = 'none';
@@ -11139,6 +11367,34 @@
     renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0);
     showToast(`↔ Akkord steht jetzt an Stelle ${over + 1}`);
   }
+  // 🎼 Skalen-Vorschläge (gleiche Logik wie Beat & Jam) als aufklappbares Kästchen
+  function scaleHintBoxHtml(list, id) {
+    const seen = {}; let inner = '';
+    (list || []).forEach(it => {
+      if (!it) return;
+      const root = it.root, type = it.type;
+      if (root == null || root < 0 || !type) return;
+      const key = root + ':' + type; if (seen[key]) return; seen[key] = 1;
+      const sugg = getJamScaleSuggestions(root, type); if (!sugg || !sugg.length) return;
+      inner += `<div style="margin:6px 0 2px;"><span class="jam-improv-label" style="display:inline-block; margin-right:6px;">${homeEsc(it.name || jamChordName({ chordRoot: root, chordType: type }))}:</span>` +
+        sugg.map(sg => `<button type="button" class="theory-chip scale-hint-btn" data-m8="${sg.m8}" data-root="${sg.rootPc}">${jamRootName(sg.rootPc, /Moll|Dorisch|Lokrisch|Phryg/.test(sg.label) ? 'moll' : 'dur')} ${homeEsc(sg.label)}</button>`).join(' ') + `</div>`;
+    });
+    if (!inner) return '';
+    return `<details class="scale-hint-det" id="${id}" style="margin-top:10px;"><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🎼 Passt dazu: Tonleiter &amp; Pentatonik</summary><div style="margin-top:8px;"><div class="jam-improv-label">Antippen = im Modul „Tonleitern“ zeigen:</div>${inner}</div></details>`;
+  }
+  function bindScaleHintChips(box) {
+    if (!box) return;
+    box.querySelectorAll('.scale-hint-btn').forEach(b => {
+      b.onclick = () => {
+        const m8 = b.dataset.m8;
+        if (!SCALE_VIEW_TYPES[m8]) return;
+        state.scaleViewRoot = parseInt(b.dataset.root, 10) || 0;
+        state.scaleViewType = m8;
+        const idx = MODULES.findIndex(m => m.type === 'scaleview');
+        if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); }
+      };
+    });
+  }
   function renderStrum() {
     if (!strumState) strumState = loadStrumState();
     const root = document.getElementById('strumRoot');
@@ -11173,6 +11429,7 @@
       </div>`;
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
       h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
+      h += scaleHintBoxHtml((strumChords() || []).slice(0, 8).map(c => ({ root: c[0], type: c[1] })), 'strumScaleHint');
     }
     h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
@@ -11208,6 +11465,7 @@
     h += `<div class="jam-hint" style="margin-top:10px;">Tipp: Erst ohne Ton nur die Handbewegung, dann langsam mit Akkord. Schneller erst, wenn es sich locker anfühlt – ganz ohne Eile. 🙂</div>`;
     h += `</div>`;
     root.innerHTML = h;
+    bindScaleHintChips(root);
     gripStripBind('strum', () => renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0));
     holdDragBind(document.getElementById('gripStrip_strum'), '.grip-item', el => Array.prototype.indexOf.call(el.parentElement.children, el), strumReorder, null);
     renderStrumNow(0);
@@ -11297,7 +11555,7 @@
   // Konzertgitarre (Foto, Hintergrund entfernt, eingebettet)
   const HOME_GUITAR_SVG = '<img src="data:image/webp;base64,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" alt="" draggable="false">';
   const HOME_GROUPS = [
-    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [15, '📖', 'Wörterbuch', 'Begriffe & Notenzeichen einfach erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett']] },
+    { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [15, '📖', 'Wörterbuch', 'Begriffe & Notenzeichen einfach erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett'], [16, '🎯', 'Effektiv üben', 'Sauber, entspannt & kreativ üben – Tipps aus Lernforschung und Praxis']] },
     { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Noten lesen & finden', 'Note → Griffbrett finden oder Bund antippen → Note sehen'], [6, '👂', 'Gehörbildung', 'Intervalle, Dur oder Moll, höher oder tiefer'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
     { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben']] },
     { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
@@ -11448,7 +11706,7 @@
   const SRCH_BANNERS = [[0, "📖 Lerne hier die Funktionen und Steuerungselemente kennen."], [1, "🧭 Wie die Töne auf dem Griffbrett liegen – oben das Wichtigste in Kürze, darunter der Übeplan."], [2, "🎓 Musiktheorie zum Mitdenken: Tippe dich durch Intervalle, Akkorde, Tonleitern und den Quintenzirkel."], [6, "👂 Gehörbildung: Hör genau hin und tippe deine Antwort – ganz in Ruhe, so oft du magst."], [15, "📖 Wörterbuch: Begriffe rund um Gitarre und Musik – und unter „🎼 Noten & Zeichen“ alle Zeichen, die in Noten vorkommen."], [7, "🎼 Wähle Grundton und Tonleiter-Typ, um alle passenden Positionen auf dem Griffbrett zu sehen!"], [9, "🥁 Wähle einen Rhythmus-Stil und einen Akkord, drück ▶ Start und spiel zur Begleitung mit. Alles Weitere kannst du später entdecken."], [4, "🎮 Spielmodus: Welcher Ton ist auf dem Griffbrett markiert? Tippe oben den passenden Ton an."], [12, "🪕 Anschlag & Zupfen: Muster wählen, Akkorde eintragen, ▶ drücken und mitspielen – ganz ohne Zeitdruck."], [11, "🎚️ Stimmgerät: Tippe auf „Mikrofon starten“ und zupfe eine Saite. Die Nadel zeigt, ob der Ton zu tief oder zu hoch ist."], [10, "📅 Trag deine Übungen ein und hake ab, an welchen Tagen du sie geübt hast. Mit ▶ Üben oder ⏱ legst du direkt los."], [13, "✍️ Akkordfolgen erstellen: Griffe in die Diagramme tippen – die App erkennt die Akkorde und erklärt die Theorie dazu."], [14, "🔁 Akkordwechsel-Trainer: Akkorde wählen, Tempo einstellen und ▶ Start drücken."], [8, "🎸 Tippe die Töne eines Akkords aufs Griffbrett – die App erkennt ihn. Oder schlag bei „Akkord nachschlagen“ einen Akkord nach."]];
   function srchBuildTextIdx() {
     const out = [];
-    [['instructionBox', 0, 'Anleitung'], ['theoryBox', 1, 'Griffbrett-Theorie'], ['theoryProBox', 2, 'Musiktheorie']].forEach(([id, mod, nm]) => {
+    [['instructionBox', 0, 'Anleitung'], ['theoryBox', 1, 'Griffbrett-Theorie'], ['theoryProBox', 2, 'Musiktheorie'], ['uebeBox', 16, 'Effektiv üben']].forEach(([id, mod, nm]) => {
       const box = document.getElementById(id); if (!box) return;
       box.querySelectorAll(SRCH_TEXT_SEL).forEach(el => {
         if (el.closest('select, button, script, style')) return;
@@ -11538,7 +11796,7 @@
   }
   function srchOpen() { srchBackHide(); showHome(); setTimeout(() => { const i = document.getElementById('homeSearch'); if (i) i.focus(); }, 60); }
   // 📖 Sprung aus einem Modul direkt in den passenden Anleitung-Abschnitt
-  const MOD_HELP_SECT = { 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18' };
+  const MOD_HELP_SECT = { 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18', 16: 'imb19' };
   // Überschriften der Anleitung anklickbar machen: Tipp = Modul öffnen
   function anleitungHeaderLinks() {
     for (const m in MOD_HELP_SECT) {
@@ -12904,11 +13162,12 @@
     try {
       initAudio(); if (!audioCtx) return;
       const t0 = audioCtx.currentTime + 0.05;
-      const notes = kind === 'end' ? [659.25, 783.99, 1046.5] : [783.99, 1046.5];
+      const notes = kind === 'end' ? [659.25, 783.99, 1046.5] : kind === 'break' ? [523.25, 659.25, 783.99, 1046.5] : [783.99, 1046.5];
+      const vol = kind === 'break' ? 0.14 : 0.18;
       notes.forEach((f, i) => {
         const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = t0 + i * 0.18;
         o.type = 'sine'; o.frequency.setValueAtTime(f, t);
-        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
+        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
         o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 1.2);
       });
     } catch (e) {}
@@ -12973,7 +13232,7 @@
         }
       } else if (ptData.set.brk && pt.sinceBreak >= Math.max(5, +ptData.set.brkMin || 25) * 60000) {
         pt.sinceBreak = 0;
-        ptChime('step');
+        ptChime('break');
         ptBanner('<strong>Kurz die Hände ausschütteln? 🙌</strong><br>Du übst schon eine Weile. Eine kleine Pause tut Fingern und Kopf gut – ganz wie du magst.', [['⏸ Pause machen', () => ptPause()], ['Weiterspielen']]);
       }
     }
@@ -13323,16 +13582,15 @@
       el.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
       el.style.animationDelay = (-Math.random() * 6).toFixed(2) + 's';
     });
-    // Katze: alle 5 Minuten durch den Raum
-    clearInterval(ptRoomCatTimer); ptRoomCatTimer = setInterval(ptRoomCatWalk, 300000);
+    // Katze: bei jeder vollen 5-Minuten-Marke der Übungszeit durch den Raum
+    ptRoomCatMile = Math.floor(ptElapsed() / 300000);
     ptRoomTick();
   }
   function ptRoomClose() {
     const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open');
-    clearInterval(ptRoomCatTimer); ptRoomCatTimer = null;
     const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; }
   }
-  let ptRoomCatTimer = null;
+  let ptRoomCatMile = 0;
   function ptRoomCatWalk() {
     const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
     const cat = document.getElementById('rmCat'); if (!cat) return;
@@ -13379,6 +13637,7 @@
     else if (ptRoomWasRunning) ptRoomEndGlow = true;
     ptRoomWasRunning = pt.running;
     const el = ptElapsed(), tgt = ptCurTarget(), r = pt.running;
+    if (r && !pt.paused) { const mile = Math.floor(el / 300000); if (mile > 0 && mile !== ptRoomCatMile) { ptRoomCatMile = mile; ptRoomCatWalk(); } }
     const dg = document.getElementById('rmDigits');
     if (dg) {
       if (ptRoomEndGlow) dg.textContent = '00:00';
@@ -13447,6 +13706,44 @@
     }
     const key = [r, pt.paused, pt.mode, (r && pt.mode !== 'up') || (!r && pt.mode === 'down'), ptRoomStatOn()].join('|');
     if (key !== ptRoomBarKey) ptRoomBarRender();
+  }
+  const UEB_TEST_ECHO = { ueb1: 'Dann ist Kapitel 1 dein bester Einstieg – und die Kurz-Blöcke in Kapitel 2 gleich dazu.', ueb2: 'Kapitel 2 ist dein Start: Atmen und Zeitlupe nehmen den Druck raus.', ueb3: 'Kapitel 3 spricht genau darüber – Kopf & Gefühl.', ueb5: 'Kapitel 5 erinnert dich ans freie Spielen – den Sinn des Ganzen.', ueb6: 'Kapitel 6 zeigt dir Rotation und eine runde Übeeinheit.' };
+  function uebeGo(id) {
+    const el = document.getElementById(id); if (!el) return;
+    const echo = document.getElementById('uebTestEcho');
+    if (echo) { echo.textContent = '👉 ' + (UEB_TEST_ECHO[id] || 'Kapitel 1 ist ein guter Start.'); echo.style.display = 'block'; }
+    el.open = true;
+    el.classList.remove('ueb-flash'); void el.offsetWidth; el.classList.add('ueb-flash');
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+  }
+  function uebeAddFokus(text) {
+    try {
+      const wk = getWeekKey(getMonday(new Date()));
+      const d = plannerState.plannerData; if (!Array.isArray(d[wk])) d[wk] = [];
+      const name = '📌 ' + text;
+      if (d[wk].some(r => r && r.name === name)) { showToast('Steht schon in deinem Wochenplan 📌'); return; }
+      d[wk].push({ name, checks: [false, false, false, false, false, false, false] });
+      savePlannerToLocalStorage(); try { renderPlanner(); } catch (e) {}
+      showToast('Steht jetzt als Wochenfokus in deinem Plan 📌');
+    } catch (e) {}
+  }
+  document.addEventListener('click', e => {
+    const t = e.target && e.target.closest ? e.target : null; if (!t || !t.closest) return;
+    const f = t.closest('[data-fokus]'); if (f) { uebeAddFokus(f.getAttribute('data-fokus')); return; }
+    const g = t.closest('[data-uebgo]'); if (g) { uebeGo(g.getAttribute('data-uebgo')); return; }
+    if (t.closest('#uebAllOpen')) { document.querySelectorAll('#uebeBox details.ueb-det').forEach(d => { d.open = true; }); return; }
+    if (t.closest('#uebAllClose')) { document.querySelectorAll('#uebeBox details.ueb-det').forEach(d => { d.open = false; }); return; }
+  });
+  // Übe-Tipp: die drei Teile der Beispiel-Übeeinheit in den Timer-Abschnitte-Modus legen
+  function uebeMakeSections() {
+    if (pt.running) { showToast('Der Timer läuft schon – beende ihn zuerst, dann legt der Knopf die drei Teile an.'); return; }
+    ptData.sections = [
+      { name: 'Warm-up & Technik', min: 10, mod: -1 },
+      { name: 'Neues Stück vom Blatt', min: 15, mod: -1 },
+      { name: 'Rotierendes Repertoire', min: 20, mod: -1 }
+    ];
+    pt.mode = 'sec'; ptData.set.mode = 'sec'; ptSave(); ptRender(); ptOpen();
+    showToast('Die drei Teile stehen jetzt im Timer-Abschnitte-Modus. 🧩');
   }
   function ptInit() {
     if (document.getElementById('ptOverlay')) return;
@@ -14239,6 +14536,7 @@
       <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip chg-grip" data-chgdrag="${i}" title="Gedrückt halten und ziehen zum Umsortieren" aria-label="Akkord ${i + 1} verschieben">⠿</button><input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
         ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
       <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 ⠿ gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>
+      ${scaleHintBoxHtml((chgParsed() || []).slice(0, 8).map(c => ({ root: c[0], type: c[1] })), 'chgScaleHint')}
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="font-weight:600;">Schläge pro Akkord:</label>
         <select id="chgBeats" style="${sel}">${[4, 2, 1].map(b => `<option value="${b}" ${b === chgState.beats ? 'selected' : ''}>${b}</option>`).join('')}</select>
@@ -14252,6 +14550,7 @@
       </div>
       <div class="chg-stage" id="chgStage"></div></div>`;
     box.innerHTML = h;
+    bindScaleHintChips(box);
     chgShow(0, -1);
     const restart = () => { if (chgPlaying) { chgStop(); chgStart(); } };
     box.querySelectorAll('[data-chgq]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords = b.dataset.chgq.split(' '); chgState.grips = []; chgSave(); chgRender(); }));
@@ -14576,7 +14875,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-27-1';
+  const APP_VERSION = '2026-10-30-5';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -14624,7 +14923,7 @@
     setTimeout(() => appCheckUpdate(true), 3000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) appCheckUpdate(false); });
   }
-  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} try { anleitungHeaderLinks(); } catch (e) {} });
+  window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} try { anleitungHeaderLinks(); } catch (e) {} try { const ub = document.getElementById('uebeTimerBtn'); if (ub) ub.addEventListener('click', uebeMakeSections); } catch (e) {} });
 
   window.addEventListener('load', init);
 
@@ -14644,5 +14943,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5130b2a0b3e380f',t:'MTc5MzExODE4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a52ddec59df237dd',t:'MTc5MzM5OTQ4Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a52ddec59df237dd',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
