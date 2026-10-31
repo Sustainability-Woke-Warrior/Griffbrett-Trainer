@@ -1137,6 +1137,17 @@
     .jam-improv-scales .theory-chip { margin: 2px 2px 2px 0; }
     .jam-improv-small { font-size: 0.65rem; color: var(--text-muted); text-align: center; }
     .jam-improv-key { margin-top: 10px; font-size: 0.8rem; }
+    .chg-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+    .chg-strip .strum-chip.on { background: var(--accent-color); color: #0b0f14; font-weight: 800; }
+    .chg-strip .strum-chip.nx { outline: 2px solid var(--accent-color); }
+    .pl-ghost { position: fixed; z-index: 4000; pointer-events: none; background: var(--card-bg); border: 1px solid var(--accent-color); border-radius: 8px; padding: 6px 10px; opacity: .92; font-size: .85rem; }
+    .pl-drop-before { box-shadow: 0 -3px 0 var(--accent-color); }
+    .pl-drop-after { box-shadow: 0 3px 0 var(--accent-color); }
+    .pl-droppable td { outline: 2px dashed var(--accent-color); outline-offset: -2px; }
+    .pl-blockrow td { background: rgba(255,215,94,.10); }
+    .pl-handle { cursor: grab; opacity: .7; margin-right: 6px; }
+    .pl-child .exercise-input { margin-left: 20px; }
+    .sp-sugg.on { background: var(--accent-color); color: #0b0f14; font-weight: 800; }
     .jam-chord-svg { display: block; }
     #jamBarTabsRow { flex-wrap: wrap; }
     .jam-bar-tab { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; min-width: 64px; }
@@ -1662,27 +1673,27 @@
           <option value="15">2. Wörterbuch</option>
           <option value="2">3. Musiktheorie</option>
           <option value="1">4. Griffbrett-Theorie</option>
-          <option value="16">17. Effektiv üben</option>
+          <option value="16">5. Effektiv üben</option>
         </optgroup>
         <optgroup label="Griffbrett üben">
-          <option value="3">5. Alle Töne</option>
-          <option value="4">6. Töne erraten</option>
-          <option value="5">7. Noten lesen &amp; finden</option>
-          <option value="6">8. Gehörbildung</option>
-          <option value="7">9. Tonleitern</option>
+          <option value="3">6. Alle Töne</option>
+          <option value="4">7. Töne erraten</option>
+          <option value="5">8. Noten lesen &amp; finden</option>
+          <option value="6">9. Gehörbildung</option>
+          <option value="7">10. Tonleitern</option>
         </optgroup>
         <optgroup label="Akkorde">
-          <option value="8">10. Akkord-Labor</option>
-          <option value="13">11. Akkordfolgen erstellen</option>
-          <option value="14">12. Akkordwechsel-Trainer</option>
+          <option value="8">11. Akkord-Labor</option>
+          <option value="13">12. Akkordfolgen erstellen</option>
+          <option value="14">13. Akkordwechsel-Trainer</option>
         </optgroup>
         <optgroup label="Spielen">
-          <option value="9">13. Beat &amp; Jam</option>
-          <option value="12">14. Anschlag &amp; Zupfen</option>
-          <option value="11">15. Stimmgerät</option>
+          <option value="9">14. Beat &amp; Jam</option>
+          <option value="12">15. Anschlag &amp; Zupfen</option>
+          <option value="11">16. Stimmgerät</option>
         </optgroup>
         <optgroup label="Planen">
-          <option value="10">16. Wochenplan</option>
+          <option value="10">17. Wochenplan</option>
         </optgroup>
       </select>
     </div>
@@ -1806,7 +1817,7 @@
     <p>Sauber, entspannt und kreativ üben: Dieses Modul bündelt, was sich in Lernforschung, Bewegungslehre und Musikpädagogik bewährt hat – kurz, alltagstauglich und ohne Druck. Alles hier sind Angebote für dich, keine Pflichten.</p>
     <div class="ueb-gold"><strong>🐢 Die Zeitlupen-Regel – der wichtigste Satz im ganzen Modul:</strong><br>Erst langsam sauber, dann schnell. Was du in Zeitlupe nicht sauber spielen kannst, kannst du im Tempo erst recht nicht sauber spielen. Dein Tempo darf erst mitwachsen, wenn die Zeitlupe sitzt – so einfach, so wirksam.</div>
     <div class="ueb-card" id="uebTest">
-      <strong>🪞 Wo stehst du gerade?</strong> <span style="opacity:.8;">Tippe, was am ehesten nach dir klingt – das Modul öffnet dir das passende Kapitel.</span>
+      <strong>🪞 Tipp dich an: Was klingt gerade nach dir?</strong> <span style="opacity:.8;">Tippe, was am ehesten nach dir klingt – das Modul öffnet dir das passende Kapitel.</span>
       <div style="display:grid; gap:6px; margin-top:8px;">
         <button type="button" class="btn btn-secondary" data-uebgo="ueb1">Ich übe lang am Stück und werde zum Ende hin unsauber.</button>
         <button type="button" class="btn btn-secondary" data-uebgo="ueb2">Bei schweren Griffen halte ich die Luft an oder spanne an.</button>
@@ -1958,7 +1969,7 @@
         <rect x="298" y="8" width="32" height="26" rx="6" fill="rgba(255,255,255,.06)" stroke="var(--card-border,#555)"/><text x="314" y="25">–</text><text x="314" y="50">So</text>
       </g>
     </svg>
-    <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Baue dir diese Woche genau eine Übeeinheit aus den drei Teilen – den Timer dafür legt dir der Knopf darüber mit einem Tipp an. Danach kurz innehalten: Welcher Teil hat dir Energie gegeben, welcher hat Kraft gekostet? So wird aus dem Vorschlag Schritt für Schritt dein eigener Plan.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: eine Übeeinheit aus drei Teilen bauen (Timer-Knopf in Modul 17)">📌 Als Wochenfokus übernehmen</button></div>
+    <div class="ueb-try"><strong>👉 Probier doch mal:</strong> Baue dir diese Woche genau eine Übeeinheit aus den drei Teilen – den Timer dafür legt dir der Knopf darüber mit einem Tipp an. Danach kurz innehalten: Welcher Teil hat dir Energie gegeben, welcher hat Kraft gekostet? So wird aus dem Vorschlag Schritt für Schritt dein eigener Plan.<br><button type="button" class="btn btn-secondary" style="margin-top:8px; padding:6px 12px; font-size:.85rem;" data-fokus="Wochenfokus: eine Übeeinheit aus drei Teilen bauen (Timer-Knopf in diesem Modul)">📌 Als Wochenfokus übernehmen</button></div>
     </details>
 
     <details class="module-block ueb-det" id="ueb7">
@@ -1996,23 +2007,23 @@
       <strong style="margin-right:4px;">📑 Inhalt:</strong>
       <button type="button" class="theory-chip" data-toc="imb1">🧭 Überblick</button>
       <button type="button" class="theory-chip" data-toc="imb2">1 Anleitung</button>
-      <button type="button" class="theory-chip" data-toc="imb3">2 Wörterbuch</button>
-      <button type="button" class="theory-chip" data-toc="imb4">3 Musiktheorie</button>
-      <button type="button" class="theory-chip" data-toc="imb5">4 Griffbrett-Theorie</button>
-      <button type="button" class="theory-chip" data-toc="imb6">5 Alle Töne</button>
-      <button type="button" class="theory-chip" data-toc="imb7">6 Töne erraten</button>
-      <button type="button" class="theory-chip" data-toc="imb8">7 Noten lesen &amp; finden</button>
-      <button type="button" class="theory-chip" data-toc="imb9">8 Gehörbildung</button>
-      <button type="button" class="theory-chip" data-toc="imb10">9 Tonleitern</button>
-      <button type="button" class="theory-chip" data-toc="imb11">10 Akkord-Labor</button>
-      <button type="button" class="theory-chip" data-toc="imb12">11 Akkordfolgen erstellen</button>
-      <button type="button" class="theory-chip" data-toc="imb13">12 Akkordwechsel-Trainer</button>
-      <button type="button" class="theory-chip" data-toc="imb14">13 Beat &amp; Jam</button>
-      <button type="button" class="theory-chip" data-toc="imb15">14 Anschlag &amp; Zupfen</button>
-      <button type="button" class="theory-chip" data-toc="imb16">15 Stimmgerät</button>
+      <button type="button" class="theory-chip" data-toc="imb3">2 Wörterbuch
+      <button type="button" class="theory-chip" data-toc="imb4">3 Musiktheorie
+      <button type="button" class="theory-chip" data-toc="imb5">4 Griffbrett-Theorie
+      <button type="button" class="theory-chip" data-toc="imb6">6 Alle Töne
+      <button type="button" class="theory-chip" data-toc="imb7">7 Töne erraten
+      <button type="button" class="theory-chip" data-toc="imb8">8 Noten lesen &amp; finden
+      <button type="button" class="theory-chip" data-toc="imb9">9 Gehörbildung
+      <button type="button" class="theory-chip" data-toc="imb10">10 Tonleitern
+      <button type="button" class="theory-chip" data-toc="imb11">11 Akkord-Labor
+      <button type="button" class="theory-chip" data-toc="imb12">12 Akkordfolgen erstellen
+      <button type="button" class="theory-chip" data-toc="imb13">13 Akkordwechsel-Trainer
+      <button type="button" class="theory-chip" data-toc="imb14">14 Beat &amp; Jam
+      <button type="button" class="theory-chip" data-toc="imb15">15 Anschlag &amp; Zupfen
+      <button type="button" class="theory-chip" data-toc="imb16">16 Stimmgerät
       <button type="button" class="theory-chip" data-toc="imb17">🎸 Saitenwechsel</button>
-      <button type="button" class="theory-chip" data-toc="imb18">16 Wochenplan</button>
-      <button type="button" class="theory-chip" data-toc="imb19">17 Effektiv üben</button>
+      <button type="button" class="theory-chip" data-toc="imb18">17 Wochenplan
+      <button type="button" class="theory-chip" data-toc="imb19">5 Effektiv üben
     </div>
 
     <div class="module-block" id="imb1">
@@ -2094,7 +2105,7 @@
 
     <div class="module-block" id="imb6">
       <div class="module-block-header">
-        <span class="module-number-badge">5</span>
+        <span class="module-number-badge">6</span>
         <h3>Alle Töne</h3>
       </div>
       <p>Führt dich schrittweise durch die einzelnen Saiten der Gitarre (Tiefe E, A, D, G, H, Hohe e & Gesamtes Griffbrett). Über die Schaltflächen oberhalb des Griffbretts wählst du, welchen der sechs Schritte du gerade übst, jeder hat seine eigene Timer-Länge. Ein grüner Haken markiert Schritte, die du in dieser Sitzung schon einmal bis zum Ablauf des Timers geübt hast. Du wählst oben den Notennamen aus und klickst die passenden Bünde auf dem Griffbrett an.</p>
@@ -2102,7 +2113,7 @@
 
     <div class="module-block" id="imb7">
       <div class="module-block-header">
-        <span class="module-number-badge">6</span>
+        <span class="module-number-badge">7</span>
         <h3>Töne erraten</h3>
       </div>
       <p>Das Programm markiert einen zufälligen Bund auf dem Griffbrett. Du wählst den richtigen Notennamen in der Auswahlleiste aus. Punkte belohnen richtige Antworten.</p>
@@ -2110,7 +2121,7 @@
 
     <div class="module-block" id="imb8">
       <div class="module-block-header">
-        <span class="module-number-badge">7</span>
+        <span class="module-number-badge">8</span>
         <h3>Noten lesen &amp; finden</h3>
       </div>
       <p>Wähle direkt im Notensystem eine beliebige Note mit der Maus oder dem Finger aus. Beim Anklicken erklingt der Ton sofort.</p>
@@ -2126,7 +2137,7 @@
 
     <div class="module-block" id="imb9">
       <div class="module-block-header">
-        <span class="module-number-badge">8</span>
+        <span class="module-number-badge">9</span>
         <h3>Gehörbildung</h3>
       </div>
       <p>Trainiere dein Gehör in Ruhe – du kannst jede Aufgabe so oft anhören, wie du magst.</p>
@@ -2144,7 +2155,7 @@
 
     <div class="module-block" id="imb10">
       <div class="module-block-header">
-        <span class="module-number-badge">9</span>
+        <span class="module-number-badge">10</span>
         <h3>Tonleitern</h3>
       </div>
       <p>Wähle einen Grundton (alle 12 Töne) und einen Tonleiter-Typ (Dur, Moll, Dur-Pentatonik, Moll-Pentatonik oder Chromatisch für alle Töne). Ein eigenes Griffbrett-Raster zeigt dir alle passenden Positionen an, der Grundton ist orange hervorgehoben, alle übrigen Skalentöne blau.</p>
@@ -2160,7 +2171,7 @@
 
     <div class="module-block" id="imb11">
       <div class="module-block-header">
-        <span class="module-number-badge">10</span>
+        <span class="module-number-badge">11</span>
         <h3>Akkord-Labor</h3>
       </div>
       <p>Antippen von Bünden setzt Töne für Akkorde, die sofort im Notensystem erscheinen.</p>
@@ -2177,7 +2188,7 @@
 
     <div class="module-block" id="imb12">
       <div class="module-block-header">
-        <span class="module-number-badge">11</span>
+        <span class="module-number-badge">12</span>
         <h3>Akkordfolgen erstellen</h3>
       </div>
       <p>Trage deine eigenen Griffe ein und lass dir die Theorie dazu erklären.</p>
@@ -2195,7 +2206,7 @@
 
     <div class="module-block" id="imb13">
       <div class="module-block-header">
-        <span class="module-number-badge">12</span>
+        <span class="module-number-badge">13</span>
         <h3>Akkordwechsel-Trainer</h3>
       </div>
       <p>Hier übst du den Wechsel zwischen 2 bis 16 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück. <strong>Aus deinen Akkordfolgen:</strong> Über „📂 Aus meinen Akkordfolgen“ übernimmst du eine gespeicherte Folge mit deinen eigenen Griffen (bis zu 16 Akkorde). Dort stehen unter „🥁 Meine Beats“ auch deine Beats aus „Beat &amp; Jam“: Ihre Akkorde kommen der Reihe nach in den Trainer, Wiederholungen werden zusammengefasst. <strong>Art:</strong> „Anschlag“ oder „Zupfen (Arpeggio)“ – beim Zupfen klingen pro Schlag zwei einzelne Töne, vom Bass nach oben und zurück.</p>
@@ -2203,7 +2214,7 @@
 
     <div class="module-block" id="imb14">
       <div class="module-block-header">
-        <span class="module-number-badge">13</span>
+        <span class="module-number-badge">14</span>
         <h3>Beat &amp; Jam</h3>
       </div>
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus dem Modul „Tonleitern“.</p>
@@ -2239,7 +2250,7 @@
 
     <div class="module-block" id="imb15">
       <div class="module-block-header">
-        <span class="module-number-badge">14</span>
+        <span class="module-number-badge">15</span>
         <h3>Anschlag &amp; Zupfen</h3>
       </div>
       <p>Lerne Anschlag- und Zupfmuster – vom einfachen Grundschlag bis Travis-Picking, Bossa Nova und ungeraden Taktarten (3/4, 6/8, 12/8, 5/4, 7/8).</p>
@@ -2261,7 +2272,7 @@
 
     <div class="module-block" id="imb16">
       <div class="module-block-header">
-        <span class="module-number-badge">15</span>
+        <span class="module-number-badge">16</span>
         <h3>Stimmgerät</h3>
       </div>
       <p>Stimmt deine Gitarre über das Mikrofon des Geräts.</p>
@@ -2291,14 +2302,14 @@
 
     <div class="module-block" id="imb18">
       <div class="module-block-header">
-        <span class="module-number-badge">16</span>
+        <span class="module-number-badge">17</span>
         <h3>Wochenplan</h3>
       </div>
       <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
       <ul>
         <li><strong>Wochen-Navigation:</strong> Wechsle zwischen den Kalenderwochen vor und zurück oder springe direkt zur aktuellen Woche.</li>
         <li><strong>Automatische Übernahme:</strong> Wechselst du in eine neue, bisher leere Woche, werden die Übungstitel aus der vorherigen Woche automatisch übernommen.</li>
-        <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern.</li>
+        <li><strong>Übung hinzufügen & verschieben:</strong> Trage in der linken Spalte eine individuelle Übung ein. Du kannst die Zeilen per Drag and Drop (Anfassen und Ziehen) ganz einfach in ihrer Reihenfolge verändern. „＋ Block“ legt eine beschriftete Kopfzeile ohne Häkchen an: Ziehe Übungen am ⠿-Griff (gedrückt halten) in den Block hinein, sortiere sie darin oder ziehe sie wieder heraus – ein Block lässt sich als Ganzes verschieben und einklappen.</li>
         <li><strong>▶ Üben:</strong> Neben jeder Übung. Öffnet das Beat-Modul: Ein verknüpfter Beat wird geladen. Besteht der Name aus Akkorden (z. B. „Am F C G“), werden sie eingestellt, sonst wird ein passendes Song-Preset gesucht. Mit „🔗 Mit Übung verknüpfen“ merkt sich die App deinen Beat, mit „✓ Heute geübt“ wird der heutige Tag abgehakt. Es gibt keinen Timer.</li>
         <li><strong>Plan als Datei speichern / laden:</strong> Sichere deine Pläne als Datei auf deinem Gerät oder lade einen gesicherten Plan wieder.</li>
         <li><strong>📊 Statistik:</strong> Unter dem Plan aufklappen. Ganz oben steht deine Übungszeit mit dem ⏱-Timer (Tage, Wochen, Monate, insgesamt). Zeigt für jedes Stück, wann du begonnen hast, wann du zuletzt geübt hast, an wie vielen Tagen insgesamt und in den letzten 30 Tagen, wie viele Wochen es im Plan steht und die „Quote“ (an wie vielen Tagen geübt, während es im Plan stand). Tippe auf eine Spaltenüberschrift zum Sortieren und auf ein Stück für den Wochenverlauf. Oben siehst du deine Übungstage, deine aktuelle Serie und deinen fleißigsten Wochentag, dazu Hinweise wie „lange nicht geübt“. Tippfehler (z. B. „Prude“ statt „Prelude“) kannst du mit „Namen zusammenführen“ zusammenlegen – das wird mit exportiert. Die Tabelle lässt sich als CSV für Excel speichern.</li>
@@ -2307,12 +2318,12 @@
 
     <div class="module-block" id="imb19">
       <div class="module-block-header">
-        <span class="module-number-badge">17</span>
+        <span class="module-number-badge">5</span>
         <h3>Effektiv üben</h3>
       </div>
       <p>Dieses Modul sammelt Übe-Tipps aus Lernforschung, Bewegungslehre und Musikpädagogik – in sieben kurzen Kapiteln: warum es manchmal unsauber wird, ein Werkzeugkasten mit sechs konkreten Schritten, die Psychologie des Übens, Handwerkstipps, das freie Spielen, Repertoire-Rotation mit einer runden Übeeinheit und ein sanfter Hinweis zum Schluss.</p>
       <ul>
-        <li><strong>Lesen &amp; stöbern:</strong> Die Kapitel sind Angebote, keine Pflicht – und standardmäßig zugeklappt, mit je einem Kernsatz als Vorgeschmack. „📖 Alle aufklappen“ zeigt alles auf einmal. Oben hilft ein kleiner Selbsttest („Wo stehst du gerade?“) beim Einstieg: Ein Tipp öffnet das passende Kapitel. In den „Probier doch mal“-Kästchen schreibt „📌 Als Wochenfokus übernehmen“ den Tipp direkt in deinen Wochenplan.</li>
+        <li><strong>Lesen &amp; stöbern:</strong> Die Kapitel sind Angebote, keine Pflicht – und standardmäßig zugeklappt, mit je einem Kernsatz als Vorgeschmack. „📖 Alle aufklappen“ zeigt alles auf einmal. Oben hilft ein kleiner Selbsttest („Tipp dich an: Was klingt gerade nach dir?“) beim Einstieg: Ein Tipp öffnet das passende Kapitel. In den „Probier doch mal“-Kästchen schreibt „📌 Als Wochenfokus übernehmen“ den Tipp direkt in deinen Wochenplan.</li>
         <li><strong>Knöpfe mit Wirkung:</strong> „🧩 Die drei Teile als Timer-Abschnitte anlegen“ füllt den Timer-Abschnitte-Modus mit einer beispielhaften Übeeinheit (Warm-up, neues Stück, rotierendes Repertoire). Die anderen Knöpfe springen direkt in passende Module (z. B. Beat &amp; Jam oder Wochenplan).</li>
         <li><strong>Keine Diagnosen:</strong> Die App stellt keine medizinischen Aussagen. Bei anhaltendem Verkrampfen, Blockaden oder Schmerzen sprich mit einer Lehrperson oder ärztlichen Fachperson.</li>
       </ul>
@@ -2618,6 +2629,7 @@
     
     <div class="planner-header">
       <button class="btn" id="addExerciseBtn">+ Übung hinzufügen</button>
+      <button class="btn btn-secondary" id="addBlockBtn">＋ Block</button>
       <details id="plannerMoreDetails" style="display:inline-block;">
         <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">… Mehr</summary>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px;">
@@ -5018,7 +5030,7 @@
       scaleViewLabelSelect.value = 'note';
     }
 
-    // Merksatz + Link zur Theorie (Modul 2)
+    // Merksatz + Link zur Theorie (Musiktheorie)
     const hint = document.getElementById('scaleViewTheoryHint');
     if (hint) {
       const m3 = TH_M8_TO_M3[state.scaleViewType] || 'dur';
@@ -5142,7 +5154,7 @@
   }
 
   // ---------- Passende Tonleitern zum Akkord ----------
-  // Rückgabe: Liste { m8: Typ in Modul 8, rootPc, label }
+  // Rückgabe: Liste { m8: Tonleiter-Typ, rootPc, label }
   function getJamScaleSuggestions(rootPc, type) {
     const iv = JAM_CHORD_INTERVALS[type] || [0, 4, 7];
     const S = (m8, label, pc = rootPc) => ({ m8, rootPc: pc, label });
@@ -5375,6 +5387,7 @@
         if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); }
       };
     });
+    bindScalePanel(box);
   }
 
   // Takt kopieren (nur das Rhythmus-Muster, optional mit Akkord)
@@ -5914,10 +5927,10 @@
       const m8 = an.key.mode === 'dur' ? 'dur' : 'moll', pen = an.key.mode === 'dur' ? 'durPenta' : 'mollPenta';
       h += `<h4>Improvisieren</h4><div>Über die ganze Folge passt die Tonleiter der Tonart: <button type="button" class="theory-chip" data-act="scale" data-m8="${m8}" data-root="${an.key.root}">${kName}</button> <button type="button" class="theory-chip" data-act="scale" data-m8="${pen}" data-root="${an.key.root}">${jamRootName(an.key.root, an.key.mode)}-${an.key.mode === 'dur' ? 'Dur' : 'Moll'}-Pentatonik</button></div>`;
     }
-    h += scaleHintBoxHtml((ds || []).map(d => d ? { root: d.root, type: d.type, name: progChordShort(d) } : null).filter(Boolean).slice(0, 8), 'progScaleHint');
+    h += scalePanelHtml('prog', (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.root; const d0 = (ds || []).find(Boolean); return d0 ? d0.root : 0; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.mode === 'moll' ? 'mollPenta' : 'durPenta'; const d0 = (ds || []).find(Boolean); return d0 ? (/moll/.test(d0.type || '') ? 'mollPenta' : 'durPenta') : 'durPenta'; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return scaleKeySugg(kd); const d0 = (ds || []).find(Boolean); return d0 ? scaleChordSugg(d0.root, d0.type) : []; })());
     h += `</div>`;
     body.innerHTML = h;
-    bindScaleHintChips(body);
+    bindScalePanel(body);
     holdDragBind(body.querySelector('.prog-cards'), '.prog-card', el => Array.prototype.indexOf.call(el.parentElement.children, el), progReorder, 'input, select, textarea');
     progMarkPlaying();
   }
@@ -6539,8 +6552,9 @@
     if (!words.length) return null;
     return JAM_SONG_PRESETS.find(p => { const l = p.label.toLowerCase(); return words.every(w => l.split(/[^a-z0-9äöüß♯♭#]+/).includes(w)); }) || null;
   }
-  function startPracticeFromPlan(weekKey, rowIdx) {
-    const row = (plannerState.plannerData[weekKey] || [])[rowIdx];
+  function startPracticeFromPlan(weekKey, bi, ri) {
+    const data = plannerState.plannerData[weekKey] || [];
+    const row = bi < 0 ? data[ri] : (data[bi] && data[bi].rows ? data[bi].rows[ri] : null);
     if (!row) return;
     const name = String(row.name || '').trim() || 'Übung';
     switchToModule(9);
@@ -6856,7 +6870,7 @@
     html += `</div>`;
     html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>
     <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Takt-Knopf gedrückt halten, ziehen, loslassen = umsortieren · kurz antippen = Takt wechseln · die Diagramme darunter sind nur die Griff-Übersicht</div>`;
-    html += gripStripShellHtml('jam');
+    html += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + gripStripShellHtml('jam') + `<div style="flex:0 1 260px; min-width:230px;">` + scalePanelHtml('jam', jam.diatonicRoot || 0, jam.diatonicType === 'moll' ? 'mollPenta' : 'durPenta', scaleKeySugg({ root: jam.diatonicRoot || 0, mode: jam.diatonicType === 'moll' ? 'moll' : 'dur' })) + `</div></div>`;
     html += `<div class="row" style="gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px;">`;
     if (jam.chordMode === 'free') {
       html += `<div class="toggle-group"><label style="font-weight:600;">Akkord Takt ${jam.activeBar + 1}:</label>
@@ -7081,6 +7095,7 @@
     </div></details>`;
 
     jamModuleRoot.innerHTML = html;
+    bindScalePanel(jamModuleRoot);
     bindJamModuleEvents();
     bindJamExtraEvents();
     bindJamPartsEvents();
@@ -9173,10 +9188,10 @@
   }
 
   // =====================================================================
-  // Gemeinsame Musiktheorie-Helfer (Modul 3). Global, damit Griffbrett-Experiment,
+  // Gemeinsame Musiktheorie-Helfer. Global, damit Griffbrett-Experiment,
   // Quiz, Harmonie und Griffbrett-Karte dieselbe, korrekte Tonbenennung nutzen.
   // =====================================================================
-  // Merksätze zu den Tonleitern (gemeinsam für Modul 3 und Modul 8)
+  // Merksätze zu den Tonleitern (gemeinsam für Musiktheorie und Tonleitern)
   const TH_SCALE_TIPS = {
     harmoll: 'Harmonisches Moll = natürliches Moll mit großer 7. Dadurch entsteht der typische „orientalische“ Schritt von ♭6 zu 7 und ein Dur-Akkord auf der V. Stufe.',
     melmoll: 'Melodisches Moll (Jazz-Variante) = Dur mit kleiner Terz. Klassisch wird es nur aufwärts so gespielt, abwärts wie natürliches Moll.',
@@ -9838,7 +9853,7 @@
         renderIntervalDemo(currentInterval.semitones, currentInterval.label);
       };
     });
-    // Grundton + Tonleiter an Modul 8 (Tonleitern & Pentatoniken) übergeben und dorthin wechseln
+    // Grundton + Tonleiter ans Tonleitern-Modul übergeben und dorthin wechseln
     const toM8 = document.getElementById('theoryScaleToM8Btn');
     if (toM8) toM8.onclick = () => {
       const mode = scaleMode?.value || 'dur';
@@ -11367,6 +11382,75 @@
     renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0);
     showToast(`↔ Akkord steht jetzt an Stelle ${over + 1}`);
   }
+  function scaleKeySugg(kd) {
+    if (!kd || kd.root == null) return [];
+    const moll = kd.mode === 'moll';
+    const rel = (kd.root + (moll ? 3 : 9)) % 12;
+    return [{ root: kd.root, type: moll ? 'moll' : 'dur' }, { root: kd.root, type: moll ? 'mollPenta' : 'durPenta' }, { root: rel, type: moll ? 'dur' : 'moll' }, { root: rel, type: moll ? 'durPenta' : 'mollPenta' }];
+  }
+  function scaleChordSugg(root, type) {
+    const s = getJamScaleSuggestions(root, type) || [];
+    return s.map(x => ({ root: x.rootPc, type: x.m8 })).slice(0, 4);
+  }
+  function scaleSuggLabel(root, type) {
+    const short = { dur: 'Dur', moll: 'Moll', durPenta: 'Dur-Pentatonik', mollPenta: 'Moll-Pentatonik' }[type] || (SCALE_VIEW_TYPES[type] ? SCALE_VIEW_TYPES[type].label : type);
+    return jamRootName(root, /moll/.test(type) ? 'moll' : 'dur') + '-' + short;
+  }
+  // 🎼 Sichtbare Skala mit Vorauswahl (Akkordfolgen, Akkordwechsel, Beat & Jam)
+  const SCALE_PANEL_KEY = 'guitartrainer_scalepanel';
+  function scalePanelSaved() { try { return JSON.parse(localStorage.getItem(SCALE_PANEL_KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function scalePanelHtml(mod, defRoot, defType, sugg) {
+    const sv = scalePanelSaved()[mod] || {};
+    const r = sv.root != null ? sv.root : defRoot;
+    const t = SCALE_VIEW_TYPES[sv.type] ? sv.type : defType;
+    const selStyle = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; padding:4px 6px;';
+    return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${sv.open === false ? '' : ' open'}><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🎼 Skala dazu anzeigen</summary>
+      <div style="margin-top:8px;">
+        <div class="row" style="gap:10px; flex-wrap:wrap; align-items:center;">
+          <label style="font-size:.85rem; font-weight:600;">Grundton: <select id="spRoot_${mod}" style="${selStyle}">${SCALE_VIEW_ROOTS.map((n, i) => `<option value="${i}" ${i === r ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+          <label style="font-size:.85rem; font-weight:600;">Tonleiter: <select id="spType_${mod}" style="${selStyle}">${Object.keys(SCALE_VIEW_TYPES).map(k => `<option value="${k}" ${k === t ? 'selected' : ''}>${SCALE_VIEW_TYPES[k].label}</option>`).join('')}</select></label>
+          <button type="button" class="btn btn-secondary" id="spOpen_${mod}" style="padding:6px 10px; font-size:.8rem;">Im Modul „Tonleitern“ öffnen</button>
+        </div>
+        <div class="jam-improv-label" style="margin-top:8px;">Passt dazu – antippen zum Auswählen:</div>
+        <div id="spSugg_${mod}" style="margin:2px 0 4px;">${(sugg || []).map(sg => `<button type="button" class="theory-chip sp-sugg" data-root="${sg.root}" data-type="${sg.type}">${homeEsc(scaleSuggLabel(sg.root, sg.type))}</button>`).join(' ')}</div>
+        <div id="spBoard_${mod}" style="margin-top:8px; overflow-x:auto;"></div>
+        <div class="jam-improv-label" id="spName_${mod}" style="margin-top:4px;"></div>
+      </div></details>`;
+  }
+  function scalePanelBoard(mod) {
+    const wrap = document.getElementById('spBoard_' + mod); if (!wrap) return;
+    const rSel = document.getElementById('spRoot_' + mod), tSel = document.getElementById('spType_' + mod);
+    const r = rSel ? +rSel.value : 0;
+    const t = tSel && SCALE_VIEW_TYPES[tSel.value] ? tSel.value : 'durPenta';
+    const st = SCALE_VIEW_TYPES[t];
+    const anchorPc = ((r + st.rootShift) + 12) % 12;
+    let anchorFret = 0;
+    while ((40 + anchorFret) % 12 !== anchorPc) anchorFret++;
+    let fretFrom = anchorFret + SCALE_VIEW_POSITIONS[0][0], fretTo = anchorFret + SCALE_VIEW_POSITIONS[0][1];
+    if (fretTo > 15) { fretFrom -= 12; fretTo -= 12; }
+    fretFrom = Math.max(0, fretFrom);
+    const built = buildScalePositionDiagramSvg(st, r, fretFrom, fretTo);
+    wrap.innerHTML = `<div class="scale-position-item" style="max-width:250px;">${built.svg}${built.fretNumbersHtml}</div>`;
+    const nm = document.getElementById('spName_' + mod);
+    if (nm) nm.innerHTML = `<strong>${SCALE_VIEW_ROOTS[r]}-${SCALE_VIEW_TYPES[t].label}</strong> – orange = Grundton, blau = Skalatöne. Diese Töne passen über die Akkorde daneben.`;
+    const sb = document.getElementById('spSugg_' + mod);
+    if (sb) sb.querySelectorAll('.sp-sugg').forEach(b => b.classList.toggle('on', +b.dataset.root === r && b.dataset.type === t));
+  }
+  function bindScalePanel(box) {
+    if (!box) return;
+    ['prog', 'chg', 'jam', 'strum'].forEach(mod => {
+      const det = box.querySelector('#sp_' + mod); if (!det) return;
+      const r = box.querySelector('#spRoot_' + mod), t = box.querySelector('#spType_' + mod);
+      const save = () => { const all = scalePanelSaved(); all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      if (r) r.onchange = () => { save(); scalePanelBoard(mod); };
+      box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; save(); scalePanelBoard(mod); });
+      if (t) t.onchange = () => { save(); scalePanelBoard(mod); };
+      det.ontoggle = () => { save(); if (det.open) scalePanelBoard(mod); };
+      const op = box.querySelector('#spOpen_' + mod);
+      if (op) op.onclick = () => { save(); state.scaleViewRoot = r ? +r.value : 0; state.scaleViewType = t ? t.value : 'durPenta'; const idx = MODULES.findIndex(m => m.type === 'scaleview'); if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); } };
+      if (det.open) scalePanelBoard(mod);
+    });
+  }
   // 🎼 Skalen-Vorschläge (gleiche Logik wie Beat & Jam) als aufklappbares Kästchen
   function scaleHintBoxHtml(list, id) {
     const seen = {}; let inner = '';
@@ -11429,7 +11513,6 @@
       </div>`;
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
       h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
-      h += scaleHintBoxHtml((strumChords() || []).slice(0, 8).map(c => ({ root: c[0], type: c[1] })), 'strumScaleHint');
     }
     h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
@@ -11456,7 +11539,7 @@
     </div>
     ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
-    h += gripStripShellHtml('strum');
+    h += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + gripStripShellHtml('strum') + `<div style="flex:0 1 250px; min-width:225px;">` + scalePanelHtml('strum', (() => { const c = (strumChords() || [])[0]; return c ? c[0] : 0; })(), (() => { const c = (strumChords() || [])[0]; return c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta'; })(), (() => { const cs = (strumChords() || []).map(c => ({ root: c[0], type: c[1] })); const kd = cs.length ? progFindKey(cs) : null; if (kd) return scaleKeySugg(kd); return cs.length ? scaleChordSugg(cs[0].root, cs[0].type) : []; })()) + `</div></div>`;
     h += `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Diagramm gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>`;
     h += `<div class="strum-now" id="strumNow"></div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
@@ -11465,7 +11548,7 @@
     h += `<div class="jam-hint" style="margin-top:10px;">Tipp: Erst ohne Ton nur die Handbewegung, dann langsam mit Akkord. Schneller erst, wenn es sich locker anfühlt – ganz ohne Eile. 🙂</div>`;
     h += `</div>`;
     root.innerHTML = h;
-    bindScaleHintChips(root);
+    bindScalePanel(root);
     gripStripBind('strum', () => renderStrumNow(strumPlaying ? Math.max(0, strumShownBar) : 0));
     holdDragBind(document.getElementById('gripStrip_strum'), '.grip-item', el => Array.prototype.indexOf.call(el.parentElement.children, el), strumReorder, null);
     renderStrumNow(0);
@@ -11986,7 +12069,7 @@
     const [y, m, d] = k.split('-').map(Number);
     const dt = new Date(y, m - 1, d);
     const wk = getWeekKey(getMonday(dt)), idx = (dt.getDay() + 6) % 7;
-    const rows = Array.isArray(plannerState.plannerData[wk]) ? plannerState.plannerData[wk] : [];
+    const rows = plannerFlatRows(Array.isArray(plannerState.plannerData[wk]) ? plannerState.plannerData[wk] : []);
     const done = rows.filter(r => r && Array.isArray(r.checks) && r.checks[idx]).length;
     let sec = 0; try { sec = (ptData.days || {})[k] || 0; } catch (e) {}
     return { done, sec, wk };
@@ -12029,6 +12112,88 @@
   }
   document.addEventListener('toggle', e => { if (e.target && e.target.id === 'plannerCalDet' && e.target.open) { plannerCalYM = null; plannerCalRender(); } }, true);
 
+  function plannerGetRow(bi, ri) { const wk = getWeekKey(getMonday(plannerState.currentDate)); const d = plannerState.plannerData[wk]; return bi < 0 ? d[ri] : d[bi].rows[ri]; }
+  function plannerFlatRows(rows) { const out = []; (rows || []).forEach(r => { if (r && r.block) (r.rows || []).forEach(c => out.push(c)); else if (r) out.push(r); }); return out; }
+  let plDrag = null, plPend = null;
+  function plPendMove(ev) { if (plPend) plPend.ev = ev; }
+  function plPendUp() { if (plPend && plPend.timer) clearTimeout(plPend.timer); plPend = null; document.removeEventListener('pointermove', plPendMove); }
+  function plDragDown(e, bi, ri, isBlock) {
+    if (plDrag || plPend) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+    plPend = { bi, ri, isBlock, ev: e, timer: null };
+    document.addEventListener('pointermove', plPendMove);
+    if (e.pointerType === 'mouse') plDragBegin();
+    else { plPend.timer = setTimeout(plDragBegin, 220); document.addEventListener('pointerup', plPendUp, { once: true }); document.addEventListener('pointercancel', plPendUp, { once: true }); }
+  }
+  function plDragBegin() {
+    if (!plPend) return;
+    const p = plPend; plPend = null;
+    if (p.timer) clearTimeout(p.timer);
+    document.removeEventListener('pointermove', plPendMove);
+    const ghost = document.createElement('div'); ghost.className = 'pl-ghost';
+    ghost.textContent = p.isBlock ? '⠿ Block' : '⠿ Übung';
+    document.body.appendChild(ghost);
+    plDrag = { bi: p.bi, ri: p.ri, isBlock: p.isBlock, ghost, target: null };
+    document.addEventListener('pointermove', plDragMove);
+    document.addEventListener('pointerup', plDragUp, { once: true });
+    document.addEventListener('pointercancel', plDragUp, { once: true });
+    plDragMove(p.ev);
+  }
+  function plDragClearMarks() { document.querySelectorAll('#plannerTableBody .pl-drop-before, #plannerTableBody .pl-drop-after').forEach(el => el.classList.remove('pl-drop-before', 'pl-drop-after')); document.querySelectorAll('#plannerTableBody .pl-droppable').forEach(el => el.classList.remove('pl-droppable')); }
+  function plDragMove(ev) {
+    if (!plDrag) return;
+    plDrag.ghost.style.left = (ev.clientX + 10) + 'px'; plDrag.ghost.style.top = (ev.clientY + 10) + 'px';
+    plDragClearMarks();
+    plDrag.target = null;
+    const el = document.elementFromPoint(ev.clientX, ev.clientY);
+    const tr = el && el.closest ? el.closest('#plannerTableBody tr') : null;
+    if (!tr) return;
+    if (tr.classList.contains('pl-blockrow')) {
+      const b = +tr.dataset.bi;
+      if (plDrag.isBlock && plDrag.bi === -1 && plDrag.ri === b) return;
+      const r = tr.getBoundingClientRect();
+      if (ev.clientY < r.top + r.height * 0.35) { tr.classList.add('pl-drop-before'); plDrag.target = { bi: -1, ri: b, before: true }; }
+      else { tr.classList.add('pl-droppable'); plDrag.target = { into: b }; }
+    } else {
+      const tbi = +tr.dataset.bi, tri = +tr.dataset.ri;
+      if (!plDrag.isBlock && tbi === plDrag.bi && tri === plDrag.ri) return;
+      if (plDrag.isBlock && tbi >= 0) return;
+      const r = tr.getBoundingClientRect();
+      const before = ev.clientY < r.top + r.height / 2;
+      tr.classList.add(before ? 'pl-drop-before' : 'pl-drop-after');
+      plDrag.target = { bi: tbi, ri: tri, before };
+    }
+  }
+  function plDragUp() {
+    document.removeEventListener('pointermove', plDragMove);
+    if (!plDrag) return;
+    const d = plDrag; plDrag = null;
+    d.ghost.remove(); plDragClearMarks();
+    const t = d.target; if (!t) return;
+    const wk = getWeekKey(getMonday(plannerState.currentDate));
+    const data = plannerState.plannerData[wk]; if (!data) return;
+    const srcList = d.bi < 0 ? data : (data[d.bi] && data[d.bi].rows);
+    if (!srcList) return;
+    const item = srcList[d.ri]; if (!item) return;
+    if (t.into != null) {
+      const blk = data[t.into]; if (!blk || blk === item) return;
+      if (!blk.rows) blk.rows = [];
+      srcList.splice(d.ri, 1);
+      blk.rows.push(item);
+    } else {
+      srcList.splice(d.ri, 1);
+      let dst = t.bi < 0 ? data : (data[t.bi] && data[t.bi].rows);
+      if (!dst) dst = data;
+      let idx = t.ri;
+      if (dst === srcList && d.ri < idx) idx--;
+      if (!t.before) idx++;
+      if (idx < 0) idx = 0; if (idx > dst.length) idx = dst.length;
+      dst.splice(idx, 0, item);
+    }
+    if (item.block) item.open = true;
+    savePlannerToLocalStorage(); renderPlanner();
+  }
   function renderPlanner() {
     try { const cd = document.getElementById('plannerCalDet'); if (cd && cd.open) setTimeout(plannerCalRender, 0); } catch (e) {}
     const monday = getMonday(plannerState.currentDate);
@@ -12047,7 +12212,7 @@
     if (!plannerState.plannerData[weekKey]) {
       const prevWeekKey = getPreviousWeekKey(monday);
       if (plannerState.plannerData[prevWeekKey] && plannerState.plannerData[prevWeekKey].length > 0) {
-        plannerState.plannerData[weekKey] = plannerState.plannerData[prevWeekKey].map(row => ({
+        plannerState.plannerData[weekKey] = plannerState.plannerData[prevWeekKey].map(row => row && row.block ? { block: true, name: row.name, open: row.open !== false, rows: (row.rows || []).map(c => ({ name: c.name, checks: [false, false, false, false, false, false, false] })) } : ({
           name: row.name,
           checks: [false, false, false, false, false, false, false]
         }));
@@ -12072,76 +12237,32 @@
 
     plannerTableBody.innerHTML = '';
     
-    let draggedRowIndex = null;
-
-    currentWeekData.forEach((row, rowIdx) => {
+    const week = currentWeekData;
+    const rowTr = (row, bi, ri, isChild) => {
       const tr = document.createElement('tr');
-      tr.draggable = true;
-      tr.dataset.index = rowIdx;
-      tr.style.cursor = 'grab';
-
-      tr.addEventListener('dragstart', (e) => {
-        draggedRowIndex = rowIdx;
-        tr.style.opacity = '0.4';
-        e.dataTransfer.effectAllowed = 'move';
-      });
-
-      tr.addEventListener('dragend', () => {
-        tr.style.opacity = '1';
-        document.querySelectorAll('#plannerTableBody tr').forEach(r => r.style.borderTop = '');
-      });
-
-      tr.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        tr.style.borderTop = '2px solid var(--accent-color)';
-      });
-
-      tr.addEventListener('dragleave', () => {
-        tr.style.borderTop = '';
-      });
-
-      tr.addEventListener('drop', (e) => {
-        e.preventDefault();
-        tr.style.borderTop = '';
-        if (draggedRowIndex !== null && draggedRowIndex !== rowIdx) {
-          const movedItem = currentWeekData.splice(draggedRowIndex, 1)[0];
-          currentWeekData.splice(rowIdx, 0, movedItem);
-          savePlannerToLocalStorage();
-          renderPlanner();
-        }
-      });
-
+      tr.dataset.bi = bi; tr.dataset.ri = ri;
+      if (isChild) tr.className = 'pl-child';
       const tdName = document.createElement('td');
+      const hd = document.createElement('span');
+      hd.className = 'pl-handle'; hd.textContent = '⠿'; hd.title = 'Gedrückt halten & ziehen: verschieben oder in einen Block ziehen';
+      hd.addEventListener('pointerdown', e => plDragDown(e, bi, ri, false));
+      tdName.appendChild(hd);
       const inputName = document.createElement('input');
-      inputName.type = 'text';
-      inputName.className = 'exercise-input';
-      inputName.value = row.name;
+      inputName.type = 'text'; inputName.className = 'exercise-input'; inputName.value = row.name || '';
       inputName.placeholder = 'Übung benennen...';
-      
-      inputName.addEventListener('focus', () => tr.draggable = false);
-      inputName.addEventListener('blur', () => tr.draggable = true);
-
-      inputName.addEventListener('change', (e) => {
-        plannerState.plannerData[weekKey][rowIdx].name = e.target.value;
-        savePlannerToLocalStorage();
-        renderPlannerStats();
-      });
+      inputName.addEventListener('change', e => { plannerGetRow(bi, ri).name = e.target.value; savePlannerToLocalStorage(); renderPlannerStats(); });
       tdName.appendChild(inputName);
       const practiceBtn = document.createElement('button');
-      practiceBtn.type = 'button';
-      practiceBtn.className = 'btn btn-secondary planner-practice-btn';
+      practiceBtn.type = 'button'; practiceBtn.className = 'btn btn-secondary planner-practice-btn';
       const hasLink = !!(plannerState.plannerData._beats && plannerState.plannerData._beats[plannerNormName(row.name)]);
       practiceBtn.textContent = hasLink ? '▶ Üben 🔗' : '▶ Üben';
       practiceBtn.title = 'Im Beat-Modul üben (ohne Zeitdruck)';
-      practiceBtn.addEventListener('click', () => startPracticeFromPlan(weekKey, rowIdx));
+      practiceBtn.addEventListener('click', () => startPracticeFromPlan(weekKey, bi, ri));
       tdName.style.textAlign = 'left';
       inputName.style.width = '100%'; inputName.style.display = 'block'; inputName.style.marginBottom = '5px'; inputName.style.boxSizing = 'border-box';
       tdName.appendChild(practiceBtn);
       const timerBtn = document.createElement('button');
-      timerBtn.type = 'button';
-      timerBtn.className = 'btn btn-secondary planner-timer-btn';
-      timerBtn.style.padding = '6px 10px';
+      timerBtn.type = 'button'; timerBtn.className = 'btn btn-secondary planner-timer-btn'; timerBtn.style.padding = '6px 10px';
       const exMin = Math.round(ptExWeekSec(weekKey, row.name) / 60);
       timerBtn.textContent = exMin ? '⏱ ' + exMin + ' Min.' : '⏱';
       timerBtn.title = exMin ? 'Diese Woche ' + exMin + ' Min. mit Timer geübt – nochmal üben' : 'Diese Übung mit Timer üben';
@@ -12149,37 +12270,42 @@
       timerBtn.addEventListener('click', () => ptOpenForPlan(row.name));
       tdName.appendChild(timerBtn);
       tr.appendChild(tdName);
-
       days.forEach((day, dayIdx) => {
         const tdCheck = document.createElement('td');
         if (day.isToday) tdCheck.className = 'today-col';
-
         const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'exercise-checkbox';
-        checkbox.checked = !!row.checks[dayIdx];
-        checkbox.addEventListener('change', (e) => {
-          plannerState.plannerData[weekKey][rowIdx].checks[dayIdx] = e.target.checked;
-          savePlannerToLocalStorage();
-          renderPlannerStats();
-        });
-        tdCheck.appendChild(checkbox);
-        tr.appendChild(tdCheck);
+        checkbox.type = 'checkbox'; checkbox.className = 'exercise-checkbox'; checkbox.checked = !!row.checks[dayIdx];
+        checkbox.addEventListener('change', e => { plannerGetRow(bi, ri).checks[dayIdx] = e.target.checked; savePlannerToLocalStorage(); renderPlannerStats(); });
+        tdCheck.appendChild(checkbox); tr.appendChild(tdCheck);
       });
-
       const tdDel = document.createElement('td');
       const delBtn = document.createElement('button');
-      delBtn.className = 'btn btn-danger';
-      delBtn.textContent = 'X';
-      delBtn.addEventListener('click', () => {
-        plannerState.plannerData[weekKey].splice(rowIdx, 1);
-        savePlannerToLocalStorage();
-        renderPlanner();
-      });
-      tdDel.appendChild(delBtn);
-      tr.appendChild(tdDel);
-
+      delBtn.className = 'btn btn-danger'; delBtn.textContent = 'X';
+      delBtn.addEventListener('click', () => { const list = bi < 0 ? week : week[bi].rows; list.splice(ri, 1); savePlannerToLocalStorage(); renderPlanner(); });
+      tdDel.appendChild(delBtn); tr.appendChild(tdDel);
       plannerTableBody.appendChild(tr);
+    };
+    week.forEach((row, ri) => {
+      if (row && row.block) {
+        const tr = document.createElement('tr');
+        tr.className = 'pl-blockrow'; tr.dataset.bi = ri; tr.dataset.blk = '1';
+        const td = document.createElement('td'); td.colSpan = 9;
+        const hd = document.createElement('span'); hd.className = 'pl-handle'; hd.textContent = '⠿'; hd.title = 'Block verschieben';
+        hd.addEventListener('pointerdown', e => plDragDown(e, -1, ri, true));
+        td.appendChild(hd);
+        const tog = document.createElement('button'); tog.type = 'button'; tog.className = 'pl-btog'; tog.style.cssText = 'background:none;border:none;color:var(--text-color);font-size:1rem;cursor:pointer;'; tog.textContent = row.open === false ? '▸' : '▾';
+        tog.addEventListener('click', () => { row.open = row.open === false; savePlannerToLocalStorage(); renderPlanner(); });
+        td.appendChild(tog);
+        const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'exercise-input pl-bname'; inp.value = row.name || ''; inp.placeholder = 'Block benennen…';
+        inp.style.cssText = 'display:inline-block; width:45%; font-weight:700; margin:0 6px;';
+        inp.addEventListener('change', e => { row.name = e.target.value; savePlannerToLocalStorage(); });
+        td.appendChild(inp);
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'btn btn-danger'; del.textContent = 'X'; del.style.padding = '2px 8px';
+        del.addEventListener('click', () => { week.splice(ri, 1); savePlannerToLocalStorage(); renderPlanner(); });
+        td.appendChild(del);
+        tr.appendChild(td); plannerTableBody.appendChild(tr);
+        if (row.open !== false) (row.rows || []).forEach((c, ci) => rowTr(c, ri, ci, true));
+      } else rowTr(row, -1, ri, false);
     });
     renderPlannerStats();
   }
@@ -12580,12 +12706,20 @@
       savePlannerToLocalStorage();
       renderPlanner();
     });
+    const addBlockBtn = document.getElementById('addBlockBtn');
+    if (addBlockBtn) addBlockBtn.addEventListener('click', () => {
+      const weekKey = getWeekKey(getMonday(plannerState.currentDate));
+      if (!plannerState.plannerData[weekKey]) plannerState.plannerData[weekKey] = [];
+      plannerState.plannerData[weekKey].push({ block: true, name: 'Neuer Block', open: true, rows: [] });
+      savePlannerToLocalStorage();
+      renderPlanner();
+    });
 
     resetWeekBtn.addEventListener('click', () => {
       const monday = getMonday(plannerState.currentDate);
       const weekKey = getWeekKey(monday);
       if (plannerState.plannerData[weekKey]) {
-        plannerState.plannerData[weekKey].forEach(row => row.checks = [false, false, false, false, false, false, false]);
+        plannerFlatRows(plannerState.plannerData[weekKey]).forEach(row => row.checks = [false, false, false, false, false, false, false]);
         savePlannerToLocalStorage();
         renderPlanner();
         showToast("Woche zurückgesetzt.");
@@ -14243,7 +14377,7 @@
   }
 
 
-  // =================== Gehörbildung (Modul 7) ===================
+  // =================== Gehörbildung ===================
   const EAR_KEY = 'guitartrainer_ear';
   const EAR_EASY = [3, 4, 7, 12];
   const EAR_SOUNDS = [['piano', '🎹 Klavier-ähnlich'], ['clear', '🔔 Klarer Ton'], ['guitar', '🎸 Gitarre']];
@@ -14536,7 +14670,8 @@
       <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip chg-grip" data-chgdrag="${i}" title="Gedrückt halten und ziehen zum Umsortieren" aria-label="Akkord ${i + 1} verschieben">⠿</button><input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
         ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
       <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 ⠿ gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>
-      ${scaleHintBoxHtml((chgParsed() || []).slice(0, 8).map(c => ({ root: c[0], type: c[1] })), 'chgScaleHint')}
+      ${(() => { const P = chgParsed(); const c = P && P[0]; const kd = P ? progFindKey(P.map(x => ({ root: x[0], type: x[1] }))) : null; const sugg = kd ? scaleKeySugg(kd) : (c ? scaleChordSugg(c[0], c[1]).concat(P && P[1] ? scaleChordSugg(P[1][0], P[1][1]) : []).filter((v, i, a) => a.findIndex(x => x.root === v.root && x.type === v.type) === i).slice(0, 6) : []); return scalePanelHtml('chg', c ? c[0] : 0, c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta', sugg); })()}
+      <div class="chg-strip" id="chgStrip">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip" data-chgjump="${i}">${homeEsc(c)}</button>`).join('')}</div>
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="font-weight:600;">Schläge pro Akkord:</label>
         <select id="chgBeats" style="${sel}">${[4, 2, 1].map(b => `<option value="${b}" ${b === chgState.beats ? 'selected' : ''}>${b}</option>`).join('')}</select>
@@ -14550,7 +14685,8 @@
       </div>
       <div class="chg-stage" id="chgStage"></div></div>`;
     box.innerHTML = h;
-    bindScaleHintChips(box);
+    bindScalePanel(box);
+    box.querySelectorAll('[data-chgjump]').forEach(b => b.addEventListener('click', () => { const i = +b.dataset.chgjump; if (chgPlaying) { chgBeat = i * chgState.beats; chgShow(i, 0); } else chgShow(i, -1); }));
     chgShow(0, -1);
     const restart = () => { if (chgPlaying) { chgStop(); chgStart(); } };
     box.querySelectorAll('[data-chgq]').forEach(b => b.addEventListener('click', () => { chgStop(); chgState.chords = b.dataset.chgq.split(' '); chgState.grips = []; chgSave(); chgRender(); }));
@@ -14581,6 +14717,8 @@
     st.innerHTML = `<div class="chg-box now"><div class="lbl">Jetzt</div><div class="nm">${homeEsc(chgState.chords[idx])}</div>${dia(idx)}
         <div class="chg-beats">${Array.from({ length: chgState.beats }, (_, b) => `<span class="${b === beat ? 'on' : ''}"></span>`).join('')}</div></div>
       <div class="chg-box next"><div class="lbl">Als Nächstes</div><div class="nm">${homeEsc(chgState.chords[nx])}</div>${dia(nx)}</div>`;
+    const strip = document.getElementById('chgStrip');
+    if (strip) strip.querySelectorAll('[data-chgjump]').forEach(b => { const i = +b.dataset.chgjump; b.classList.toggle('on', i === idx); b.classList.toggle('nx', i === nx); });
   }
   const CHG_PAT = { kind: 'strum', unit: 1, steps: 'Dd' };
   function chgTick() {
@@ -14875,7 +15013,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-30-5';
+  const APP_VERSION = '2026-10-31-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -14943,5 +15081,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a52ddec59df237dd',t:'MTc5MzM5OTQ4Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a52ddec59df237dd',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a531a118098c5a3b',t:'MTc5MzQzODkwMw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a531a118098c5a3b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
