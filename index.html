@@ -11983,6 +11983,7 @@
     const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
     { const hp = document.getElementById('homePathBtn'); if (hp) hp.addEventListener('click', () => pathOpen()); }
     document.querySelectorAll('[data-qt]').forEach(b => b.addEventListener('click', () => qtGo(b.dataset.qt)));
+    { const qh = document.getElementById('qtHide'); if (qh) qh.addEventListener('click', () => { const d = qtLoad(); d.off = true; qtSave(d); renderHome(); showToast('👍 Karte ausgeblendet – der Lernpfad „Erste Schritte“ bleibt natürlich.'); }); }
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
     const ss = document.getElementById('homeStartSelect');
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
@@ -14011,10 +14012,13 @@
   const QT_STEPS = [['tuner', '🎸', 'Gitarre stimmen'], ['room', '🛋️', '5 Min Übungsraum'], ['jam', '🥁', 'Loop & Skala']];
   function qtHomeCard() {
     const d = qtLoad();
+    if (d.off) return '';
     const doneN = QT_STEPS.filter(st => d[st[0]]).length;
-    let h = `<div class="home-pt" style="display:block; cursor:default;" id="qtCard"><div style="display:flex; gap:10px; align-items:center;"><b style="font-size:1.4rem;">⏱</b><strong style="flex:1;">Deine ersten 10 Minuten</strong><span style="font-size:.8rem; opacity:.8;">${doneN}/3</span></div>`;
+    if (doneN === QT_STEPS.length) return ''; // (a) nach 🎉 3/3 blendet sich die Karte selbst aus
+    let h = `<div class="home-pt" style="display:block; cursor:default;" id="qtCard"><div style="display:flex; gap:10px; align-items:center;"><b style="font-size:1.4rem;">⏱</b><strong style="flex:1;">Deine ersten 10 Minuten</strong><span style="font-size:.8rem; opacity:.8;">${doneN}/3</span><button type="button" class="sec" id="qtHide" aria-label="Diese Karte ausblenden" title="Karte ausblenden" style="padding:4px 8px; font-size:.8rem;">✕</button></div>`;
+    h += `<div style="margin-top:8px; font-size:.9rem; line-height:1.5; opacity:.92;">Wofür? Ein freiwilliger Mini-Einstieg für den ersten Besuch: In drei kurzen Schritten ist deine Gitarre gestimmt, du hast einmal in Ruhe gespielt und den Jam-Raum ausprobiert. Kein Muss und keine Reihenfolge – jeder Knopf bringt dich direkt zum richtigen Ort und zurück.</div>`;
     QT_STEPS.forEach(st => { h += `<button type="button" class="btn ${d[st[0]] ? 'btn-secondary' : ''}" data-qt="${st[0]}" style="margin:6px 6px 0 0; padding:6px 10px; font-size:.85rem;">${d[st[0]] ? '✔ ' : ''}${st[1]} ${st[2]}</button>`; });
-    h += `<div class="jam-improv-label" style="margin-top:6px;">${doneN === QT_STEPS.length ? '🎉 Geschafft! Danach wartet der Lernpfad „Erste Schritte“ mit allen Stationen.' : 'Drei Kurz-Stationen, zusammen rund zehn Minuten – Reihenfolge egal, alles bleibt markiert.'}</div></div>`;
+    h += `<div class="jam-improv-label" style="margin-top:6px;">Zusammen rund 10 Minuten. Erledigte Stationen bleiben markiert – sobald alle drei fertig sind, verabschiedet sich die Karte von selbst.</div></div>`;
     return h;
   }
   function qtGo(which) {
@@ -14022,6 +14026,7 @@
     if (which === 'tuner') { try { hideHome(); } catch (e) {} switchToModule(11); window.scrollTo(0, 0); }
     else if (which === 'room') { pt.mode = 'down'; ptData.set.mode = 'down'; ptData.set.downMin = 5; ptSave(); ptRoomOpen(); ptRoomBarRender(); ptRoomTick(); }
     else if (which === 'jam') { try { const all = scalePanelSaved(); all.jam = { root: 0, type: 'durPenta', open: true, ctl: false }; localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} try { hideHome(); } catch (e) {} switchToModule(9); window.scrollTo(0, 0); }
+    if (QT_STEPS.every(st => d[st[0]])) showToast('🎉 Geschafft! Deine ersten 10 Minuten sind komplett – der Lernpfad „Erste Schritte“ wartet schon.');
     renderHome();
   }
   function pathHomeCard() {
@@ -15070,7 +15075,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-1';
+  const APP_VERSION = '2026-11-01-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15138,5 +15143,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53c1fb9ebaad272',t:'MTc5MzU0ODk0Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53c1fb9ebaad272',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53cf8e338f9d8ed',t:'MTc5MzU1Nzg0Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53cf8e338f9d8ed',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
