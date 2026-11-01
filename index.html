@@ -1147,6 +1147,8 @@
     .pl-blockrow td { background: rgba(255,215,94,.10); }
     .pl-handle { cursor: grab; opacity: .7; margin-right: 6px; }
     .pl-child .exercise-input { margin-left: 20px; }
+    :focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
+    .sum-head { display: inline-block; padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; border: 1px solid var(--card-border); background: var(--panel-overlay, rgba(255,255,255,.06)); color: var(--text-color); cursor: pointer; font-weight: 600; }
     .sp-sugg.on { background: var(--accent-color); color: #0b0f14; font-weight: 800; }
     .jam-chord-svg { display: block; }
     #jamBarTabsRow { flex-wrap: wrap; }
@@ -1641,13 +1643,13 @@
 <div class="container">
   <header>
     <h1>Gitarren-Griffbrett-Trainer</h1>
-    <button class="btn btn-secondary" id="homeBtn" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
-    <button class="btn btn-secondary" id="ptBtn" title="Übungs-Timer" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⏱</button>
-    <button class="btn btn-secondary" id="diaryBtn" title="Übungs-Tagebuch" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">📓</button>
-    <button class="btn btn-secondary" id="settingsBtn" title="Einstellungen" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⚙️</button>
-    <button class="btn btn-secondary" id="backupBtn" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:8px; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
-    <button class="btn btn-secondary" id="fontSizeBtn" title="Schriftgröße ändern" style="padding:8px 10px; font-size:1rem; line-height:1; font-weight:800;">A+</button>
-    <button class="btn btn-secondary" id="themeToggleBtn" title="Hell/Dunkel umschalten" style="padding:8px 12px; font-size:1.1rem; line-height:1;">🌙</button>
+    <button class="btn btn-secondary" id="homeBtn" aria-label="Zur Startseite" title="Zur Startseite" style="margin-left:auto; padding:8px 12px; font-size:1.05rem; line-height:1;">🏠 Start</button>
+    <button class="btn btn-secondary" id="ptBtn" aria-label="Übungs-Timer öffnen" title="Übungs-Timer" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⏱</button>
+    <button class="btn btn-secondary" id="diaryBtn" aria-label="Übungs-Tagebuch öffnen" title="Übungs-Tagebuch" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">📓</button>
+    <button class="btn btn-secondary" id="settingsBtn" aria-label="Einstellungen öffnen" title="Einstellungen" style="margin-left:8px; padding:8px 12px; font-size:1.05rem; line-height:1;">⚙️</button>
+    <button class="btn btn-secondary" id="backupBtn" aria-label="Datensicherung: sichern oder wiederherstellen" title="Datensicherung: alles sichern / wiederherstellen" style="margin-left:8px; padding:8px 12px; font-size:1.1rem; line-height:1;">💾</button>
+    <button class="btn btn-secondary" id="fontSizeBtn" aria-label="Schriftgröße ändern" title="Schriftgröße ändern" style="padding:8px 10px; font-size:1rem; line-height:1; font-weight:800;">A+</button>
+    <button class="btn btn-secondary" id="themeToggleBtn" aria-label="Hell oder Dunkel umschalten" title="Hell/Dunkel umschalten" style="padding:8px 12px; font-size:1.1rem; line-height:1;">🌙</button>
     <div class="timer-container" id="timerContainer" style="display:none;">
       <span class="timer-display" id="timerDisplay">05:00</span>
       <button class="btn btn-secondary" id="timerBtn">Start</button>
@@ -2631,7 +2633,7 @@
       <button class="btn" id="addExerciseBtn">+ Übung hinzufügen</button>
       <button class="btn btn-secondary" id="addBlockBtn">＋ Block</button>
       <details id="plannerMoreDetails" style="display:inline-block;">
-        <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">… Mehr</summary>
+        <summary class="sum-head">… Mehr</summary>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px;">
           <button class="btn btn-secondary" id="exportDataBtn">💾 Plan als Datei speichern</button>
           <label for="importDataInput" class="btn btn-secondary" style="cursor:pointer;">📂 Plan aus Datei laden</label>
@@ -2681,7 +2683,7 @@
       </div>
     </div>
     <details id="viewOptsDetails" style="margin-top:6px;">
-      <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">👁 Ansicht einstellen</summary>
+      <summary class="sum-head">👁 Ansicht einstellen</summary>
       <div class="row" style="margin-top:8px;">
         <div class="toggle-group" id="accidentalGroup">
           <input type="checkbox" id="accidentalsToggle">
@@ -2714,7 +2716,7 @@
   </div>
 </div>
 
-<div class="feedback-toast" id="feedbackToast"></div>
+<div class="feedback-toast" id="feedbackToast" role="status" aria-live="polite"></div>
 
 <script>
   let audioCtx = null;
@@ -11405,9 +11407,9 @@
     const r = sv.root != null ? sv.root : defRoot;
     const t = SCALE_VIEW_TYPES[sv.type] ? sv.type : defType;
     const selStyle = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; padding:4px 6px;';
-    return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${sv.open === false ? '' : ' open'}><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🎼 Skala dazu anzeigen</summary>
+    return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${sv.open === false ? '' : ' open'}><summary class="sum-head">🎼 Skala dazu anzeigen</summary>
       <div style="margin-top:8px;">
-        <details id="spCtl_${mod}"${ctlOpen}><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;">🎛 Auswahl & Vorschläge</summary>
+        <details id="spCtl_${mod}"${ctlOpen}><summary class="sum-head">🎛 Auswahl & Vorschläge</summary>
         <div class="row" style="gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px;">
           <label style="font-size:.85rem; font-weight:600;">Grundton: <select id="spRoot_${mod}" style="${selStyle}">${SCALE_VIEW_ROOTS.map((n, i) => `<option value="${i}" ${i === r ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
           <label style="font-size:.85rem; font-weight:600;">Tonleiter: <select id="spType_${mod}" style="${selStyle}">${Object.keys(SCALE_VIEW_TYPES).map(k => `<option value="${k}" ${k === t ? 'selected' : ''}>${SCALE_VIEW_TYPES[k].label}</option>`).join('')}</select></label>
@@ -11469,7 +11471,7 @@
         sugg.map(sg => `<button type="button" class="theory-chip scale-hint-btn" data-m8="${sg.m8}" data-root="${sg.rootPc}">${jamRootName(sg.rootPc, /Moll|Dorisch|Lokrisch|Phryg/.test(sg.label) ? 'moll' : 'dur')} ${homeEsc(sg.label)}</button>`).join(' ') + `</div>`;
     });
     if (!inner) return '';
-    return `<details class="scale-hint-det" id="${id}" style="margin-top:10px;"><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🎼 Passt dazu: Tonleiter &amp; Pentatonik</summary><div style="margin-top:8px;"><div class="jam-improv-label">Antippen = im Modul „Tonleitern“ zeigen:</div>${inner}</div></details>`;
+    return `<details class="scale-hint-det" id="${id}" style="margin-top:10px;"><summary class="sum-head">🎼 Passt dazu: Tonleiter &amp; Pentatonik</summary><div style="margin-top:8px;"><div class="jam-improv-label">Antippen = im Modul „Tonleitern“ zeigen:</div>${inner}</div></details>`;
   }
   function bindScaleHintChips(box) {
     if (!box) return;
@@ -11529,7 +11531,7 @@
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
       <details id="strumBegDetails" ${strumState.begOpen ? 'open' : ''} style="display:inline-block;">
-        <summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🥁 Begleitung &amp; Anzeige</summary>
+        <summary class="sum-head">🥁 Begleitung &amp; Anzeige</summary>
         <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:8px;">
           ${visLagSelectHtml(sel)}
           <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;">🥁 Schlagzeug: <select id="strumDrum" style="${sel}">${STRUM_DRUM_STYLES.filter(x => p.sig === '4/4' || x[0] === 'off' || x[0] === 'default').map(([v, l]) => `<option value="${v}" ${v === (p.sig === '4/4' || strumState.drum === 'off' ? (strumState.drum || 'off') : 'default') ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
@@ -11952,6 +11954,7 @@
       <div class="tip"><strong>💡 Tipp des Tages</strong><br>${homeEsc(homeTipOfDay())}</div>
       ${li && last !== 0 ? `<button type="button" class="cont" data-home-open="${last}">↪ Weiter mit: ${li[1] === 'GTR' ? '🎸' : li[1]} ${homeEsc(li[2])}</button>` : ''}</div>`;
     try { h += pathHomeCard(); } catch (e) {}
+    try { h += qtHomeCard(); } catch (e) {}
     { const s = ptStats(); h += `<button type="button" class="home-pt" id="homePtBtn"><b>⏱</b><span><strong>Übungszeit</strong><br>heute ${ptFmtMin(s.today)} · diese Woche ${ptFmtMin(s.week)}</span><span style="flex:0; white-space:nowrap; font-weight:700;">${pt.running ? (pt.paused ? '⏸ ' : '▶ ') + ptHeaderText() : 'Timer öffnen ›'}</span></button>`; }
     { const L = diaryLoad(); const e = L[0]; h += `<button type="button" class="home-pt" id="homeDiaryBtn"><b>📓</b><span><strong>Übungs-Tagebuch</strong><br>${e ? 'Zuletzt: ' + diaryDateTxt(e.date) + (e.note ? ' · ' + homeEsc(e.note.slice(0, 40)) + (e.note.length > 40 ? '…' : '') : '') : 'Noch keine Einträge'}</span><span style="flex:0; white-space:nowrap; font-weight:700;">Öffnen ›</span></button>`; }
     h += strHomeTile();
@@ -11979,6 +11982,7 @@
     { const hs = document.getElementById('homeStrBtn'); if (hs) hs.addEventListener('click', () => strOpen()); }
     const hdy = document.getElementById('homeDiaryBtn'); if (hdy) hdy.addEventListener('click', () => diaryOpen());
     { const hp = document.getElementById('homePathBtn'); if (hp) hp.addEventListener('click', () => pathOpen()); }
+    document.querySelectorAll('[data-qt]').forEach(b => b.addEventListener('click', () => qtGo(b.dataset.qt)));
     box.querySelectorAll('[data-home-open]').forEach(b => b.addEventListener('click', () => { hideHome(); switchToModule(parseInt(b.dataset.homeOpen, 10)); window.scrollTo(0, 0); }));
     const ss = document.getElementById('homeStartSelect');
     if (ss) ss.addEventListener('change', e => { try { localStorage.setItem(HOME_START_KEY, e.target.value); } catch (err) {} showToast(e.target.value === 'home' ? 'Beim Öffnen erscheint die Startseite.' : 'Beim Öffnen geht es direkt ins letzte Modul.'); });
@@ -12285,7 +12289,7 @@
       });
       const tdDel = document.createElement('td');
       const delBtn = document.createElement('button');
-      delBtn.className = 'btn btn-danger'; delBtn.textContent = 'X';
+      delBtn.className = 'btn btn-danger'; delBtn.textContent = 'X'; delBtn.title = 'Übung löschen'; delBtn.setAttribute('aria-label', 'Übung löschen');
       delBtn.addEventListener('click', () => { const list = bi < 0 ? week : week[bi].rows; list.splice(ri, 1); savePlannerToLocalStorage(); renderPlanner(); });
       tdDel.appendChild(delBtn); tr.appendChild(tdDel);
       plannerTableBody.appendChild(tr);
@@ -12305,7 +12309,7 @@
         inp.style.cssText = 'display:inline-block; width:45%; font-weight:700; margin:0 6px;';
         inp.addEventListener('change', e => { row.name = e.target.value; savePlannerToLocalStorage(); });
         td.appendChild(inp);
-        const del = document.createElement('button'); del.type = 'button'; del.className = 'btn btn-danger'; del.textContent = 'X'; del.style.padding = '2px 8px';
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'btn btn-danger'; del.textContent = 'X'; del.style.padding = '2px 8px'; del.title = 'Block löschen'; del.setAttribute('aria-label', 'Block löschen');
         del.addEventListener('click', () => { week.splice(ri, 1); savePlannerToLocalStorage(); renderPlanner(); });
         td.appendChild(del);
         tr.appendChild(td); plannerTableBody.appendChild(tr);
@@ -13526,13 +13530,13 @@
     });
     p.querySelectorAll('[data-ptmode]').forEach(b => b.addEventListener('click', () => { pt.mode = b.dataset.ptmode; ptData.set.mode = pt.mode; ptSave(); ptRender(); }));
     p.querySelectorAll('[data-ptmin]').forEach(b => b.addEventListener('click', () => { ptData.set.downMin = +b.dataset.ptmin; ptSave(); ptRender(); }));
-    on('ptMinInput', e => { const v = Math.round(+e.target.value); if (v >= 1 && v <= 180) { ptData.set.downMin = v; ptSave(); ptRender(); } }, 'change');
+    on('ptMinInput', e => { const v = Math.round(+e.target.value); if (v >= 1 && v <= 180) { ptData.set.downMin = v; ptSave(); if (!pt.running && pt.mode === 'down') pt.target = v * 60000; p.querySelectorAll('[data-ptmin]').forEach(b => { b.className = 'btn' + (+b.dataset.ptmin === v ? '' : ' btn-secondary'); }); ptUpdateLive(); } }, 'change');
     p.querySelectorAll('[data-psec]').forEach(el => el.addEventListener('change', () => {
       const x = ptData.sections[+el.dataset.psec]; if (!x) return;
       if (el.dataset.pf === 'name') x.name = el.value.slice(0, 40);
       else if (el.dataset.pf === 'min') x.min = Math.min(120, Math.max(1, Math.round(+el.value) || 1));
       else x.mod = parseInt(el.value, 10);
-      ptSave(); ptRender();
+      ptSave(); if (!pt.running) ptUpdateLive();
     }));
     p.querySelectorAll('[data-psecdel]').forEach(b => b.addEventListener('click', () => { if (ptData.sections.length > 1) { ptData.sections.splice(+b.dataset.psecdel, 1); ptSave(); ptRender(); } else showToast('Mindestens ein Abschnitt bleibt.'); }));
     on('ptSecAdd', () => { if (ptData.sections.length < 10) { ptData.sections.push({ name: 'Abschnitt ' + (ptData.sections.length + 1), min: 5, mod: -1 }); ptSave(); ptRender(); } });
@@ -13543,6 +13547,7 @@
     on('ptChime', e => { ptData.set.chime = e.target.checked; ptSave(); }, 'change');
     on('ptBrk', e => { ptData.set.brk = e.target.checked; ptSave(); }, 'change');
     on('ptBrkMin', e => { const v = Math.round(+e.target.value); if (v >= 5 && v <= 120) { ptData.set.brkMin = v; ptSave(); } }, 'change');
+    p.querySelectorAll('input[type=number]').forEach(i => i.addEventListener('focus', () => setTimeout(() => { try { i.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }, 200)));
     ptUpdateLive();
   }
   // =================== Raumansicht: der Timer als ganzes Zimmer ===================
@@ -13757,7 +13762,7 @@
     if (!r) h += '<button type="button" class="sec" id="rmMode">' + (pt.mode === 'down' ? '⏳ Countdown' : pt.mode === 'up' ? '⏱ Stoppuhr' : '🧩 Abschnitte') + '</button>';
     else if (pt.mode === 'sec') h += '<button type="button" class="sec" id="rmSkip">⏭ Nächster Teil</button>';
     if (pt.mode === 'up') {
-      if (ptRoomBarEdit) h += '<span class="sec" style="display:inline-flex; gap:4px; align-items:center;">🎯 <input type="number" id="rmBarInp" min="5" max="240" value="' + ptRoomBarMin() + '" style="width:64px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:0.85rem;"> Min <button type="button" class="sec" id="rmBarOk" title="Übernehmen">✔</button><button type="button" class="sec" id="rmBarNo" title="Abbrechen">✕</button></span>';
+      if (ptRoomBarEdit) h += '<span class="sec" style="display:inline-flex; gap:4px; align-items:center;">🎯 <input type="number" id="rmBarInp" min="5" max="240" value="' + ptRoomBarMin() + '" style="width:64px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:0.85rem;"> Min <button type="button" class="sec" id="rmBarOk" aria-label="Übernehmen" title="Übernehmen">✔</button><button type="button" class="sec" id="rmBarNo" aria-label="Abbrechen" title="Abbrechen">✕</button></span>';
       else h += '<button type="button" class="sec" id="rmBarTgt" title="Balken-Zielzeit selbst einstellen">🎯 ' + ptRoomBarMin() + ' Min</button>';
     }
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
@@ -13984,6 +13989,25 @@
   function pathSave(d) { try { localStorage.setItem(PATH_KEY, JSON.stringify(d)); } catch (e) {} }
   function pathModName(st) { const o = [...moduleSelectEl.options].find(x => x.value === String(st.mod)); return o ? o.text : ''; }
   function pathNextIdx(d) { return PATH_STEPS.findIndex(st => !d.done.includes(st.id)); }
+  const QT_KEY = 'guitartrainer_quicktour';
+  function qtLoad() { try { return JSON.parse(localStorage.getItem(QT_KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function qtSave(d) { try { localStorage.setItem(QT_KEY, JSON.stringify(d)); } catch (e) {} }
+  const QT_STEPS = [['tuner', '🎸', 'Gitarre stimmen'], ['room', '🛋️', '5 Min Übungsraum'], ['jam', '🥁', 'Loop & Skala']];
+  function qtHomeCard() {
+    const d = qtLoad();
+    const doneN = QT_STEPS.filter(st => d[st[0]]).length;
+    let h = `<div class="home-pt" style="display:block; cursor:default;" id="qtCard"><div style="display:flex; gap:10px; align-items:center;"><b style="font-size:1.4rem;">⏱</b><strong style="flex:1;">Deine ersten 10 Minuten</strong><span style="font-size:.8rem; opacity:.8;">${doneN}/3</span></div>`;
+    QT_STEPS.forEach(st => { h += `<button type="button" class="btn ${d[st[0]] ? 'btn-secondary' : ''}" data-qt="${st[0]}" style="margin:6px 6px 0 0; padding:6px 10px; font-size:.85rem;">${d[st[0]] ? '✔ ' : ''}${st[1]} ${st[2]}</button>`; });
+    h += `<div class="jam-improv-label" style="margin-top:6px;">${doneN === QT_STEPS.length ? '🎉 Geschafft! Danach wartet der Lernpfad „Erste Schritte“ mit allen Stationen.' : 'Drei Kurz-Stationen, zusammen rund zehn Minuten – Reihenfolge egal, alles bleibt markiert.'}</div></div>`;
+    return h;
+  }
+  function qtGo(which) {
+    const d = qtLoad(); d[which] = true; qtSave(d);
+    if (which === 'tuner') switchToModule(11);
+    else if (which === 'room') { pt.mode = 'down'; ptData.set.mode = 'down'; ptData.set.downMin = 5; ptSave(); ptRoomOpen(); ptRoomBarRender(); ptRoomTick(); }
+    else if (which === 'jam') { switchToModule(9); try { const all = scalePanelSaved(); all.jam = { root: 0, type: 'durPenta', open: true, ctl: false }; localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} }
+    renderHome();
+  }
   function pathHomeCard() {
     const d = pathLoad(); if (d.hide) return '';
     const n = d.done.filter(id => PATH_STEPS.some(st => st.id === id)).length, nx = pathNextIdx(d), tot = PATH_STEPS.length;
@@ -15030,7 +15054,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-31-5';
+  const APP_VERSION = '2026-10-31-6';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15098,5 +15122,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53b3a85d820e5e3',t:'MTc5MzUzOTU1OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53b3a85d820e5e3',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53bd46ccfa3d388',t:'MTc5MzU0NTg2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53bd46ccfa3d388',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
