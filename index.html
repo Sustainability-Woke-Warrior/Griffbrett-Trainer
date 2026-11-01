@@ -13547,7 +13547,6 @@
     on('ptChime', e => { ptData.set.chime = e.target.checked; ptSave(); }, 'change');
     on('ptBrk', e => { ptData.set.brk = e.target.checked; ptSave(); }, 'change');
     on('ptBrkMin', e => { const v = Math.round(+e.target.value); if (v >= 5 && v <= 120) { ptData.set.brkMin = v; ptSave(); } }, 'change');
-    p.querySelectorAll('input[type=number]').forEach(i => i.addEventListener('focus', () => setTimeout(() => { try { i.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }, 200)));
     ptUpdateLive();
   }
   // =================== Raumansicht: der Timer als ganzes Zimmer ===================
@@ -13780,7 +13779,7 @@
     on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmBack', () => { ptRoomClose(); ptOpen(); });
     on('rmStat', ptRoomStatToggle);
-    on('rmBarTgt', () => { ptRoomBarEdit = true; ptRoomBarRender(); const inp = document.getElementById('rmBarInp'); if (inp) { inp.focus(); inp.select(); } });
+    on('rmBarTgt', () => { ptRoomBarEdit = true; ptRoomBarRender(); const inp = document.getElementById('rmBarInp'); if (inp) { inp.focus(); try { if (window.matchMedia && matchMedia('(pointer:fine)').matches) inp.select(); } catch (e) {} } });
     on('rmBarOk', () => { const inp = document.getElementById('rmBarInp'); ptRoomBarSet(inp ? inp.value : 60); ptRoomBarEdit = false; ptRoomBarRender(); ptRoomTick(); });
     on('rmBarNo', () => { ptRoomBarEdit = false; ptRoomBarRender(); });
     { const inp = document.getElementById('rmBarInp'); if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { ptRoomBarSet(inp.value); ptRoomBarEdit = false; ptRoomBarRender(); ptRoomTick(); } if (e.key === 'Escape') { ptRoomBarEdit = false; ptRoomBarRender(); } }); }
@@ -13916,6 +13915,23 @@
     const rsvg = rmDiv.querySelector('#ptRoomSvg');
     if (rsvg) rsvg.addEventListener('click', () => { const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.toggle('hide'); });
     setInterval(ptRoomTick, 1000);
+    // Android: Wenn die Tastatur aufgeht, schrumpft der sichtbare Bereich (visualViewport).
+    // Bottom-Sheets und die Raumleiste sitzen sonst UNTER der Tastatur - Chrome schliesst
+    // die Tastatur dann gern wieder. Deshalb heben wir sie um die Tastaturhoehe an.
+    function ptVvLift() {
+      let off = 0;
+      try { const vv = window.visualViewport; if (vv) off = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)); } catch (e) {}
+      document.querySelectorAll('.pt-overlay').forEach(ov => { ov.style.paddingBottom = off > 0 ? off + 'px' : ''; });
+      const bar = document.getElementById('ptRoomBar');
+      if (bar) bar.style.bottom = off > 0 ? off + 'px' : '';
+    }
+    const vvSchedule = () => { clearTimeout(ptVvLift._t); ptVvLift._t = setTimeout(ptVvLift, 60); };
+    try { window.ptVvLift = ptVvLift; } catch (e) {}
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', vvSchedule);
+      window.visualViewport.addEventListener('scroll', vvSchedule);
+    }
+    window.addEventListener('resize', vvSchedule);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
     // Beim Schließen/Wechseln der App die Zeit sichern
@@ -14003,9 +14019,9 @@
   }
   function qtGo(which) {
     const d = qtLoad(); d[which] = true; qtSave(d);
-    if (which === 'tuner') switchToModule(11);
+    if (which === 'tuner') { try { hideHome(); } catch (e) {} switchToModule(11); window.scrollTo(0, 0); }
     else if (which === 'room') { pt.mode = 'down'; ptData.set.mode = 'down'; ptData.set.downMin = 5; ptSave(); ptRoomOpen(); ptRoomBarRender(); ptRoomTick(); }
-    else if (which === 'jam') { switchToModule(9); try { const all = scalePanelSaved(); all.jam = { root: 0, type: 'durPenta', open: true, ctl: false }; localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} }
+    else if (which === 'jam') { try { const all = scalePanelSaved(); all.jam = { root: 0, type: 'durPenta', open: true, ctl: false }; localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} try { hideHome(); } catch (e) {} switchToModule(9); window.scrollTo(0, 0); }
     renderHome();
   }
   function pathHomeCard() {
@@ -15054,7 +15070,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-31-6';
+  const APP_VERSION = '2026-11-01-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15122,5 +15138,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53bd46ccfa3d388',t:'MTc5MzU0NTg2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53bd46ccfa3d388',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53c1fb9ebaad272',t:'MTc5MzU0ODk0Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53c1fb9ebaad272',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
