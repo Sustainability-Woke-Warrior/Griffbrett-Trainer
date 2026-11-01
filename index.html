@@ -11401,18 +11401,21 @@
   function scalePanelSaved() { try { return JSON.parse(localStorage.getItem(SCALE_PANEL_KEY) || '{}') || {}; } catch (e) { return {}; } }
   function scalePanelHtml(mod, defRoot, defType, sugg) {
     const sv = scalePanelSaved()[mod] || {};
+    const ctlOpen = sv.ctl ? ' open' : '';
     const r = sv.root != null ? sv.root : defRoot;
     const t = SCALE_VIEW_TYPES[sv.type] ? sv.type : defType;
     const selStyle = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; padding:4px 6px;';
     return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${sv.open === false ? '' : ' open'}><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem;">🎼 Skala dazu anzeigen</summary>
       <div style="margin-top:8px;">
-        <div class="row" style="gap:10px; flex-wrap:wrap; align-items:center;">
+        <details id="spCtl_${mod}"${ctlOpen}><summary class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;">🎛 Auswahl & Vorschläge</summary>
+        <div class="row" style="gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px;">
           <label style="font-size:.85rem; font-weight:600;">Grundton: <select id="spRoot_${mod}" style="${selStyle}">${SCALE_VIEW_ROOTS.map((n, i) => `<option value="${i}" ${i === r ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
           <label style="font-size:.85rem; font-weight:600;">Tonleiter: <select id="spType_${mod}" style="${selStyle}">${Object.keys(SCALE_VIEW_TYPES).map(k => `<option value="${k}" ${k === t ? 'selected' : ''}>${SCALE_VIEW_TYPES[k].label}</option>`).join('')}</select></label>
           <button type="button" class="btn btn-secondary" id="spOpen_${mod}" style="padding:6px 10px; font-size:.8rem;">Im Modul „Tonleitern“ öffnen</button>
         </div>
         <div class="jam-improv-label" style="margin-top:8px;">Passt dazu – antippen zum Auswählen:</div>
-        <div id="spSugg_${mod}" style="margin:2px 0 4px;">${(sugg || []).map(sg => `<button type="button" class="theory-chip sp-sugg" data-root="${sg.root}" data-type="${sg.type}">${homeEsc(scaleSuggLabel(sg.root, sg.type))}</button>`).join(' ')}</div>
+        <div id="spSugg_${mod}" style="margin:2px 0 8px;">${(sugg || []).map(sg => `<button type="button" class="theory-chip sp-sugg" data-root="${sg.root}" data-type="${sg.type}">${homeEsc(scaleSuggLabel(sg.root, sg.type))}</button>`).join(' ')}</div>
+        </details>
         <div id="spBoard_${mod}" style="margin-top:8px; overflow-x:auto;"></div>
         <div class="jam-improv-label" id="spName_${mod}" style="margin-top:4px;"></div>
       </div></details>`;
@@ -11440,8 +11443,10 @@
     if (!box) return;
     ['prog', 'chg', 'jam', 'strum'].forEach(mod => {
       const det = box.querySelector('#sp_' + mod); if (!det) return;
+      const ctlDet = box.querySelector('#spCtl_' + mod);
       const r = box.querySelector('#spRoot_' + mod), t = box.querySelector('#spType_' + mod);
-      const save = () => { const all = scalePanelSaved(); all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      const save = () => { const all = scalePanelSaved(); all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      if (ctlDet) ctlDet.ontoggle = () => save();
       if (r) r.onchange = () => { save(); scalePanelBoard(mod); };
       box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; save(); scalePanelBoard(mod); });
       if (t) t.onchange = () => { save(); scalePanelBoard(mod); };
@@ -13738,6 +13743,9 @@
     cat.style.transform = 'translate(' + to + 'px,0px) scaleX(' + dir + ')';
     setTimeout(() => { cat.style.display = 'none'; cat.style.transition = 'none'; }, 11500);
   }
+  const PT_ROOM_BAR_KEY = 'guitartrainer_ptroombar';
+  const PT_ROOM_BAR_STEPS = [15, 25, 30, 45, 60, 90];
+  function ptRoomBarMin() { let m = 0; try { m = +localStorage.getItem(PT_ROOM_BAR_KEY) || 0; } catch (e) {} return PT_ROOM_BAR_STEPS.includes(m) ? m : 60; }
   function ptRoomBarRender() {
     const bar = document.getElementById('ptRoomBar'); if (!bar) return;
     const r = pt.running, paused = pt.paused;
@@ -13747,6 +13755,7 @@
     if (showPlus) h += '<button type="button" class="sec" id="rmPlus">+5 Min</button>';
     if (!r) h += '<button type="button" class="sec" id="rmMode">' + (pt.mode === 'down' ? '⏳ Countdown' : pt.mode === 'up' ? '⏱ Stoppuhr' : '🧩 Abschnitte') + '</button>';
     else if (pt.mode === 'sec') h += '<button type="button" class="sec" id="rmSkip">⏭ Nächster Teil</button>';
+    if (pt.mode === 'up') h += '<button type="button" class="sec" id="rmBarTgt" title="Balken-Zielzeit umschalten">🎯 ' + ptRoomBarMin() + ' Min</button>';
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
     h += '<button type="button" class="sec" id="rmBack">↩ Zurück</button>';
     bar.innerHTML = h;
@@ -13762,6 +13771,7 @@
     on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmBack', () => { ptRoomClose(); ptOpen(); });
     on('rmStat', ptRoomStatToggle);
+    on('rmBarTgt', () => { const cur = ptRoomBarMin(); const nx = PT_ROOM_BAR_STEPS[(PT_ROOM_BAR_STEPS.indexOf(cur) + 1) % PT_ROOM_BAR_STEPS.length]; try { localStorage.setItem(PT_ROOM_BAR_KEY, String(nx)); } catch (e) {} ptRoomBarRender(); ptRoomTick(); });
     ptRoomBarKey = [r, paused, pt.mode, showPlus].join('|');
   }
   function ptRoomTick() {
@@ -13786,7 +13796,7 @@
       else if (pt.paused) t = '⏸ Pause · ' + (pt.mode === 'down' ? 'noch übrig' : pt.mode === 'sec' ? 'aktueller Teil' : 'deine Übungszeit');
       else if (pt.mode === 'down') t = 'übrig · dann sanfter Ton';
       else if (pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; t = 'Teil ' + (pt.secIdx + 1) + '/' + ptData.sections.length + ': ' + (c ? c.name || 'Abschnitt' : 'Abschnitt'); }
-      else t = 'so lange übst du schon';
+      else t = 'so lange übst du schon · Balken-Runde: ' + ptRoomBarMin() + ' Min';
       cap.textContent = t;
     }
     const fill = document.getElementById('rmFill');
@@ -13794,7 +13804,7 @@
       let p = 0;
       if (ptRoomEndGlow) p = 1;
       else if (r && tgt) p = Math.min(1, el / tgt);
-      else if (r && pt.mode === 'up') p = (el % 3600000) / 3600000;
+      else if (r && pt.mode === 'up') { const T = ptRoomBarMin() * 60000; p = (el % T) / T; }
       fill.setAttribute('width', String(Math.round(186 * p)));
     }
     // Wanduhr: echte Uhrzeit (wie eine richtige Zimmeruhr)
@@ -15013,7 +15023,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-10-31-3';
+  const APP_VERSION = '2026-10-31-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15081,5 +15091,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a531a118098c5a3b',t:'MTc5MzQzODkwMw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a531a118098c5a3b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53b01e8bd60d2a0',t:'MTc5MzUzNzI0MA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53b01e8bd60d2a0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
