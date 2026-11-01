@@ -58,6 +58,13 @@
       touch-action: manipulation;
     }
 
+    /* Eingabefelder MUESSEN auf Android Textauswahl/Caret erlauben -
+       sonst schliesst Chrome die Tastatur sofort wieder (bekannter Chromium-Effekt). */
+    input, textarea {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--bg-color);
@@ -13348,7 +13355,7 @@
   function ptLogTick() {
     const now = Date.now();
     if (pt.running && !pt.paused && pt.lastTick) {
-      const dt = Math.min(60000, Math.max(0, now - pt.lastTick));
+      const dt = Math.min(4 * 3600000, Math.max(0, now - pt.lastTick)); // Lücken (Bildschirm aus/Tab gedrosselt) zählen mit, bis 4 h als Schutz vor vergessenen Stopps
       const k = ptDayKey();
       ptData.days[k] = (ptData.days[k] || 0) + dt / 1000;
       ptLogEx(k, dt / 1000);
@@ -13936,7 +13943,7 @@
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
     // Beim Schließen/Wechseln der App die Zeit sichern
-    document.addEventListener('visibilitychange', () => { if (document.hidden) { ptLogTick(); ptSave(); } else if (pt.running && !pt.paused) { pt.lastTick = Date.now(); ptTick(); } });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { ptLogTick(); ptSave(); } else if (pt.running && !pt.paused) { ptTick(); } }); // kein lastTick-Reset: sonst wäre die Zeit im Hintergrund futsch
     window.addEventListener('pagehide', () => { ptLogTick(); ptSave(); });
     window.addEventListener('freeze', () => { ptLogTick(); ptSave(); });
     try { ptRestoreSession(); } catch (e) {}
@@ -15075,7 +15082,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-2';
+  const APP_VERSION = '2026-11-01-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15143,5 +15150,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53cf8e338f9d8ed',t:'MTc5MzU1Nzg0Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53cf8e338f9d8ed',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53d2b3a1c8dbd78',t:'MTc5MzU1OTkwNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53d2b3a1c8dbd78',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
