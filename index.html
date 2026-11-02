@@ -1535,7 +1535,7 @@
     .dy-items label { display:flex; gap:8px; align-items:center; margin:4px 0; }
     .dy-mood button { font-size:1.5rem; background:none; border:2px solid transparent; border-radius:10px; padding:2px 6px; cursor:pointer; }
     .dy-mood button.on { border-color: var(--accent-color, #3b82f6); }
-    .dy-panel textarea, .dy-panel input[type=number], .dy-panel input[type=text] { width:100%; box-sizing:border-box; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px; font-size:0.95rem; }
+    .dy-panel textarea, .dy-panel input[inputmode=numeric], .dy-panel input[type=text] { width:100%; box-sizing:border-box; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px; font-size:0.95rem; }
     .pt-panel { background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 16px 16px 22px; box-shadow: 0 -6px 24px rgba(0,0,0,.3); }
     .pt-head { display: flex; align-items: center; gap: 8px; }
     .pt-head h3 { margin: 0; flex: 1; }
@@ -1547,8 +1547,8 @@
     .pt-box { border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
     .pt-sec-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
     .pt-sec-row input[type=text] { flex: 1 1 120px; min-width: 0; }
-    .pt-sec-row input, .pt-sec-row select, .pt-box input[type=number] { padding: 8px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--bg-color, transparent); color: var(--text-color); font-size: 1rem; }
-    .pt-sec-row input[type=number] { width: 64px; }
+    .pt-sec-row input, .pt-sec-row select, .pt-box input[inputmode=numeric] { padding: 8px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--bg-color, transparent); color: var(--text-color); font-size: 1rem; }
+    .pt-sec-row input[inputmode=numeric] { width: 64px; }
     .pt-sec-row.cur { outline: 2px solid var(--primary-color, #3b82f6); border-radius: 8px; }
     .pt-week { display: flex; gap: 6px; align-items: flex-end; height: 70px; margin-top: 8px; }
     .pt-week div { flex: 1; text-align: center; font-size: .75rem; }
@@ -6955,7 +6955,7 @@
           <span>Loop-Durchläufe um</span>
           <select id="jamTrainerStep" style="${sel}">${[1,2,3,4,5,10].map(n => `<option value="${n}" ${n === (jam.trainerStep || 2) ? 'selected' : ''}>+${n}</option>`).join('')}</select>
           <span>BPM, bis</span>
-          <input type="number" id="jamTrainerTarget" min="60" max="160" value="${jam.trainerTarget || 120}" style="width:58px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
+          <input type="text" inputmode="numeric" autocomplete="off" id="jamTrainerTarget" min="60" max="160" value="${jam.trainerTarget || 120}" style="width:58px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
           <span>BPM</span>
         </div>
         <div class="jam-hint" id="jamTrainerStatus">${jam.trainerOn ? `Aktuell ${jam.bpm} BPM, Ziel ${jam.trainerTarget} BPM` : 'Aus'}</div>
@@ -7084,7 +7084,7 @@
     html += `<details class="jam-section" data-sec="save" ${ui.save ? 'open' : ''}><summary>💾 Speichern / Export</summary>`;
     html += `<div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
       <label style="font-weight:600; font-size:0.85rem;">Wiederholungen:</label>
-      <input type="number" id="jamExportRepeats" min="1" max="8" value="2" style="width:48px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
+      <input type="text" inputmode="numeric" autocomplete="off" id="jamExportRepeats" min="1" max="8" value="2" style="width:48px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
       <button class="btn btn-secondary" id="jamExportBtn">🎵 Als WAV exportieren</button>
       <button class="btn btn-secondary" id="jamExportMidiBtn">🎹 Als MIDI exportieren</button></div>`;
     html += `<div id="jamSaveLoadPanel" style="display:block; margin-top:12px; padding:14px; border:1px solid var(--card-border); border-radius:10px;">
@@ -10671,7 +10671,7 @@
           <option value="3" ${r === '3' ? 'selected' : ''}>Triolen (Shuffle)</option>
         </select>
         <label style="font-weight:600;">Tempo:</label>
-        <input type="number" id="strumEdBpm" min="30" max="180" value="${d.bpm}" style="width:64px; ${sel}"> <span style="font-size:0.85rem;">BPM</span>
+        <input type="text" inputmode="numeric" autocomplete="off" id="strumEdBpm" min="30" max="180" value="${d.bpm}" style="width:64px; ${sel}"> <span style="font-size:0.85rem;">BPM</span>
       </div>
       <div class="strum-grid-wrap" id="strumEditGrid">${strumEditGridHtml()}</div>
       <div class="jam-hint">${d.kind === 'strum' ? 'Kästchen antippen wechselt: · → ↓ → <b>↓</b> betont → ↑ → <b>↑</b> betont → ✕ gedämpft → B¹ Bass → B² Wechselbass → ·' : 'Antippen setzt oder entfernt einen Punkt. Punkte übereinander werden gleichzeitig gezupft. Unten siehst du die Vorschau in Noten und Tabulatur.'}</div>
@@ -13502,12 +13502,12 @@
     h += ptClockHtml();
     if (!r && pt.mode === 'down') {
       h += `<div class="pt-presets">${[5, 10, 15, 20, 30].map(m => `<button type="button" class="btn ${+ptData.set.downMin === m ? '' : 'btn-secondary'}" data-ptmin="${m}">${m} Min.</button>`).join('')}</div>
-        <div style="text-align:center;"><label>Eigene Zeit: <input type="number" id="ptMinInput" min="1" max="180" value="${ptData.set.downMin}" style="width:70px; padding:8px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-color); font-size:1rem;"> Min.</label></div>`;
+        <div style="text-align:center;"><label for="ptMinInput">Eigene Zeit:</label> <input type="text" inputmode="numeric" autocomplete="off" id="ptMinInput" min="1" max="180" value="${ptData.set.downMin}" style="width:70px; padding:8px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-color); font-size:1rem;"> Min.</div>`;
     }
     if (pt.mode === 'sec') {
       h += `<div class="pt-box"><strong>Abschnitte</strong>${ptData.sections.map((x, i) => `<div class="pt-sec-row ${r && i === pt.secIdx ? 'cur' : ''}">
           <span>${i + 1}.</span><input type="text" data-psec="${i}" data-pf="name" value="${homeEsc(x.name)}" placeholder="Name" ${r ? 'disabled' : ''}>
-          <input type="number" min="1" max="120" data-psec="${i}" data-pf="min" value="${x.min}" ${r ? 'disabled' : ''}><span>Min.</span>
+          <input type="text" inputmode="numeric" autocomplete="off" min="1" max="120" data-psec="${i}" data-pf="min" value="${x.min}" ${r ? 'disabled' : ''}><span>Min.</span>
           <select data-psec="${i}" data-pf="mod" ${r ? 'disabled' : ''} title="Dieses Modul beim Start des Abschnitts öffnen">${modOpts(+x.mod)}</select>
           ${r ? '' : `<button type="button" class="btn btn-secondary" data-psecdel="${i}" style="padding:6px 10px;" title="Abschnitt entfernen">✕</button>`}
         </div>`).join('')}
@@ -13526,7 +13526,7 @@
     h += `<div class="pt-box"><strong>Einstellungen</strong>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptChime" ${ptData.set.chime ? 'checked' : ''}> Sanfter Ton am Ende</label></div>
       <div style="margin-top:6px;"><label><input type="checkbox" id="ptBrk" ${ptData.set.brk ? 'checked' : ''}> Pausen-Erinnerung nach</label>
-        <input type="number" id="ptBrkMin" min="5" max="120" value="${ptData.set.brkMin}" style="width:60px;"> Min.</div></div>`;
+        <input type="text" inputmode="numeric" autocomplete="off" id="ptBrkMin" min="5" max="120" value="${ptData.set.brkMin}" style="width:60px;"> Min.</div></div>`;
     p.innerHTML = h;
     ptClockTick();
     const on = (id, f, ev = 'click') => { const el = document.getElementById(id); if (el) el.addEventListener(ev, f); };
@@ -13769,7 +13769,7 @@
     if (!r) h += '<button type="button" class="sec" id="rmMode">' + (pt.mode === 'down' ? '⏳ Countdown' : pt.mode === 'up' ? '⏱ Stoppuhr' : '🧩 Abschnitte') + '</button>';
     else if (pt.mode === 'sec') h += '<button type="button" class="sec" id="rmSkip">⏭ Nächster Teil</button>';
     if (pt.mode === 'up') {
-      if (ptRoomBarEdit) h += '<span class="sec" style="display:inline-flex; gap:4px; align-items:center;">🎯 <input type="number" id="rmBarInp" min="5" max="240" value="' + ptRoomBarMin() + '" style="width:64px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:0.85rem;"> Min <button type="button" class="sec" id="rmBarOk" aria-label="Übernehmen" title="Übernehmen">✔</button><button type="button" class="sec" id="rmBarNo" aria-label="Abbrechen" title="Abbrechen">✕</button></span>';
+      if (ptRoomBarEdit) h += '<span class="sec" style="display:inline-flex; gap:4px; align-items:center;">🎯 <input type="text" inputmode="numeric" autocomplete="off" id="rmBarInp" min="5" max="240" value="' + ptRoomBarMin() + '" style="width:64px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:0.85rem;"> Min <button type="button" class="sec" id="rmBarOk" aria-label="Übernehmen" title="Übernehmen">✔</button><button type="button" class="sec" id="rmBarNo" aria-label="Abbrechen" title="Abbrechen">✕</button></span>';
       else h += '<button type="button" class="sec" id="rmBarTgt" title="Balken-Zielzeit selbst einstellen">🎯 ' + ptRoomBarMin() + ' Min</button>';
     }
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
@@ -14921,9 +14921,9 @@
       <label for="strType">Saitenart</label><select id="strType">${Object.entries(STR_TYPES).map(([k, t]) => `<option value="${k}" ${k === d.type ? 'selected' : ''}>${t.name}</option>`).join('')}</select>
       <label for="strChanged">Zuletzt gewechselt am</label><input type="date" id="strChanged" value="${d.changed}" max="${ptDayKey(new Date())}">
       <label for="strMode">Zählen nach</label><select id="strMode"><option value="weeks" ${d.mode === 'weeks' ? 'selected' : ''}>Wochen (Kalender)</option><option value="hours" ${d.mode === 'hours' ? 'selected' : ''}>Spielstunden</option></select>
-      <div id="strWeeksRow"><label for="strWeeks">Wechseln nach … Wochen</label><input type="number" id="strWeeks" min="1" max="104" value="${d.weeks}"></div>
-      <div id="strHoursRow"><label for="strHours">Wechseln nach … Spielstunden</label><input type="number" id="strHours" min="5" max="1000" value="${d.hours}">
-        <label for="strMin">An Tagen ohne Timer: ca. Minuten pro Tag</label><input type="number" id="strMin" min="0" max="600" value="${d.minPerDay || 0}">
+      <div id="strWeeksRow"><label for="strWeeks">Wechseln nach … Wochen</label><input type="text" inputmode="numeric" autocomplete="off" id="strWeeks" min="1" max="104" value="${d.weeks}"></div>
+      <div id="strHoursRow"><label for="strHours">Wechseln nach … Spielstunden</label><input type="text" inputmode="numeric" autocomplete="off" id="strHours" min="5" max="1000" value="${d.hours}">
+        <label for="strMin">An Tagen ohne Timer: ca. Minuten pro Tag</label><input type="text" inputmode="numeric" autocomplete="off" id="strMin" min="0" max="600" value="${d.minPerDay || 0}">
         <div style="font-size:.85rem; opacity:.8; margin-top:4px;">Tage mit Timer zählen mit der gemessenen Zeit. 0 = nur Timer-Zeit zählt.</div></div>
       <label style="display:flex; gap:8px; align-items:center; margin-top:10px; font-weight:600;"><input type="checkbox" id="strPopup" ${d.popup ? 'checked' : ''}> Hinweis-Fenster, wenn ein Wechsel fällig ist</label>
       <div style="font-size:.85rem; opacity:.8;">Erscheint dann höchstens einmal am Tag beim Öffnen der App.</div>
@@ -14992,7 +14992,7 @@
           <button type="button" class="btn btn-secondary" data-dyday="${yKey}" ${dKey === yKey ? 'disabled' : ''}>Gestern</button>
         </div>
         ${d.calOpen ? `<div id="dyCal">${miniCalHtml({ y: d.calY, m: d.calM, sel: dKey, maxKey: ptDayKey(), level: ptLevelForDay, dot: k => entryDays.has(k) })}<div class="mcal-legend"><i style="background:#fb923c;border-radius:50%"></i>schon ein Eintrag <i style="background:rgba(34,197,94,0.5)"></i>Übungszeit (Timer)</div></div>` : ''}
-        <label style="font-weight:600;">Dauer (Minuten)</label><input type="number" id="dyMin" min="0" max="600" value="${d.min}" placeholder="z. B. 20">
+        <label style="font-weight:600;">Dauer (Minuten)</label><input type="text" inputmode="numeric" autocomplete="off" id="dyMin" min="0" max="600" value="${d.min}" placeholder="z. B. 20">
         <div style="font-weight:600; margin-top:10px;">Was hast du geübt?</div>
         <div class="dy-items">${offer.length ? offer.map((o, i) => `<label><input type="checkbox" data-dyitem="${i}" ${d.items.includes(o) ? 'checked' : ''}> ${homeEsc(o)}</label>`).join('') : '<div style="opacity:.7; font-size:.9rem;">Noch nichts geöffnet.</div>'}</div>
         <input type="text" id="dyExtra" placeholder="Weiteres, z. B. „Lied: Knockin' on Heaven's Door“" style="margin-top:6px;" value="${homeEsc(d.extra || '')}">
@@ -15082,7 +15082,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-3';
+  const APP_VERSION = '2026-11-01-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15132,8 +15132,57 @@
   }
   window.addEventListener('load', () => { try { ptInit(); } catch (e) {} try { diaryInit(); } catch (e) {} try { setMenuInit(); appA4Badge(); } catch (e) {} try { appUpdInit(); } catch (e) {} try { anleitungHeaderLinks(); } catch (e) {} try { const ub = document.getElementById('uebeTimerBtn'); if (ub) ub.addEventListener('click', uebeMakeSections); } catch (e) {} });
 
+  // Android-sicher: Zahlenfelder sind Textfelder mit Ziffernblock.
+  // Eingabe: nur Ziffern zulassen. Beim Verlassen (change): in den erlaubten Bereich klemmen.
+  document.addEventListener('input', e => {
+    const t = e.target;
+    if (t && t.matches && t.matches('input[inputmode=numeric]')) {
+      const c = String(t.value).replace(/[^0-9]/g, '');
+      if (c !== t.value) t.value = c;
+    }
+  });
+  document.addEventListener('change', e => {
+    const t = e.target;
+    if (t && t.matches && t.matches('input[inputmode=numeric]')) {
+      const mn = t.getAttribute('min'), mx = t.getAttribute('max');
+      let v = Math.round(+t.value || 0);
+      if (mn !== null && !isNaN(+mn)) v = Math.max(+mn, v);
+      if (mx !== null && !isNaN(+mx)) v = Math.min(+mx, v);
+      if (String(v) !== t.value) t.value = String(v);
+    }
+  }, true);
   window.addEventListener('load', init);
 
+  // ---- Tastatur-Diagnose (nur mit #tastatur-test in der Adresse) ----
+  function kbTestInit() {
+    if (location.hash !== '#tastatur-test') return;
+    const d = document.createElement('div');
+    d.style.cssText = 'position:fixed; inset:0; z-index:9999; background:var(--bg-color); color:var(--text-color); padding:14px; overflow:auto; font-size:0.95rem;';
+    d.innerHTML = '<h2 style="margin:0 0 8px;">🔎 Tastatur-Diagnose</h2>' +
+      '<p>Tippe jedes Feld kurz an (2–3 Sek.) und schau, ob die Tastatur offen bleibt. Unten erscheint ein Protokoll.</p>' +
+      '<p>A Text: <input type="text" id="kbA" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-color);"></p>' +
+      '<p>B Ziffernblock neu: <input type="text" inputmode="numeric" id="kbB" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-color);"></p>' +
+      '<p>C number alt: <input type="number" id="kbC" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-color);"></p>' +
+      '<p>D Textarea: <textarea id="kbD" rows="2" style="width:160px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-color);"></textarea></p>' +
+      '<p>E im Label: <label>Text <input type="text" inputmode="numeric" id="kbE" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-color);"></label></p>' +
+      '<pre id="kbLog" style="user-select:text; -webkit-user-select:text; white-space:pre-wrap; background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:8px; min-height:120px;"></pre>' +
+      '<button type="button" class="btn" id="kbClose">Schließen</button>';
+    document.body.appendChild(d);
+    const log = document.getElementById('kbLog');
+    const t0 = Date.now();
+    const line = s2 => { log.textContent += '[' + ((Date.now() - t0) / 1000).toFixed(1) + 's] ' + s2 + '\n'; log.scrollTop = log.scrollHeight; };
+    ['kbA','kbB','kbC','kbD','kbE'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('focus', () => line(id + ': focus'));
+      el.addEventListener('blur', () => line(id + ': BLUR'));
+    });
+    document.addEventListener('visibilitychange', () => line('sichtbar? ' + document.visibilityState));
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', () => line('Viewport-Höhe: ' + Math.round(window.visualViewport.height)));
+    window.addEventListener('resize', () => line('Fenster-Höhe: ' + window.innerHeight));
+    document.getElementById('kbClose').addEventListener('click', () => { location.hash = ''; location.reload(); });
+    line('bereit – Felder antippen');
+  }
+  window.addEventListener('load', kbTestInit);
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
@@ -15150,5 +15199,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a53d2b3a1c8dbd78',t:'MTc5MzU1OTkwNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a53d2b3a1c8dbd78',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
