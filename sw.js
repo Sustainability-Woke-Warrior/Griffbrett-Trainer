@@ -1,35 +1,49 @@
-const CACHE_NAME = 'griffbrett-trainer-v1';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
-
-// Beim Installieren des Service Workers werden alle wichtigen Dateien
-// einmalig in den Cache geladen, damit die App danach auch offline startet.
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
-  );
-  self.skipWaiting();
+/* Gitarren-Griffbrett-Trainer – Service Worker
+   Netzwerk-zuerst fuer Seiten: Neue Versionen kommen sofort an,
+   Offline bleibt als Rueckfall moeglich. Ersetzt aeltere Cache-First-SW. */
+const VER = '2026-11-01-5';
+const CACHE = 'ggt-' + VER;
+self.addEventListener('install', () => { self.skipWaiting(); });
+self.addEventListener('activate', e => {
+  e.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+      await self.clients.claim();
+    } catch (err) {}
+  })());
 });
-
-// Alte Cache-Versionen aufräumen, wenn eine neue Version des Service Workers aktiv wird.
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    )
-  );
-  self.clients.claim();
-});
-
-// Cache-first Strategie: Erst versuchen aus dem Cache zu laden (funktioniert offline),
-// nur bei Cache-Miss wird tatsächlich das Netzwerk angefragt.
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
-  );
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  try { if (new URL(req.url).origin !== self.location.origin) return; } catch (err) { return; }
+  if (req.mode === 'navigate') {
+    e.respondWith((async () => {
+      try {
+        const net = await fetch(req, { cache: 'no-store' });
+        try { const c = await caches.open(CACHE); c.put(req, net.clone()); } catch (err) {}
+        return net;
+      } catch (err) {
+        try {
+          const c = await caches.open(CACHE);
+          const hit = await c.match(req) || await c.match(new Request('index.html'));
+          if (hit) return hit;
+        } catch (err2) {}
+        throw err;
+      }
+    })());
+    return;
+  }
+  e.respondWith((async () => {
+    let hit = null;
+    try { const c = await caches.open(CACHE); hit = await c.match(req); } catch (err) {}
+    try {
+      const net = await fetch(req);
+      if (net.ok) { try { const c = await caches.open(CACHE); c.put(req, net.clone()); } catch (err) {} }
+      return net;
+    } catch (err) {
+      if (hit) return hit;
+      throw err;
+    }
+  })());
 });
