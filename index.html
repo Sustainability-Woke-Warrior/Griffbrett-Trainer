@@ -15066,7 +15066,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-7';
+  const APP_VERSION = '2026-11-01-8';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15137,6 +15137,37 @@
   }, true);
   window.addEventListener('load', init);
 
+  // ---- Tastatur-Protokoll im Hintergrund (immer an, leichtgewichtig) ----
+  // Merkt sich Fokus/Blur/Klicks/Viewport/DOM-Umbauten/Funktionsaufrufe in einem Ringpuffer,
+  // damit die Diagnose-Seite zeigen kann, was bei den ECHTEN Feldern passiert.
+  window.__kbRing = [];
+  (function () {
+    const R = window.__kbRing, t0 = Date.now();
+    const push = s2 => { R.push('[' + ((Date.now() - t0) / 1000).toFixed(1) + 's] ' + s2); if (R.length > 240) R.shift(); };
+    window.__kbPush = push;
+    const name = t => (t && (t.id || (t.tagName ? t.tagName.toLowerCase() : ''))) || '?';
+    document.addEventListener('focusin', e => push('focus: ' + name(e.target)), true);
+    document.addEventListener('focusout', e => push('BLUR: ' + name(e.target)), true);
+    document.addEventListener('click', e => push('click: ' + name(e.target)), true);
+    document.addEventListener('change', e => { const t = e.target; if (t && t.matches && t.matches('input,textarea')) push('change: ' + name(t)); }, true);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', () => push('vv: ' + Math.round(window.visualViewport.height)));
+    setTimeout(() => {
+      try {
+        const mo = new MutationObserver(ms => {
+          let add = 0, rem = 0;
+          ms.forEach(m => { m.addedNodes.forEach(n => { if (n.nodeType === 1) add++; }); m.removedNodes.forEach(n => { if (n.nodeType === 1) rem++; }); });
+          if (add || rem) push('DOM ptPanel/Leiste umgebaut +' + add + '/-' + rem);
+        });
+        const a = document.getElementById('ptPanel'), b = document.getElementById('ptRoomBar');
+        if (a) mo.observe(a, { childList: true, subtree: true });
+        if (b) mo.observe(b, { childList: true, subtree: true });
+      } catch (e) {}
+    }, 1500);
+    ['ptRender', 'ptRoomBarRender', 'ptUpdateLive', 'renderHome'].forEach(fn => {
+      const o = window[fn];
+      if (typeof o === 'function') window[fn] = function () { push('call: ' + fn); return o.apply(this, arguments); };
+    });
+  })();
   // ---- Tastatur-Diagnose (nur mit #tastatur-test in der Adresse) ----
   function kbTestInit() {
     if (document.getElementById('kbLog')) return;
@@ -15183,6 +15214,10 @@
     const bf = document.createElement('button'); bf.type = 'button'; bf.className = 'btn btn-secondary'; bf.textContent = '🧪 F: Bottom-Sheet öffnen'; bf.style.margin = '4px 6px 0 0'; bf.addEventListener('click', mkSheet);
     const bg = document.createElement('button'); bg.type = 'button'; bg.className = 'btn btn-secondary'; bg.textContent = '🧪 G: Raumleiste öffnen'; bg.style.margin = '4px 6px 0 0'; bg.addEventListener('click', mkBar);
     d.insertBefore(bf, document.getElementById('kbLog')); d.insertBefore(bg, document.getElementById('kbLog'));
+    try {
+      const R = window.__kbRing || [];
+      if (R.length) { line('--- Protokoll der echten Felder (vorher) ---'); R.slice(-60).forEach(x => line(x.replace(/^\[[\d.]+s\] /, ''))); line('--- Ende Protokoll ---'); }
+    } catch (e) {}
     line('bereit – Felder antippen');
   }
   window.addEventListener('load', kbTestInit);
@@ -15202,5 +15237,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55531e2ba21dca8',t:'MTc5MzgxMTgzNQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55531e2ba21dca8',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55559a32ac0dcb0',t:'MTc5MzgxMzQ2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55559a32ac0dcb0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
