@@ -15066,7 +15066,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-8';
+  const APP_VERSION = '2026-11-01-9';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15218,6 +15218,58 @@
       const R = window.__kbRing || [];
       if (R.length) { line('--- Protokoll der echten Felder (vorher) ---'); R.slice(-60).forEach(x => line(x.replace(/^\[[\d.]+s\] /, ''))); line('--- Ende Protokoll ---'); }
     } catch (e) {}
+    // Auto-Analyse: letztes echtes Feld-Fenster zusammenfassen
+    const ECHT = id => id && !/^kb/.test(id);
+    const verdictText = () => {
+      const R = (window.__kbRing || []).map(x => x.replace(/^\[[\d.]+s\] /, ''));
+      let fi = -1, fid = '';
+      for (let i = R.length - 1; i >= 0; i--) { const m = R[i].match(/^focus: (.+)$/); if (m && ECHT(m[1])) { fi = i; fid = m[1]; break; } }
+      if (fi < 0) return 'Noch kein echtes Feld angetippt seit App-Start.\nBitte zuerst z. B. das Minutenfeld antippen, dann erneut öffnen.';
+      let bi = -1;
+      for (let i = fi + 1; i < R.length; i++) { if (R[i] === 'BLUR: ' + fid) { bi = i; break; } }
+      const win = R.slice(fi + 1, bi < 0 ? R.length : bi);
+      const L = [];
+      L.push('Feld: ' + fid);
+      L.push('Zeitfenster: ' + R[fi] + ' bis ' + (bi < 0 ? 'kein BLUR (Tastatur evtl. ohne Fokusverlust ausgeblendet)' : R[bi]));
+      const rel = win.filter(x => /^(call:|DOM |click:|change:|vv:)/.test(x));
+      let lastvv = '';
+      rel.forEach(x => { if (x.startsWith('vv:')) { if (x === lastvv) return; lastvv = x; } L.push('  ' + x); });
+      if (!rel.length) L.push('  (keine Umbauten/Klicks/Viewportwechsel im Fenster)');
+      L.push('Umbau-Funktionen im Fenster: ' + (win.filter(x => x.startsWith('call: ptRender') || x.startsWith('call: ptRoomBarRender')).length));
+      const winExt = R.slice(fi + 1, Math.min(R.length, (bi < 0 ? R.length : bi) + 3));
+      L.push('DOM-Umbauten im Fenster: ' + (winExt.filter(x => x.startsWith('DOM ')).length));
+      return L.join('\n');
+    };
+    const vpre = document.createElement('pre');
+    vpre.id = 'kbVerdict';
+    vpre.style.cssText = 'user-select:text; -webkit-user-select:text; white-space:pre-wrap; font-size:1.05rem; line-height:1.45; background:var(--card-bg); border:2px solid var(--accent-color); border-radius:10px; padding:10px; margin:8px 0;';
+    d.insertBefore(vpre, document.getElementById('kbLog'));
+    const fillV = () => { vpre.textContent = verdictText(); };
+    fillV();
+    const row = document.createElement('div'); row.style.cssText = 'margin:6px 0;';
+    const bCopy = document.createElement('button'); bCopy.type = 'button'; bCopy.className = 'btn'; bCopy.textContent = '📋 Protokoll kopieren';
+    bCopy.addEventListener('click', () => {
+      const txt = verdictText() + '\n\n--- Rohzeilen ---\n' + (window.__kbRing || []).slice(-60).join('\n');
+      const done = () => { bCopy.textContent = '✔ kopiert – im Chat einfügen'; };
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, () => fallbackCopy(txt, done)); else fallbackCopy(txt, done); } catch (e) { fallbackCopy(txt, done); }
+    });
+    function fallbackCopy(txt, done) {
+      try {
+        const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed; inset:0; z-index:10000; font-size:1rem;'; document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length);
+        const okc = document.execCommand('copy'); ta.remove(); if (okc) done(); else line('Kopieren blockiert – bitte .txt nutzen.');
+      } catch (e) { line('Kopieren blockiert – bitte .txt nutzen.'); }
+    }
+    const bTxt = document.createElement('button'); bTxt.type = 'button'; bTxt.className = 'btn btn-secondary'; bTxt.textContent = '📄 Protokoll als .txt';
+    bTxt.addEventListener('click', () => {
+      try {
+        const txt = verdictText() + '\n\n--- Rohzeilen ---\n' + (window.__kbRing || []).slice(-60).join('\n');
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' })); a.download = 'tastatur_protokoll.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      } catch (e) { line('.txt fehlgeschlagen.'); }
+    });
+    const bRaw = document.createElement('button'); bRaw.type = 'button'; bRaw.className = 'btn btn-secondary'; bRaw.textContent = '🔎 Rohzeilen ein/aus';
+    bRaw.addEventListener('click', () => { const l = document.getElementById('kbLog'); l.style.display = l.style.display === 'none' ? '' : 'none'; });
+    row.appendChild(bCopy); row.appendChild(bTxt); row.appendChild(bRaw);
+    d.insertBefore(row, document.getElementById('kbLog'));
     line('bereit – Felder antippen');
   }
   window.addEventListener('load', kbTestInit);
@@ -15237,5 +15289,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55559a32ac0dcb0',t:'MTc5MzgxMzQ2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55559a32ac0dcb0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55599c25bdfd382',t:'MTc5MzgxNjA4OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55599c25bdfd382',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
