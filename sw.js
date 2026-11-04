@@ -1,7 +1,7 @@
 /* Gitarren-Griffbrett-Trainer – Service Worker
    Netzwerk-zuerst fuer Seiten: Neue Versionen kommen sofort an,
    Offline bleibt als Rueckfall moeglich. Ersetzt aeltere Cache-First-SW. */
-const VER = '2026-11-01-5';
+const VER = '2026-11-01-6';
 const CACHE = 'ggt-' + VER;
 self.addEventListener('install', () => { self.skipWaiting(); });
 self.addEventListener('activate', e => {
