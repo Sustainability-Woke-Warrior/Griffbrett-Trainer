@@ -13924,23 +13924,6 @@
     const rsvg = rmDiv.querySelector('#ptRoomSvg');
     if (rsvg) rsvg.addEventListener('click', () => { const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.toggle('hide'); });
     setInterval(ptRoomTick, 1000);
-    // Android: Wenn die Tastatur aufgeht, schrumpft der sichtbare Bereich (visualViewport).
-    // Bottom-Sheets und die Raumleiste sitzen sonst UNTER der Tastatur - Chrome schliesst
-    // die Tastatur dann gern wieder. Deshalb heben wir sie um die Tastaturhoehe an.
-    function ptVvLift() {
-      let off = 0;
-      try { const vv = window.visualViewport; if (vv) off = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)); } catch (e) {}
-      document.querySelectorAll('.pt-overlay').forEach(ov => { ov.style.paddingBottom = off > 0 ? off + 'px' : ''; });
-      const bar = document.getElementById('ptRoomBar');
-      if (bar) bar.style.bottom = off > 0 ? off + 'px' : '';
-    }
-    const vvSchedule = () => { clearTimeout(ptVvLift._t); ptVvLift._t = setTimeout(ptVvLift, 60); };
-    try { window.ptVvLift = ptVvLift; } catch (e) {}
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', vvSchedule);
-      window.visualViewport.addEventListener('scroll', vvSchedule);
-    }
-    window.addEventListener('resize', vvSchedule);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
     // Beim Schließen/Wechseln der App die Zeit sichern
@@ -15083,7 +15066,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-6';
+  const APP_VERSION = '2026-11-01-7';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15182,6 +15165,24 @@
     if (window.visualViewport) window.visualViewport.addEventListener('resize', () => line('Viewport-Höhe: ' + Math.round(window.visualViewport.height)));
     window.addEventListener('resize', () => line('Fenster-Höhe: ' + window.innerHeight));
     document.getElementById('kbClose').addEventListener('click', () => { location.hash = ''; location.reload(); });
+    const bindKb = id => { const el = document.getElementById(id); if (!el) return; el.addEventListener('focus', () => line(id + ': focus')); el.addEventListener('blur', () => line(id + ': BLUR')); };
+    const mkSheet = () => {
+      const ov = document.createElement('div'); ov.className = 'pt-overlay open'; ov.id = 'kbSheet';
+      ov.innerHTML = '<div class="pt-panel"><h3>🧪 F: Feld im Bottom-Sheet</h3><p style="margin:6px 0;">Minuten: <input type="text" inputmode="numeric" id="kbF" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--bg-color); color:var(--text-color);"></p><button type="button" class="btn btn-secondary" id="kbSheetClose">Schließen</button></div>';
+      document.body.appendChild(ov); bindKb('kbF');
+      document.getElementById('kbSheetClose').addEventListener('click', () => ov.remove());
+      line('F-Blatt offen');
+    };
+    const mkBar = () => {
+      const bar = document.createElement('div'); bar.className = 'pt-room open'; bar.id = 'kbBarWrap'; bar.style.cssText = 'position:fixed; inset:0; z-index:9998; background:rgba(20,10,5,.6);';
+      bar.innerHTML = '<div class="pt-room-bar" id="kbBar" style="position:absolute; left:0; right:0; bottom:0; display:flex; gap:10px; justify-content:center; align-items:center; padding:12px; background:rgba(60,20,10,.85);">🧪 G: <input type="text" inputmode="numeric" id="kbG" style="width:90px; padding:8px; border:1px solid var(--card-border); border-radius:8px; background:var(--bg-color); color:var(--text-color);"> <button type="button" class="btn btn-secondary" id="kbBarClose">Schließen</button></div>';
+      document.body.appendChild(bar); bindKb('kbG');
+      document.getElementById('kbBarClose').addEventListener('click', () => bar.remove());
+      line('G-Leiste offen');
+    };
+    const bf = document.createElement('button'); bf.type = 'button'; bf.className = 'btn btn-secondary'; bf.textContent = '🧪 F: Bottom-Sheet öffnen'; bf.style.margin = '4px 6px 0 0'; bf.addEventListener('click', mkSheet);
+    const bg = document.createElement('button'); bg.type = 'button'; bg.className = 'btn btn-secondary'; bg.textContent = '🧪 G: Raumleiste öffnen'; bg.style.margin = '4px 6px 0 0'; bg.addEventListener('click', mkBar);
+    d.insertBefore(bf, document.getElementById('kbLog')); d.insertBefore(bg, document.getElementById('kbLog'));
     line('bereit – Felder antippen');
   }
   window.addEventListener('load', kbTestInit);
@@ -15201,5 +15202,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a554960dca661e4a',t:'MTc5MzgwNTQ1Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a554960dca661e4a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55531e2ba21dca8',t:'MTc5MzgxMTgzNQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55531e2ba21dca8',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
