@@ -11984,6 +11984,7 @@
     box.innerHTML = h;
     try { srchBind(); } catch (e) {}
     { const ub = document.getElementById('homeUpdBtn'); if (ub) ub.addEventListener('click', appManualCheck); }
+    { const vs = document.querySelector('.home-ver span'); if (vs) { let n = 0, t = 0; vs.addEventListener('click', () => { const now = Date.now(); if (now - t > 1500) n = 0; t = now; if (++n >= 3) { n = 0; try { location.hash = 'tastatur-test'; kbTestInit(); } catch (e) {} } }); } }
     { const a = document.getElementById('homeA4Select'); if (a) a.addEventListener('change', e => { appSetA4(+e.target.value); showToast('Kammerton: ' + appA4() + ' Hz'); }); }
     const hpt = document.getElementById('homePtBtn'); if (hpt) hpt.addEventListener('click', () => ptOpen());
     { const hs = document.getElementById('homeStrBtn'); if (hs) hs.addEventListener('click', () => strOpen()); }
@@ -13943,8 +13944,8 @@
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
     // Beim Schließen/Wechseln der App die Zeit sichern
-    document.addEventListener('visibilitychange', () => { if (document.hidden) { ptLogTick(); ptSave(); } else if (pt.running && !pt.paused) { ptTick(); } }); // kein lastTick-Reset: sonst wäre die Zeit im Hintergrund futsch
-    window.addEventListener('pagehide', () => { ptLogTick(); ptSave(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { if (!window.__skipAutosaveOnUnload) { ptLogTick(); ptSave(); } } else if (pt.running && !pt.paused) { ptTick(); } }); // kein lastTick-Reset: sonst wäre die Zeit im Hintergrund futsch
+    window.addEventListener('pagehide', () => { if (window.__skipAutosaveOnUnload) return; ptLogTick(); ptSave(); });
     window.addEventListener('freeze', () => { ptLogTick(); ptSave(); });
     try { ptRestoreSession(); } catch (e) {}
     ptUpdateLive();
@@ -15082,7 +15083,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-01-4';
+  const APP_VERSION = '2026-11-01-6';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15155,6 +15156,7 @@
 
   // ---- Tastatur-Diagnose (nur mit #tastatur-test in der Adresse) ----
   function kbTestInit() {
+    if (document.getElementById('kbLog')) return;
     if (location.hash !== '#tastatur-test') return;
     const d = document.createElement('div');
     d.style.cssText = 'position:fixed; inset:0; z-index:9999; background:var(--bg-color); color:var(--text-color); padding:14px; overflow:auto; font-size:0.95rem;';
@@ -15199,5 +15201,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a54c621d48d3a93b',t:'MTc5MzcxOTQzOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a54c621d48d3a93b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a554960dca661e4a',t:'MTc5MzgwNTQ1Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a554960dca661e4a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
