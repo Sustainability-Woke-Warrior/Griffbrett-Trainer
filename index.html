@@ -1695,14 +1695,15 @@
           <option value="8">11. Akkord-Labor</option>
           <option value="13">12. Akkordfolgen erstellen</option>
           <option value="14">13. Akkordwechsel-Trainer</option>
+          <option value="17">14. Tonart-Werkstatt</option>
         </optgroup>
         <optgroup label="Spielen">
-          <option value="9">14. Beat &amp; Jam</option>
-          <option value="12">15. Anschlag &amp; Zupfen</option>
-          <option value="11">16. Stimmgerät</option>
+          <option value="9">15. Beat &amp; Jam</option>
+          <option value="12">16. Anschlag &amp; Zupfen</option>
+          <option value="11">17. Stimmgerät</option>
         </optgroup>
         <optgroup label="Planen">
-          <option value="10">17. Wochenplan</option>
+          <option value="10">18. Wochenplan</option>
         </optgroup>
       </select>
     </div>
@@ -1816,6 +1817,7 @@
   <div id="scaleViewGrid" style="display:none;"></div>
 
   <div id="jamModuleRoot" style="display:none;"></div>
+  <div id="twRoot" style="display:none;"></div>
   <div id="tunerRoot" style="display:none;"></div>
   <div id="strumRoot" style="display:none;"></div>
   <div id="earRoot" style="display:none;"></div>
@@ -2853,7 +2855,8 @@
     { name: "Akkordfolgen erstellen", stringIdx: -1, time: 0, type: "progmod" },
     { name: "Akkordwechsel-Trainer", stringIdx: -1, time: 0, type: "chgmod" },
     { name: "Wörterbuch", stringIdx: -1, time: 0, type: "glossary" },
-    { name: "Effektiv üben", stringIdx: -1, time: 0, type: "uebe" }
+    { name: "Effektiv üben", stringIdx: -1, time: 0, type: "uebe" },
+    { name: "Tonart-Werkstatt", stringIdx: -1, time: 0, type: "tw" }
   ];
 
   const NATURAL_NOTES = ["C", "D", "E", "F", "G", "A", "H"];
@@ -9451,10 +9454,6 @@
       return { chords, minor, keyName: scale[0].name + (minor ? '-Moll' : '-Dur') };
     }
 
-    function chordPitches(rootPc, type) {
-      const base = 48 + rootPc;
-      return TH_CHORD_TYPES[type].iv.map(iv => base + iv);
-    }
 
     const PROGS = {
       dur: [
@@ -9480,21 +9479,6 @@
       });
     }
 
-    function transferToJam(chords) {
-      try {
-        if (!state.jam) initJamState();
-        if (state.jam.playing && typeof stopJamPlayback === 'function') stopJamPlayback();
-        state.jam.chordMode = 'free';
-        // Folge über alle Takte wiederholen (bei 8/12/16 Takten)
-        for (let k = 0; k < state.jam.bars.length; k++) {
-          const c = chords[k % chords.length];
-          state.jam.bars[k].chordRoot = c.root.pc;
-          state.jam.bars[k].chordType = TH_CHORD_TYPES[c.type].jam;
-        }
-        scheduleJamAutosave();
-        return true;
-      } catch (e) { console.error('Übernahme ins Jam-Modul fehlgeschlagen', e); return false; }
-    }
 
     function renderDiatonic() {
       if (!dCards) return;
@@ -10266,6 +10250,8 @@
     scaleViewPositionRow.style.display = 'none';
     scaleViewGrid.style.display = 'none';
     jamModuleRoot.style.display = 'none';
+    const twModuleRoot = document.getElementById('twRoot');
+    if (twModuleRoot) twModuleRoot.style.display = 'none';
     document.getElementById('tunerRoot').style.display = 'none';
     document.getElementById('strumRoot').style.display = 'none';
     document.getElementById('earRoot').style.display = 'none';
@@ -10352,7 +10338,10 @@
       jamModuleRoot.style.display = 'block';
       if (!state.jam) initJamState();
       renderJamModule();
-    } else if (mod.type === 'game') {
+    } else if (mod.type === 'tw') {
+    const twEl = document.getElementById('twRoot');
+    if (twEl) { twEl.style.display = ''; renderTwModule(); }
+  } else if (mod.type === 'game') {
       timerContainerEl.style.display = 'none';
       gameLevelRow.style.display = 'flex';
       gameScoreContainer.style.display = 'block';
@@ -11674,7 +11663,7 @@
     7: 'tonleiter skala skalen pentatonik caged positionen modi kirchentonarten', 8: 'akkord akkorde griff griffe nachschlagen lexikon griffvarianten erkennen',
     13: 'akkordfolge song lied midi eintragen grosse ansicht drucken', 14: 'wechsel wechseln akkordwechsel',
     9: 'schlagzeug drums begleitung band rhythmus stil improvisieren songteile wav beat', 12: 'strumming picking fingerpicking zupfmuster schlagmuster rhythmus',
-    11: 'stimmen tuner mikrofon saitenwechsel saiten', 10: 'plan kalender statistik uebungen'
+    11: 'stimmen tuner mikrofon saitenwechsel saiten', 10: 'plan kalender statistik uebungen', 17: 'tonart tonarten werkstatt kadenz kadenzen akkorde griffe sammlung sammeln speichern jam folgen jazz ii v i turnaround dur moll neapolitanisch andalusisch trugschluss backdoor tritonus sekundaerdominante septakkorde'
   };
   const SRCH_SCALE_WORDS = { dur: 'ionisch major durtonleiter', moll: 'aeolisch minor natuerlich molltonleiter', harmoll: 'harmonisch', melmoll: 'melodisch jazz', durPenta: 'pentatonik penta major', mollPenta: 'pentatonik penta blues minor', dorisch: 'kirchentonart modus modi', phrygisch: 'kirchentonart modus modi', lydisch: 'kirchentonart modus modi', mixolydisch: 'kirchentonart modus modi', lokrisch: 'kirchentonart modus modi', chromatic: 'chromatisch alle' };
   const SRCH_GROUPS = [['chord', '🎸 Akkorde'], ['mod', '📦 Module'], ['scale', '🪜 Tonleitern'], ['gloss', '📖 Wörterbuch'], ['pat', '🪕 Anschlag- & Zupfmuster'], ['mine', '⭐ Meine Sachen'], ['text', '📄 In Texten'], ['tool', '🧰 Werkzeuge & Einstellungen']];
@@ -15072,8 +15061,223 @@
     const b = document.getElementById('diaryBtn'); if (b) b.addEventListener('click', diaryOpen);
   }
 
+  // Aus dem Theorie-Scope an Top-Level gehoben – wird auch von der Tonart-Werkstatt genutzt
+  function chordPitches(rootPc, type) {
+    const base = 48 + rootPc;
+    return TH_CHORD_TYPES[type].iv.map(iv => base + iv);
+  }
+  function transferToJam(chords) {
+    try {
+      if (!state.jam) initJamState();
+      if (state.jam.playing && typeof stopJamPlayback === 'function') stopJamPlayback();
+      state.jam.chordMode = 'free';
+      // Folge über alle Takte wiederholen (bei 8/12/16 Takten)
+      for (let k = 0; k < state.jam.bars.length; k++) {
+        const c = chords[k % chords.length];
+        state.jam.bars[k].chordRoot = c.root.pc;
+        state.jam.bars[k].chordType = TH_CHORD_TYPES[c.type].jam;
+      }
+      scheduleJamAutosave();
+      return true;
+    } catch (e) { console.error('Übernahme ins Jam-Modul fehlgeschlagen', e); return false; }
+  }
+
+  // =================== Tonart-Werkstatt (Modul 18) ===================
+  const TW_KEY = 'guitartrainer_tw', TW_COLS = 'guitartrainer_twcols';
+  let twState = null, twSelChord = 0, twPick = new Set();
+  function twLoadSet() { try { return JSON.parse(localStorage.getItem(TW_KEY) || 'null'); } catch (e) { return null; } }
+  function twInitState() { const s = twLoadSet(); twState = { root: s && s.root != null ? s.root : 4, minor: !!(s && s.minor), sev: !!(s && s.sev) }; }
+  function twSaveSet() { try { localStorage.setItem(TW_KEY, JSON.stringify(twState)); } catch (e) {} }
+  function twSpellNote(rootPc, semi) { try { const letter = thBestLetter(rootPc, [semi], [0]); return thSpell(rootPc, letter, [semi], [0])[0].name; } catch (e) { return ''; } }
+  function twFamily() {
+    const rootPc = twState.root, minor = twState.minor, sev = twState.sev;
+    const ivs = minor ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11];
+    const letter = thBestLetter(rootPc, ivs, [0, 1, 2, 3, 4, 5, 6]);
+    const scale = thSpell(rootPc, letter, ivs, [0, 1, 2, 3, 4, 5, 6]);
+    const ROM = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+    return scale.map((note, i) => {
+      const at = k => scale[(i + k) % 7];
+      const semi = k => ((at(k).pc - note.pc) + 12) % 12;
+      const type = thChordTypeFromIntervals(semi(2), semi(4), sev ? semi(6) : undefined);
+      const def = TH_CHORD_TYPES[type];
+      const isMin = ['moll', 'dim', 'min7', 'm7b5', 'dim7'].includes(type);
+      let roman = isMin ? ROM[i].toLowerCase() : ROM[i];
+      if (type === 'dim' || type === 'dim7') roman += '°';
+      if (type === 'm7b5') roman += 'ø';
+      return { i, roman, root: { pc: note.pc, name: note.name }, type, name: note.name + def.sym };
+    });
+  }
+  function twChordObj(step) {
+    const rootPc = twState.root;
+    if (step.d != null) return twFamily()[step.d];
+    const pc = (rootPc + step.s) % 12, type = step.t || 'dur';
+    const nm = twSpellNote(rootPc, step.s);
+    return { root: { pc, name: nm }, type, name: nm + TH_CHORD_TYPES[type].sym };
+  }
+  const TW_PROGS = [
+    { mode: 'moll', level: 'Grund', label: 'Pendel i–iv', info: 'Ruhe und Bewegung im Wechsel – trägt ganze Songs.', steps: [{ d: 0 }, { d: 3 }] },
+    { mode: 'moll', level: 'Grund', label: 'Andalusische Kadenz i–VII–VI–V', info: 'Absteigende Flamenco-Linie; die Dur-Dominante stammt aus harmonisch Moll.', steps: [{ d: 0 }, { d: 6 }, { d: 5 }, { d: 4, t: 'dur' }] },
+    { mode: 'moll', level: 'Grund', label: 'Epische Moll-Folge i–VI–III–VII', info: 'Klingt groß wie Filmmusik.', steps: [{ d: 0 }, { d: 5 }, { d: 2 }, { d: 6 }] },
+    { mode: 'moll', level: 'Grund', label: 'Moll-Kadenz i–iv–v', info: 'Das weiche Grundgerüst in Moll.', steps: [{ d: 0 }, { d: 3 }, { d: 4 }] },
+    { mode: 'moll', level: 'Grund', label: 'Moll-Kadenz i–iv–V (Dur-Dominante)', info: 'Die Dur-Dominante zieht stark nach Hause.', steps: [{ d: 0 }, { d: 3 }, { d: 4, t: 'dur' }] },
+    { mode: 'moll', level: 'Grund', label: 'Seitenblick: Pop-Folge der Dur-Parallele', info: 'Dieselben Töne, anderes Zentrum – die Dur-Seite deiner Molltonart.', steps: [{ s: 3, t: 'dur' }, { s: 10, t: 'dur' }, { s: 0, t: 'moll' }, { s: 8, t: 'dur' }] },
+    { mode: 'dur', level: 'Grund', label: 'Pop-Folge I–V–vi–IV', info: 'Die Axis-Folge unzähliger Hits.', steps: [{ d: 0 }, { d: 4 }, { d: 5 }, { d: 3 }] },
+    { mode: 'dur', level: 'Grund', label: 'Grundkadenz I–IV–V–I', info: 'Ruhe → Bewegung → Spannung → Ruhe.', steps: [{ d: 0 }, { d: 3 }, { d: 4 }, { d: 0 }] },
+    { mode: 'dur', level: 'Grund', label: '50er-Jahre-Folge I–vi–IV–V', info: 'Der Doo-Wop-Balladen-Klassiker.', steps: [{ d: 0 }, { d: 5 }, { d: 3 }, { d: 4 }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Trugschluss V–vi', info: 'Die Dominante täuscht die Auflösung vor – überraschend weich.', steps: [{ d: 4, t: 'dom7' }, { d: 5 }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Backdoor-Kadenz iv7–♭VII7–I', info: 'Die „Hintertür“ zurück zur Tonika – souliger Klang.', steps: [{ s: 5, t: 'min7' }, { s: 10, t: 'dom7' }, { s: 0, t: 'dur' }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Tritonus-Substitution ii–♭II7–I', info: 'Statt V7 der tiefe Nachbar ♭II7 – jazziger Zug zur Tonika.', steps: [{ d: 1, t: 'min7' }, { s: 1, t: 'dom7' }, { s: 0, t: 'maj7' }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Sekundärdominanten-Kette I–V/ii–ii–V', info: 'V/ii hellt kurz auf, bevor die echte Kadenz kommt.', steps: [{ s: 0, t: 'dur' }, { s: 9, t: 'dom7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Dim-Durchgang I–♯i°7–ii–V', info: 'Der verminderte Durchgangsakkord verbindet elegant.', steps: [{ s: 0, t: 'dur' }, { s: 1, t: 'dim7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
+    { mode: 'moll', level: 'Fortgeschritten', label: 'Neapolitanische Kadenz ♭II–V–i', info: 'Der dunkle ♭II-Dur-Dreiklang als feierlicher Vorbote der Dominante.', steps: [{ s: 1, t: 'dur' }, { d: 4, t: 'dur' }, { d: 0 }] },
+    { mode: 'moll', level: 'Fortgeschritten', label: 'Phrygische Kadenz iv–V', info: 'Halbschluss mit spanischem Flair.', steps: [{ d: 3 }, { d: 4, t: 'dur' }] },
+    { mode: 'moll', level: 'Fortgeschritten', label: 'Jazz-Moll-Wendung i–iv–♭VII–III', info: 'Öffnet den Blick zur Dur-Parallele.', steps: [{ d: 0 }, { d: 3 }, { s: 10, t: 'dom7' }, { s: 3, t: 'maj7' }] },
+    { mode: 'dur', level: 'Jazz', label: 'II–V–I mit Septakkorden', info: 'Die Jazz-Kadenz schlechthin.', steps: [{ d: 1, t: 'min7' }, { d: 4, t: 'dom7' }, { s: 0, t: 'maj7' }] },
+    { mode: 'moll', level: 'Jazz', label: 'II–V–i in Moll (iiø7–V7–i)', info: 'Die Jazz-Kadenz in Moll.', steps: [{ d: 1, t: 'm7b5' }, { d: 4, t: 'dom7' }, { d: 0 }] },
+    { mode: 'dur', level: 'Jazz', label: 'Turnaround I–vi–ii–V', info: 'Die Endlosschleife des Jazz.', steps: [{ s: 0, t: 'maj7' }, { d: 5, t: 'min7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
+    { mode: 'dur', level: 'Jazz', label: 'III–vi–ii–V', info: 'Sanfterer Einstieg in den Turnaround.', steps: [{ d: 2, t: 'min7' }, { d: 5, t: 'min7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
+    { mode: 'dur', level: 'Jazz', label: 'Erweiterter Turnaround ii–V–iii–vi', info: 'Kreist elegant, statt sofort aufzulösen.', steps: [{ d: 1, t: 'min7' }, { d: 4, t: 'dom7' }, { d: 2, t: 'min7' }, { d: 5, t: 'min7' }] },
+    { mode: 'dur', level: 'Jazz', label: 'Jazz-Turnaround mit Sekundärdominante I–VI7–ii–V', info: 'VI7 als Würze zwischen I und ii.', steps: [{ s: 0, t: 'maj7' }, { s: 9, t: 'dom7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
+    { mode: 'moll', level: 'Jazz', label: 'Moll-Turnaround i–♭VI–♭II7 (Tritonus-Zug)', info: '♭VI und die Substitutions-Dominante färben klassisch-jazzig.', steps: [{ d: 0, t: 'min7' }, { s: 8, t: 'maj7' }, { s: 1, t: 'dom7' }, { d: 0 }] }
+  ];
+  function twGripSvg(frets) {
+    const played = frets.map((f, i) => [f, i]).filter(x => x[0] >= 0);
+    if (!played.length) return '';
+    const minF = Math.min.apply(null, played.map(x => x[0])), maxF = Math.max.apply(null, played.map(x => x[0]));
+    const start = Math.max(1, minF), rows = Math.max(4, Math.min(5, maxF - start + 1));
+    const W = 96, H = 18 + rows * 22 + 8; let g = '';
+    for (let i = 0; i < 6; i++) { const x = 12 + i * 15; g += '<line x1="' + x + '" y1="18" x2="' + x + '" y2="' + (18 + rows * 22) + '" stroke="#94a3b8" stroke-width="1.3"/>'; }
+    for (let r = 0; r <= rows; r++) g += '<line x1="12" y1="' + (18 + r * 22) + '" x2="87" y2="' + (18 + r * 22) + '" stroke="#94a3b8" stroke-width="' + (r === 0 ? 2 : 1.1) + '"/>';
+    const lbl = start > 1 ? '<text x="2" y="14" fill="#94a3b8" font-size="9">' + start + '.</text>' : '';
+    frets.forEach((f, i) => {
+      const x = 12 + i * 15;
+      if (f < 0) g += '<text x="' + (x - 4) + '" y="12" fill="#94a3b8" font-size="10">✕</text>';
+      else if (f === 0) g += '<circle cx="' + x + '" cy="10" r="4" fill="none" stroke="#f8fafc" stroke-width="1.5"/>';
+      else g += '<circle cx="' + x + '" cy="' + (18 + (f - start) * 22 + 11) + '" r="6" fill="#06b6d4"/>';
+    });
+    return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Griffbild">' + lbl + g + '</svg>';
+  }
+  function twGrips(c) { return (typeof JAM_BOOK_GRIPS !== 'undefined' && JAM_BOOK_GRIPS[c.root.pc + '|' + c.type]) || []; }
+  function twColsLoad() { try { const d = JSON.parse(localStorage.getItem(TW_COLS) || '[]'); return Array.isArray(d) ? d : []; } catch (e) { return []; } }
+  function twColsSave(d) { try { localStorage.setItem(TW_COLS, JSON.stringify(d)); } catch (e) {} }
+  function twPickChords() { const fam = twFamily(); return fam.filter(c => twPick.has(c.i)); }
+  function twToJam(chords, label) {
+    const ok = transferToJam(chords);
+    showToast(ok ? '🥁 ' + (label || chords.map(c => c.name).join(' – ')) + ' liegt jetzt im Jam-Modul.' : '❌ Übernahme hat nicht geklappt.');
+    return ok;
+  }
+  function twToProg(chords, label) {
+    try {
+      progState = progLoad();
+      progState.draft.name = (label || 'Aus der Tonart-Werkstatt').slice(0, 60);
+      progState.draft.chords = chords.slice(0, 16).map(c => { const g = twGrips(c); return { frets: (g[0] || [-1, -1, -1, -1, -1, -1]).slice(), start: 1 }; });
+      if (!progState.draft.chords.length) progState.draft.chords = [progEmptyChord()];
+      progSave();
+      const idx = MODULES.findIndex(m => m.type === 'progmod');
+      if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); }
+      showToast('📋 Folge „' + progState.draft.name + '“ liegt jetzt im Akkordfolgen-Modul.');
+      return true;
+    } catch (e) { showToast('❌ Übernahme nicht möglich.'); return false; }
+  }
+  function renderTwModule() {
+    const root = document.getElementById('twRoot'); if (!root) return;
+    if (!twState) twInitState();
+    const fam = twFamily();
+    if (twSelChord >= fam.length) twSelChord = 0;
+    const NAMES = ['C', 'C♯/D♭', 'D', 'E♭', 'E', 'F', 'F♯/G♭', 'G', 'A♭', 'A', 'B♭', 'H'];
+    let h = '<div class="theory-card"><div class="theory-transpose theory-scale-controls">' +
+      '<label for="twRootSel">Tonart:</label><select id="twRootSel">' + NAMES.map((n, i) => '<option value="' + i + '"' + (i === twState.root ? ' selected' : '') + '>' + n + '</option>').join('') + '</select>' +
+      '<select id="twTypeSel"><option value="dur"' + (!twState.minor ? ' selected' : '') + '>Dur</option><option value="moll"' + (twState.minor ? ' selected' : '') + '>Moll</option></select>' +
+      '<label class="th-check"><input type="checkbox" id="twSevChk"' + (twState.sev ? ' checked' : '') + '> Septakkorde</label></div>';
+    h += '<div class="th-chord-cards" id="twCards">' + fam.map(c =>
+      '<button type="button" class="th-chord-card' + (c.i === twSelChord ? ' th-tonic' : '') + '" data-twcard="' + c.i + '"><span class="th-roman">' + c.roman + '</span><strong>' + homeEsc(c.name) + '</strong><small>' + (twPick.has(c.i) ? '✔ in Sammlung' : 'antippen') + '</small></button>').join('') + '</div>';
+    const sel = fam[twSelChord], grips = twGrips(sel);
+    h += '<div class="row" style="margin-top:10px; gap:8px; align-items:center;"><button type="button" class="btn btn-secondary" id="twAddSel">' + (twPick.has(sel.i) ? '✔ Aus Sammlung entfernen' : '＋ Zur Sammlung') + '</button>' +
+      '<button type="button" class="btn btn-secondary" id="twPlaySel">🔊 Anhören</button>' +
+      '<button type="button" class="btn btn-secondary" id="twLabSel">🔬 Im Akkord-Labor öffnen</button></div>';
+    h += '<div class="row" style="margin-top:10px; flex-wrap:wrap; gap:14px; align-items:flex-start;">' + (grips.length ? grips.slice(0, 3).map((g, i) => '<div style="text-align:center; font-size:.78rem; color:var(--text-muted);">' + twGripSvg(g) + 'Griff ' + (i + 1) + '</div>').join('') : '<div style="opacity:.8;">Für diesen Akkordtyp liegt kein Griffbild im Bestand – das Akkord-Labor hilft weiter.</div>') + '</div></div>';
+    // Sammlung
+    const pick = twPickChords();
+    h += '<div class="theory-card"><h4 style="margin:0 0 8px;">💾 Meine Sammlung</h4>' +
+      (pick.length ? '<div class="row" style="gap:6px; flex-wrap:wrap;">' + pick.map(c => '<span class="theory-chip">' + homeEsc(c.name) + '</span>').join('') + '</div>' +
+        '<div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap;">' +
+        '<input type="text" id="twColName" placeholder="Name, z. B. Song-Ideen E-Moll" maxlength="40" style="flex:1; min-width:160px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' +
+        '<button type="button" class="btn" id="twColSave">💾 Speichern</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColPlay">🔊 Spielen</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColJam">🥁 Ins Jam</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColProg">📋 Ins Akkordfolgen-Modul</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColClear">✕ Leeren</button></div>'
+        : '<div style="opacity:.85;">Tippe Akkord-Kärtchen an, um sie hier zu sammeln – dann speichern und jederzeit in andere Module übernehmen.</div>') + '</div>';
+    const cols = twColsLoad();
+    if (cols.length) {
+      h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📚 Gespeicherte Sammlungen</h4>' + cols.map(c =>
+        '<div class="th-prog-row"><div><strong>' + homeEsc(c.name) + '</strong><br><span>' + (c.names || []).map(homeEsc).join(' – ') + '</span></div>' +
+        '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twload="' + c.id + '">📂 Laden</button>' +
+        '<button type="button" class="theory-chip" data-twcoljam="' + c.id + '">🥁 Jam</button>' +
+        '<button type="button" class="theory-chip" data-twcolprog="' + c.id + '">📋 Folgen</button>' +
+        '<button type="button" class="theory-chip" data-twcolplay="' + c.id + '">🔊</button>' +
+        '<button type="button" class="theory-chip" data-twcolrm="' + c.id + '">🗑</button></div></div>').join('') + '</div>';
+    }
+    // Kadenzen
+    const minor = twState.minor;
+    const list = TW_PROGS.filter(p => p.mode === (minor ? 'moll' : 'dur'));
+    ['Grund', 'Fortgeschritten', 'Jazz'].forEach(lv => {
+      const rows = list.filter(p => p.level === lv);
+      if (!rows.length) return;
+      h += '<div class="theory-card"><h4 style="margin:0 0 4px;">' + (lv === 'Grund' ? '🌱 Grund-Kadenzen' : lv === 'Fortgeschritten' ? '🎯 Fortgeschrittene Kadenzen' : '🎷 Jazz-Kadenzen') + '</h4>';
+      rows.forEach(p => {
+        const chords = p.steps.map(st => twChordObj(st));
+        h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.label) + '</strong><br><span>' + chords.map(c => homeEsc(c.name)).join(' – ') + '</span><br><small style="color:var(--text-muted);">' + homeEsc(p.info) + '</small></div>' +
+          '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twplay="' + TW_PROGS.indexOf(p) + '">🔊</button>' +
+          '<button type="button" class="theory-chip" data-twjam="' + TW_PROGS.indexOf(p) + '">🥁 Jam</button>' +
+          '<button type="button" class="theory-chip" data-twprog="' + TW_PROGS.indexOf(p) + '">📋 Folgen</button>' +
+          '<button type="button" class="theory-chip" data-twsavep="' + TW_PROGS.indexOf(p) + '">💾</button></div></div>';
+      });
+      h += '</div>';
+    });
+    root.innerHTML = h;
+    // Bindings
+    const on = (id, f, ev) => { const el = document.getElementById(id); if (el) el.addEventListener(ev || 'click', f); };
+    on('twRootSel', e => { twState.root = +e.target.value; twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); }, 'change');
+    on('twTypeSel', e => { twState.minor = e.target.value === 'moll'; twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); }, 'change');
+    on('twSevChk', e => { twState.sev = e.target.checked; twSaveSet(); renderTwModule(); }, 'change');
+    root.querySelectorAll('[data-twcard]').forEach(b => b.addEventListener('click', () => { twSelChord = +b.dataset.twcard; renderTwModule(); }));
+    on('twAddSel', () => { if (twPick.has(twSelChord)) twPick.delete(twSelChord); else twPick.add(twSelChord); renderTwModule(); });
+    on('twPlaySel', () => thPlayPitches(chordPitches(sel.root.pc, sel.type)));
+    on('twLabSel', () => { const g = grips[0]; const idx = MODULES.findIndex(m => m.type === 'chordlab'); if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); if (g) setTimeout(() => { try { chordLabApplyFrets(g); renderChordLookupVariants(grips, 0); } catch (e) {} }, 250); } });
+    on('twColSave', () => {
+      const nm = (document.getElementById('twColName').value || '').trim() || ('Sammlung ' + new Date().toLocaleDateString('de-DE'));
+      const d = twColsLoad();
+      d.push({ id: Date.now(), name: nm, root: twState.root, minor: twState.minor, chords: pick.map(c => [c.root.pc, c.type]), names: pick.map(c => c.name) });
+      twColsSave(d); showToast('💾 Sammlung „' + nm + '“ gespeichert.'); renderTwModule();
+    });
+    on('twColPlay', () => pick.forEach((c, k) => thPlayPitches(chordPitches(c.root.pc, c.type), k * 0.9)));
+    on('twColJam', () => twToJam(pick, 'Sammlung'));
+    on('twColProg', () => twToProg(pick, (document.getElementById('twColName') && document.getElementById('twColName').value || '').trim() || 'Meine Sammlung'));
+    on('twColClear', () => { twPick.clear(); renderTwModule(); });
+    root.querySelectorAll('[data-twload]').forEach(b => b.addEventListener('click', () => {
+      const c = twColsLoad().find(x => String(x.id) === b.dataset.twload); if (!c) return;
+      twState.root = c.root; twState.minor = !!c.minor; twSaveSet();
+      const fam2 = twFamily(); twPick = new Set(fam2.filter(f => c.chords.some(p => p[0] === f.root.pc && p[1] === f.type)).map(f => f.i));
+      renderTwModule(); showToast('📂 Sammlung „' + c.name + '“ geladen.');
+    }));
+    const colChords = c => (c.chords || []).map(p => ({ root: { pc: p[0], name: twSpellNote(c.root, (p[0] - c.root + 12) % 12) }, type: p[1], name: (c.names && c.names[c.chords.indexOf(p)]) || '' }));
+    root.querySelectorAll('[data-twcoljam]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcoljam); if (c) twToJam(colChords(c), c.name); }));
+    root.querySelectorAll('[data-twcolprog]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolprog); if (c) twToProg(colChords(c), c.name); }));
+    root.querySelectorAll('[data-twcolplay]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolplay); if (c) colChords(c).forEach((ch, k) => thPlayPitches(chordPitches(ch.root.pc, ch.type), k * 0.9)); }));
+    root.querySelectorAll('[data-twcolrm]').forEach(b => b.addEventListener('click', () => { twColsSave(twColsLoad().filter(x => String(x.id) !== b.dataset.twcolrm)); renderTwModule(); }));
+    root.querySelectorAll('[data-twplay]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twplay]; p.steps.map(st => twChordObj(st)).forEach((c, k) => thPlayPitches(chordPitches(c.root.pc, c.type), k * 1.0)); }));
+    root.querySelectorAll('[data-twjam]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twjam]; twToJam(p.steps.map(st => twChordObj(st)), p.label); }));
+    root.querySelectorAll('[data-twprog]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twprog]; twToProg(p.steps.map(st => twChordObj(st)), p.label); }));
+    root.querySelectorAll('[data-twsavep]').forEach(b => b.addEventListener('click', () => {
+      const p = TW_PROGS[+b.dataset.twsavep]; const chords = p.steps.map(st => twChordObj(st));
+      const d = twColsLoad(); d.push({ id: Date.now(), name: p.label, root: twState.root, minor: twState.minor, chords: chords.map(c => [c.root.pc, c.type]), names: chords.map(c => c.name) });
+      twColsSave(d); showToast('💾 „' + p.label + '“ als Sammlung gespeichert.'); renderTwModule();
+    }));
+  }
+
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-04-2';
+  const APP_VERSION = '2026-11-06-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15296,5 +15500,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5564fa039b2e7ba',t:'MTc5MzgyMzUzOQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5564fa039b2e7ba',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56612b409dc382b',t:'MTc5Mzk4ODgxNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56612b409dc382b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
