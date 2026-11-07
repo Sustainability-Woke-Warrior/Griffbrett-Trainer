@@ -953,6 +953,22 @@
       margin-bottom: 7px;
       font-size: 0.98rem;
     }
+
+    details.tw-fold > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-color);
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+    details.tw-fold > summary::-webkit-details-marker { display: none; }
+    details.tw-fold > summary::before { content: '▸'; color: var(--text-muted); }
+    details.tw-fold[open] > summary::before { content: '▾'; }
+    details.tw-fold[open] > summary { margin-bottom: 7px; }
+    .tw-fold-cnt { margin-left: auto; color: var(--text-muted); font-weight: 600; font-size: .78rem; white-space: nowrap; }
     .theory-chip-row {
       display: flex;
       flex-wrap: wrap;
@@ -1470,11 +1486,56 @@
       #rmWallB { animation: rmWallB 52s ease-in-out infinite alternate; }
       #rmWallC { animation: rmWallC 52s ease-in-out infinite alternate; }
       #rmLeaves { transform-box: fill-box; transform-origin: 50% 100%; animation: rmSway 12s ease-in-out infinite alternate; }
+      .rm-curtain { transform-box: fill-box; transform-origin: 50% 0%; animation: rmCurtain 9s ease-in-out infinite alternate; }
+      .rm-curtain.c2 { animation-duration: 11s; animation-delay: -3s; }
+      #rmDust circle { animation: rmDustF 16s linear infinite; }
+      #rmSunPatch { transition: transform 1s linear, opacity 2s ease; }
+      #rmClkS.rm-sweep { transform-box: view-box; transform-origin: 460px 105px; animation: rmSweep 60s linear infinite; }
+      #rmCat.rm-purr #rmCatTail { animation: rmWag .45s ease-in-out 3 alternate; }
+      #rmCat.rm-purr #rmCatNote { animation: rmNoteUp 1.6s ease-out; }
+      #rmCat.rm-sleep #rmCatZ { animation: rmZzz 3.4s ease-in-out infinite; }
+      #rmCat.rm-sleep .rm-ears { animation: rmEar 9s ease-in-out infinite; }
+      .rm-catcurl { animation: rmBreathe 3.6s ease-in-out infinite alternate; }
+      #rmCat.rm-stretch .rm-catbody, #rmCat.rm-stretch .rm-catcurl { animation: rmStretch 1.1s ease-out; }
+      .rm-steam { animation: rmSteam 6.5s ease-in-out infinite; }
+      .rm-steam.s2 { animation-delay: -2.8s; }
+      .rm-steam.s3 { animation-delay: -4.6s; }
+      .rm-note-fly { animation: rmFly 2.6s ease-out forwards; }
+      #rmPulse.go { animation: rmPulseA 3.2s ease-out; }
     }
     @keyframes rmWallA { from { stop-color: #ffd75e; } to { stop-color: #ffe183; } }
     @keyframes rmWallB { from { stop-color: #ff9040; } to { stop-color: #ffa061; } }
     @keyframes rmWallC { from { stop-color: #e5533d; } to { stop-color: #dd5f4c; } }
     @keyframes rmSway { from { transform: rotate(-1.3deg); } to { transform: rotate(1.5deg); } }
+    /* Raum: Tageszeit, Katze, Tee, Vorhang, Staub, Noten, Puls */
+    #rmNightVeil, #rmMoon, #rmStars { transition: opacity 3s ease; }
+    #rmSunPatch { transition: opacity 2s ease; }
+    .rm-steam { opacity: 0; }
+    #rmCat { cursor: pointer; }
+    #rmCatNote, #rmCatZ { opacity: 0; pointer-events: none; }
+    #rmCatStand { display: none; }
+    #rmCat.rm-walk #rmCatStand { display: inline; }
+    #rmCat.rm-walk #rmCatCurl { display: none; }
+    .rm-catcurl { transform-box: fill-box; transform-origin: 50% 100%; }
+    #rmCatTail, #rmCatEars { transform-box: fill-box; }
+    #rmCatTail { transform-origin: 100% 90%; }
+    #rmCatEars { transform-origin: 50% 100%; }
+    #rmOverlay { position: absolute; inset: 0; pointer-events: none; background: #0b1020; opacity: 0; transition: opacity 1.6s ease; }
+    #rmPulse { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at 50% 55%, rgba(255,205,110,.5), rgba(255,140,60,0) 70%); }
+    .rm-note-fly { position: absolute; font-size: 26px; pointer-events: none; opacity: 0; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
+    @keyframes rmSteam { 0% { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0; } 22% { opacity: .55; } 65% { opacity: .35; } 100% { transform: translateY(-26px) scaleX(1.6) rotate(5deg); opacity: 0; } }
+    @keyframes rmCurtain { from { transform: skewX(-1.1deg); } to { transform: skewX(1.4deg); } }
+    @keyframes rmDustF { 0% { transform: translate(0,0); opacity: 0; } 12% { opacity: .7; } 88% { opacity: .5; } 100% { transform: translate(26px,34px); opacity: 0; } }
+    @keyframes rmSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rmWag { from { transform: rotate(-14deg); } to { transform: rotate(16deg); } }
+    @keyframes rmNoteUp { 0% { opacity: 0; transform: translateY(0); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-26px); } }
+    @keyframes rmZzz { 0% { opacity: 0; transform: translate(0,0); } 30% { opacity: .95; } 100% { opacity: 0; transform: translate(7px,-16px); } }
+    @keyframes rmEar { 0%, 92% { transform: rotate(0deg); } 95% { transform: rotate(-5deg); } 98% { transform: rotate(3deg); } 100% { transform: rotate(0deg); } }
+    @keyframes rmBreathe { from { transform: scaleY(1); } to { transform: scaleY(1.05); } }
+    @keyframes rmStretch { 0% { transform: scaleY(1); } 35% { transform: scaleY(.82) scaleX(1.1); } 70% { transform: scaleY(1.08) scaleX(.95); } 100% { transform: scaleY(1); } }
+    @keyframes rmFly { 0% { opacity: 0; transform: translate(0,0) scale(.7); } 18% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx, 10px), -90px) scale(1.15); } }
+    @keyframes rmPulseA { 0% { opacity: 0; } 35% { opacity: .85; } 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { #rmDust, .rm-steam { display: none; } }
     .str-bar { height: 8px; border-radius: 6px; background: var(--card-border); overflow: hidden; margin-top: 6px; }
     .str-bar > i { display: block; height: 100%; background: #22c55e; }
     .str-bar.soon > i { background: #f59e0b; }
@@ -2243,7 +2304,7 @@
         <li><strong>Tonart wählen:</strong> Oben Grundton und Dur/Moll einstellen; „Septakkorde“ schaltet vierstimmige Akkorde ein. Deine Wahl bleibt gemerkt.</li>
         <li><strong>Akkordfamilie:</strong> Die Kärtchen zeigen die sieben Stufenakkorde (römische Stufe + Name). Antippen zeigt alle Griffbilder, 🔊 spielt den Akkord, 🔬 öffnet ihn im Akkord-Labor.</li>
         <li><strong>Sammlung:</strong> „＋ Zur Sammlung“ nimmt Akkorde auf. Mit Namen und Ordner speichern (💾), jederzeit laden, abspielen, 🥁 ins Jam-Modul oder 📋 ins Akkordfolgen-Modul übernehmen, 📎 in die Zwischenablage kopieren.</li>
-        <li><strong>Kadenzen:</strong> 24 Wendungen in drei Stufen (🌱 Grund,  Fortgeschritten,  Jazz), passend zur gewählten Tonart. Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen (z. B. I – V – vi – IV) – sofort spielbar.</li>
+        <li><strong>Kadenzen &amp; längere Folgen:</strong> 41 Wendungen in vier Gruppen (🌱 Grund, 🎯 Fortgeschritten – für mehr Übersicht auf- und zuklappbar, 🎷 Jazz, 🎸 Längere Akkordfolgen mit 6–12 Schritten) – in Dur siehst du die Dur-Folgen, in Moll die Moll-Folgen. Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen (z. B. I – V – vi – IV) – sofort spielbar.</li>
         <li><strong>Überall hin mitnehmen:</strong> 🥁 legt die Folge ins Jam-Modul, 📋 baut sie im Akkordfolgen-Modul als Entwurf auf, 📎 kopiert sie in die Zwischenablage. Jam- und Folgen-Modul haben passende „📥 Übernehmen“-Bereiche; umgekehrt zeigt die Werkstatt deine gespeicherten Akkordfolgen an.</li>
         <li><strong>Ordner:</strong> Gespeicherte Sammlungen, Akkordfolgen und eigene Zupf-/Schlagmuster lassen sich in Ordner stecken; Ordner kannst du umbenennen (✏️ bzw. 🗂).</li>
       </ul>
@@ -2259,6 +2320,7 @@
         <li><strong>Oben:</strong> Start/Stop, Tempo, Taktart, Rhythmus-Stil und Loop-Bereich. Die weiteren Funktionen stecken in einklappbaren Bereichen (▸ antippen).</li>
         <li><strong>✏️ Griff eintragen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
         <li><strong>Leistung:</strong> Unter „🎚️ Lautstärke &amp; Klangfarbe“. „Automatisch“ rechnet auf Handys sparsamer, damit es nicht knackst oder aussetzt. Du kannst jederzeit von Hand „Sparsam“ oder „Hohe Qualität“ wählen – die Einstellung gilt nur für dieses Gerät.</li>
+        <li><strong>Es stockt?</strong> Wenn der Beat hakt oder aussetzt, liegt das fast immer an der Leistung des Handys/Tablets – nicht an einem Fehler in der App. Häufige Ursachen: Energiesparmodus, viele offene Apps/Tabs, lange Laufzeit ohne Neustart. Gegenmittel: Energiesparmodus für den Browser ausschalten, andere Apps schließen, Gerät oder Browser neu starten – und bei „Leistung“ auf „Sparsam“ stellen.</li>
         <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie im Modul „Tonleitern“.</li>
         <li><strong>🎸 Griffe zeigen:</strong> Unter den Takt-Knöpfen stehen alle Griffe des Songs nebeneinander, jeder Akkord einmal. Beim Abspielen leuchtet der aktuelle Griff, der nächste ist gestrichelt umrandet. Antippen: Akkord anhören. Kannst du die Griffe auswendig, nimm einfach das Häkchen weg.</li>
         <li><strong>🎸 Gitarre spielt mit:</strong> Die App spielt ein Muster aus „Anschlag &amp; Zupfen“ (auch deine eigenen) mit den Akkorden der Takte und deinen ✏️-Griffen. Haken bei „Gitarre an“ setzen und ein Muster wählen. Zur Auswahl stehen die Muster, die zur Taktart des Beats passen. Lautstärke, Stumm (M) und Solo (S) unter „🎚️ Lautstärke &amp; Klangfarbe“. Die Gitarre wird mit dem Beat gespeichert und kommt beim WAV- und MIDI-Export mit.</li>
@@ -7155,6 +7217,7 @@
         '<button type="button" class="btn btn-secondary" id="jamClipIn"' + (cl ? '' : ' disabled') + '>📎 Zwischenablage' + (cl ? ': ' + homeEsc((cl.label || cl.chords.map(c => c.name).join(' – ')).slice(0, 40)) : ' leer') + '</button>' +
         (twc.length ? twc.map(c => '<button type="button" class="theory-chip" data-jamcol="' + c.id + '">🥁 ' + homeEsc((fldNorm(c.folder) ? fldNorm(c.folder) + ' / ' : '') + c.name) + '</button>').join('') : '<span style="opacity:.75;">Noch keine Werkstatt-Sammlungen gespeichert.</span>') +
         '</div><div style="font-size:.78rem; opacity:.8; padding:2px 4px 8px;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner.</div></details>'; }
+    html += `<div style="margin-top:12px; font-size:.8rem; color:var(--text-muted);">💡 Stockt der Beat, liegt es fast immer an der Geräte-Leistung (Energiesparmodus, viele offene Apps, langes Laufen ohne Neustart) – nicht an einem Fehler der App. Abhilfe: Energiesparmodus aus, andere Apps schließen, Browser neu starten, ggf. „Sparsam“ wählen.</div>`;
     jamModuleRoot.innerHTML = html;
     bindScalePanel(jamModuleRoot);
     bindJamModuleEvents();
@@ -10395,7 +10458,7 @@
     } else if (mod.type === 'tw') {
       timerContainerEl.style.display = 'none';
       standardControls.style.display = 'none';
-      speechBannerEl.textContent = "🧰 Tonart-Werkstatt: Tonart wählen, Akkorde der Tonart ansehen, Kadenzen bis Jazz aufklappen – und Sammlungen in andere Module übernehmen.";
+      speechBannerEl.textContent = "🧰 Tonart-Werkstatt: Tonart wählen, Akkorde der Tonart ansehen, Kadenzen und längere Akkordfolgen aufklappen – und Sammlungen in andere Module übernehmen.";
       const twEl = document.getElementById('twRoot');
       if (twEl) { twEl.style.display = ''; renderTwModule(); }
     } else if (mod.type === 'game') {
@@ -11712,7 +11775,7 @@
   const HOME_GROUPS = [
     { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [15, '📖', 'Wörterbuch', 'Begriffe & Notenzeichen einfach erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett'], [16, '🎯', 'Effektiv üben', 'Sauber, entspannt & kreativ üben – Tipps aus Lernforschung und Praxis']] },
     { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Noten lesen & finden', 'Note → Griffbrett finden oder Bund antippen → Note sehen'], [6, '👂', 'Gehörbildung', 'Intervalle, Dur oder Moll, höher oder tiefer'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
-    { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben'], [17, '🧰', 'Tonart-Werkstatt', 'Akkordfamilien, Kadenzen bis Jazz & Sammlungen für Jam & Folgen']] },
+    { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben'], [17, '🧰', 'Tonart-Werkstatt', 'Akkordfamilien, Kadenzen bis Jazz, längere Folgen & Sammlungen für Jam & Folgen']] },
     { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
     { title: 'Planen', color: 'teal', items: [[10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Kalender, Statistik']] }
   ];
@@ -13384,6 +13447,7 @@
 
   function ptChime(kind) {
     if (!ptData.set.chime) return;
+    try { if (kind !== 'break') ptRoomNotes(kind); } catch (e) {}
     try {
       initAudio(); if (!audioCtx) return;
       const t0 = audioCtx.currentTime + 0.05;
@@ -13663,6 +13727,7 @@
       <stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#ffb35c"/>
     </linearGradient>
     <radialGradient id="rmGlow"><stop offset="0" stop-color="#fff7e0" stop-opacity=".95"/><stop offset="1" stop-color="#fff7e0" stop-opacity="0"/></radialGradient>
+    <filter id="rmSteamBlur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1.1"/></filter>
     <clipPath id="rmWinClip"><rect x="64" y="64" width="172" height="142" rx="4"/></clipPath>
     <clipPath id="rmLavaClip"><path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z"/></clipPath>
   </defs>
@@ -13671,15 +13736,24 @@
   <g stroke="#7c4426" stroke-width="3" opacity=".6">
     <line x1="0" y1="462" x2="900" y2="462"/><line x1="0" y1="500" x2="900" y2="500"/><line x1="0" y1="536" x2="900" y2="536"/>
   </g>
+  <polygon id="rmSunPatch" points="96,430 250,430 330,560 40,560" fill="#ffe9b0" opacity=".25"/>
+  <g id="rmDust" opacity=".85"><circle cx="150" cy="300" r="2" fill="#fff7e0" style="animation-delay:-2s"/><circle cx="205" cy="262" r="1.6" fill="#fff7e0" style="animation-delay:-7s"/><circle cx="122" cy="352" r="1.8" fill="#fff7e0" style="animation-delay:-12s"/><circle cx="243" cy="322" r="1.5" fill="#fff7e0" style="animation-delay:-4.5s"/></g>
   <g transform="translate(30,0)">
     <rect x="60" y="60" width="180" height="150" rx="8" fill="url(#rmSky)" stroke="#7a3b22" stroke-width="9"/>
     <g clip-path="url(#rmWinClip)">
       <circle id="rmSunGlow" cx="112" cy="102" r="40" fill="url(#rmGlow)"/>
       <circle id="rmSun" cx="112" cy="102" r="24" fill="#fff3c4"/>
+      <g id="rmStars" opacity="0"><circle cx="88" cy="86" r="1.6" fill="#fff7e0"/><circle cx="150" cy="78" r="1.3" fill="#fff7e0"/><circle cx="205" cy="96" r="1.5" fill="#fff7e0"/><circle cx="170" cy="122" r="1.1" fill="#fff7e0"/></g>
+      <circle id="rmMoon" cx="196" cy="92" r="15" fill="#f2ecda" opacity="0"/>
+      <rect id="rmNightVeil" x="64" y="64" width="172" height="142" fill="#0b1a3a" opacity="0"/>
     </g>
     <line x1="150" y1="64" x2="150" y2="206" stroke="#7a3b22" stroke-width="6"/>
     <line x1="64" y1="135" x2="236" y2="135" stroke="#7a3b22" stroke-width="6"/>
+    <path class="rm-curtain" d="M64 62 q10 74 4 150 l15 0 q5 -76 1 -150 Z" fill="#d9694a" opacity=".92"/>
+    <path class="rm-curtain c2" d="M236 62 q-10 74 -4 150 l-15 0 q-5 -76 -1 -150 Z" fill="#d9694a" opacity=".92"/>
   </g>
+  <rect x="82" y="212" width="196" height="9" rx="3" fill="#7a3b22"/>
+  <g id="rmBooks"></g>
   <g>
     <circle cx="460" cy="105" r="48" fill="#fffdf4" stroke="#4a2113" stroke-width="9"/>
     <circle cx="460" cy="105" r="40" fill="none" stroke="#e3d2ac" stroke-width="1.5"/>
@@ -13730,6 +13804,7 @@
       <path d="M180 402 C168 372 172 352 186 336 C190 356 190 372 188 402 Z" fill="#5f8f4a"/>
       <path d="M192 402 C196 368 208 352 224 344 C216 366 206 384 200 402 Z" fill="#6fa056"/>
       <path d="M176 402 C160 384 152 368 152 350 C166 362 176 380 182 402 Z" fill="#4e7d3c"/>
+      <g id="rmLeafGrow"></g>
     </g>
     <path d="M168 400 h44 l-6 36 h-32 Z" fill="#b3542c"/>
   </g>
@@ -13741,6 +13816,16 @@
     <rect x="478" y="344" width="16" height="46" rx="8" fill="#b3542c"/>
     <rect x="396" y="406" width="12" height="26" rx="5" fill="#5b2d16"/>
     <rect x="472" y="406" width="12" height="26" rx="5" fill="#5b2d16"/>
+  </g>
+  <g id="rmTea">
+    <ellipse cx="441" cy="337" rx="17" ry="3.5" fill="#e8ddc8"/>
+    <path d="M428 322 h26 l-3 14 h-20 Z" fill="#f4ede0"/>
+    <path d="M454 325 q8 2 0 8" fill="none" stroke="#f4ede0" stroke-width="2.5"/>
+    <g filter="url(#rmSteamBlur)" stroke="#fff7e0" fill="none" stroke-linecap="round">
+      <path class="rm-steam" d="M437 316 c 5 -6 -5 -11 0 -17 c 5 -6 -4 -10 0 -15" stroke-width="2.6"/>
+      <path class="rm-steam s2" d="M444 316 c 5 -6 -5 -11 0 -17 c 5 -6 -4 -10 0 -15" stroke-width="2.2"/>
+      <path class="rm-steam s3" d="M451 316 c 4 -5 -4 -10 0 -15 c 4 -5 -3 -9 0 -13" stroke-width="1.8"/>
+    </g>
   </g>
   <g>
     <rect x="560" y="330" width="220" height="96" rx="10" fill="#a05a2c"/>
@@ -13759,6 +13844,7 @@
           fill="#ffd75e" letter-spacing="1">--:--</text>
     <g>
       <ellipse cx="758" cy="308" rx="26" ry="20" fill="url(#rmGlow)" opacity=".22"/>
+      <ellipse id="rmLavaWarm" cx="758" cy="308" rx="30" ry="24" fill="#ff5a2a" opacity="0"/>
       <path d="M748 330 h20 l-3 -8 h-14 Z" fill="#4a2113"/>
       <path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z" fill="#fff7e0" opacity=".3"/>
       <g clip-path="url(#rmLavaClip)">
@@ -13789,16 +13875,30 @@
     <text id="rmLab6" x="558" y="497" text-anchor="middle" font-size="11" fill="#fff7e0" fill-opacity=".8">So</text>
   </g>
   <g id="rmCat" style="display:none">
-    <g class="rm-catbody">
-      <path d="M-26 486 q-10 -2 -8 -14 q6 2 8 6 Z" fill="#4a2113"/>
+    <text id="rmCatNote" x="10" y="456" font-size="16" fill="#fff7e0">♪</text>
+    <text id="rmCatZ" x="24" y="462" font-size="13" font-weight="700" fill="#fff7e0">z z</text>
+    <g id="rmCatCurl" class="rm-catcurl">
+      <ellipse cx="0" cy="487" rx="23" ry="12" fill="#4a2113"/>
+      <path d="M-22 492 q20 10 44 0 q-4 6 -22 6 q-18 0 -22 -6 Z" fill="#4a2113"/>
+      <path d="M-19 489 q14 8 33 4" fill="none" stroke="#38180d" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="15" cy="479" r="9.5" fill="#4a2113"/>
+      <g class="rm-ears">
+        <path d="M8 473 l-2 -8 l7 3 Z" fill="#4a2113"/>
+        <path d="M19 471 l3 -7 l4 7 Z" fill="#4a2113"/>
+      </g>
+    </g>
+    <g id="rmCatStand" class="rm-catbody">
+      <path id="rmCatTail" d="M-26 486 q-10 -2 -8 -14 q6 2 8 6 Z" fill="#4a2113"/>
       <ellipse cx="0" cy="486" rx="24" ry="11" fill="#4a2113"/>
       <rect x="-16" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
       <rect x="-6" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
       <rect x="4" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
       <rect x="12" y="490" width="6" height="14" rx="3" fill="#4a2113"/>
       <circle cx="22" cy="472" r="10" fill="#4a2113"/>
-      <path d="M14 466 l-2 -9 l8 4 Z" fill="#4a2113"/>
-      <path d="M26 464 l4 -8 l4 8 Z" fill="#4a2113"/>
+      <g id="rmCatEars" class="rm-ears">
+        <path d="M14 466 l-2 -9 l8 4 Z" fill="#4a2113"/>
+        <path d="M26 464 l4 -8 l4 8 Z" fill="#4a2113"/>
+      </g>
     </g>
   </g>
   <g>
@@ -13808,8 +13908,80 @@
     <path d="M816 430 h32 l-6 -14 h-20 Z" fill="#5b2d16"/>
   </g>
 </svg>
+<div id="rmOverlay"></div><div id="rmPulse"></div>
 <div id="ptRoomList" style="position:absolute; top:10px; right:10px; max-width:min(46vw,320px); background:rgba(60,20,10,.5); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-radius:12px; padding:8px 12px; color:#fff7e0; font-size:.8rem; line-height:1.45;"></div>
 <div class="pt-room-bar" id="ptRoomBar"></div>`;
+  }
+  const RM_CAT_HOME = 852, RM_CAT_WINDOW = 150; // rechte Ecke neben der Stehlampe; Pause = Fenster
+  function ptRoomTod() { const h = new Date().getHours(); return (h >= 20 || h < 6) ? 'night' : (h >= 17 ? 'evening' : 'day'); }
+  function ptRoomDays() { let n = 0; for (const k in ptData.days) if (ptData.days[k] >= 60) n++; return n; }
+  function ptRoomTotalMin() { let s = 0; for (const k in ptData.days) s += +ptData.days[k] || 0; return Math.floor(s / 60); } // ptData.days zählt Sekunden
+  const RM_BOOK_COLORS = ['#c0563a', '#3f7a5a', '#4a6fa5', '#a5813f', '#7a4a8f', '#b05574', '#4f8f8a', '#8f6a4a'];
+  function ptRoomRenderBooks() {
+    const g = document.getElementById('rmBooks'); if (!g) return;
+    const n = Math.min(14, ptRoomDays());
+    if (g.dataset.n === String(n)) return;
+    g.dataset.n = String(n);
+    let s = '';
+    for (let i = 0; i < n; i++) {
+      const hb = 20 + ((i * 7) % 9), w = 8 + ((i * 3) % 4), x = 96 + i * 13;
+      s += '<rect x="' + x + '" y="' + (212 - hb) + '" width="' + w + '" height="' + hb + '" rx="1.5" fill="' + RM_BOOK_COLORS[(i * 3 + 1) % RM_BOOK_COLORS.length] + '" stroke="#4a2113" stroke-width=".8"/>';
+    }
+    g.innerHTML = s;
+  }
+  const RM_LEAF_ANGS = [-40, -24, -8, 8, 24, 40, 56, -56, 68];
+  const RM_LEAF_FILLS = ['#5f8f4a', '#6fa056', '#4e7d3c'];
+  function ptRoomRenderLeaves() {
+    const g = document.getElementById('rmLeafGrow'); if (!g) return;
+    const want = Math.min(9, Math.floor(ptRoomTotalMin() / 30));
+    if (g.dataset.n === String(want)) return;
+    g.dataset.n = String(want);
+    let s = '';
+    for (let i = 0; i < want; i++) s += '<path d="M180 402 C168 372 172 352 186 336 C190 356 190 372 188 402 Z" fill="' + RM_LEAF_FILLS[i % 3] + '" transform="rotate(' + RM_LEAF_ANGS[i] + ' 186 402)"/>';
+    g.innerHTML = s;
+  }
+  function ptRoomNotes(kind) {
+    const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
+    const host = document.getElementById('rmOverlay'); if (!host) return;
+    const n = kind === 'end' ? 3 : 2;
+    for (let i = 0; i < n; i++) {
+      const sp = document.createElement('span');
+      sp.className = 'rm-note-fly'; sp.textContent = i % 2 ? '♫' : '♪';
+      sp.style.left = (42 + Math.random() * 16) + '%';
+      sp.style.top = (46 + Math.random() * 8) + '%';
+      sp.style.setProperty('--dx', (Math.random() * 44 - 22).toFixed(0) + 'px');
+      sp.style.animationDelay = (i * 0.28) + 's';
+      host.appendChild(sp);
+      setTimeout(() => { try { sp.remove(); } catch (e) {} }, 3400);
+    }
+  }
+  function ptRoomCelebrate() {
+    ptRoomNotes('end');
+    const pu = document.getElementById('rmPulse');
+    if (pu) { pu.classList.remove('go'); void pu.getBoundingClientRect(); pu.classList.add('go'); setTimeout(() => pu.classList.remove('go'), 3400); }
+  }
+  function ptRoomCatSet() {
+    const cat = document.getElementById('rmCat'); if (!cat) return;
+    const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
+    if (cat.dataset.walking === '1') return;
+    const sleeping = pt.running && pt.paused;
+    const reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    cat.style.display = '';
+    const x = sleeping ? RM_CAT_WINDOW : RM_CAT_HOME;
+    if (cat.dataset.pos !== String(x)) {
+      cat.dataset.pos = String(x);
+      cat.style.transition = reduce ? 'none' : 'transform 5s ease-in-out';
+      cat.style.transform = 'translate(' + x + 'px,0px)';
+    }
+    const wasSleep = cat.dataset.sleep === '1';
+    cat.classList.toggle('rm-sleep', sleeping);
+    cat.dataset.sleep = sleeping ? '1' : '0';
+    if (wasSleep && !sleeping) { cat.classList.remove('rm-stretch'); void cat.getBoundingClientRect(); cat.classList.add('rm-stretch'); setTimeout(() => cat.classList.remove('rm-stretch'), 1200); }
+  }
+  function ptRoomCatPurr() {
+    const cat = document.getElementById('rmCat'); if (!cat) return;
+    cat.classList.remove('rm-purr'); void cat.getBoundingClientRect(); cat.classList.add('rm-purr');
+    setTimeout(() => cat.classList.remove('rm-purr'), 1700);
   }
   function ptRoomOpen() {
     const r = document.getElementById('ptRoom'); if (!r) return;
@@ -13821,13 +13993,19 @@
       el.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
       el.style.animationDelay = (-Math.random() * 6).toFixed(2) + 's';
     });
-    // Katze: bei jeder vollen 5-Minuten-Marke der Übungszeit durch den Raum
+    // Katze: fester Platz am Sessel; in Pausen schläft sie am Fenster. Alle 5 Übeminuten läuft sie einmal durchs Zimmer.
     ptRoomCatMile = Math.floor(ptElapsed() / 300000);
+    const cat0 = document.getElementById('rmCat');
+    if (cat0) { const slp = pt.running && pt.paused; const x0 = slp ? RM_CAT_WINDOW : RM_CAT_HOME; cat0.dataset.walking = '0'; cat0.dataset.sleep = slp ? '1' : '0'; cat0.classList.toggle('rm-sleep', slp); cat0.style.display = ''; cat0.style.transition = 'none'; cat0.style.transform = 'translate(' + x0 + 'px,0px)'; cat0.dataset.pos = String(x0); }
+    // Sekundenzeiger der Wanduhr gleitet lautlos (bei „Bewegung reduzieren“ tickt er stattdessen)
+    const cs0 = document.getElementById('rmClkS');
+    if (cs0) { const nw = new Date(); cs0.classList.add('rm-sweep'); cs0.style.animationDelay = '-' + (nw.getSeconds() + nw.getMilliseconds() / 1000).toFixed(2) + 's'; }
+    ptRoomRenderBooks(); ptRoomRenderLeaves();
     ptRoomTick();
   }
   function ptRoomClose() {
     const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open');
-    const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; }
+    const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; cat.dataset.pos = ''; cat.classList.remove('rm-sleep', 'rm-stretch', 'rm-purr'); }
   }
   let ptRoomCatMile = 0;
   function ptRoomCatWalk() {
@@ -13835,13 +14013,15 @@
     const cat = document.getElementById('rmCat'); if (!cat) return;
     const ltr = Math.random() < 0.5, dir = ltr ? 1 : -1;
     const from = ltr ? -90 : 990, to = ltr ? 990 : -90;
+    cat.dataset.walking = '1';
+    cat.classList.add('rm-walk');
     cat.style.display = '';
     cat.style.transition = 'none';
     cat.style.transform = 'translate(' + from + 'px,0px) scaleX(' + dir + ')';
     void cat.getBoundingClientRect();
     cat.style.transition = 'transform 11s linear';
     cat.style.transform = 'translate(' + to + 'px,0px) scaleX(' + dir + ')';
-    setTimeout(() => { cat.style.display = 'none'; cat.style.transition = 'none'; }, 11500);
+    setTimeout(() => { cat.dataset.walking = '0'; cat.dataset.pos = ''; cat.style.transition = 'none'; cat.classList.remove('rm-walk'); ptRoomCatSet(); }, 11500);
   }
   const PT_ROOM_BAR_KEY = 'guitartrainer_ptroombar';
   let ptRoomBarEdit = false;
@@ -13893,9 +14073,11 @@
   function ptRoomTick() {
     const rm = document.getElementById('ptRoom');
     if (!rm || !rm.classList.contains('open')) return;
+    const glowBefore = ptRoomEndGlow;
     if (pt.running) ptRoomEndGlow = false;
     else if (ptRoomWasRunning) ptRoomEndGlow = true;
     ptRoomWasRunning = pt.running;
+    if (!glowBefore && ptRoomEndGlow) ptRoomCelebrate();
     const el = ptElapsed(), tgt = ptCurTarget(), r = pt.running;
     if (r && !pt.paused) { const mile = Math.floor(el / 300000); if (mile > 0 && mile !== ptRoomCatMile) { ptRoomCatMile = mile; ptRoomCatWalk(); } }
     const dg = document.getElementById('rmDigits');
@@ -13934,12 +14116,32 @@
     const sun = document.getElementById('rmSun'), sung = document.getElementById('rmSunGlow');
     if (sun) { sun.setAttribute('cx', sx.toFixed(1)); sun.setAttribute('cy', sy.toFixed(1)); }
     if (sung) { sung.setAttribute('cx', sx.toFixed(1)); sung.setAttribute('cy', sy.toFixed(1)); }
+    // Tageszeit-Stimmung: Sonnenfleck auf dem Boden, Staub im Strahl, Nacht am Fenster
+    const tod = ptRoomTod();
+    if (rm.dataset.tod !== tod) { rm.dataset.tod = tod; rm.classList.toggle('rm-night', tod === 'night'); }
+    const patch = document.getElementById('rmSunPatch');
+    if (patch) { patch.setAttribute('transform', 'translate(' + (-60 + 260 * p2).toFixed(1) + ',0)'); patch.setAttribute('opacity', tod === 'night' ? '0' : tod === 'evening' ? '.16' : '.26'); }
+    const dust = document.getElementById('rmDust');
+    if (dust) dust.setAttribute('opacity', tod === 'day' ? '.85' : tod === 'evening' ? '.4' : '0');
+    const veil = document.getElementById('rmNightVeil'), moon = document.getElementById('rmMoon'), stars = document.getElementById('rmStars');
+    if (veil) veil.setAttribute('opacity', tod === 'night' ? '.88' : tod === 'evening' ? '.28' : '0');
+    if (moon) moon.setAttribute('opacity', tod === 'night' ? '1' : '0');
+    if (stars) stars.setAttribute('opacity', tod === 'night' ? '.9' : '0');
+    // Lava-Lampe wird mit der Sitzung wärmer
+    const lw = document.getElementById('rmLavaWarm');
+    if (lw) lw.setAttribute('opacity', (0.05 + 0.3 * Math.min(1, el / 3600000)).toFixed(3));
+    // Pause dimmt den Raum sanft; abends/nachts ist es ohnehin gemütlicher
+    const ov = document.getElementById('rmOverlay');
+    if (ov) { const base = tod === 'night' ? 0.26 : tod === 'evening' ? 0.11 : 0; ov.style.opacity = String(Math.min(0.55, base + (r && pt.paused ? 0.18 : 0))); }
+    // Katze: Platz wählen (Sessel oder Fenster), Bücher & Blätter aktuell halten
+    ptRoomCatSet();
+    ptRoomRenderBooks(); ptRoomRenderLeaves();
     // Digitaluhr auf dem Schränkchen: echte Uhrzeit
     const dig = document.getElementById('rmDig');
     if (dig) dig.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
     // Lampe: leuchtet warm auf, wenn die Zeit um ist; Abschnitte färben sie
     const glow = document.getElementById('rmLampGlow'), shade = document.getElementById('rmLampShade');
-    if (glow) glow.setAttribute('opacity', ptRoomEndGlow ? '0.95' : '0.35');
+    if (glow) glow.setAttribute('opacity', ptRoomEndGlow ? '0.95' : tod === 'night' ? '.8' : tod === 'evening' ? '.55' : '.35');
     if (shade) shade.setAttribute('fill', ptRoomEndGlow ? '#fff3c4' : (pt.mode === 'sec' && r ? PT_ROOM_SEC_COLORS[pt.secIdx % PT_ROOM_SEC_COLORS.length] : '#ffcf6e'));
     // Übungszeit auf dem Boden (optional)
     const st = document.getElementById('rmStats');
@@ -14022,6 +14224,8 @@
     if (gtr) gtr.addEventListener('click', e => { e.stopPropagation(); ptRoomClose(); ptClose(); try { hideHome(); switchToModule(11); window.scrollTo(0, 0); } catch (err) {} });
     const rsvg = rmDiv.querySelector('#ptRoomSvg');
     if (rsvg) rsvg.addEventListener('click', () => { const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.toggle('hide'); });
+    const rmCatEl = rmDiv.querySelector('#rmCat');
+    if (rmCatEl) rmCatEl.addEventListener('click', e => { e.stopPropagation(); ptRoomCatPurr(); });
     setInterval(ptRoomTick, 1000);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
     const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpenSmart);
@@ -15262,7 +15466,7 @@
 
   // =================== Tonart-Werkstatt (Modul 18) ===================
   const TW_KEY = 'guitartrainer_tw', TW_COLS = 'guitartrainer_twcols';
-  let twState = null, twSelChord = 0, twPick = new Set(), twOpenProg = null, twRenFolder = null;
+  let twState = null, twSelChord = 0, twPick = new Set(), twOpenProg = null, twRenFolder = null, twFoldCols = false, twFoldProg = false, twFoldAdv = false;
   function twLoadSet() { try { return JSON.parse(localStorage.getItem(TW_KEY) || 'null'); } catch (e) { return null; } }
   function twInitState() { const s = twLoadSet(); twState = { root: s && s.root != null ? s.root : 4, minor: !!(s && s.minor), sev: !!(s && s.sev) }; }
   function twSaveSet() { try { localStorage.setItem(TW_KEY, JSON.stringify(twState)); } catch (e) {} }
@@ -15287,7 +15491,7 @@
   }
   function twChordObj(step) {
     const rootPc = twState.root;
-    if (step.d != null) return twFamily()[step.d];
+    if (step.d != null) { const c = twFamily()[step.d]; if (step.t && step.t !== c.type && TH_CHORD_TYPES[step.t]) return { i: c.i, roman: c.roman, root: c.root, type: step.t, name: c.root.name + TH_CHORD_TYPES[step.t].sym }; return c; }
     const pc = (rootPc + step.s) % 12, type = step.t || 'dur';
     const nm = twSpellNote(rootPc, step.s);
     return { root: { pc, name: nm }, type, name: nm + TH_CHORD_TYPES[type].sym };
@@ -15324,7 +15528,24 @@
     { mode: 'dur', level: 'Jazz', label: 'III–vi–ii–V', info: 'Sanfterer Einstieg in den Turnaround.', steps: [{ d: 2, t: 'min7' }, { d: 5, t: 'min7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
     { mode: 'dur', level: 'Jazz', label: 'Erweiterter Turnaround ii–V–iii–vi', info: 'Kreist elegant, statt sofort aufzulösen.', steps: [{ d: 1, t: 'min7' }, { d: 4, t: 'dom7' }, { d: 2, t: 'min7' }, { d: 5, t: 'min7' }] },
     { mode: 'dur', level: 'Jazz', label: 'Jazz-Turnaround mit Sekundärdominante I–VI7–ii–V', info: 'VI7 als Würze zwischen I und ii.', steps: [{ s: 0, t: 'maj7' }, { s: 9, t: 'dom7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }] },
-    { mode: 'moll', level: 'Jazz', label: 'Moll-Turnaround i–♭VI–♭II7 (Tritonus-Zug)', info: '♭VI und die Substitutions-Dominante färben klassisch-jazzig.', steps: [{ d: 0, t: 'min7' }, { s: 8, t: 'maj7' }, { s: 1, t: 'dom7' }, { d: 0 }] }
+    { mode: 'moll', level: 'Jazz', label: 'Moll-Turnaround i–♭VI–♭II7 (Tritonus-Zug)', info: '♭VI und die Substitutions-Dominante färben klassisch-jazzig.', steps: [{ d: 0, t: 'min7' }, { s: 8, t: 'maj7' }, { s: 1, t: 'dom7' }, { d: 0 }] },
+    { mode: 'dur', level: 'Grund', label: 'Plagalkadenz IV–I (Amen-Kadenz)', info: 'Der weiche „Amen“-Schluss aus der Kirchenmusik.', steps: [{ d: 3 }, { d: 0 }] },
+    { mode: 'dur', level: 'Grund', label: 'Halbschluss I–IV–V', info: 'Endet offen auf der Dominante – klingt wie eine Frage, die weiter will.', steps: [{ d: 0 }, { d: 3 }, { d: 4 }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Königsstraße IV–V–iii–vi', info: 'Die „Royal Road“ des Pop – Sehnsucht und Spannung in einem Zug.', steps: [{ d: 3 }, { d: 4 }, { d: 2 }, { d: 5 }] },
+    { mode: 'dur', level: 'Fortgeschritten', label: 'Rock-Kadenz I–♭VII–♭VI–♭VII', info: 'Die große Rock-Wendung mit Dur-Akkorden von außerhalb der Tonleiter.', steps: [{ d: 0 }, { s: 10, t: 'dur' }, { s: 8, t: 'dur' }, { s: 10, t: 'dur' }] },
+    { mode: 'dur', level: 'Jazz', label: 'Rhythm-Changes-Brücke III7–VI7–II7–V7', info: 'Die berühmte Bridge aus „I Got Rhythm“ – vier Dominanten kreisen nach Hause.', steps: [{ s: 4, t: 'dom7' }, { s: 9, t: 'dom7' }, { s: 2, t: 'dom7' }, { s: 7, t: 'dom7' }] },
+    { mode: 'dur', level: 'Jazz', label: 'Herbstlaub-Auftakt ii–V–I–vi–ii–V–iii', info: 'Die ersten Takte von „Autumn Leaves“ – ein Jazz-Standard zum Mitüben.', steps: [{ d: 1, t: 'min7' }, { d: 4, t: 'dom7' }, { s: 0, t: 'maj7' }, { d: 5, t: 'min7' }, { d: 1, t: 'min7' }, { d: 4, t: 'dom7' }, { d: 2, t: 'min7' }] },
+    { mode: 'dur', level: 'Lang', label: 'Kanon-Folge I–V–vi–iii–IV–I–IV–V', info: 'Acht Akkorde des berühmten Kanons – das Fundament unzähliger Popsongs.', steps: [{ d: 0 }, { d: 4 }, { d: 5 }, { d: 2 }, { d: 3 }, { d: 0 }, { d: 3 }, { d: 4 }] },
+    { mode: 'dur', level: 'Lang', label: '12-Takt-Blues I–IV–V', info: 'Das Grundgerüst von Blues und Rock – ein Akkord pro Takt. Mit Dominant-Septakkorden klingt es noch bluesiger.', steps: [{ d: 0 }, { d: 3 }, { d: 0 }, { d: 0 }, { d: 3 }, { d: 3 }, { d: 0 }, { d: 0 }, { d: 4 }, { d: 3 }, { d: 0 }, { d: 4 }] },
+    { mode: 'dur', level: 'Lang', label: 'Quintenzirkel-Runde I–IV–vii°–iii–vi–ii–V–I', info: 'Acht Stufen, jeweils eine Quinte weiter – einmal durch die ganze Tonart.', steps: [{ d: 0 }, { d: 3 }, { d: 6 }, { d: 2 }, { d: 5 }, { d: 1 }, { d: 4 }, { d: 0 }] },
+    { mode: 'dur', level: 'Lang', label: 'Lange Pop-Brücke vi–IV–I–V–vi–IV–V', info: 'Die Axis-Folge, ausgeschrieben zu einem kompletten Brücken-Teil.', steps: [{ d: 5 }, { d: 3 }, { d: 0 }, { d: 4 }, { d: 5 }, { d: 3 }, { d: 4 }] },
+    { mode: 'moll', level: 'Grund', label: 'Plagalkadenz iv–i (Amen-Kadenz)', info: 'Der weiche „Amen“-Schluss – auch in Moll.', steps: [{ d: 3 }, { d: 0 }] },
+    { mode: 'moll', level: 'Fortgeschritten', label: 'Moll-Trugschluss V7–VI', info: 'Die Dur-Dominante täuscht – statt i kommt das warme ♭VI.', steps: [{ s: 7, t: 'dom7' }, { d: 5 }] },
+    { mode: 'moll', level: 'Fortgeschritten', label: 'Picardischer Schluss iv–V–I', info: 'Moll-Kadenz mit hellem Dur-Schlussakkord – feierlich und überraschend.', steps: [{ d: 3 }, { d: 4, t: 'dur' }, { s: 0, t: 'dur' }] },
+    { mode: 'moll', level: 'Jazz', label: 'Moll-Turnaround i–♭VImaj7–iv7–V7', info: 'Runder Jazz-Schluss in Moll – auch als Endlos-Schleife spielbar.', steps: [{ d: 0 }, { s: 8, t: 'maj7' }, { s: 5, t: 'min7' }, { s: 7, t: 'dom7' }] },
+    { mode: 'moll', level: 'Lang', label: 'Moll-Kanon-Folge i–V–VI–III–iv–i–iv–V', info: 'Die Kanon-Folge in der Moll-Variante – dunkel, ruhig und feierlich.', steps: [{ d: 0 }, { d: 4, t: 'dur' }, { d: 5 }, { d: 2 }, { d: 3 }, { d: 0 }, { d: 3 }, { d: 4, t: 'dur' }] },
+    { mode: 'moll', level: 'Lang', label: 'Moll-Blues (12 Takt) i–iv–V', info: 'Blues in Moll – weich und melancholisch; ein Akkord pro Takt.', steps: [{ d: 0 }, { d: 3 }, { d: 0 }, { d: 0 }, { d: 3 }, { d: 3 }, { d: 0 }, { d: 0 }, { d: 4 }, { d: 3 }, { d: 0 }, { d: 4 }] },
+    { mode: 'moll', level: 'Lang', label: 'Epische Moll-Reise i–VI–III–VII–i–VI–iv–V', info: 'Die epische Moll-Folge, ausgeschrieben zu einem kompletten Abschnitt.', steps: [{ d: 0 }, { d: 5 }, { d: 2 }, { d: 6 }, { d: 0 }, { d: 5 }, { d: 3 }, { d: 4, t: 'dur' }] }
   ];
   function twGripSvg(frets) {
     const played = frets.map((f, i) => [f, i]).filter(x => x[0] >= 0);
@@ -15378,8 +15599,9 @@
       '<li>Oben <strong>Tonart</strong> wählen: Grundton, Dur oder Moll, auf Wunsch Septakkorde. Deine Wahl bleibt gemerkt.</li>' +
       '<li>Die <strong>Kärtchen</strong> zeigen alle sieben Akkorde der Tonart. Antippen zeigt Griffbilder, 🔊 spielt den Akkord, 🔬 öffnet ihn im Akkord-Labor.</li>' +
       '<li><strong>„＋ Zur Sammlung“</strong> nimmt Akkorde in deine Sammlung auf: speichern (💾), in Ordner sortieren (🗂) und in andere Module übernehmen.</li>' +
-      '<li><strong>Kadenzen:</strong> Zeile antippen → die Folge erscheint komplett mit Griffbildern und Stufen (z. B. I – V – vi – IV), sofort spielbar.</li>' +
-      '<li>🥁 = ins Jam-Modul · 📋 = ins Akkordfolgen-Modul · 📎 = in die Zwischenablage (andere Module haben „📥 Übernehmen“).</li><li><strong>📎 Zwischenablage oder 💾 Sammlung?</strong> Die Zwischenablage merkt sich kurz genau <strong>eine</strong> Folge, solange die App offen ist – perfekt zum schnellen Wechseln zwischen Modulen. 💾 Sammlungen bleiben dagegen <strong>dauerhaft</strong> gespeichert, mit Name und Ordner.</li></ul></div>';
+      '<li><strong>Kadenzen &amp; längere Folgen:</strong> vier Gruppen – 🌱 Grund, 🎯 Fortgeschritten, 🎷 Jazz und 🎸 Längere Akkordfolgen (6–12 Akkorde, z. B. Kanon-Folge oder 12-Takt-Blues). Zeile antippen → alles erscheint mit Griffbildern und Stufen, sofort spielbar.</li>' +
+      '<li>🥁 = ins Jam-Modul · 📋 = ins Akkordfolgen-Modul · 📎 = in die Zwischenablage (andere Module haben „📥 Übernehmen“).</li><li><strong>📎 Zwischenablage oder 💾 Sammlung?</strong> Die Zwischenablage merkt sich kurz genau <strong>eine</strong> Folge, solange die App offen ist – perfekt zum schnellen Wechseln zwischen Modulen. 💾 Sammlungen bleiben dagegen <strong>dauerhaft</strong> gespeichert, mit Name und Ordner.</li></ul>' +
+      '<div style="border-top:1px solid var(--card-border); margin-top:10px; padding-top:10px;"><strong style="font-size:.92rem;">🗂 Der Sammlungs-Bereich unten – so funktioniert er und dafür ist er da</strong><p style="margin:6px 0 0; font-size:.88rem; line-height:1.6;">Ganz unten im Modul liegt dein <strong>Regal</strong>: „📚 Gespeicherte Sammlungen“. Dort landet alles, was du mit 💾 speicherst – jede Sammlung hat einen <strong>Namen</strong> und wohnt auf Wunsch in einem <strong>Ordner</strong> (z. B. „Songs“, „Kadenzen“, „Ideen“). Ordner sind wie Schubladen: Sie gruppieren deine Sammlungen und lassen sich jederzeit ✏️ umbenennen. Jeder Eintrag hat seine Knöpfe: 📂 <strong>Laden</strong> holt die Akkorde als Auswahl zurück, 🥁 und 📋 übernehmen die Folge ins Jam- bzw. Folgen-Modul, 📎 legt sie in die Zwischenablage, 🔊 spielt sie und 🗑 löscht sie. Darunter findest du „📥 Deine Akkordfolgen aus dem Folgen-Modul“ – eine automatische Liste dessen, was du dort gespeichert hast; mit einem Tipp wird daraus eine Werkstatt-Sammlung. <strong>Der Sinn dahinter:</strong> Du baust dir einmal eine Folge zusammen – und hast sie dann dauerhaft griffbereit, sortiert und in jedem anderen Modul sofort spielbar. Beide Bereiche sind eingeklappt (▸) und bleiben unscheinbar, bis du sie brauchst.</p></div></div>';
     h += '<div class="theory-card"><div class="theory-transpose theory-scale-controls">' +
       '<label for="twRootSel">Tonart:</label><select id="twRootSel">' + NAMES.map((n, i) => '<option value="' + i + '"' + (i === twState.root ? ' selected' : '') + '>' + n + '</option>').join('') + '</select>' +
       '<select id="twTypeSel"><option value="dur"' + (!twState.minor ? ' selected' : '') + '>Dur</option><option value="moll"' + (twState.minor ? ' selected' : '') + '>Moll</option></select>' +
@@ -15393,65 +15615,14 @@
       '<button type="button" class="btn btn-secondary" id="twPlaySel">🔊 Anhören</button>' +
       '<button type="button" class="btn btn-secondary" id="twLabSel">🔬 Im Akkord-Labor öffnen</button></div>';
     h += '<div class="row" style="margin-top:10px; flex-wrap:wrap; gap:14px; align-items:flex-start;">' + (grips.length ? grips.slice(0, 3).map((g, i) => '<div style="text-align:center; font-size:.78rem; color:var(--text-muted);">' + twGripSvg(g) + 'Griff ' + (i + 1) + '</div>').join('') : '<div style="opacity:.8;">Für diesen Akkordtyp liegt kein Griffbild im Bestand – das Akkord-Labor hilft weiter.</div>') + '</div></div>';
-    // Sammlung
-    const pick = twPickChords();
-    h += '<div class="theory-card"><h4 style="margin:0 0 8px;">💾 Meine Sammlung</h4>' +
-      (pick.length ? '<div class="row" style="gap:6px; flex-wrap:wrap;">' + pick.map(c => '<span class="theory-chip">' + homeEsc(c.name) + '</span>').join('') + '</div>' +
-        '<div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap;">' +
-        '<input type="text" id="twColName" placeholder="Name, z. B. Song-Ideen E-Moll" maxlength="40" style="flex:1; min-width:150px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' +
-        '<input type="text" id="twColFolder" list="twFolderList" placeholder="Ordner (optional)" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' + folderDatalist('twFolderList') +
-        '<button type="button" class="btn" id="twColSave">💾 Speichern</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColPlay">🔊 Spielen</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColJam">🥁 Ins Jam</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColProg">📋 Ins Folgen-Modul</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColClip">📎 Kopieren</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColClear">✕ Leeren</button></div>'
-        : '<div style="opacity:.85;">Tippe Akkord-Kärtchen an, um sie hier zu sammeln – dann speichern und jederzeit in andere Module übernehmen.</div>') +
-      (pick.length ? '' : '<div class="row" style="margin-top:8px; gap:8px;"><button type="button" class="btn btn-secondary" id="twColClipIn">📥 Aus Zwischenablage holen</button></div>') + '</div>';
-    const cols = twColsLoad();
-    if (cols.length) {
-      h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📚 Gespeicherte Sammlungen</h4>';
-      fldGroups(cols).forEach(([f, arr]) => {
-        h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 4px;"><strong style="font-size:.85rem;">🗂 ' + homeEsc(f) + '</strong>' +
-          (twRenFolder === f
-            ? '<input type="text" id="twRenIn" value="' + homeEsc(f === 'Ohne Ordner' ? '' : f) + '" placeholder="Neuer Name" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:6px;"><button type="button" class="theory-chip" data-twrenok="1">✔</button><button type="button" class="theory-chip" data-twrenc="1">✕</button>'
-            : '<button type="button" class="theory-chip" data-twrenf="' + homeEsc(f) + '">✏️ umbenennen</button>') + '</div>';
-        arr.forEach(c => {
-          h += '<div class="th-prog-row"><div><strong>' + homeEsc(c.name) + '</strong><br><span>' + (c.chords || []).map(p => homeEsc(p[2] || '')).join(' – ') + '</span></div>' +
-            '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twload="' + c.id + '">📂 Laden</button>' +
-            '<button type="button" class="theory-chip" data-twcoljam="' + c.id + '">🥁 Jam</button>' +
-            '<button type="button" class="theory-chip" data-twcolprog="' + c.id + '">📋 Folgen</button>' +
-            '<button type="button" class="theory-chip" data-twcolclip="' + c.id + '">📎</button>' +
-            '<button type="button" class="theory-chip" data-twcolplay="' + c.id + '">🔊</button>' +
-            '<button type="button" class="theory-chip" data-twcolrm="' + c.id + '">🗑</button></div></div>';
-        });
-      });
-      h += '</div>';
-    }
-    // Folgen aus dem Akkordfolgen-Modul
-    try {
-      const ps = progLoad();
-      if (ps.saved && ps.saved.length) {
-        h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📥 Deine Akkordfolgen aus dem Folgen-Modul</h4>';
-        fldGroups(ps.saved).forEach(([f, arr]) => {
-          h += '<div style="font-size:.85rem; margin:8px 0 4px;"><strong>🗂 ' + homeEsc(f) + '</strong></div>';
-          arr.forEach(p => {
-            h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.name || 'Ohne Namen') + '</strong><br><span>' + p.chords.length + ' Akkorde</span></div>' +
-              '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twpsave="' + p.name.replace(/"/g, '&quot;') + '">📂 Als Sammlung</button>' +
-              '<button type="button" class="theory-chip" data-twpjam="' + p.name.replace(/"/g, '&quot;') + '">🥁 Jam</button>' +
-              '<button type="button" class="theory-chip" data-twpclip="' + p.name.replace(/"/g, '&quot;') + '">📎</button></div></div>';
-          });
-        });
-        h += '</div>';
-      }
-    } catch (e) {}
     // Kadenzen
     const minor = twState.minor;
     const list = TW_PROGS.filter(p => p.mode === (minor ? 'moll' : 'dur'));
-    ['Grund', 'Fortgeschritten', 'Jazz'].forEach(lv => {
+    ['Grund', 'Fortgeschritten', 'Jazz', 'Lang'].forEach(lv => {
       const rows = list.filter(p => p.level === lv);
       if (!rows.length) return;
-      h += '<div class="theory-card"><h4 style="margin:0 0 4px;">' + (lv === 'Grund' ? '🌱 Grund-Kadenzen' : lv === 'Fortgeschritten' ? '🎯 Fortgeschrittene Kadenzen' : '🎷 Jazz-Kadenzen') + '</h4><div style="font-size:.8rem; color:var(--text-muted); margin-bottom:6px;">Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen.</div>';
+      if (lv === 'Fortgeschritten') h += '<details class="theory-card tw-fold" id="twFoldAdv"' + (twFoldAdv ? ' open' : '') + '><summary>🎯 Fortgeschrittene Kadenzen<span class="tw-fold-cnt">' + rows.length + ' Folgen · antippen</span></summary><div style="font-size:.8rem; color:var(--text-muted); margin:6px 0 4px;">Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen.</div>';
+      else h += '<div class="theory-card"><h4 style="margin:0 0 4px;">' + (lv === 'Grund' ? '🌱 Grund-Kadenzen' : lv === 'Jazz' ? '🎷 Jazz-Kadenzen' : '🎸 Längere Akkordfolgen') + '</h4><div style="font-size:.8rem; color:var(--text-muted); margin-bottom:6px;">Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen.</div>';
       rows.forEach(p => {
         const gi = TW_PROGS.indexOf(p);
         const chords = p.steps.map(st => twChordObj(st));
@@ -15473,11 +15644,67 @@
               '<div style="font-size:.82rem; font-weight:700;">' + homeEsc(c.name) + '</div></div>';
           }).join('') + '</div>' : '') + '</div>';
       });
-      h += '</div>';
+      h += (lv === 'Fortgeschritten' ? '</details>' : '</div>');
     });
+    // Sammlung
+    const pick = twPickChords();
+    if (!pick.length) h += '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; color:var(--text-muted); font-size:.88rem; padding:2px 4px; margin:2px 0 12px;"><span>💾 Sammlung: noch leer – tippe Akkord-Kärtchen an, um sie zu sammeln.</span><button type="button" class="btn btn-secondary" id="twColClipIn" style="padding:6px 10px; font-size:.8rem;">📥 Aus Zwischenablage holen</button></div>';
+    if (pick.length) h += '<div class="theory-card"><h4 style="margin:0 0 8px;">💾 Meine Sammlung</h4>' +
+      (pick.length ? '<div class="row" style="gap:6px; flex-wrap:wrap;">' + pick.map(c => '<span class="theory-chip">' + homeEsc(c.name) + '</span>').join('') + '</div>' +
+        '<div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap;">' +
+        '<input type="text" id="twColName" placeholder="Name, z. B. Song-Ideen E-Moll" maxlength="40" style="flex:1; min-width:150px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' +
+        '<input type="text" id="twColFolder" list="twFolderList" placeholder="Ordner (optional)" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' + folderDatalist('twFolderList') +
+        '<button type="button" class="btn" id="twColSave">💾 Speichern</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColPlay">🔊 Spielen</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColJam">🥁 Ins Jam</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColProg">📋 Ins Folgen-Modul</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColClip">📎 Kopieren</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColClear">✕ Leeren</button></div>'
+        : '<div style="opacity:.85;">Tippe Akkord-Kärtchen an, um sie hier zu sammeln – dann speichern und jederzeit in andere Module übernehmen.</div>') +
+      (pick.length ? '' : '<div class="row" style="margin-top:8px; gap:8px;"><button type="button" class="btn btn-secondary" id="twColClipIn">📥 Aus Zwischenablage holen</button></div>') + '</div>';
+    const cols = twColsLoad();
+    if (cols.length) {
+      h += '<details class="theory-card tw-fold" id="twFoldCols"' + (twFoldCols ? ' open' : '') + '><summary>📚 Gespeicherte Sammlungen<span class="tw-fold-cnt">' + cols.length + (cols.length === 1 ? ' Eintrag' : ' Einträge') + ' · antippen</span></summary>';
+      fldGroups(cols).forEach(([f, arr]) => {
+        h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 4px;"><strong style="font-size:.85rem;">🗂 ' + homeEsc(f) + '</strong>' +
+          (twRenFolder === f
+            ? '<input type="text" id="twRenIn" value="' + homeEsc(f === 'Ohne Ordner' ? '' : f) + '" placeholder="Neuer Name" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:6px;"><button type="button" class="theory-chip" data-twrenok="1">✔</button><button type="button" class="theory-chip" data-twrenc="1">✕</button>'
+            : '<button type="button" class="theory-chip" data-twrenf="' + homeEsc(f) + '">✏️ umbenennen</button>') + '</div>';
+        arr.forEach(c => {
+          h += '<div class="th-prog-row"><div><strong>' + homeEsc(c.name) + '</strong><br><span>' + (c.chords || []).map(p => homeEsc(p[2] || '')).join(' – ') + '</span></div>' +
+            '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twload="' + c.id + '">📂 Laden</button>' +
+            '<button type="button" class="theory-chip" data-twcoljam="' + c.id + '">🥁 Jam</button>' +
+            '<button type="button" class="theory-chip" data-twcolprog="' + c.id + '">📋 Folgen</button>' +
+            '<button type="button" class="theory-chip" data-twcolclip="' + c.id + '">📎</button>' +
+            '<button type="button" class="theory-chip" data-twcolplay="' + c.id + '">🔊</button>' +
+            '<button type="button" class="theory-chip" data-twcolrm="' + c.id + '">🗑</button></div></div>';
+        });
+      });
+      h += '</details>';
+    }
+    // Folgen aus dem Akkordfolgen-Modul
+    try {
+      const ps = progLoad();
+      if (ps.saved && ps.saved.length) {
+        h += '<details class="theory-card tw-fold" id="twFoldProg"' + (twFoldProg ? ' open' : '') + '><summary>📥 Deine Akkordfolgen aus dem Folgen-Modul<span class="tw-fold-cnt">' + ps.saved.length + (ps.saved.length === 1 ? ' Folge' : ' Folgen') + ' · antippen</span></summary>';
+        fldGroups(ps.saved).forEach(([f, arr]) => {
+          h += '<div style="font-size:.85rem; margin:8px 0 4px;"><strong>🗂 ' + homeEsc(f) + '</strong></div>';
+          arr.forEach(p => {
+            h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.name || 'Ohne Namen') + '</strong><br><span>' + p.chords.length + ' Akkorde</span></div>' +
+              '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twpsave="' + p.name.replace(/"/g, '&quot;') + '">📂 Als Sammlung</button>' +
+              '<button type="button" class="theory-chip" data-twpjam="' + p.name.replace(/"/g, '&quot;') + '">🥁 Jam</button>' +
+              '<button type="button" class="theory-chip" data-twpclip="' + p.name.replace(/"/g, '&quot;') + '">📎</button></div></div>';
+          });
+        });
+        h += '</details>';
+      }
+    } catch (e) {}
     root.innerHTML = h;
     // Bindings
     const on = (id, f, ev) => { const el = document.getElementById(id); if (el) el.addEventListener(ev || 'click', f); };
+    on('twFoldCols', () => { const fc = document.getElementById('twFoldCols'); twFoldCols = !!(fc && fc.open); }, 'toggle');
+    on('twFoldProg', () => { const fp = document.getElementById('twFoldProg'); twFoldProg = !!(fp && fp.open); }, 'toggle');
+    on('twFoldAdv', () => { const fa = document.getElementById('twFoldAdv'); twFoldAdv = !!(fa && fa.open); }, 'toggle');
     on('twRootSel', e => { twState.root = +e.target.value; twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); }, 'change');
     on('twTypeSel', e => { twState.minor = e.target.value === 'moll'; twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); }, 'change');
     on('twSevChk', e => { twState.sev = e.target.checked; twSaveSet(); renderTwModule(); }, 'change');
@@ -15543,7 +15770,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-06-4';
+  const APP_VERSION = '2026-11-07-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15766,5 +15993,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56b1108f8ebdc6c',t:'MTc5NDA0MTE3Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56b1108f8ebdc6c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56db9d79941dbf6',t:'MTc5NDA2OTA2Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56db9d79941dbf6',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
