@@ -1465,6 +1465,16 @@
     @keyframes rmLava { from { transform: translateY(5px); } to { transform: translateY(-13px); } }
     .rm-catbody { animation: rmCatBob .5s ease-in-out infinite alternate; }
     @keyframes rmCatBob { from { transform: translateY(0); } to { transform: translateY(-2px); } }
+    @media (prefers-reduced-motion: no-preference) {
+      #rmWallA { animation: rmWallA 52s ease-in-out infinite alternate; }
+      #rmWallB { animation: rmWallB 52s ease-in-out infinite alternate; }
+      #rmWallC { animation: rmWallC 52s ease-in-out infinite alternate; }
+      #rmLeaves { transform-box: fill-box; transform-origin: 50% 100%; animation: rmSway 12s ease-in-out infinite alternate; }
+    }
+    @keyframes rmWallA { from { stop-color: #ffd75e; } to { stop-color: #ffe183; } }
+    @keyframes rmWallB { from { stop-color: #ff9040; } to { stop-color: #ffa061; } }
+    @keyframes rmWallC { from { stop-color: #e5533d; } to { stop-color: #dd5f4c; } }
+    @keyframes rmSway { from { transform: rotate(-1.3deg); } to { transform: rotate(1.5deg); } }
     .str-bar { height: 8px; border-radius: 6px; background: var(--card-border); overflow: hidden; margin-top: 6px; }
     .str-bar > i { display: block; height: 100%; background: #22c55e; }
     .str-bar.soon > i { background: #f59e0b; }
@@ -2223,9 +2233,25 @@
       <p>Hier übst du den Wechsel zwischen 2 bis 16 Akkorden im Takt. Wähle eine Schnellwahl (z. B. C ↔ F oder C → Am → F → G) oder tippe eigene Akkorde ein. Stell ein, wie viele Schläge jeder Akkord bekommt (4, 2 oder 1), und das Tempo. Die App zählt einen Takt ein und zeigt groß den aktuellen Akkord mit Griffbild und daneben den nächsten. Das Tempo wird für jede Akkordfolge gemerkt, ↺ setzt es auf 60 BPM zurück. <strong>Aus deinen Akkordfolgen:</strong> Über „📂 Aus meinen Akkordfolgen“ übernimmst du eine gespeicherte Folge mit deinen eigenen Griffen (bis zu 16 Akkorde). Dort stehen unter „🥁 Meine Beats“ auch deine Beats aus „Beat &amp; Jam“: Ihre Akkorde kommen der Reihe nach in den Trainer, Wiederholungen werden zusammengefasst. <strong>Art:</strong> „Anschlag“ oder „Zupfen (Arpeggio)“ – beim Zupfen klingen pro Schlag zwei einzelne Töne, vom Bass nach oben und zurück.</p>
     </div>
 
-    <div class="module-block" id="imb14">
+    <div class="module-block" id="imb20">
       <div class="module-block-header">
         <span class="module-number-badge">14</span>
+        <h3>Tonart-Werkstatt</h3>
+      </div>
+      <p>Dein Werkzeugkasten für Tonarten: alle Akkorde einer Tonart, Kadenzen vom Grundgerüst bis Jazz – und Sammlungen, die du in andere Module übernimmst.</p>
+      <ul>
+        <li><strong>Tonart wählen:</strong> Oben Grundton und Dur/Moll einstellen; „Septakkorde“ schaltet vierstimmige Akkorde ein. Deine Wahl bleibt gemerkt.</li>
+        <li><strong>Akkordfamilie:</strong> Die Kärtchen zeigen die sieben Stufenakkorde (römische Stufe + Name). Antippen zeigt alle Griffbilder, 🔊 spielt den Akkord, 🔬 öffnet ihn im Akkord-Labor.</li>
+        <li><strong>Sammlung:</strong> „＋ Zur Sammlung“ nimmt Akkorde auf. Mit Namen und Ordner speichern (💾), jederzeit laden, abspielen, 🥁 ins Jam-Modul oder 📋 ins Akkordfolgen-Modul übernehmen, 📎 in die Zwischenablage kopieren.</li>
+        <li><strong>Kadenzen:</strong> 24 Wendungen in drei Stufen (🌱 Grund,  Fortgeschritten,  Jazz), passend zur gewählten Tonart. Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen (z. B. I – V – vi – IV) – sofort spielbar.</li>
+        <li><strong>Überall hin mitnehmen:</strong> 🥁 legt die Folge ins Jam-Modul, 📋 baut sie im Akkordfolgen-Modul als Entwurf auf, 📎 kopiert sie in die Zwischenablage. Jam- und Folgen-Modul haben passende „📥 Übernehmen“-Bereiche; umgekehrt zeigt die Werkstatt deine gespeicherten Akkordfolgen an.</li>
+        <li><strong>Ordner:</strong> Gespeicherte Sammlungen, Akkordfolgen und eigene Zupf-/Schlagmuster lassen sich in Ordner stecken; Ordner kannst du umbenennen (✏️ bzw. 🗂).</li>
+      </ul>
+    </div>
+
+    <div class="module-block" id="imb14">
+      <div class="module-block-header">
+        <span class="module-number-badge">15</span>
         <h3>Beat &amp; Jam</h3>
       </div>
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus dem Modul „Tonleitern“.</p>
@@ -2261,7 +2287,7 @@
 
     <div class="module-block" id="imb15">
       <div class="module-block-header">
-        <span class="module-number-badge">15</span>
+        <span class="module-number-badge">16</span>
         <h3>Anschlag &amp; Zupfen</h3>
       </div>
       <p>Lerne Anschlag- und Zupfmuster – vom einfachen Grundschlag bis Travis-Picking, Bossa Nova und ungeraden Taktarten (3/4, 6/8, 12/8, 5/4, 7/8).</p>
@@ -2283,7 +2309,7 @@
 
     <div class="module-block" id="imb16">
       <div class="module-block-header">
-        <span class="module-number-badge">16</span>
+        <span class="module-number-badge">17</span>
         <h3>Stimmgerät</h3>
       </div>
       <p>Stimmt deine Gitarre über das Mikrofon des Geräts.</p>
@@ -2313,7 +2339,7 @@
 
     <div class="module-block" id="imb18">
       <div class="module-block-header">
-        <span class="module-number-badge">17</span>
+        <span class="module-number-badge">18</span>
         <h3>Wochenplan</h3>
       </div>
       <p>Erstelle deine eigenen Übungseinheiten für jeden Tag von Montag bis Sonntag. Das Datum wird automatisch tagesaktuell berechnet.</p>
@@ -4291,7 +4317,8 @@
     notePickerEl.innerHTML = '';
     const modType = curModType();
     
-    if (modType === 'ear' || modType === 'theory' || modType === 'theoryPro' || modType === 'instruction' || modType === 'finder' || modType === 'planner' || modType === 'chordlab' || modType === 'scaleview' || modType === 'jam' || modType === 'tuner' || modType === 'strum' || modType === 'progmod' || modType === 'chgmod' || modType === 'eartrain' || modType === 'glossary' || modType === 'uebe') {
+    // Erlaubnis-Liste: Die Noten-Leiste erscheint nur, wo sie wirklich gebraucht wird – neue Module automatisch ohne.
+    if (modType !== 'stringpractice' && modType !== 'game') {
       notePickerEl.style.display = 'none';
       return;
     }
@@ -5847,6 +5874,7 @@
     h += `<div class="prog-row">
       <label>Anzahl Akkorde: <select id="progCount">${Array.from({ length: 16 }, (_, i) => `<option value="${i + 1}" ${i + 1 === dr.chords.length ? 'selected' : ''}>${i + 1}</option>`).join('')}</select></label>
       <input type="text" id="progName" placeholder="Name der Folge, z. B. Mein Lied – Strophe" value="${homeEsc(dr.name || '')}" maxlength="60" style="flex:1 1 200px;">
+      <input type="text" id="progFolder" list="progFolderList" placeholder="Ordner (optional)" maxlength="24" value="${homeEsc(dr.folder || '')}" style="flex:1 1 140px;">${folderDatalist('progFolderList')}
     </div>
     <div class="prog-row">
       <button type="button" class="btn" data-act="big">🔍 Große Ansicht</button>
@@ -5871,9 +5899,13 @@
     </div>`;
     if (progState.saved.length) {
       const selI = progSelIdx !== null && progState.saved[progSelIdx] ? progSelIdx : progState.saved.findIndex(p => p.name === (dr.name || '').trim());
-      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progState.saved.map((p, i) => `<option value="${i}" ${i === selI ? 'selected' : ''}>${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}</select></label>
+      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progSavedOptsHtml(progState.saved, selI)}</select></label>
         <button type="button" class="btn btn-secondary" data-act="open">📂 Öffnen</button>
-        <button type="button" class="btn btn-secondary" data-act="del">🗑️ Löschen</button></div>`;
+        <button type="button" class="btn btn-secondary" data-act="del">🗑️ Löschen</button>
+        <button type="button" class="btn btn-secondary" data-act="renfolder">✏️ Ordner</button></div>`;
+      if (progRenFolder) {
+        h += `<div class="prog-row" style="flex-wrap:wrap;">` + fldGroups(progState.saved).map(([f]) => f === progRenFolder ? `<input type="text" id="progRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" placeholder="Neuer Ordnername" maxlength="24" style="flex:1; min-width:130px;"><button type="button" class="btn" data-act="renfolderok">✔</button>` : `<button type="button" class="theory-chip" data-act="renfolderpick" data-f="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="btn btn-secondary" data-act="renfolderend">Fertig</button></div>`;
+      }
     }
     h += `<div class="prog-cards">`;
     dr.chords.forEach((c, ci) => {
@@ -5941,6 +5973,11 @@
     }
     h += scalePanelHtml('prog', (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.root; const d0 = (ds || []).find(Boolean); return d0 ? d0.root : 0; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.mode === 'moll' ? 'mollPenta' : 'durPenta'; const d0 = (ds || []).find(Boolean); return d0 ? (/moll/.test(d0.type || '') ? 'mollPenta' : 'durPenta') : 'durPenta'; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return scaleKeySugg(kd); const d0 = (ds || []).find(Boolean); return d0 ? scaleChordSugg(d0.root, d0.type) : []; })());
     h += `</div>`;
+    { const cl = clipGet(); const twc = twColsLoad();
+      h += '<div class="prog-row" style="margin-top:12px;"><strong>📥 Übernehmen aus anderen Modulen</strong></div>' +
+        '<div class="prog-row"><button type="button" class="btn btn-secondary" data-act="clipin"' + (cl ? '' : ' disabled') + '>📎 Aus Zwischenablage' + (cl ? ': ' + homeEsc((cl.label || '').slice(0, 30)) : '') + '</button></div><div style="font-size:.8rem; opacity:.8;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner.</div>';
+      if (twc.length) h += fldGroups(twc).map(([f, arr]) => '<div class="prog-row" style="font-size:.85rem; opacity:.9; margin-top:6px;">🗂 ' + homeEsc(f) + '</div>' + arr.map(c => '<div class="prog-row"><span style="flex:1;">' + homeEsc(c.name) + ' (' + (c.chords || []).length + ')</span><button type="button" class="btn btn-secondary" data-act="twcolin" data-id="' + c.id + '">📥 In den Entwurf</button></div>').join('')).join('');
+    }
     body.innerHTML = h;
     bindScalePanel(body);
     holdDragBind(body.querySelector('.prog-cards'), '.prog-card', el => Array.prototype.indexOf.call(el.parentElement.children, el), progReorder, 'input, select, textarea');
@@ -6050,7 +6087,7 @@
       const ls = L.filter(p => p.kind === k);
       const grp = (lab, arr) => { if (arr.length) h += `<optgroup label="${homeEsc(kl + ': ' + lab)}">${arr.map(p => opt('pat:' + p.id, `${p.name} (${p.sig})`)).join('')}</optgroup>`; };
       grp('★ Favoriten', ls.filter(p => fav(p.id)));
-      grp('✏️ Meine Muster', ls.filter(p => p.level === 0));
+      fldGroups(ls.filter(p => p.level === 0)).forEach(([f, arr]) => grp(f === 'Ohne Ordner' ? 'Meine Muster' : 'Meine Muster · ' + f, arr));
       grp('⭐ Einfach', ls.filter(p => p.level === 1));
       grp('⭐⭐ Mittel', ls.filter(p => p.level === 2));
       grp('⭐⭐⭐ Fortgeschritten', ls.filter(p => p.level === 3));
@@ -6446,10 +6483,16 @@
         c.start = mx <= 5 ? 1 : Math.min(12, Math.min(...pl));
         state.progPick = null;
       }
+      else if (act === 'clipin') { const cl = clipGet(); if (!cl) { showToast('📎 Die Zwischenablage ist leer.'); return; } dr.name = (cl.label || dr.name || '').slice(0, 60); dr.chords = chordsToFrets(cl.chords); if (!dr.chords.length) dr.chords = [progEmptyChord()]; progSave(); progRender(); showToast('📎 Zwischenablage in den Entwurf übernommen.'); }
+      else if (act === 'twcolin') { const host = e.target.closest('[data-act="twcolin"]'); const col = twColsLoad().find(x => String(x.id) === (host ? host.dataset.id : '')); if (!col) return; dr.name = (col.name || '').slice(0, 60); dr.chords = chordsToFrets(twColChords(col)); if (!dr.chords.length) dr.chords = [progEmptyChord()]; progSave(); progRender(); showToast('📥 „' + col.name + '“ in den Entwurf übernommen.'); }
+      else if (act === 'renfolder') { progRenFolder = progRenFolder ? null : '__pick'; progRender(); }
+      else if (act === 'renfolderpick') { const hb = e.target.closest('[data-f]'); progRenFolder = hb ? hb.dataset.f : null; progRender(); }
+      else if (act === 'renfolderok') { const inp = document.getElementById('progRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = progRenFolder; if (nn && old) { progState.saved.forEach(p => { if ((fldNorm(p.folder) || 'Ohne Ordner') === old) p.folder = nn; }); progSave(); showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.'); } progRenFolder = null; progRender(); }
+      else if (act === 'renfolderend') { progRenFolder = null; progRender(); }
       else if (act === 'save') {
         const name = (dr.name || '').trim();
         if (!name) { showToast('Gib der Folge zuerst einen Namen.'); document.getElementById('progName').focus(); return; }
-        const copy = JSON.parse(JSON.stringify(dr)); copy.name = name;
+        const copy = JSON.parse(JSON.stringify(dr)); copy.name = name; copy.folder = fldNorm((document.getElementById('progFolder') || {}).value);
         const i = progState.saved.findIndex(p => p.name === name);
         if (i >= 0) progState.saved[i] = copy; else progState.saved.push(copy);
         progSelIdx = i >= 0 ? i : progState.saved.length - 1;
@@ -6508,6 +6551,7 @@
   document.addEventListener('input', e => {
     if (e.target && e.target.id === 'progPlayBpm' && progState) { progPlayOpts().bpm = parseInt(e.target.value, 10); const v = document.getElementById('progBpmVal'); if (v) v.textContent = progPlayOpts().bpm; }
     if (e.target && e.target.id === 'progName' && progState) { progState.draft.name = e.target.value; progSave(); }
+    if (e.target && e.target.id === 'progFolder' && progState) { progState.draft.folder = fldNorm(e.target.value); progSave(); }
     if (e.target && e.target.classList && e.target.classList.contains('prog-cname') && progState) {
       const c = progState.draft.chords[+e.target.dataset.c];
       if (c) {
@@ -7106,6 +7150,11 @@
       </div>
     </div></details>`;
 
+    { const twc = twColsLoad(); const cl = clipGet();
+      html += '<details class="jam-section"><summary>📥 Folgen übernehmen (Zwischenablage & Werkstatt-Sammlungen)</summary><div class="row" style="flex-wrap:wrap; gap:8px; padding:10px 4px;">' +
+        '<button type="button" class="btn btn-secondary" id="jamClipIn"' + (cl ? '' : ' disabled') + '>📎 Zwischenablage' + (cl ? ': ' + homeEsc((cl.label || cl.chords.map(c => c.name).join(' – ')).slice(0, 40)) : ' leer') + '</button>' +
+        (twc.length ? twc.map(c => '<button type="button" class="theory-chip" data-jamcol="' + c.id + '">🥁 ' + homeEsc((fldNorm(c.folder) ? fldNorm(c.folder) + ' / ' : '') + c.name) + '</button>').join('') : '<span style="opacity:.75;">Noch keine Werkstatt-Sammlungen gespeichert.</span>') +
+        '</div><div style="font-size:.78rem; opacity:.8; padding:2px 4px 8px;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner.</div></details>'; }
     jamModuleRoot.innerHTML = html;
     bindScalePanel(jamModuleRoot);
     bindJamModuleEvents();
@@ -7113,6 +7162,7 @@
     bindJamPartsEvents();
     bindJamPlanBannerEvents();
     bindJamGtrEvents();
+    bindTwImportJam();
     gripStripBind('jam', updateJamGripStrip);
     renderJamSavedList();
     updateJamImprovPanel();
@@ -8446,7 +8496,7 @@
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="display:flex; gap:6px; align-items:center; font-weight:600;"><input type="checkbox" id="jamGtrOn" ${jam.gtrOn ? 'checked' : ''}> Gitarre an</label>
         <select id="jamGtrSel" style="${sel} max-width:100%;"><option value="">– Muster wählen –</option>${!gp || fit ? '' : `<option value="${gp.id}" selected disabled>${homeEsc(gp.name)} (${gp.sig})</option>`}
-          ${grp('★ Favoriten', ok.filter(x => strumIsFav(x.id)))}${grp('✏️ Meine Muster', ok.filter(x => x.custom))}${grp('↕ Anschlag', ok.filter(x => !x.custom && x.kind === 'strum'))}${grp('✋ Zupfen', ok.filter(x => !x.custom && x.kind === 'pick'))}
+          ${grp('★ Favoriten', ok.filter(x => strumIsFav(x.id)))}${fldGroups(ok.filter(x => x.custom)).map(([f, arr]) => grp(f === 'Ohne Ordner' ? '✏️ Meine Muster' : '✏️ Meine Muster · ' + homeEsc(f), arr)).join('')}${grp('↕ Anschlag', ok.filter(x => !x.custom && x.kind === 'strum'))}${grp('✋ Zupfen', ok.filter(x => !x.custom && x.kind === 'pick'))}
         </select></div>
       <div class="jam-hint" style="color:var(--text-color);">${hint}</div>
       <div class="jam-hint">Hier stehen nur Muster im ${jam.timeSig}-Takt${nOther ? ` (${nOther} weitere Muster haben eine andere Taktart)` : ''}.</div></details>`;
@@ -10236,8 +10286,8 @@
     theoryBox.style.display = 'none';
     theoryProBox.style.display = 'none';
     plannerContainer.style.display = 'none';
-    fretboardWrapper.style.display = 'block';
-    staffContainer.style.display = state.showStaff ? 'flex' : 'none';
+    fretboardWrapper.style.display = 'none';
+    staffContainer.style.display = 'none';
     gameLevelRow.style.display = 'none';
     gameScoreContainer.style.display = 'none';
     finderControlsRow.style.display = 'none';
@@ -10292,6 +10342,8 @@
       initTheoryPro();
       try { initTheoryExtras(); } catch (e) { console.error('Theorie-Erweiterungen:', e); }
     } else if (mod.type === 'stringpractice') {
+      fretboardWrapper.style.display = 'block';
+      staffContainer.style.display = state.showStaff ? 'flex' : 'none';
       timerContainerEl.style.display = 'flex';
       stringPracticeControlsRow.style.display = 'flex';
       renderStringPracticeControls();
@@ -10300,6 +10352,8 @@
       updateTimerDisplay();
       speechBannerEl.textContent = `🎯 ${step.label}: Wähle oben einen Ton (z. B. C) und tippe auf dem Griffbrett die Stelle an, wo er liegt. Links am Rand stehen die Saitennamen.`;
     } else if (mod.type === 'finder') {
+      fretboardWrapper.style.display = 'block';
+      staffContainer.style.display = state.showStaff ? 'flex' : 'none';
       timerContainerEl.style.display = 'none';
       finderControlsRow.style.display = 'flex';
       speechBannerEl.textContent = finderBanner();
@@ -10339,9 +10393,14 @@
       if (!state.jam) initJamState();
       renderJamModule();
     } else if (mod.type === 'tw') {
-    const twEl = document.getElementById('twRoot');
-    if (twEl) { twEl.style.display = ''; renderTwModule(); }
-  } else if (mod.type === 'game') {
+      timerContainerEl.style.display = 'none';
+      standardControls.style.display = 'none';
+      speechBannerEl.textContent = "🧰 Tonart-Werkstatt: Tonart wählen, Akkorde der Tonart ansehen, Kadenzen bis Jazz aufklappen – und Sammlungen in andere Module übernehmen.";
+      const twEl = document.getElementById('twRoot');
+      if (twEl) { twEl.style.display = ''; renderTwModule(); }
+    } else if (mod.type === 'game') {
+      fretboardWrapper.style.display = 'block';
+      staffContainer.style.display = state.showStaff ? 'flex' : 'none';
       timerContainerEl.style.display = 'none';
       gameLevelRow.style.display = 'flex';
       gameScoreContainer.style.display = 'block';
@@ -10386,6 +10445,8 @@
         try { chgRender(); document.getElementById('chgTrainer').style.display = 'block'; } catch (e) { console.error(e); }
       }
     } else if (mod.type === 'chordlab') {
+      fretboardWrapper.style.display = 'block';
+      staffContainer.style.display = state.showStaff ? 'flex' : 'none';
       timerContainerEl.style.display = 'none';
       chordLabControlsRow.style.display = 'flex';
       chordLookupRow.style.display = 'flex';
@@ -10649,6 +10710,7 @@
       <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
         <label style="font-weight:600;">Name:</label>
         <input type="text" id="strumEdName" maxlength="40" value="${homeEsc(d.name)}" placeholder="z. B. Für Silke – Strophe" style="flex:1; min-width:160px; ${sel}">
+        <input type="text" id="strumEdFolder" maxlength="24" value="${homeEsc(d.folder || '')}" placeholder="Ordner (optional)" list="strumFolderList" style="flex:1; min-width:120px; ${sel}">${folderDatalist('strumFolderList')}
       </div>
       <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px;">
         <label style="font-weight:600;">Taktart:</label>
@@ -10725,6 +10787,7 @@
     const d = strumEdit.draft;
     bindStrumEditGrid();
     document.getElementById('strumEdName').addEventListener('input', e => { d.name = e.target.value; });
+    { const fe = document.getElementById('strumEdFolder'); if (fe) fe.addEventListener('input', e => { d.folder = fldNorm(e.target.value); }); }
     const geom = () => { strumApplyGeom(d, document.getElementById('strumEdSig').value, document.getElementById('strumEdRaster').value); document.getElementById('strumEdRaster').disabled = /\/8$/.test(d.sig); if (/\/8$/.test(d.sig)) document.getElementById('strumEdRaster').value = '8'; strumEditRefresh(); };
     document.getElementById('strumEdSig').addEventListener('change', geom);
     document.getElementById('strumEdRaster').addEventListener('change', geom);
@@ -10739,7 +10802,7 @@
       if (!has) { showToast('Das Muster ist noch leer – tippe ein paar Kästchen an.'); return; }
       d.name = (d.name || '').trim() || (d.kind === 'strum' ? 'Mein Schlagmuster' : 'Mein Zupfmuster');
       const list = strumCustomList();
-      const clean = { id: d.id, kind: d.kind, name: d.name, sig: d.sig, unit: d.unit, bpm: d.bpm, steps: d.steps, tip: 'Eigenes Muster' };
+      const clean = { id: d.id, kind: d.kind, name: d.name, sig: d.sig, unit: d.unit, bpm: d.bpm, steps: d.steps, tip: 'Eigenes Muster', folder: fldNorm(d.folder) };
       if (d.count) clean.count = d.count;
       const idx = list.findIndex(p => p.id === d.id);
       if (idx >= 0) list[idx] = clean; else list.unshift(clean);
@@ -11497,10 +11560,12 @@
       <label style="font-weight:600;">Muster:</label>
       <select id="strumPatternSelect" style="${sel} max-width:100%;">
         ${list.some(x => strumIsFav(x.id)) ? `<optgroup label="★ Favoriten">${list.filter(x => strumIsFav(x.id)).map(x => `<option value="${x.id}">${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
-        ${list.some(x => x.level === 0) ? `<optgroup label="✏️ Meine Muster">${list.filter(x => x.level === 0).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
+        ${strumMineOptgroups(list, p.id)}
         ${[1, 2, 3].map(l => `<optgroup label="${stars(l)} ${['', 'Einfach', 'Mittel', 'Fortgeschritten'][l]}">${list.filter(x => x.level === l).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${x.name} (${x.sig})</option>`).join('')}</optgroup>`).join('')}
         ${list.some(x => x.level === 4) ? `<optgroup label="🎵 Stile mit Akkordfolgen">${list.filter(x => x.level === 4).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
       </select>
+      ${strumEdit || !list.some(x => x.level === 0) ? '' : `<button type="button" class="strum-chip" id="strumRenFldBtn" title="Ordner umbenennen">🗂 Ordner</button>`}
+      ${!strumEdit && strumRenFolder && list.some(x => x.level === 0) ? fldGroups(strumCustomList()).map(([f]) => f === strumRenFolder ? `<input type="text" id="strumRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" maxlength="24" style="width:110px; ${sel}"><button type="button" class="strum-chip" id="strumRenOk">✔</button>` : `<button type="button" class="strum-chip" data-srenf="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="strum-chip" id="strumRenEnd">Fertig</button>` : ''}
       ${strumEdit ? '' : `<button type="button" class="strum-chip" id="strumFavBtn" title="Als Favorit merken" style="font-size:1.1rem;">${strumIsFav(p.id) ? '★' : '☆'}</button>
       <button type="button" class="strum-chip" id="strumPreviewBtn" title="Zwei Takte vorspielen">${strumPreview ? '⏹ Stopp' : '👂 Anhören'}</button>`}</div>`;
     if (strumEdit) {
@@ -11563,6 +11628,10 @@
       on('strumCopyBtn', () => { const p0 = strumPattern(); const d = JSON.parse(JSON.stringify(p0)); d.id = 'c_' + Date.now().toString(36); d.name = p0.name + ' (Kopie)'; d.bpm = strumBpm(); d.custom = true; d.level = 0; d.tip = 'Eigenes Muster'; strumStartEdit(d); });
       on('strumEditBtn', () => strumStartEdit(strumPattern(), strumPattern().id));
       on('strumDelBtn', () => strumDeleteCustom(strumPattern().id));
+      on('strumRenFldBtn', () => { strumRenFolder = strumRenFolder ? null : '__x'; renderStrum(); });
+      on('strumRenEnd', () => { strumRenFolder = null; renderStrum(); });
+      on('strumRenOk', () => { const inp = document.getElementById('strumRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = strumRenFolder; if (nn && old) { const ls = strumCustomList(); ls.forEach(pt => { if ((fldNorm(pt.folder) || 'Ohne Ordner') === old) pt.folder = nn; }); strumSaveCustomList(ls); showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.'); } strumRenFolder = null; renderStrum(); });
+      document.querySelectorAll('[data-srenf]').forEach(el => el.addEventListener('click', () => { strumRenFolder = el.dataset.srenf; renderStrum(); }));
     }
   }
   function bindStrumEvents() {
@@ -11643,7 +11712,7 @@
   const HOME_GROUPS = [
     { title: 'Lernen', color: 'blue', items: [[0, '📘', 'Anleitung', 'Alle Module und Knöpfe kurz erklärt – und wo du was findest'], [15, '📖', 'Wörterbuch', 'Begriffe & Notenzeichen einfach erklärt'], [2, '🎼', 'Musiktheorie', 'Intervalle, Akkorde, Tonleitern, Quintenzirkel'], [1, '🧭', 'Griffbrett-Theorie', 'So findest du jeden Ton auf dem Griffbrett'], [16, '🎯', 'Effektiv üben', 'Sauber, entspannt & kreativ üben – Tipps aus Lernforschung und Praxis']] },
     { title: 'Griffbrett üben', color: 'green', items: [[3, 'GTR', 'Alle Töne', 'Saite für Saite das Griffbrett lernen'], [4, '🎯', 'Töne erraten', 'Spiel: Welcher Ton ist markiert?'], [5, '🎶', 'Noten lesen & finden', 'Note → Griffbrett finden oder Bund antippen → Note sehen'], [6, '👂', 'Gehörbildung', 'Intervalle, Dur oder Moll, höher oder tiefer'], [7, '🪜', 'Tonleitern', 'Pentatoniken, Modi und CAGED-Positionen']] },
-    { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben']] },
+    { title: 'Akkorde', color: 'rose', items: [[8, '🧪', 'Akkord-Labor', 'Akkorde greifen, erkennen und nachschlagen'], [13, '✍️', 'Akkordfolgen erstellen', 'Griffe eintragen, anhören, Theorie dazu, MIDI'], [14, '🔁', 'Akkordwechsel-Trainer', 'Wechsel zwischen Akkorden im Takt üben'], [17, '🧰', 'Tonart-Werkstatt', 'Akkordfamilien, Kadenzen bis Jazz & Sammlungen für Jam & Folgen']] },
     { title: 'Spielen', color: 'orange', items: [[9, '🥁', 'Beat & Jam', 'Begleitband bauen und dazu improvisieren'], [12, '🪕', 'Anschlag & Zupfen', 'Muster lernen und eigene erstellen'], [11, '🎚️', 'Stimmgerät', 'Gitarre über das Mikrofon stimmen']] },
     { title: 'Planen', color: 'teal', items: [[10, '📅', 'Wochenplan', 'Übungen planen, abhaken, Kalender, Statistik']] }
   ];
@@ -11882,7 +11951,7 @@
   }
   function srchOpen() { srchBackHide(); showHome(); setTimeout(() => { const i = document.getElementById('homeSearch'); if (i) i.focus(); }, 60); }
   // 📖 Sprung aus einem Modul direkt in den passenden Anleitung-Abschnitt
-  const MOD_HELP_SECT = { 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18', 16: 'imb19' };
+  const MOD_HELP_SECT = { 17: 'imb20', 15: 'imb3', 2: 'imb4', 1: 'imb5', 3: 'imb6', 4: 'imb7', 5: 'imb8', 6: 'imb9', 7: 'imb10', 8: 'imb11', 13: 'imb12', 14: 'imb13', 9: 'imb14', 12: 'imb15', 11: 'imb16', 10: 'imb18', 16: 'imb19' };
   // Überschriften der Anleitung anklickbar machen: Tipp = Modul öffnen
   function anleitungHeaderLinks() {
     for (const m in MOD_HELP_SECT) {
@@ -13233,6 +13302,21 @@
   }
   // Übersicht über vergangene Tage, Wochen und Monate (Timer + Wochenplan-Statistik)
   let ptHistOpen = false;
+  function ptTodayListHtml() {
+    const day = (ptData.ex || {})[ptDayKey()] || {};
+    const es = Object.entries(day).filter(e => e[1] >= 30).sort((a, b) => b[1] - a[1]);
+    if (!es.length) return '<div style="opacity:.8; font-size:.85rem; margin-top:4px;">Heute noch keine Einträge – der Timer schreibt hier automatisch mit, was du übst.</div>';
+    return es.map(([n, v]) => '<div style="display:flex; justify-content:space-between; gap:10px;"><span>' + homeEsc(n) + '</span><b>' + ptFmtMin(v) + '</b></div>').join('');
+  }
+  const PT_LASTVIEW_KEY = 'guitartrainer_ptlastview';
+  const PT_ROOM_LIST_KEY = 'guitartrainer_ptroomlist';
+  let ptPanelBarEdit = false;
+  function ptRoomListOn() { try { return localStorage.getItem(PT_ROOM_LIST_KEY) !== '0'; } catch (e) { return true; } }
+  function ptRoomListSet(v) { try { localStorage.setItem(PT_ROOM_LIST_KEY, v ? '1' : '0'); } catch (e) {} ptRoomListKey = ''; ptRoomBarKey = ''; ptRoomBarRender(); ptRoomTick(); }
+  let ptRoomListKey = '';
+  function ptLastView() { try { return localStorage.getItem(PT_LASTVIEW_KEY) === 'room' ? 'room' : 'panel'; } catch (e) { return 'panel'; } }
+  function ptSetLastView(v) { try { localStorage.setItem(PT_LASTVIEW_KEY, v); } catch (e) {} }
+  function ptOpenSmart() { if (ptLastView() === 'room') ptRoomOpen(); else ptOpen(); }
   function ptHistInner() {
     const days = (ptData && ptData.days) || {};
     const keys = Object.keys(days).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k) && days[k] >= 30).sort();
@@ -13436,8 +13520,10 @@
     if (b) { b.textContent = pt.running ? (pt.paused ? '⏸ ' : '⏱ ') + ptHeaderText() : '⏱'; b.classList.toggle('pt-on', pt.running); }
     const big = document.getElementById('ptBig'); if (big) big.textContent = pt.running ? ptHeaderText() : (pt.mode === 'down' ? ptFmt(Math.max(1, +ptData.set.downMin || 10) * 60000) : pt.mode === 'sec' ? ptFmt(Math.max(1, +(ptData.sections[0] || {}).min || 1) * 60000) : '0:00');
     const td = document.getElementById('ptToday'); if (td) { const s = ptStats(); td.textContent = `Heute: ${ptFmtMin(s.today)} · Diese Woche: ${ptFmtMin(s.week)}`; }
+    const bf = document.getElementById('ptBarFill');
+    if (bf) { let w = 0; if (pt.running && pt.mode === 'up') { const T = ptRoomBarMin() * 60000; w = 100 * (ptElapsed() % T) / T; } bf.style.width = w.toFixed(1) + '%'; }
   }
-  function ptOpen() { const o = document.getElementById('ptOverlay'); if (!o) return; ptRender(); o.classList.add('open'); ptClockTick(); }
+  function ptOpen() { const o = document.getElementById('ptOverlay'); if (!o) return; ptSetLastView('panel'); ptRender(); o.classList.add('open'); ptClockTick(); }
   function ptClose() { const o = document.getElementById('ptOverlay'); if (o) o.classList.remove('open'); }
   function ptOpenForPlan(name) {
     if (!pt.running) { pt.plan = String(name || '').trim() || 'Übung'; pt.mode = 'down'; }
@@ -13474,6 +13560,7 @@
   setInterval(ptClockTick, 1000);
   function ptRender() {
     const p = document.getElementById('ptPanel'); if (!p) return;
+    if (ptPanelBarEdit) { const ae0 = document.activeElement; if (ae0 && ae0.id === 'ptBarInp') return; }
     const r = pt.running, s = ptStats(), max = Math.max(60, ...s.days.map(d => d.v));
     const modOpts = sel => `<option value="-1" ${sel < 0 ? 'selected' : ''}>– kein Modul –</option>` + HOME_GROUPS.map(g => g.items.map(it => `<option value="${it[0]}" ${it[0] === sel ? 'selected' : ''}>${homeEsc(ptModName(it[0]))}</option>`).join('')).join('');
     setTimeout(() => { const b = document.getElementById('ptStrBtn'); if (b) b.onclick = () => { ptClose(); strOpen(); }; }, 0);
@@ -13489,6 +13576,11 @@
     else sub = pt.mode === 'up' ? 'Zählt einfach mit – ohne Ziel.' : pt.mode === 'down' ? 'Am Ende kommt ein sanfter Ton.' : 'Mehrere Teile nacheinander.';
     if (r && pt.paused) sub = '⏸ Pause – ' + sub;
     h += `<div class="pt-sub">${sub}</div>`;
+    if (pt.mode === 'up') {
+      h += `<div class="pt-box" style="text-align:center;"><div style="font-size:.85rem; opacity:.85;">Balken-Runde: <strong id="ptBarMinLab">${ptRoomBarMin()}</strong> Min – der Balken läuft pro Runde einmal voll.</div>` +
+        `<div style="margin:8px auto 0; max-width:320px; height:10px; border-radius:5px; background:var(--card-border); overflow:hidden;"><div id="ptBarFill" style="height:100%; width:0%; background:#06b6d4; border-radius:5px;"></div></div>` +
+        `<div style="margin-top:8px;">${ptPanelBarEdit ? `<input type="text" inputmode="numeric" autocomplete="off" id="ptBarInp" min="5" max="240" value="${ptRoomBarMin()}" style="width:64px; padding:6px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-color);"> <button type="button" class="btn" id="ptBarOk" style="padding:6px 10px;">✔</button> <button type="button" class="btn btn-secondary" id="ptBarNo" style="padding:6px 10px;">✕</button>` : `<button type="button" class="btn btn-secondary" id="ptBarTgt">🎯 ${ptRoomBarMin()} Min</button>`}</div></div>`;
+    }
     h += ptClockHtml();
     if (!r && pt.mode === 'down') {
       h += `<div class="pt-presets">${[5, 10, 15, 20, 30].map(m => `<button type="button" class="btn ${+ptData.set.downMin === m ? '' : 'btn-secondary'}" data-ptmin="${m}">${m} Min.</button>`).join('')}</div>
@@ -13508,7 +13600,7 @@
       (pt.paused ? `<button type="button" class="btn" id="ptResumeBtn">▶ Weiter</button>` : `<button type="button" class="btn" id="ptPauseBtn">⏸ Pause</button>`) + `<button type="button" class="btn btn-secondary" id="ptStopBtn">⏹ Beenden</button>`) + `</div>`;
     h += `<div style="text-align:center; margin-top:10px;"><button type="button" class="btn btn-secondary" id="ptRoomBtn">🛋️ Raumansicht</button></div>`;
     if (r && pt.mode === 'sec') { const c = ptData.sections[pt.secIdx]; if (c && c.mod >= 0) h += `<div style="text-align:center;"><button type="button" class="btn btn-secondary" id="ptOpenMod">📂 ${homeEsc(ptModName(+c.mod))} öffnen</button></div>`; }
-    h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div>
+    h += `<div class="pt-box"><strong>Deine Übungszeit</strong><div id="ptToday" style="margin-top:4px;"></div><div class="pth-h" style="margin-top:8px;">📋 Zeitliste heute</div>${ptTodayListHtml()}
       <div class="pt-week">${s.days.map((d, i) => `<div class="${d.today ? 'today' : ''}"><i style="height:${Math.round(48 * d.v / max)}px"></i>${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][i]}<br>${Math.floor(d.v / 60)}</div>`).join('')}</div>
       <div style="font-size:.8rem; opacity:.7; margin-top:4px;">Minuten pro Tag, diese Woche.</div></div>`;
     h += `<details class="pt-box" id="ptHistDet" ${ptHistOpen ? 'open' : ''}><summary>📈 Vergangene Tage &amp; Wochen</summary>${ptHistInner()}
@@ -13521,6 +13613,9 @@
     ptClockTick();
     const on = (id, f, ev = 'click') => { const el = document.getElementById(id); if (el) el.addEventListener(ev, f); };
     on('ptCloseBtn', ptClose);
+    on('ptBarTgt', () => { ptPanelBarEdit = true; ptRender(); const i2 = document.getElementById('ptBarInp'); if (i2) { i2.focus(); try { if (window.matchMedia && matchMedia('(pointer:fine)').matches) i2.select(); } catch (e) {} } });
+    on('ptBarOk', () => { const i3 = document.getElementById('ptBarInp'); const v3 = Math.round(+ (i3 ? i3.value : 0)); if (v3 >= 5 && v3 <= 240) { try { localStorage.setItem(PT_ROOM_BAR_KEY, String(v3)); } catch (e) {} } ptPanelBarEdit = false; ptRender(); ptUpdateLive(); });
+    on('ptBarNo', () => { ptPanelBarEdit = false; ptRender(); });
     on('ptHistCal', () => {
       ptClose();
       try { hideHome(); switchToModule(10); } catch (e) {}
@@ -13562,7 +13657,7 @@
     return `<svg id="ptRoomSvg" viewBox="0 0 900 560" preserveAspectRatio="xMidYMax slice" aria-label="Zimmer mit Gitarre, Schränkchen und Stuhl – deine Übungszeit">
   <defs>
     <linearGradient id="rmWall" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffd75e"/><stop offset=".55" stop-color="#ff9040"/><stop offset="1" stop-color="#e5533d"/>
+      <stop id="rmWallA" offset="0" stop-color="#ffd75e"/><stop id="rmWallB" offset=".55" stop-color="#ff9040"/><stop id="rmWallC" offset="1" stop-color="#e5533d"/>
     </linearGradient>
     <linearGradient id="rmSky" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#ffb35c"/>
@@ -13630,10 +13725,12 @@
       <line x1="286" y1="200" x2="286" y2="392"/><line x1="290" y1="200" x2="290" y2="392"/><line x1="294" y1="200" x2="294" y2="392"/>
     </g>
   </g>
-  <g>
-    <path d="M180 402 C168 372 172 352 186 336 C190 356 190 372 188 402 Z" fill="#5f8f4a"/>
-    <path d="M192 402 C196 368 208 352 224 344 C216 366 206 384 200 402 Z" fill="#6fa056"/>
-    <path d="M176 402 C160 384 152 368 152 350 C166 362 176 380 182 402 Z" fill="#4e7d3c"/>
+  <g id="rmPlant">
+    <g id="rmLeaves">
+      <path d="M180 402 C168 372 172 352 186 336 C190 356 190 372 188 402 Z" fill="#5f8f4a"/>
+      <path d="M192 402 C196 368 208 352 224 344 C216 366 206 384 200 402 Z" fill="#6fa056"/>
+      <path d="M176 402 C160 384 152 368 152 350 C166 362 176 380 182 402 Z" fill="#4e7d3c"/>
+    </g>
     <path d="M168 400 h44 l-6 36 h-32 Z" fill="#b3542c"/>
   </g>
   <g>
@@ -13711,12 +13808,13 @@
     <path d="M816 430 h32 l-6 -14 h-20 Z" fill="#5b2d16"/>
   </g>
 </svg>
+<div id="ptRoomList" style="position:absolute; top:10px; right:10px; max-width:min(46vw,320px); background:rgba(60,20,10,.5); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-radius:12px; padding:8px 12px; color:#fff7e0; font-size:.8rem; line-height:1.45;"></div>
 <div class="pt-room-bar" id="ptRoomBar"></div>`;
   }
   function ptRoomOpen() {
     const r = document.getElementById('ptRoom'); if (!r) return;
     ptRoomEndGlow = false; ptRoomWasRunning = pt.running; ptRoomBarKey = '';
-    r.classList.add('open');
+    r.classList.add('open'); ptSetLastView('room');
     const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.remove('hide');
     // Lavalampe: jedes Mal zufällig blubbern lassen
     r.querySelectorAll('.rm-lava').forEach(el => {
@@ -13770,6 +13868,7 @@
       else h += '<button type="button" class="sec" id="rmBarTgt" title="Balken-Zielzeit selbst einstellen">🎯 ' + ptRoomBarMin() + ' Min</button>';
     }
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
+    if (!ptRoomListOn()) h += '<button type="button" class="sec" id="rmListShow" title="Zeitliste einblenden">📋</button>';
     h += '<button type="button" class="sec" id="rmBack">↩ Zurück</button>';
     bar.innerHTML = h;
     const on = (id, f) => { const el = document.getElementById(id); if (el) el.addEventListener('click', f); };
@@ -13784,6 +13883,7 @@
     on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmBack', () => { ptRoomClose(); ptOpen(); });
     on('rmStat', ptRoomStatToggle);
+    on('rmListShow', () => ptRoomListSet(true));
     on('rmBarTgt', () => { ptRoomBarEdit = true; ptRoomBarRender(); const inp = document.getElementById('rmBarInp'); if (inp) { inp.focus(); try { if (window.matchMedia && matchMedia('(pointer:fine)').matches) inp.select(); } catch (e) {} } });
     on('rmBarOk', () => { const inp = document.getElementById('rmBarInp'); ptRoomBarSet(inp ? inp.value : 60); ptRoomBarEdit = false; ptRoomBarRender(); ptRoomTick(); });
     on('rmBarNo', () => { ptRoomBarEdit = false; ptRoomBarRender(); });
@@ -13864,6 +13964,9 @@
         });
       }
     }
+    { const rl = document.getElementById('ptRoomList');
+      if (rl) { const showL = ptRoomListOn(); rl.style.display = showL ? '' : 'none';
+        if (showL) { const lh = ptTodayListHtml(); const kk = lh + ptFmtMin(ptStats().today); if (kk !== ptRoomListKey) { ptRoomListKey = kk; rl.innerHTML = '<div style="display:flex; justify-content:space-between; gap:8px; align-items:center;"><strong style="font-size:.85rem;">📋 Zeitliste heute · ' + ptFmtMin(ptStats().today) + '</strong><button type="button" id="rmListX" aria-label="Zeitliste ausblenden" title="Zeitliste ausblenden" style="background:none; border:none; color:#fff7e0; font-size:.95rem; cursor:pointer; padding:2px 6px;">✕</button></div>' + lh; const xb = document.getElementById('rmListX'); if (xb) xb.addEventListener('click', () => ptRoomListSet(false)); } } } }
     const key = ptRoomBarKeyOf();
     if (key !== ptRoomBarKey) ptRoomBarRender();
   }
@@ -13921,7 +14024,7 @@
     if (rsvg) rsvg.addEventListener('click', () => { const bar = document.getElementById('ptRoomBar'); if (bar) bar.classList.toggle('hide'); });
     setInterval(ptRoomTick, 1000);
     const b = document.createElement('div'); b.id = 'ptBanner'; b.className = 'pt-banner'; document.body.appendChild(b);
-    const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpen);
+    const btn = document.getElementById('ptBtn'); if (btn) btn.addEventListener('click', ptOpenSmart);
     // Beim Schließen/Wechseln der App die Zeit sichern
     document.addEventListener('visibilitychange', () => { if (document.hidden) { if (!window.__skipAutosaveOnUnload) { ptLogTick(); ptSave(); } } else if (pt.running && !pt.paused) { ptTick(); } }); // kein lastTick-Reset: sonst wäre die Zeit im Hintergrund futsch
     window.addEventListener('pagehide', () => { if (window.__skipAutosaveOnUnload) return; ptLogTick(); ptSave(); });
@@ -14124,6 +14227,7 @@
   const GLOSSARY = [
     ['Akkord', 'Mehrere Töne (mindestens drei), die gleichzeitig klingen. Auf der Gitarre greift man dafür mehrere Saiten auf einmal.', 8],
     ['Akkordfolge', 'Die Reihenfolge der Akkorde in einem Lied, zum Beispiel C – Am – F – G.', 13],
+    ['Zwischenablage (📎)', 'Ein kurzfristiger Merkzettel der App für genau eine Akkordfolge: Mit 📎 kopierst du eine Folge (z. B. eine Kadenz aus der Tonart-Werkstatt), mit 📥 fügst du sie in einem anderen Modul wieder ein (Jam-Modul oder Akkordfolgen-Modul). Der Merkzettel bleibt nur erhalten, solange die App offen ist. Zum dauerhaften Behalten nutzt du 💾 (Sammlungen in der Werkstatt bzw. Speichern im Folgen-Modul).', null],
     ['Anschlag (Strumming)', 'Mit der Hand oder einem Plektrum über mehrere Saiten streichen – abwärts (↓) oder aufwärts (↑).', 12],
     ['Arpeggio', 'Die Töne eines Akkords nacheinander statt gleichzeitig spielen, also „gebrochen“.', null],
     ['Barré', 'Ein Finger (meist der Zeigefinger) drückt mehrere Saiten im selben Bund gleichzeitig herunter. So lassen sich Griffe am Hals verschieben.', null],
@@ -15082,9 +15186,83 @@
     } catch (e) { console.error('Übernahme ins Jam-Modul fehlgeschlagen', e); return false; }
   }
 
+  // =================== Modul-übergreifend: Zwischenablage, Ordner, Umwandlungen ===================
+  const CLIP_KEY = 'guitartrainer_clip';
+  let progRenFolder = null, strumRenFolder = null;
+  function clipSet(chords, label) {
+    try {
+      sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: chords.map(c => [c.root.pc, c.type, c.name || '']), label: label || '', ts: Date.now() }));
+      showToast('📎 In der Zwischenablage: ' + (label || chords.map(c => c.name).join(' – ')));
+      return true;
+    } catch (e) { showToast('❌ Zwischenablage nicht verfügbar.'); return false; }
+  }
+  function clipGet() {
+    try {
+      const d = JSON.parse(sessionStorage.getItem(CLIP_KEY) || 'null');
+      if (!d || !Array.isArray(d.chords) || !d.chords.length) return null;
+      return { label: d.label || '', chords: d.chords.map(p => ({ root: { pc: p[0], name: p[2] || '' }, type: p[1], name: p[2] || '' })) };
+    } catch (e) { return null; }
+  }
+  function fldNorm(v) { return String(v || '').trim().slice(0, 24); }
+  function fldGroups(items) {
+    const m = new Map();
+    items.forEach(it => { const f = fldNorm(it.folder) || 'Ohne Ordner'; if (!m.has(f)) m.set(f, []); m.get(f).push(it); });
+    return [...m.entries()].sort((a, b) => a[0] === 'Ohne Ordner' ? 1 : b[0] === 'Ohne Ordner' ? -1 : a[0].localeCompare(b[0], 'de'));
+  }
+  function allFolderNames() {
+    const s = new Set();
+    try { twColsLoad().forEach(c => { if (fldNorm(c.folder)) s.add(fldNorm(c.folder)); }); } catch (e) {}
+    try { (progLoad().saved || []).forEach(p => { if (fldNorm(p.folder)) s.add(fldNorm(p.folder)); }); } catch (e) {}
+    try { strumCustomList().forEach(p => { if (fldNorm(p.folder)) s.add(fldNorm(p.folder)); }); } catch (e) {}
+    return [...s].sort((a, b) => a.localeCompare(b, 'de'));
+  }
+  function folderDatalist(id) { return '<datalist id="' + id + '">' + allFolderNames().map(f => '<option value="' + homeEsc(f) + '"></option>').join('') + '</datalist>'; }
+  function chordsToFrets(chords) {
+    return chords.slice(0, 16).map(c => {
+      const g = (typeof JAM_BOOK_GRIPS !== 'undefined' && JAM_BOOK_GRIPS[c.root.pc + '|' + c.type]) || [];
+      return { frets: (g[0] || [-1, -1, -1, -1, -1, -1]).slice(), start: 1 };
+    });
+  }
+  function fretsToChord(frets) {
+    try {
+      const pitches = frets.map((f, i) => f >= 0 ? JAM_PAINT_OPEN[i] + f : null).filter(p => p !== null);
+      if (pitches.length < 2) return null;
+      const det = chordDetectFromPitches(pitches, false, null);
+      if (!det || det.score < 60 || !TH_CHORD_TYPES[det.type]) return null;
+      const nm = getDisplayName(60 + det.root);
+      return { root: { pc: det.root, name: nm }, type: det.type, name: nm + TH_CHORD_TYPES[det.type].sym };
+    } catch (e) { return null; }
+  }
+  function progSavedOptsHtml(saved, selI) {
+    const idx = saved.map((p, i) => i);
+    return fldGroups(idx.map(i => ({ folder: saved[i].folder, i })))
+      .map(([f, arr]) => '<optgroup label="' + homeEsc(f) + '">' + arr.map(x => '<option value="' + x.i + '"' + (x.i === selI ? ' selected' : '') + '>' + homeEsc(saved[x.i].name || 'Ohne Namen') + ' (' + saved[x.i].chords.length + ')</option>').join('') + '</optgroup>').join('');
+  }
+  function strumMineOptgroups(list, curId) {
+    const mine = list.filter(x => x.level === 0);
+    if (!mine.length) return '';
+    return fldGroups(mine).map(([f, items]) => '<optgroup label="✏️ ' + (f === 'Ohne Ordner' ? 'Meine Muster' : 'Meine Muster · ' + homeEsc(f)) + '">' + items.map(x => '<option value="' + x.id + '"' + (x.id === curId ? ' selected' : '') + '>' + homeEsc(x.name) + ' (' + x.sig + ')</option>').join('') + '</optgroup>').join('');
+  }
+  function bindTwImportJam() {
+    const b = document.getElementById('jamClipIn');
+    if (b) b.addEventListener('click', () => {
+      const c = clipGet();
+      if (!c) { showToast('📎 Die Zwischenablage ist leer.'); return; }
+      const ok = transferToJam(c.chords);
+      showToast(ok ? '🥁 „' + (c.label || 'Zwischenablage') + '“ liegt jetzt im Jam-Modul.' : '❌ Übernahme hat nicht geklappt.');
+    });
+    document.querySelectorAll('[data-jamcol]').forEach(el => el.addEventListener('click', () => {
+      const col = twColsLoad().find(x => String(x.id) === el.dataset.jamcol);
+      if (!col) return;
+      const chords = (col.chords || []).map(p => ({ root: { pc: p[0], name: p[2] || '' }, type: p[1], name: p[2] || '' }));
+      const ok = transferToJam(chords);
+      showToast(ok ? '🥁 „' + col.name + '“ liegt jetzt im Jam-Modul.' : '❌ Übernahme hat nicht geklappt.');
+    }));
+  }
+
   // =================== Tonart-Werkstatt (Modul 18) ===================
   const TW_KEY = 'guitartrainer_tw', TW_COLS = 'guitartrainer_twcols';
-  let twState = null, twSelChord = 0, twPick = new Set();
+  let twState = null, twSelChord = 0, twPick = new Set(), twOpenProg = null, twRenFolder = null;
   function twLoadSet() { try { return JSON.parse(localStorage.getItem(TW_KEY) || 'null'); } catch (e) { return null; } }
   function twInitState() { const s = twLoadSet(); twState = { root: s && s.root != null ? s.root : 4, minor: !!(s && s.minor), sev: !!(s && s.sev) }; }
   function twSaveSet() { try { localStorage.setItem(TW_KEY, JSON.stringify(twState)); } catch (e) {} }
@@ -15113,6 +15291,14 @@
     const pc = (rootPc + step.s) % 12, type = step.t || 'dur';
     const nm = twSpellNote(rootPc, step.s);
     return { root: { pc, name: nm }, type, name: nm + TH_CHORD_TYPES[type].sym };
+  }
+  function twRoman(step, chord) {
+    const ROMN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+    const SEMI = ['I', '♭II', 'II', '♭III', 'III', 'IV', '♯IV', 'V', '♭VI', 'VI', '♭VII', 'VII'];
+    const base = step.d != null ? ROMN[step.d] : SEMI[((step.s % 12) + 12) % 12];
+    const low = ['moll', 'min7', 'dim', 'dim7', 'm7b5'].includes(chord.type);
+    const r = low ? base.toLowerCase() : base.toUpperCase();
+    return r + ({ maj7: 'maj7', dom7: '7', min7: '7', dim: '°', dim7: '°7', m7b5: 'ø7', aug: '+' }[chord.type] || '');
   }
   const TW_PROGS = [
     { mode: 'moll', level: 'Grund', label: 'Pendel i–iv', info: 'Ruhe und Bewegung im Wechsel – trägt ganze Songs.', steps: [{ d: 0 }, { d: 3 }] },
@@ -15161,6 +15347,9 @@
   function twColsLoad() { try { const d = JSON.parse(localStorage.getItem(TW_COLS) || '[]'); return Array.isArray(d) ? d : []; } catch (e) { return []; } }
   function twColsSave(d) { try { localStorage.setItem(TW_COLS, JSON.stringify(d)); } catch (e) {} }
   function twPickChords() { const fam = twFamily(); return fam.filter(c => twPick.has(c.i)); }
+  function twColChords(c) {
+    return (c.chords || []).map((p, k) => ({ root: { pc: p[0], name: p[2] || (c.names && c.names[k]) || '' }, type: p[1], name: p[2] || (c.names && c.names[k]) || '' }));
+  }
   function twToJam(chords, label) {
     const ok = transferToJam(chords);
     showToast(ok ? '🥁 ' + (label || chords.map(c => c.name).join(' – ')) + ' liegt jetzt im Jam-Modul.' : '❌ Übernahme hat nicht geklappt.');
@@ -15170,7 +15359,7 @@
     try {
       progState = progLoad();
       progState.draft.name = (label || 'Aus der Tonart-Werkstatt').slice(0, 60);
-      progState.draft.chords = chords.slice(0, 16).map(c => { const g = twGrips(c); return { frets: (g[0] || [-1, -1, -1, -1, -1, -1]).slice(), start: 1 }; });
+      progState.draft.chords = chordsToFrets(chords);
       if (!progState.draft.chords.length) progState.draft.chords = [progEmptyChord()];
       progSave();
       const idx = MODULES.findIndex(m => m.type === 'progmod');
@@ -15185,14 +15374,22 @@
     const fam = twFamily();
     if (twSelChord >= fam.length) twSelChord = 0;
     const NAMES = ['C', 'C♯/D♭', 'D', 'E♭', 'E', 'F', 'F♯/G♭', 'G', 'A♭', 'A', 'B♭', 'H'];
-    let h = '<div class="theory-card"><div class="theory-transpose theory-scale-controls">' +
+    let h = '<div class="theory-card"><h4 style="margin:0 0 6px;">🧭 So funktioniert dieses Modul</h4><ul style="margin:0; padding-left:18px; font-size:.9rem; line-height:1.55;">' +
+      '<li>Oben <strong>Tonart</strong> wählen: Grundton, Dur oder Moll, auf Wunsch Septakkorde. Deine Wahl bleibt gemerkt.</li>' +
+      '<li>Die <strong>Kärtchen</strong> zeigen alle sieben Akkorde der Tonart. Antippen zeigt Griffbilder, 🔊 spielt den Akkord, 🔬 öffnet ihn im Akkord-Labor.</li>' +
+      '<li><strong>„＋ Zur Sammlung“</strong> nimmt Akkorde in deine Sammlung auf: speichern (💾), in Ordner sortieren (🗂) und in andere Module übernehmen.</li>' +
+      '<li><strong>Kadenzen:</strong> Zeile antippen → die Folge erscheint komplett mit Griffbildern und Stufen (z. B. I – V – vi – IV), sofort spielbar.</li>' +
+      '<li>🥁 = ins Jam-Modul · 📋 = ins Akkordfolgen-Modul · 📎 = in die Zwischenablage (andere Module haben „📥 Übernehmen“).</li><li><strong>📎 Zwischenablage oder 💾 Sammlung?</strong> Die Zwischenablage merkt sich kurz genau <strong>eine</strong> Folge, solange die App offen ist – perfekt zum schnellen Wechseln zwischen Modulen. 💾 Sammlungen bleiben dagegen <strong>dauerhaft</strong> gespeichert, mit Name und Ordner.</li></ul></div>';
+    h += '<div class="theory-card"><div class="theory-transpose theory-scale-controls">' +
       '<label for="twRootSel">Tonart:</label><select id="twRootSel">' + NAMES.map((n, i) => '<option value="' + i + '"' + (i === twState.root ? ' selected' : '') + '>' + n + '</option>').join('') + '</select>' +
       '<select id="twTypeSel"><option value="dur"' + (!twState.minor ? ' selected' : '') + '>Dur</option><option value="moll"' + (twState.minor ? ' selected' : '') + '>Moll</option></select>' +
       '<label class="th-check"><input type="checkbox" id="twSevChk"' + (twState.sev ? ' checked' : '') + '> Septakkorde</label></div>';
+    const parRoot = twState.minor ? (twState.root + 3) % 12 : (twState.root + 9) % 12;
+    h += '<div class="row" style="margin-top:8px; gap:8px; align-items:center; flex-wrap:wrap; font-size:.9rem;"><span>🔗 Parallelltonart: <strong>' + NAMES[parRoot] + (twState.minor ? '-Dur' : '-Moll') + '</strong> <span style="opacity:.75;">(gleiche Töne, anderes Zentrum)</span></span><button type="button" class="btn btn-secondary" id="twParSwitch" style="padding:6px 12px;">🔄 Wechseln</button></div>';
     h += '<div class="th-chord-cards" id="twCards">' + fam.map(c =>
       '<button type="button" class="th-chord-card' + (c.i === twSelChord ? ' th-tonic' : '') + '" data-twcard="' + c.i + '"><span class="th-roman">' + c.roman + '</span><strong>' + homeEsc(c.name) + '</strong><small>' + (twPick.has(c.i) ? '✔ in Sammlung' : 'antippen') + '</small></button>').join('') + '</div>';
     const sel = fam[twSelChord], grips = twGrips(sel);
-    h += '<div class="row" style="margin-top:10px; gap:8px; align-items:center;"><button type="button" class="btn btn-secondary" id="twAddSel">' + (twPick.has(sel.i) ? '✔ Aus Sammlung entfernen' : '＋ Zur Sammlung') + '</button>' +
+    h += '<div class="row" style="margin-top:10px; gap:8px; align-items:center; flex-wrap:wrap;"><button type="button" class="btn btn-secondary" id="twAddSel">' + (twPick.has(sel.i) ? '✔ Aus Sammlung entfernen' : '＋ Zur Sammlung') + '</button>' +
       '<button type="button" class="btn btn-secondary" id="twPlaySel">🔊 Anhören</button>' +
       '<button type="button" class="btn btn-secondary" id="twLabSel">🔬 Im Akkord-Labor öffnen</button></div>';
     h += '<div class="row" style="margin-top:10px; flex-wrap:wrap; gap:14px; align-items:flex-start;">' + (grips.length ? grips.slice(0, 3).map((g, i) => '<div style="text-align:center; font-size:.78rem; color:var(--text-muted);">' + twGripSvg(g) + 'Griff ' + (i + 1) + '</div>').join('') : '<div style="opacity:.8;">Für diesen Akkordtyp liegt kein Griffbild im Bestand – das Akkord-Labor hilft weiter.</div>') + '</div></div>';
@@ -15201,37 +15398,80 @@
     h += '<div class="theory-card"><h4 style="margin:0 0 8px;">💾 Meine Sammlung</h4>' +
       (pick.length ? '<div class="row" style="gap:6px; flex-wrap:wrap;">' + pick.map(c => '<span class="theory-chip">' + homeEsc(c.name) + '</span>').join('') + '</div>' +
         '<div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap;">' +
-        '<input type="text" id="twColName" placeholder="Name, z. B. Song-Ideen E-Moll" maxlength="40" style="flex:1; min-width:160px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' +
+        '<input type="text" id="twColName" placeholder="Name, z. B. Song-Ideen E-Moll" maxlength="40" style="flex:1; min-width:150px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' +
+        '<input type="text" id="twColFolder" list="twFolderList" placeholder="Ordner (optional)" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:8px;">' + folderDatalist('twFolderList') +
         '<button type="button" class="btn" id="twColSave">💾 Speichern</button>' +
         '<button type="button" class="btn btn-secondary" id="twColPlay">🔊 Spielen</button>' +
         '<button type="button" class="btn btn-secondary" id="twColJam">🥁 Ins Jam</button>' +
-        '<button type="button" class="btn btn-secondary" id="twColProg">📋 Ins Akkordfolgen-Modul</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColProg">📋 Ins Folgen-Modul</button>' +
+        '<button type="button" class="btn btn-secondary" id="twColClip">📎 Kopieren</button>' +
         '<button type="button" class="btn btn-secondary" id="twColClear">✕ Leeren</button></div>'
-        : '<div style="opacity:.85;">Tippe Akkord-Kärtchen an, um sie hier zu sammeln – dann speichern und jederzeit in andere Module übernehmen.</div>') + '</div>';
+        : '<div style="opacity:.85;">Tippe Akkord-Kärtchen an, um sie hier zu sammeln – dann speichern und jederzeit in andere Module übernehmen.</div>') +
+      (pick.length ? '' : '<div class="row" style="margin-top:8px; gap:8px;"><button type="button" class="btn btn-secondary" id="twColClipIn">📥 Aus Zwischenablage holen</button></div>') + '</div>';
     const cols = twColsLoad();
     if (cols.length) {
-      h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📚 Gespeicherte Sammlungen</h4>' + cols.map(c =>
-        '<div class="th-prog-row"><div><strong>' + homeEsc(c.name) + '</strong><br><span>' + (c.names || []).map(homeEsc).join(' – ') + '</span></div>' +
-        '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twload="' + c.id + '">📂 Laden</button>' +
-        '<button type="button" class="theory-chip" data-twcoljam="' + c.id + '">🥁 Jam</button>' +
-        '<button type="button" class="theory-chip" data-twcolprog="' + c.id + '">📋 Folgen</button>' +
-        '<button type="button" class="theory-chip" data-twcolplay="' + c.id + '">🔊</button>' +
-        '<button type="button" class="theory-chip" data-twcolrm="' + c.id + '">🗑</button></div></div>').join('') + '</div>';
+      h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📚 Gespeicherte Sammlungen</h4>';
+      fldGroups(cols).forEach(([f, arr]) => {
+        h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 4px;"><strong style="font-size:.85rem;">🗂 ' + homeEsc(f) + '</strong>' +
+          (twRenFolder === f
+            ? '<input type="text" id="twRenIn" value="' + homeEsc(f === 'Ohne Ordner' ? '' : f) + '" placeholder="Neuer Name" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:6px;"><button type="button" class="theory-chip" data-twrenok="1">✔</button><button type="button" class="theory-chip" data-twrenc="1">✕</button>'
+            : '<button type="button" class="theory-chip" data-twrenf="' + homeEsc(f) + '">✏️ umbenennen</button>') + '</div>';
+        arr.forEach(c => {
+          h += '<div class="th-prog-row"><div><strong>' + homeEsc(c.name) + '</strong><br><span>' + (c.chords || []).map(p => homeEsc(p[2] || '')).join(' – ') + '</span></div>' +
+            '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twload="' + c.id + '">📂 Laden</button>' +
+            '<button type="button" class="theory-chip" data-twcoljam="' + c.id + '">🥁 Jam</button>' +
+            '<button type="button" class="theory-chip" data-twcolprog="' + c.id + '">📋 Folgen</button>' +
+            '<button type="button" class="theory-chip" data-twcolclip="' + c.id + '">📎</button>' +
+            '<button type="button" class="theory-chip" data-twcolplay="' + c.id + '">🔊</button>' +
+            '<button type="button" class="theory-chip" data-twcolrm="' + c.id + '">🗑</button></div></div>';
+        });
+      });
+      h += '</div>';
     }
+    // Folgen aus dem Akkordfolgen-Modul
+    try {
+      const ps = progLoad();
+      if (ps.saved && ps.saved.length) {
+        h += '<div class="theory-card"><h4 style="margin:0 0 8px;">📥 Deine Akkordfolgen aus dem Folgen-Modul</h4>';
+        fldGroups(ps.saved).forEach(([f, arr]) => {
+          h += '<div style="font-size:.85rem; margin:8px 0 4px;"><strong>🗂 ' + homeEsc(f) + '</strong></div>';
+          arr.forEach(p => {
+            h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.name || 'Ohne Namen') + '</strong><br><span>' + p.chords.length + ' Akkorde</span></div>' +
+              '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twpsave="' + p.name.replace(/"/g, '&quot;') + '">📂 Als Sammlung</button>' +
+              '<button type="button" class="theory-chip" data-twpjam="' + p.name.replace(/"/g, '&quot;') + '">🥁 Jam</button>' +
+              '<button type="button" class="theory-chip" data-twpclip="' + p.name.replace(/"/g, '&quot;') + '">📎</button></div></div>';
+          });
+        });
+        h += '</div>';
+      }
+    } catch (e) {}
     // Kadenzen
     const minor = twState.minor;
     const list = TW_PROGS.filter(p => p.mode === (minor ? 'moll' : 'dur'));
     ['Grund', 'Fortgeschritten', 'Jazz'].forEach(lv => {
       const rows = list.filter(p => p.level === lv);
       if (!rows.length) return;
-      h += '<div class="theory-card"><h4 style="margin:0 0 4px;">' + (lv === 'Grund' ? '🌱 Grund-Kadenzen' : lv === 'Fortgeschritten' ? '🎯 Fortgeschrittene Kadenzen' : '🎷 Jazz-Kadenzen') + '</h4>';
+      h += '<div class="theory-card"><h4 style="margin:0 0 4px;">' + (lv === 'Grund' ? '🌱 Grund-Kadenzen' : lv === 'Fortgeschritten' ? '🎯 Fortgeschrittene Kadenzen' : '🎷 Jazz-Kadenzen') + '</h4><div style="font-size:.8rem; color:var(--text-muted); margin-bottom:6px;">Zeile antippen: Die Folge erscheint komplett mit Griffbildern und Stufen.</div>';
       rows.forEach(p => {
+        const gi = TW_PROGS.indexOf(p);
         const chords = p.steps.map(st => twChordObj(st));
-        h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.label) + '</strong><br><span>' + chords.map(c => homeEsc(c.name)).join(' – ') + '</span><br><small style="color:var(--text-muted);">' + homeEsc(p.info) + '</small></div>' +
-          '<div class="theory-chip-row"><button type="button" class="theory-chip" data-twplay="' + TW_PROGS.indexOf(p) + '">🔊</button>' +
-          '<button type="button" class="theory-chip" data-twjam="' + TW_PROGS.indexOf(p) + '">🥁 Jam</button>' +
-          '<button type="button" class="theory-chip" data-twprog="' + TW_PROGS.indexOf(p) + '">📋 Folgen</button>' +
-          '<button type="button" class="theory-chip" data-twsavep="' + TW_PROGS.indexOf(p) + '">💾</button></div></div>';
+        const romans = p.steps.map((st, k) => twRoman(st, chords[k])).join(' – ');
+        const open = twOpenProg === gi;
+        h += '<div class="th-prog-row" style="display:block;">' +
+          '<div class="row" style="gap:8px; align-items:flex-start; justify-content:space-between;">' +
+          '<button type="button" data-twopen="' + gi + '" style="flex:1; text-align:left; background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:4px 0;">' +
+          '<strong>' + (open ? '▾ ' : '▸ ') + homeEsc(p.label) + '</strong><br><span>' + homeEsc(romans) + ' · ' + chords.map(c => homeEsc(c.name)).join(' – ') + '</span><br><small style="color:var(--text-muted);">' + homeEsc(p.info) + '</small></button>' +
+          '<div class="theory-chip-row" style="margin-top:0;"><button type="button" class="theory-chip" data-twplay="' + gi + '">🔊</button>' +
+          '<button type="button" class="theory-chip" data-twjam="' + gi + '">🥁</button>' +
+          '<button type="button" class="theory-chip" data-twprog="' + gi + '">📋</button>' +
+          '<button type="button" class="theory-chip" data-twclip="' + gi + '">📎</button>' +
+          '<button type="button" class="theory-chip" data-twsavep="' + gi + '">💾</button></div></div>' +
+          (open ? '<div class="row" style="margin:10px 0 4px; gap:12px; flex-wrap:wrap; align-items:flex-start;">' + chords.map((c, k) => {
+            const g = twGrips(c)[0];
+            return '<div style="text-align:center;"><div style="font-weight:800; font-size:.85rem; color:var(--text-muted);">' + homeEsc(twRoman(p.steps[k], c)) + '</div>' +
+              (g ? twGripSvg(g) : '<div style="width:96px; height:60px; display:flex; align-items:center; justify-content:center; font-size:.7rem; opacity:.7;">kein Griffbild</div>') +
+              '<div style="font-size:.82rem; font-weight:700;">' + homeEsc(c.name) + '</div></div>';
+          }).join('') + '</div>' : '') + '</div>';
       });
       h += '</div>';
     });
@@ -15242,42 +15482,68 @@
     on('twTypeSel', e => { twState.minor = e.target.value === 'moll'; twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); }, 'change');
     on('twSevChk', e => { twState.sev = e.target.checked; twSaveSet(); renderTwModule(); }, 'change');
     root.querySelectorAll('[data-twcard]').forEach(b => b.addEventListener('click', () => { twSelChord = +b.dataset.twcard; renderTwModule(); }));
+    on('twParSwitch', () => { if (twState.minor) { twState.root = (twState.root + 3) % 12; twState.minor = false; } else { twState.root = (twState.root + 9) % 12; twState.minor = true; } twSaveSet(); twPick.clear(); twSelChord = 0; renderTwModule(); });
     on('twAddSel', () => { if (twPick.has(twSelChord)) twPick.delete(twSelChord); else twPick.add(twSelChord); renderTwModule(); });
     on('twPlaySel', () => thPlayPitches(chordPitches(sel.root.pc, sel.type)));
     on('twLabSel', () => { const g = grips[0]; const idx = MODULES.findIndex(m => m.type === 'chordlab'); if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); if (g) setTimeout(() => { try { chordLabApplyFrets(g); renderChordLookupVariants(grips, 0); } catch (e) {} }, 250); } });
     on('twColSave', () => {
       const nm = (document.getElementById('twColName').value || '').trim() || ('Sammlung ' + new Date().toLocaleDateString('de-DE'));
+      const fo = fldNorm((document.getElementById('twColFolder') || {}).value);
       const d = twColsLoad();
-      d.push({ id: Date.now(), name: nm, root: twState.root, minor: twState.minor, chords: pick.map(c => [c.root.pc, c.type]), names: pick.map(c => c.name) });
-      twColsSave(d); showToast('💾 Sammlung „' + nm + '“ gespeichert.'); renderTwModule();
+      d.push({ id: Date.now(), name: nm, folder: fo, root: twState.root, minor: twState.minor, chords: pick.map(c => [c.root.pc, c.type, c.name]) });
+      twColsSave(d); twPick.clear(); showToast('💾 Sammlung „' + nm + '“' + (fo ? ' in Ordner „' + fo + '“' : '') + ' gespeichert.'); renderTwModule();
     });
     on('twColPlay', () => pick.forEach((c, k) => thPlayPitches(chordPitches(c.root.pc, c.type), k * 0.9)));
     on('twColJam', () => twToJam(pick, 'Sammlung'));
     on('twColProg', () => twToProg(pick, (document.getElementById('twColName') && document.getElementById('twColName').value || '').trim() || 'Meine Sammlung'));
+    on('twColClip', () => clipSet(pick, (document.getElementById('twColName') && document.getElementById('twColName').value || '').trim() || 'Meine Sammlung'));
     on('twColClear', () => { twPick.clear(); renderTwModule(); });
+    on('twColClipIn', () => {
+      const c = clipGet(); if (!c) { showToast('📎 Die Zwischenablage ist leer.'); return; }
+      const fam2 = twFamily();
+      c.chords.forEach(ch => { const m = fam2.find(f => f.root.pc === ch.root.pc && f.type === ch.type); if (m) twPick.add(m.i); });
+      renderTwModule(); showToast('📥 Zwischenablage in die Sammlung geholt (passende Akkorde der Tonart).');
+    });
+    root.querySelectorAll('[data-twrenf]').forEach(b => b.addEventListener('click', () => { twRenFolder = b.dataset.twrenf; renderTwModule(); }));
+    root.querySelectorAll('[data-twrenc]').forEach(b => b.addEventListener('click', () => { twRenFolder = null; renderTwModule(); }));
+    root.querySelectorAll('[data-twrenok]').forEach(b => b.addEventListener('click', () => {
+      const inp = document.getElementById('twRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = twRenFolder;
+      if (nn && old) { const d = twColsLoad(); d.forEach(c => { if ((fldNorm(c.folder) || 'Ohne Ordner') === old) c.folder = nn; }); twColsSave(d); showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.'); }
+      twRenFolder = null; renderTwModule();
+    }));
     root.querySelectorAll('[data-twload]').forEach(b => b.addEventListener('click', () => {
       const c = twColsLoad().find(x => String(x.id) === b.dataset.twload); if (!c) return;
       twState.root = c.root; twState.minor = !!c.minor; twSaveSet();
-      const fam2 = twFamily(); twPick = new Set(fam2.filter(f => c.chords.some(p => p[0] === f.root.pc && p[1] === f.type)).map(f => f.i));
+      const fam2 = twFamily(); twPick = new Set(fam2.filter(f => (c.chords || []).some(p => p[0] === f.root.pc && p[1] === f.type)).map(f => f.i));
       renderTwModule(); showToast('📂 Sammlung „' + c.name + '“ geladen.');
     }));
-    const colChords = c => (c.chords || []).map(p => ({ root: { pc: p[0], name: twSpellNote(c.root, (p[0] - c.root + 12) % 12) }, type: p[1], name: (c.names && c.names[c.chords.indexOf(p)]) || '' }));
-    root.querySelectorAll('[data-twcoljam]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcoljam); if (c) twToJam(colChords(c), c.name); }));
-    root.querySelectorAll('[data-twcolprog]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolprog); if (c) twToProg(colChords(c), c.name); }));
-    root.querySelectorAll('[data-twcolplay]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolplay); if (c) colChords(c).forEach((ch, k) => thPlayPitches(chordPitches(ch.root.pc, ch.type), k * 0.9)); }));
+    root.querySelectorAll('[data-twcoljam]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcoljam); if (c) twToJam(twColChords(c), c.name); }));
+    root.querySelectorAll('[data-twcolprog]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolprog); if (c) twToProg(twColChords(c), c.name); }));
+    root.querySelectorAll('[data-twcolclip]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolclip); if (c) clipSet(twColChords(c), c.name); }));
+    root.querySelectorAll('[data-twcolplay]').forEach(b => b.addEventListener('click', () => { const c = twColsLoad().find(x => String(x.id) === b.dataset.twcolplay); if (c) twColChords(c).forEach((ch, k) => thPlayPitches(chordPitches(ch.root.pc, ch.type), k * 0.9)); }));
     root.querySelectorAll('[data-twcolrm]').forEach(b => b.addEventListener('click', () => { twColsSave(twColsLoad().filter(x => String(x.id) !== b.dataset.twcolrm)); renderTwModule(); }));
+    const progChordsByName = nm => { const p = progLoad().saved.find(x => x.name === nm); if (!p) return []; return p.chords.map(c => fretsToChord(c.frets)).filter(Boolean); };
+    root.querySelectorAll('[data-twpsave]').forEach(b => b.addEventListener('click', () => {
+      const chords = progChordsByName(b.dataset.twpsave); if (!chords.length) { showToast('❌ Akkorde nicht erkannt.'); return; }
+      const d = twColsLoad(); d.push({ id: Date.now(), name: b.dataset.twpsave, folder: '', root: twState.root, minor: twState.minor, chords: chords.map(c => [c.root.pc, c.type, c.name]) });
+      twColsSave(d); showToast('📂 Als Sammlung gespeichert.'); renderTwModule();
+    }));
+    root.querySelectorAll('[data-twpjam]').forEach(b => b.addEventListener('click', () => { const chords = progChordsByName(b.dataset.twpjam); if (chords.length) twToJam(chords, b.dataset.twpjam); }));
+    root.querySelectorAll('[data-twpclip]').forEach(b => b.addEventListener('click', () => { const chords = progChordsByName(b.dataset.twpclip); if (chords.length) clipSet(chords, b.dataset.twpclip); }));
+    root.querySelectorAll('[data-twopen]').forEach(b => b.addEventListener('click', () => { const gi = +b.dataset.twopen; twOpenProg = twOpenProg === gi ? null : gi; renderTwModule(); }));
     root.querySelectorAll('[data-twplay]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twplay]; p.steps.map(st => twChordObj(st)).forEach((c, k) => thPlayPitches(chordPitches(c.root.pc, c.type), k * 1.0)); }));
     root.querySelectorAll('[data-twjam]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twjam]; twToJam(p.steps.map(st => twChordObj(st)), p.label); }));
     root.querySelectorAll('[data-twprog]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twprog]; twToProg(p.steps.map(st => twChordObj(st)), p.label); }));
+    root.querySelectorAll('[data-twclip]').forEach(b => b.addEventListener('click', () => { const p = TW_PROGS[+b.dataset.twclip]; clipSet(p.steps.map(st => twChordObj(st)), p.label); }));
     root.querySelectorAll('[data-twsavep]').forEach(b => b.addEventListener('click', () => {
       const p = TW_PROGS[+b.dataset.twsavep]; const chords = p.steps.map(st => twChordObj(st));
-      const d = twColsLoad(); d.push({ id: Date.now(), name: p.label, root: twState.root, minor: twState.minor, chords: chords.map(c => [c.root.pc, c.type]), names: chords.map(c => c.name) });
-      twColsSave(d); showToast('💾 „' + p.label + '“ als Sammlung gespeichert.'); renderTwModule();
+      const d = twColsLoad(); d.push({ id: Date.now(), name: p.label, folder: 'Kadenzen', root: twState.root, minor: twState.minor, chords: chords.map(c => [c.root.pc, c.type, c.name]) });
+      twColsSave(d); showToast('💾 „' + p.label + '“ als Sammlung im Ordner „Kadenzen“ gespeichert.'); renderTwModule();
     }));
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-06-1';
+  const APP_VERSION = '2026-11-06-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -15500,5 +15766,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56612b409dc382b',t:'MTc5Mzk4ODgxNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56612b409dc382b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56b1108f8ebdc6c',t:'MTc5NDA0MTE3Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56b1108f8ebdc6c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
