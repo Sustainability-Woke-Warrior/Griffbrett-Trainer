@@ -1512,7 +1512,7 @@
     #rmNightVeil, #rmMoon, #rmMoonGlow, #rmStars { transition: opacity 3s ease; }
     @keyframes rmTwinkle { from { opacity: .45; } to { opacity: 1; } }
     #rmSunPatch { transition: opacity 2s ease; }
-    .rm-steam { opacity: 0; }
+    .rm-steam { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
     #rmCat { cursor: pointer; }
     #rmCatNote, #rmCatZ { opacity: 0; pointer-events: none; }
     #rmCatStand { display: none; }
@@ -1525,7 +1525,7 @@
     #rmOverlay { position: absolute; inset: 0; pointer-events: none; background: #0b1020; opacity: 0; transition: opacity 1.6s ease; }
     #rmPulse { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at 50% 55%, rgba(255,205,110,.5), rgba(255,140,60,0) 70%); }
     .rm-note-fly { position: absolute; font-size: 26px; pointer-events: none; opacity: 0; text-shadow: 0 1px 4px rgba(0,0,0,.35); }
-    @keyframes rmSteam { 0% { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0; } 20% { opacity: .34; } 60% { opacity: .22; } 100% { transform: translateY(-92px) scaleX(1.7) rotate(4deg); opacity: 0; } }
+    @keyframes rmSteam { 0% { transform: translateY(0) scaleX(1); opacity: 0; } 20% { opacity: .34; } 60% { opacity: .22; } 100% { transform: translateY(-92px) scaleX(1.6); opacity: 0; } }
     @keyframes rmCurtain { from { transform: skewX(-1.1deg); } to { transform: skewX(1.4deg); } }
     @keyframes rmDustF { 0% { transform: translate(0,0); opacity: 0; } 12% { opacity: .7; } 88% { opacity: .5; } 100% { transform: translate(26px,34px); opacity: 0; } }
     @keyframes rmSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -3839,6 +3839,7 @@
   let finderNoteBoxes = [];
   let chordLabNoteBoxes = [];
   let jamTimerId = null;
+  let jamStepsScheduled = 0, jamSchedErrors = 0; // Lebend-Test: wie viele Schritte geplant / Fehler aufgetreten sind
   let jamNextNoteTime = 0;
   let jamCurrentStep = 0;
   let jamSaveLoadPanelOpen = false;
@@ -5622,8 +5623,8 @@
     stopJamPlayback();
     jam.timeSig = '4/4';
     jam.rhythmStyle = JAM_STYLE_LABELS[p.style] ? p.style : 'default';
-    jam.bpm = p.bpm;
-    jam.swing = p.swing;
+    jam.bpm = (Number.isFinite(Number(p.bpm)) && Number(p.bpm) >= 30 && Number(p.bpm) <= 300) ? Number(p.bpm) : 96;
+    jam.swing = Number.isFinite(Number(p.swing)) ? Math.max(0, Math.min(1, Number(p.swing))) : 0;
     jam.chordMode = 'free';
     jam.parts = [];
     setJamBarCount(JAM_BAR_COUNTS.includes(p.chords.length) ? p.chords.length : JAM_BARS);
@@ -5951,6 +5952,10 @@
       <button type="button" class="btn btn-secondary" data-act="beat">🥁 In den Beat übernehmen</button>
       <button type="button" class="btn btn-secondary" data-act="plan">📅 In den Wochenplan</button>
       <button type="button" class="btn btn-secondary" data-act="chg">🔁 Im Wechsel-Trainer üben</button>
+      <label style="font-size:.85rem; font-weight:600; display:inline-flex; align-items:center; gap:6px;">🎹 MIDI als: <select id="progMidiMode" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:.85rem; padding:4px 6px;">
+        <option value="pattern"${progState.midiMode === 'quarter' ? '' : ' selected'}>Zupfmuster (Arpeggio)</option>
+        <option value="quarter"${progState.midiMode === 'quarter' ? ' selected' : ''}>Blockakkorde (je eine Viertel)</option>
+      </select></label>
       <button type="button" class="btn btn-secondary" data-act="midi">🎹 MIDI speichern</button>
     </div>`;
     const po = progPlayOpts();
@@ -6268,10 +6273,28 @@
     progMarkPlaying();
   }
   // ---------- MIDI-Export ----------
-  function progMidiBytes() {
-    const dr = progState.draft, o = progPlayOpts(), TPQ = 480;
+  function progMidiBytes(mode) {
+    const dr = progState.draft, TPQ = 480;
+    mode = mode === 'quarter' ? 'quarter' : 'pattern';
+    const o = Object.assign({}, progPlayOpts());
+    if (mode === 'pattern') {
+      // „Als Zupfmuster“: Ein gewähltes Zupfmuster (pat:…pick) oder „Zupfen“ bleibt erhalten;
+      // steht die Art auf Anschlag, wird das einfache Arpeggio exportiert.
+      const cur = o.style;
+      const pat = typeof cur === 'string' && cur.startsWith('pat:') ? progPatById(cur.slice(4)) : null;
+      const isPick = cur === 'arp' || (pat && pat.kind === 'pick');
+      if (!isPick) o.style = 'arp';
+    }
     const notes = [];
     let pos = 0, sig = '4/4', tpb = TPQ;
+    if (mode === 'quarter') {
+      // Blockakkorde: Jeder Akkord genau eine Viertel lang, alle Saiten gleichzeitig
+      dr.chords.forEach(c => {
+        const s = progSounding(c); if (!s.length) return;
+        s.forEach((si, k) => notes.push({ on: pos + k * 8, p: JAM_PAINT_OPEN[si] + c.frets[si], vel: 100, off: pos + TPQ }));
+        pos += TPQ;
+      });
+    } else {
     dr.chords.forEach(c => {
       if (!progSounding(c).length) return;
       const info = progBarInfo(c, o);
@@ -6281,9 +6304,11 @@
       info.ev.forEach(ev => { if (!ev.x) notes.push({ on: barStart + Math.round(ev.beat * tpb) + (ev.k || 0) * 8, p: JAM_PAINT_OPEN[ev.si] + c.frets[ev.si], vel: Math.min(127, Math.round(ev.vel * 100)), barEnd }); });
       pos = barEnd;
     });
+    }
     if (!notes.length) return null;
     notes.sort((a, b) => a.on - b.on);
     notes.forEach((n, i) => {
+      if (n.off != null) return;
       let off = n.barEnd;
       for (let j = i + 1; j < notes.length; j++) if (notes[j].p === n.p) { off = Math.min(off, notes[j].on); break; }
       n.off = Math.max(n.on + 10, off);
@@ -6307,7 +6332,9 @@
       0x4d, 0x54, 0x72, 0x6b, (L >>> 24) & 255, (L >> 16) & 255, (L >> 8) & 255, L & 255, ...tr]);
   }
   function progMidiExport() {
-    const bytes = progMidiBytes();
+    const sel = document.getElementById('progMidiMode');
+    const mode = (sel ? sel.value : progState.midiMode) === 'quarter' ? 'quarter' : 'pattern';
+    const bytes = progMidiBytes(mode);
     if (!bytes) { showToast('Trag zuerst einen Griff ein.'); return; }
     const nm = ((progState.draft.name || '').trim() || 'Akkordfolge').replace(/[\\/:*?"<>|]+/g, '_').slice(0, 60);
     try {
@@ -6610,6 +6637,7 @@
       progSave();
     }
     else if (e.target.id === 'progPlayLoop') { progPlayOpts().loop = e.target.checked; progSave(); }
+    else if (e.target.id === 'progMidiMode') { progState.midiMode = e.target.value === 'quarter' ? 'quarter' : 'pattern'; progSave(); }
     else if (e.target.id === 'progPlayBpm') { progSave(); }
   });
   document.addEventListener('input', e => {
@@ -7578,7 +7606,8 @@
     });
 
     document.getElementById('jamTempoRange').addEventListener('input', (e) => {
-      jam.bpm = parseInt(e.target.value, 10);
+      const bpmNeu = parseInt(e.target.value, 10);
+      if (Number.isFinite(bpmNeu)) jam.bpm = Math.max(30, Math.min(300, bpmNeu));
       document.getElementById('jamTempoLabel').textContent = `${jam.bpm} BPM`;
       scheduleJamAutosave();
     });
@@ -8724,10 +8753,23 @@
     while (jamNextNoteTime < audioCtx.currentTime + lookahead) {
       // Swing: ungerade 16tel leicht verzögert spielen (Raster bleibt gleich)
       const swingOffset = getJamSwingOffset(jamCurrentStep, 60 / state.jam.bpm / 4);
-      jamScheduleStep(state.jam.playingBar, jamCurrentStep, jamNextNoteTime + swingOffset, {
-        fill: isJamFillPass(state.jam.playingBar, jamLoopCount),
-        crash: jamCrashNext && jamCurrentStep === 0
-      });
+      jamStepsScheduled++;
+      try {
+        jamScheduleStep(state.jam.playingBar, jamCurrentStep, jamNextNoteTime + swingOffset, {
+          fill: isJamFillPass(state.jam.playingBar, jamLoopCount),
+          crash: jamCrashNext && jamCurrentStep === 0
+        });
+      } catch (err) {
+        // Ein kaputter Schritt darf den ganzen Beat nicht mehr stilllegen
+        jamSchedErrors++;
+        if (jamSchedErrors === 1) { try { showToast('⚠️ Beat-Fehler: ' + (err && err.message ? err.message : err)); } catch (e) {} }
+        if (jamSchedErrors >= 8) {
+          try { showToast('❌ Der Beat lief nicht – ich setze ihn auf den Standard zurück.'); } catch (e) {}
+          state.jam.playing = false; clearTimeout(jamTimerId);
+          try { localStorage.removeItem(JAM_AUTOSAVE_KEY); } catch (e) {}
+          initJamState(); renderJamModule(); return;
+        }
+      }
       if (jamCurrentStep === 0) jamCrashNext = false;
       const stepToShow = jamCurrentStep;
       const barToShow = state.jam.playingBar;
@@ -8761,6 +8803,45 @@
     jamTimerId = setTimeout(jamScheduler, 25);
   }
 
+  // Selbstcheck vor dem Start: ungültige Zustände reparieren, statt stumm zu bleiben
+  function jamValidateForPlayback() {
+    const fixed = [];
+    let j = state.jam;
+    if (!j) { initJamState(); j = state.jam; fixed.push('Beat-Zustand fehlte (neu aufgebaut)'); }
+    if (!(Number.isFinite(j.bpm) && j.bpm >= 30 && j.bpm <= 300)) { j.bpm = 96; fixed.push('Tempo ungültig → 96'); }
+    if (!j.timeSig || !JAM_TIME_SIGS[j.timeSig]) { j.timeSig = '4/4'; fixed.push('Taktart ungültig → 4/4'); }
+    if (!Array.isArray(j.bars) || j.bars.length < 1 || !j.bars.every(b => b && b.pattern && typeof b.pattern === 'object')) {
+      j.bars = [makeDefaultJamBar(), makeDefaultJamBar(), makeDefaultJamBar(), makeDefaultJamBar()];
+      fixed.push('Taktdaten beschädigt → Standard-Takte');
+    }
+    const steps = getJamStepsCount() || 16;
+    j.bars.forEach(bar => { JAM_ROWS.forEach(row => {
+      if (!Array.isArray(bar.pattern[row.id]) || bar.pattern[row.id].length !== steps) {
+        const alt = Array.isArray(bar.pattern[row.id]) ? bar.pattern[row.id] : [];
+        bar.pattern[row.id] = Array.from({ length: steps }, (_, i) => alt[i] || 0);
+        if (!fixed.includes('Musterzeilen repariert')) fixed.push('Musterzeilen repariert');
+      }
+    }); });
+    const nb = j.bars.length;
+    if (!Number.isInteger(j.loopEnd) || j.loopEnd < 0 || j.loopEnd >= nb) { j.loopEnd = nb - 1; fixed.push('Loop-Ende korrigiert'); }
+    if (!Number.isInteger(j.loopStart) || j.loopStart < 0 || j.loopStart > j.loopEnd) { j.loopStart = 0; fixed.push('Loop-Start korrigiert'); }
+    if (!j.volumes || Object.keys(JAM_DEFAULT_VOLUMES).some(k => !(Number.isFinite(j.volumes[k]) && j.volumes[k] >= 0 && j.volumes[k] <= 1))) {
+      j.volumes = { ...JAM_DEFAULT_VOLUMES }; fixed.push('Lautstärken ungültig → Standardwerte');
+    } else if (Object.keys(JAM_DEFAULT_VOLUMES).every(k => !(j.volumes[k] > 0))) {
+      j.volumes = { ...JAM_DEFAULT_VOLUMES }; fixed.push('Alle Regler auf 0 → Standardwerte');
+    }
+    if (!j.mutes || typeof j.mutes !== 'object') j.mutes = {};
+    if (!j.solos || typeof j.solos !== 'object') j.solos = {};
+    const eff = getJamEffectiveVolumes(j.volumes);
+    const padLive = j.bars.some(b => b.padOn !== false);
+    const anyInstr = JAM_ROWS.some(r => eff[r.id] > 0);
+    const padOk = padLive && eff.pad > 0, gtrOk = !!j.gtrOn && eff.gtr > 0;
+    if (!anyInstr && !padOk && !gtrOk) { j.mutes = {}; j.solos = {}; fixed.push('Alles stummgeschaltet (Mute/Solo) → zurückgesetzt'); }
+    if (!Number.isFinite(j.swing)) j.swing = 0;
+    if (!Number.isFinite(j.humanize)) j.humanize = 0;
+    return fixed;
+  }
+
   function toggleJamPlayback() {
     initAudio();
     if (!audioCtx) { try { showToast('❌ Ton nicht verfügbar: Dieser Browser stellt kein Web Audio bereit.'); } catch (e) {} return; }
@@ -8771,6 +8852,11 @@
       jamLoopCount = 0;
       jamCrashNext = false;
       if (!jamPlayStartedAt || Date.now() - jamPlayStartedAt > 30 * 60000) { jamPlayStartedAt = Date.now(); jamHintBreakShown = 0; }
+      const repairs = jamValidateForPlayback();
+      if (repairs.length) {
+        try { showToast('🔧 Beat-Reparatur: ' + repairs.slice(0, 2).join(' · ') + (repairs.length > 2 ? ' · …' : '')); } catch (e) {}
+        scheduleJamAutosave();
+      }
       state.jam.playingBar = state.jam.loopStart;
       jamNextNoteTime = audioCtx.currentTime + 0.05;
       // Einzähler: ein Takt Klicks auf den Zählzeiten, danach startet der Beat
@@ -8779,9 +8865,22 @@
         getJamAccentSteps().forEach((st, i) => jamPlayClick(jamNextNoteTime + st * stepDur, i === 0));
         jamNextNoteTime += stepDur * getJamStepsCount();
       }
+      jamStepsScheduled = 0; jamSchedErrors = 0;
       jamScheduler();
-      // Wachhund: Falls Android den Tonkontext schlafen lässt, wecken + Hinweis
+      // Wachhund 1: schläft der Tonkontext (Android), wecken
       setTimeout(() => { if (state.jam.playing && audioCtx && audioCtx.state === 'suspended') { try { audioCtx.resume(); showToast('🔇 Der Ton schlief noch (Android) – er wird jetzt geweckt.'); } catch (e) {} } }, 600);
+      // Wachhund 2 (Lebend-Test): Hat der Planer wirklich Schritte eingeplant?
+      setTimeout(() => {
+        if (!state.jam.playing || jamStepsScheduled > 0 || jamSchedErrors > 0) return;
+        try { showToast('🔧 Der Beat ist nicht angesprungen – ich baue ihn neu auf und starte erneut.'); } catch (e) {}
+        clearTimeout(jamTimerId);
+        try { localStorage.removeItem(JAM_AUTOSAVE_KEY); } catch (e) {}
+        initJamState();
+        state.jam.playing = true; state.jam.playingBar = 0; jamCurrentStep = 0;
+        jamNextNoteTime = audioCtx.currentTime + 0.05;
+        jamStepsScheduled = 0; jamSchedErrors = 0;
+        jamScheduler(); renderJamModule();
+      }, 1200);
     } else {
       clearTimeout(jamTimerId);
       try { if (audioCtx) strumDamp(audioCtx, audioCtx.currentTime); } catch (e) {}
@@ -11573,20 +11672,61 @@
         <div class="jam-improv-label" id="spName_${mod}" style="margin-top:4px;"></div>
       </div></details>`;
   }
+  // Alle fünf Lagen als kompakte Griffbilder (wie im Modul „Tonleitern“) – als HTML-Text
+  function scalePositionsHtml(st, r, t) {
+    const anchorPc = ((r + st.rootShift) + 12) % 12;
+    let anchorFret = 0;
+    while ((40 + anchorFret) % 12 !== anchorPc) anchorFret++;
+    const labels = t === 'dur' ? SCALE_VIEW_CAGED_LABELS : (t === 'moll' ? SCALE_VIEW_CAGED_LABELS_MINOR : SCALE_VIEW_POSITION_LABELS);
+    let html = '<div class="scale-position-grid">';
+    SCALE_VIEW_POSITIONS.forEach((w, i) => {
+      let fretFrom = anchorFret + w[0], fretTo = anchorFret + w[1];
+      if (fretTo > 15) { fretFrom -= 12; fretTo -= 12; }
+      fretFrom = Math.max(0, fretFrom);
+      const built = buildScalePositionDiagramSvg(st, r, fretFrom, fretTo);
+      html += `<div class="scale-position-item" style="max-width:250px;"><div class="scale-position-title">${labels[i]}</div>${built.svg}${built.fretNumbersHtml}</div>`;
+    });
+    return html + '</div>';
+  }
+  // Ganzes Griffbrett (Bund 0–12) als Tabelle – als HTML-Text
+  function scaleFullGridHtml(st, r) {
+    const stringNames = ['e', 'H', 'G', 'D', 'A', 'E'];
+    const fretCount = 13;
+    let html = `<div style="--scale-fret-count:${fretCount}; min-width:430px;">`;
+    STRINGS.forEach((str, sIdx) => {
+      html += `<div class="scale-grid-row" style="grid-template-columns: 34px repeat(${fretCount}, 1fr);"><div class="scale-string-label">${stringNames[sIdx]}</div>`;
+      for (let fret = 0; fret <= 12; fret++) {
+        const pitch = str.openPitch + fret;
+        const pc = ((pitch % 12) + 12) % 12;
+        const relative = ((pc - r) + 12) % 12;
+        const inScale = st.intervals.includes(relative);
+        const isRoot = inScale && relative === 0;
+        const label = inScale ? getScaleViewLabel(pc, relative, st, fret, 0) : '';
+        html += `<div class="scale-cell ${inScale ? 'in-scale' : ''} ${isRoot ? 'root-note' : ''}">${label}</div>`;
+      }
+      html += '</div>';
+    });
+    html += `<div class="scale-fret-numbers" style="grid-template-columns: 34px repeat(${fretCount}, 1fr);"><span></span>${Array.from({ length: fretCount }, (_, i) => `<span class="in-window">${i}</span>`).join('')}</div></div>`;
+    return html;
+  }
   function scalePanelBoard(mod) {
     const wrap = document.getElementById('spBoard_' + mod); if (!wrap) return;
     const rSel = document.getElementById('spRoot_' + mod), tSel = document.getElementById('spType_' + mod);
     const r = rSel ? +rSel.value : 0;
     const t = tSel && SCALE_VIEW_TYPES[tSel.value] ? tSel.value : 'durPenta';
     const st = SCALE_VIEW_TYPES[t];
-    const anchorPc = ((r + st.rootShift) + 12) % 12;
-    let anchorFret = 0;
-    while ((40 + anchorFret) % 12 !== anchorPc) anchorFret++;
-    let fretFrom = anchorFret + SCALE_VIEW_POSITIONS[0][0], fretTo = anchorFret + SCALE_VIEW_POSITIONS[0][1];
-    if (fretTo > 15) { fretFrom -= 12; fretTo -= 12; }
-    fretFrom = Math.max(0, fretFrom);
-    const built = buildScalePositionDiagramSvg(st, r, fretFrom, fretTo);
-    wrap.innerHTML = `<div class="scale-position-item" style="max-width:250px;">${built.svg}${built.fretNumbersHtml}</div>`;
+    const sv = scalePanelSaved()[mod] || {};
+    const view = sv.view === 'board' ? 'board' : 'pos';
+    const act = 'border-color:var(--accent-color); font-weight:800;';
+    const tog = `<div class="row" style="gap:6px; margin:0 0 8px; flex-wrap:wrap;">` +
+      `<button type="button" class="btn btn-secondary sp-view" data-v="pos" style="padding:4px 10px; font-size:.78rem;${view === 'pos' ? act : ''}">Alle Lagen 1–5</button>` +
+      `<button type="button" class="btn btn-secondary sp-view" data-v="board" style="padding:4px 10px; font-size:.78rem;${view === 'board' ? act : ''}">Griffbrett 0–12</button></div>`;
+    wrap.innerHTML = tog + (view === 'board' ? scaleFullGridHtml(st, r) : scalePositionsHtml(st, r, t));
+    wrap.querySelectorAll('.sp-view').forEach(b => b.onclick = () => {
+      const all = scalePanelSaved(); all[mod] = Object.assign({}, all[mod], { view: b.dataset.v === 'board' ? 'board' : 'pos' });
+      try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {}
+      scalePanelBoard(mod);
+    });
     const nm = document.getElementById('spName_' + mod);
     if (nm) nm.innerHTML = `<strong>${SCALE_VIEW_ROOTS[r]}-${SCALE_VIEW_TYPES[t].label}</strong> – orange = Grundton, blau = Skalatöne. Diese Töne passen über die Akkorde daneben.`;
     const sb = document.getElementById('spSugg_' + mod);
@@ -11598,7 +11738,7 @@
       const det = box.querySelector('#sp_' + mod); if (!det) return;
       const ctlDet = box.querySelector('#spCtl_' + mod);
       const r = box.querySelector('#spRoot_' + mod), t = box.querySelector('#spType_' + mod);
-      const save = () => { const all = scalePanelSaved(); all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      const save = () => { const all = scalePanelSaved(); const prev = all[mod] || {}; all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open, view: prev.view === 'board' ? 'board' : 'pos' }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
       if (ctlDet) ctlDet.ontoggle = () => save();
       if (r) r.onchange = () => { save(); scalePanelBoard(mod); };
       box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; save(); scalePanelBoard(mod); });
@@ -15829,7 +15969,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-07-4';
+  const APP_VERSION = '2026-11-07-6';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16052,5 +16192,5 @@
     });
   }
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5745d16eaf7d389',t:'MTc5NDEzODY2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5745d16eaf7d389',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
