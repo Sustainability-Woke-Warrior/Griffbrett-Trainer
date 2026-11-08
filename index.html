@@ -880,6 +880,15 @@
 
     /* Fünf-Positionen-Ansicht (CAGED-Formen bzw. Pentatonik-Positionen 1-5),
        versetzt angeordnet wie im klassischen Lehrbuch-Griffbild. */
+    .sp-caro { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding: 4px 2px 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .sp-caro::-webkit-scrollbar { display: none; }
+    .sp-slide { flex: 0 0 92%; scroll-snap-align: center; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px; text-align: center; }
+    .sp-caro-outer { position: relative; }
+    .sp-pfeil { position: absolute; top: 38%; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 1.05rem; line-height: 1; cursor: pointer; z-index: 2; opacity: .92; }
+    .sp-pfeil.l { left: -4px; } .sp-pfeil.r { right: -4px; }
+    .sp-dots { display: flex; gap: 8px; justify-content: center; margin-top: 6px; }
+    .sp-dot { width: 10px; height: 10px; border-radius: 50%; border: none; padding: 0; background: var(--card-border); cursor: pointer; }
+    .sp-dot.on { background: #f59e0b; }
     .scale-position-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -6040,7 +6049,7 @@
       const m8 = an.key.mode === 'dur' ? 'dur' : 'moll', pen = an.key.mode === 'dur' ? 'durPenta' : 'mollPenta';
       h += `<h4>Improvisieren</h4><div>Über die ganze Folge passt die Tonleiter der Tonart: <button type="button" class="theory-chip" data-act="scale" data-m8="${m8}" data-root="${an.key.root}">${kName}</button> <button type="button" class="theory-chip" data-act="scale" data-m8="${pen}" data-root="${an.key.root}">${jamRootName(an.key.root, an.key.mode)}-${an.key.mode === 'dur' ? 'Dur' : 'Moll'}-Pentatonik</button></div>`;
     }
-    h += scalePanelHtml('prog', (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.root; const d0 = (ds || []).find(Boolean); return d0 ? d0.root : 0; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.mode === 'moll' ? 'mollPenta' : 'durPenta'; const d0 = (ds || []).find(Boolean); return d0 ? (/moll/.test(d0.type || '') ? 'mollPenta' : 'durPenta') : 'durPenta'; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return scaleKeySugg(kd); const d0 = (ds || []).find(Boolean); return d0 ? scaleChordSugg(d0.root, d0.type) : []; })());
+    h += scaleFretHtml('prog') + scalePanelHtml('prog', (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.root; const d0 = (ds || []).find(Boolean); return d0 ? d0.root : 0; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return kd.mode === 'moll' ? 'mollPenta' : 'durPenta'; const d0 = (ds || []).find(Boolean); return d0 ? (/moll/.test(d0.type || '') ? 'mollPenta' : 'durPenta') : 'durPenta'; })(), (() => { const kd = an && an.key; if (kd && kd.root != null) return scaleKeySugg(kd); const d0 = (ds || []).find(Boolean); return d0 ? scaleChordSugg(d0.root, d0.type) : []; })());
     h += `</div>`;
     { const cl = clipGet(); const twc = twColsLoad();
       h += '<div class="prog-row" style="margin-top:12px;"><strong>📥 Übernehmen aus anderen Modulen</strong></div>' +
@@ -7018,7 +7027,7 @@
     html += `</div>`;
     html += `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🔁 Loop-Bereich: Takt ${jam.loopStart + 1}${jam.loopEnd > jam.loopStart ? `–${jam.loopEnd + 1}` : ''}</div>
     <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Takt-Knopf gedrückt halten, ziehen, loslassen = umsortieren · kurz antippen = Takt wechseln · die Diagramme darunter sind nur die Griff-Übersicht</div>`;
-    html += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + gripStripShellHtml('jam') + `<div style="flex:0 1 260px; min-width:230px;">` + scalePanelHtml('jam', jam.diatonicRoot || 0, jam.diatonicType === 'moll' ? 'mollPenta' : 'durPenta', scaleKeySugg({ root: jam.diatonicRoot || 0, mode: jam.diatonicType === 'moll' ? 'moll' : 'dur' })) + `</div></div>`;
+    html += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + `<div style="flex:1 1 320px; min-width:260px;">` + gripStripShellHtml('jam') + scaleFretHtml('jam') + `</div><div style="flex:0 1 260px; min-width:230px;">` + scalePanelHtml('jam', jam.diatonicRoot || 0, jam.diatonicType === 'moll' ? 'mollPenta' : 'durPenta', scaleKeySugg({ root: jam.diatonicRoot || 0, mode: jam.diatonicType === 'moll' ? 'moll' : 'dur' })) + `</div></div>`;
     html += `<div class="row" style="gap:16px; align-items:center; flex-wrap:wrap; margin-top:10px;">`;
     if (jam.chordMode === 'free') {
       html += `<div class="toggle-group"><label style="font-weight:600;">Akkord Takt ${jam.activeBar + 1}:</label>
@@ -11672,21 +11681,30 @@
         <div class="jam-improv-label" id="spName_${mod}" style="margin-top:4px;"></div>
       </div></details>`;
   }
-  // Alle fünf Lagen als kompakte Griffbilder (wie im Modul „Tonleitern“) – als HTML-Text
-  function scalePositionsHtml(st, r, t) {
+  // Eine Lage als Karussell-Seite: Titel + Griffbild + Bundnummern
+  function scalePositionSlideHtml(st, r, t, i) {
     const anchorPc = ((r + st.rootShift) + 12) % 12;
     let anchorFret = 0;
     while ((40 + anchorFret) % 12 !== anchorPc) anchorFret++;
     const labels = t === 'dur' ? SCALE_VIEW_CAGED_LABELS : (t === 'moll' ? SCALE_VIEW_CAGED_LABELS_MINOR : SCALE_VIEW_POSITION_LABELS);
-    let html = '<div class="scale-position-grid">';
-    SCALE_VIEW_POSITIONS.forEach((w, i) => {
-      let fretFrom = anchorFret + w[0], fretTo = anchorFret + w[1];
-      if (fretTo > 15) { fretFrom -= 12; fretTo -= 12; }
-      fretFrom = Math.max(0, fretFrom);
-      const built = buildScalePositionDiagramSvg(st, r, fretFrom, fretTo);
-      html += `<div class="scale-position-item" style="max-width:250px;"><div class="scale-position-title">${labels[i]}</div>${built.svg}${built.fretNumbersHtml}</div>`;
-    });
-    return html + '</div>';
+    const w = SCALE_VIEW_POSITIONS[i];
+    let fretFrom = anchorFret + w[0], fretTo = anchorFret + w[1];
+    if (fretTo > 15) { fretFrom -= 12; fretTo -= 12; }
+    fretFrom = Math.max(0, fretFrom);
+    const built = buildScalePositionDiagramSvg(st, r, fretFrom, fretTo);
+    return `<div class="sp-slide"><div class="scale-position-title">${labels[i]}</div>${built.svg}${built.fretNumbersHtml}</div>`;
+  }
+  // Aufklappbarer Griffbrett-Block (Bund 0–12) für unter die Akkorde – standardmäßig zu
+  function scaleFretHtml(mod) {
+    const sv = scalePanelSaved()[mod] || {};
+    return `<details class="sp-fret" id="spFret_${mod}" style="margin-top:12px;"${sv.fret ? ' open' : ''}><summary class="sum-head">🎸 Ganzes Griffbrett 0–12</summary><div id="spFretBoard_${mod}" style="margin-top:8px; overflow-x:auto;"></div></details>`;
+  }
+  function scalePanelFret(mod) {
+    const box = document.getElementById('spFretBoard_' + mod); if (!box) return;
+    const rSel = document.getElementById('spRoot_' + mod), tSel = document.getElementById('spType_' + mod);
+    const r = rSel ? +rSel.value : 0;
+    const t = tSel && SCALE_VIEW_TYPES[tSel.value] ? tSel.value : 'durPenta';
+    box.innerHTML = scaleFullGridHtml(SCALE_VIEW_TYPES[t], r);
   }
   // Ganzes Griffbrett (Bund 0–12) als Tabelle – als HTML-Text
   function scaleFullGridHtml(st, r) {
@@ -11716,17 +11734,39 @@
     const t = tSel && SCALE_VIEW_TYPES[tSel.value] ? tSel.value : 'durPenta';
     const st = SCALE_VIEW_TYPES[t];
     const sv = scalePanelSaved()[mod] || {};
-    const view = sv.view === 'board' ? 'board' : 'pos';
-    const act = 'border-color:var(--accent-color); font-weight:800;';
-    const tog = `<div class="row" style="gap:6px; margin:0 0 8px; flex-wrap:wrap;">` +
-      `<button type="button" class="btn btn-secondary sp-view" data-v="pos" style="padding:4px 10px; font-size:.78rem;${view === 'pos' ? act : ''}">Alle Lagen 1–5</button>` +
-      `<button type="button" class="btn btn-secondary sp-view" data-v="board" style="padding:4px 10px; font-size:.78rem;${view === 'board' ? act : ''}">Griffbrett 0–12</button></div>`;
-    wrap.innerHTML = tog + (view === 'board' ? scaleFullGridHtml(st, r) : scalePositionsHtml(st, r, t));
-    wrap.querySelectorAll('.sp-view').forEach(b => b.onclick = () => {
-      const all = scalePanelSaved(); all[mod] = Object.assign({}, all[mod], { view: b.dataset.v === 'board' ? 'board' : 'pos' });
-      try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {}
-      scalePanelBoard(mod);
-    });
+    const start = Number.isInteger(sv.pos) ? Math.max(0, Math.min(SCALE_VIEW_POSITIONS.length - 1, sv.pos)) : 0;
+    const slides = SCALE_VIEW_POSITIONS.map((w, i) => scalePositionSlideHtml(st, r, t, i)).join('');
+    const dots = SCALE_VIEW_POSITIONS.map((w, i) => `<button type="button" class="sp-dot" data-i="${i}" title="Position ${i + 1}"></button>`).join('');
+    wrap.innerHTML = `<div class="row" style="gap:6px; margin:0 0 8px; flex-wrap:wrap;">` +
+      `<button type="button" class="btn btn-secondary sp-jump" style="padding:4px 10px; font-size:.78rem;" title="Öffnet den Griffbrett-Block unter den Akkorden">🎸 Griffbrett 0–12</button></div>` +
+      `<div class="sp-caro-outer"><button type="button" class="sp-pfeil l" title="Vorige Position">‹</button><button type="button" class="sp-pfeil r" title="Nächste Position">›</button>` +
+      `<div class="sp-caro" id="spCaro_${mod}">${slides}</div></div>` +
+      `<div class="sp-dots" id="spDots_${mod}">${dots}</div>` +
+      `<div style="text-align:center; font-size:.72rem; color:var(--text-muted); margin-top:4px;">← wischen oder Pfeile tippen →</div>`;
+    const caro = document.getElementById('spCaro_' + mod), dotsBox = document.getElementById('spDots_' + mod);
+    const step = () => (caro.children[0] ? caro.children[0].offsetWidth + 10 : 200);
+    const sync = () => {
+      if (!caro.clientWidth) return -1;
+      const i = Math.max(0, Math.min(SCALE_VIEW_POSITIONS.length - 1, Math.round(caro.scrollLeft / step())));
+      dotsBox.querySelectorAll('.sp-dot').forEach((d, k) => d.classList.toggle('on', k === i));
+      return i;
+    };
+    let saveT = null;
+    caro.addEventListener('scroll', () => { const i = sync(); if (i < 0) return; clearTimeout(saveT); saveT = setTimeout(() => { const all = scalePanelSaved(); all[mod] = Object.assign({}, all[mod], { pos: i }); try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} }, 180); });
+    dotsBox.querySelectorAll('.sp-dot').forEach(d => d.onclick = () => caro.children[+d.dataset.i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }));
+    wrap.querySelector('.sp-pfeil.l').onclick = () => caro.scrollBy({ left: -step(), behavior: 'smooth' });
+    wrap.querySelector('.sp-pfeil.r').onclick = () => caro.scrollBy({ left: step(), behavior: 'smooth' });
+    wrap.querySelector('.sp-jump').onclick = () => {
+      const det = document.getElementById('spFret_' + mod); if (!det) return;
+      det.open = true;
+      const all = scalePanelSaved(); all[mod] = Object.assign({}, all[mod], { fret: true }); try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {}
+      scalePanelFret(mod);
+      try { det.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    };
+    caro.scrollLeft = start * step();
+    sync();
+    if (window.requestAnimationFrame) requestAnimationFrame(() => { if (document.body.contains(caro)) { caro.scrollLeft = start * step(); sync(); } });
+    scalePanelFret(mod);
     const nm = document.getElementById('spName_' + mod);
     if (nm) nm.innerHTML = `<strong>${SCALE_VIEW_ROOTS[r]}-${SCALE_VIEW_TYPES[t].label}</strong> – orange = Grundton, blau = Skalatöne. Diese Töne passen über die Akkorde daneben.`;
     const sb = document.getElementById('spSugg_' + mod);
@@ -11738,7 +11778,9 @@
       const det = box.querySelector('#sp_' + mod); if (!det) return;
       const ctlDet = box.querySelector('#spCtl_' + mod);
       const r = box.querySelector('#spRoot_' + mod), t = box.querySelector('#spType_' + mod);
-      const save = () => { const all = scalePanelSaved(); const prev = all[mod] || {}; all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open, view: prev.view === 'board' ? 'board' : 'pos' }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      const save = () => { const all = scalePanelSaved(); const prev = all[mod] || {}; all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open, pos: Number.isInteger(prev.pos) ? prev.pos : 0, fret: !!prev.fret }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      const fretDet = box.querySelector('#spFret_' + mod);
+      if (fretDet) fretDet.ontoggle = () => { save(); if (fretDet.open) scalePanelFret(mod); };
       if (ctlDet) ctlDet.ontoggle = () => save();
       if (r) r.onchange = () => { save(); scalePanelBoard(mod); };
       box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; save(); scalePanelBoard(mod); });
@@ -11839,7 +11881,7 @@
     </div>
     ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
-    h += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + gripStripShellHtml('strum') + `<div style="flex:0 1 250px; min-width:225px;">` + scalePanelHtml('strum', (() => { const c = (strumChords() || [])[0]; return c ? c[0] : 0; })(), (() => { const c = (strumChords() || [])[0]; return c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta'; })(), (() => { const cs = (strumChords() || []).map(c => ({ root: c[0], type: c[1] })); const kd = cs.length ? progFindKey(cs) : null; if (kd) return scaleKeySugg(kd); return cs.length ? scaleChordSugg(cs[0].root, cs[0].type) : []; })()) + `</div></div>`;
+    h += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + `<div style="flex:1 1 320px; min-width:260px;">` + gripStripShellHtml('strum') + scaleFretHtml('strum') + `</div><div style="flex:0 1 250px; min-width:225px;">` + scalePanelHtml('strum', (() => { const c = (strumChords() || [])[0]; return c ? c[0] : 0; })(), (() => { const c = (strumChords() || [])[0]; return c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta'; })(), (() => { const cs = (strumChords() || []).map(c => ({ root: c[0], type: c[1] })); const kd = cs.length ? progFindKey(cs) : null; if (kd) return scaleKeySugg(kd); return cs.length ? scaleChordSugg(cs[0].root, cs[0].type) : []; })()) + `</div></div>`;
     h += `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Diagramm gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>`;
     h += `<div class="strum-now" id="strumNow"></div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:10px; margin-top:14px;">
@@ -13523,8 +13565,21 @@
     }
     pt.lastTick = Date.now();
     clearInterval(pt.iv); pt.iv = setInterval(ptTick, 1000);
+    ptWakeSync();
   }
   const pt = { running: false, paused: false, mode: ptData.set.mode, accum: 0, startedAt: 0, target: 0, secIdx: 0, lastTick: 0, sinceBreak: 0, plan: null, iv: null, saveCnt: 0 };
+  // 🔆 Bildschirm wach halten, solange eine Übungssitzung läuft (auch in der Pause).
+  // Erst nach ⏹ Beenden darf das Tablet wieder normal abschalten.
+  let ptWake = null, ptWakeWanted = false;
+  function ptWakeSync() {
+    ptWakeWanted = !!pt.running;
+    if (ptWakeWanted) {
+      if (!ptWake && navigator.wakeLock && navigator.wakeLock.request) {
+        navigator.wakeLock.request('screen').then(l => { ptWake = l; try { l.addEventListener('release', () => { ptWake = null; }); } catch (e) {} }).catch(() => {});
+      }
+    } else if (ptWake) { try { ptWake.release(); } catch (e) {} ptWake = null; }
+  }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && ptWakeWanted) { ptWake = null; ptWakeSync(); } });
   function ptDayKey(d) { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function ptStats() {
     const now = new Date(), mon = new Date(now); mon.setHours(12, 0, 0, 0); mon.setDate(mon.getDate() - ((now.getDay() + 6) % 7));
@@ -13673,6 +13728,7 @@
   }
   function ptTick() {
     ptLogTick();
+    if (pt.running) ptWakeSync();
     if (pt.running && !pt.paused) {
       const t = ptCurTarget();
       if (t && ptElapsed() >= t) {
@@ -13700,7 +13756,7 @@
     ptLogTick();
     const plan = pt.plan;
     pt.running = false; pt.paused = false; pt.accum = 0;
-    clearInterval(pt.iv); pt.iv = null; ptSave();
+    clearInterval(pt.iv); pt.iv = null; ptSave(); ptWakeSync();
     ptChime('end');
     const btns = [];
     if (plan) btns.push(['✔ Im Wochenplan abhaken', () => ptMarkPlan(plan)]);
@@ -13735,7 +13791,7 @@
     pt.secIdx = 0; pt.accum = 0; pt.startedAt = Date.now(); pt.lastTick = Date.now(); pt.sinceBreak = 0;
     pt.running = true; pt.paused = false;
     clearInterval(pt.iv); pt.iv = setInterval(ptTick, 1000);
-    ptSave();
+    ptSave(); ptWakeSync();
     if (pt.mode === 'sec') { const s = ptData.sections[0]; if (s && s.mod >= 0) { ptGoModule(s.mod); showToast(`⏱ ${s.name || 'Abschnitt'} – ${s.min} Min. Viel Spaß!`); } }
     ptRender(); ptUpdateLive();
   }
@@ -13744,7 +13800,7 @@
   function ptStop() {
     ptLogTick();
     pt.running = false; pt.paused = false; pt.accum = 0; pt.plan = null;
-    clearInterval(pt.iv); pt.iv = null; ptSave();
+    clearInterval(pt.iv); pt.iv = null; ptSave(); ptWakeSync();
     showToast(`Timer beendet. Heute geübt: ${ptFmtMin(ptStats().today)} 🎸`);
     ptRender(); ptUpdateLive();
   }
@@ -13887,9 +13943,9 @@
     return String(m).padStart(2, '0') + ':' + ss;
   }
   function ptRoomHtml() {
-    return `<svg id="ptRoomSvg" viewBox="0 0 900 560" preserveAspectRatio="xMidYMax slice" aria-label="Zimmer mit Gitarre, Schränkchen und Stuhl – deine Übungszeit">
+    return `<svg id="ptRoomSvg" viewBox="0 0 900 560" preserveAspectRatio="xMidYMax meet" aria-label="Zimmer mit Gitarre, Schränkchen und Stuhl – deine Übungszeit">
   <defs>
-    <linearGradient id="rmWall" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="rmWall" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="430">
       <stop id="rmWallA" offset="0" stop-color="#ffd75e"/><stop id="rmWallB" offset=".55" stop-color="#ff9040"/><stop id="rmWallC" offset="1" stop-color="#e5533d"/>
     </linearGradient>
     <linearGradient id="rmSky" x1="0" y1="0" x2="0" y2="1">
@@ -13900,10 +13956,10 @@
     <clipPath id="rmWinClip"><rect x="64" y="64" width="172" height="142" rx="4"/></clipPath>
     <clipPath id="rmLavaClip"><path d="M751 322 C748 310 748 302 752 294 h12 C768 302 768 310 765 322 Z"/></clipPath>
   </defs>
-  <rect width="900" height="430" fill="url(#rmWall)"/>
-  <rect y="430" width="900" height="130" fill="#9c5a33"/>
+  <rect x="-4000" y="-4000" width="8900" height="4430" fill="url(#rmWall)"/>
+  <rect x="-4000" y="430" width="8900" height="130" fill="#9c5a33"/>
   <g stroke="#7c4426" stroke-width="3" opacity=".6">
-    <line x1="0" y1="462" x2="900" y2="462"/><line x1="0" y1="500" x2="900" y2="500"/><line x1="0" y1="536" x2="900" y2="536"/>
+    <line x1="-4000" y1="462" x2="4900" y2="462"/><line x1="-4000" y1="500" x2="4900" y2="500"/><line x1="-4000" y1="536" x2="4900" y2="536"/>
   </g>
   <polygon id="rmSunPatch" points="96,430 250,430 330,560 40,560" fill="#ffe9b0" opacity=".25"/>
   <g id="rmDust" opacity=".85"><circle cx="150" cy="300" r="2" fill="#fff7e0" style="animation-delay:-2s"/><circle cx="205" cy="262" r="1.6" fill="#fff7e0" style="animation-delay:-7s"/><circle cx="122" cy="352" r="1.8" fill="#fff7e0" style="animation-delay:-12s"/><circle cx="243" cy="322" r="1.5" fill="#fff7e0" style="animation-delay:-4.5s"/></g>
@@ -14046,7 +14102,7 @@
   </g>
   <g id="rmCat" style="display:none">
     <text id="rmCatNote" x="10" y="456" font-size="16" fill="#fff7e0">♪</text>
-    <text id="rmCatZ" x="24" y="462" font-size="13" font-weight="700" fill="#fff7e0">z z</text>
+    <text id="rmCatZ" x="24" y="462" font-size="13" font-weight="700" fill="#fff7e0">z z z</text>
     <g id="rmCatCurl" class="rm-catcurl">
       <ellipse cx="0" cy="487" rx="23" ry="12" fill="#4a2113"/>
       <path d="M-22 492 q20 10 44 0 q-4 6 -22 6 q-18 0 -22 -6 Z" fill="#4a2113"/>
@@ -14155,19 +14211,17 @@
     const cat = document.getElementById('rmCat'); if (!cat) return;
     const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
     if (cat.dataset.walking === '1') return;
-    const sleeping = pt.running && pt.paused;
     const reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     cat.style.display = '';
-    const x = sleeping ? RM_CAT_WINDOW : RM_CAT_HOME;
+    const x = ptRoomCatSide === 'l' ? RM_CAT_WINDOW : RM_CAT_HOME;
     if (cat.dataset.pos !== String(x)) {
       cat.dataset.pos = String(x);
       cat.style.transition = reduce ? 'none' : 'transform 5s ease-in-out';
-      cat.style.transform = 'translate(' + x + 'px,0px)';
     }
-    const wasSleep = cat.dataset.sleep === '1';
-    cat.classList.toggle('rm-sleep', sleeping);
-    cat.dataset.sleep = sleeping ? '1' : '0';
-    if (wasSleep && !sleeping) { cat.classList.remove('rm-stretch'); void cat.getBoundingClientRect(); cat.classList.add('rm-stretch'); setTimeout(() => cat.classList.remove('rm-stretch'), 1200); }
+    cat.style.transform = 'translate(' + x + 'px,0px)';
+    // Sie schläft auf ihrer Seite (mit „z z z“) – beim Üben wie in der Pause
+    cat.classList.add('rm-sleep');
+    cat.dataset.sleep = '1';
   }
   function ptRoomCatPurr() {
     const cat = document.getElementById('rmCat'); if (!cat) return;
@@ -14184,10 +14238,10 @@
       el.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
       el.style.animationDelay = (-Math.random() * 6).toFixed(2) + 's';
     });
-    // Katze: fester Platz am Sessel; in Pausen schläft sie am Fenster. Alle 5 Übeminuten läuft sie einmal durchs Zimmer.
+    // Katze: schläft rechts an der Lampe oder links am Fenster; alle 5 Übeminuten läuft sie zur anderen Seite.
     ptRoomCatMile = Math.floor(ptElapsed() / 300000);
     const cat0 = document.getElementById('rmCat');
-    if (cat0) { const slp = pt.running && pt.paused; const x0 = slp ? RM_CAT_WINDOW : RM_CAT_HOME; cat0.dataset.walking = '0'; cat0.dataset.sleep = slp ? '1' : '0'; cat0.classList.toggle('rm-sleep', slp); cat0.style.display = ''; cat0.style.transition = 'none'; cat0.style.transform = 'translate(' + x0 + 'px,0px)'; cat0.dataset.pos = String(x0); }
+    if (cat0) { const x0 = ptRoomCatSide === 'l' ? RM_CAT_WINDOW : RM_CAT_HOME; cat0.dataset.walking = '0'; cat0.dataset.sleep = '1'; cat0.classList.add('rm-sleep'); cat0.style.display = ''; cat0.style.transition = 'none'; cat0.style.transform = 'translate(' + x0 + 'px,0px)'; cat0.dataset.pos = String(x0); }
     // Sekundenzeiger der Wanduhr gleitet lautlos (bei „Bewegung reduzieren“ tickt er stattdessen)
     const cs0 = document.getElementById('rmClkS');
     if (cs0) { const nw = new Date(); cs0.classList.add('rm-sweep'); cs0.style.animationDelay = '-' + (nw.getSeconds() + nw.getMilliseconds() / 1000).toFixed(2) + 's'; }
@@ -14199,20 +14253,39 @@
     const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; cat.dataset.pos = ''; cat.classList.remove('rm-sleep', 'rm-stretch', 'rm-purr'); }
   }
   let ptRoomCatMile = 0;
+  let ptRoomCatSide = 'r'; // 'r' = rechts an der Lampe, 'l' = links am Fenster – wechselt alle 5 Übeminuten
   function ptRoomCatWalk() {
     const rm = document.getElementById('ptRoom'); if (!rm || !rm.classList.contains('open')) return;
     const cat = document.getElementById('rmCat'); if (!cat) return;
-    const ltr = Math.random() < 0.5, dir = ltr ? 1 : -1;
-    const from = ltr ? -90 : 990, to = ltr ? 990 : -90;
+    if (cat.dataset.walking === '1') return;
+    const reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const fromX = ptRoomCatSide === 'l' ? RM_CAT_WINDOW : RM_CAT_HOME;
+    ptRoomCatSide = ptRoomCatSide === 'l' ? 'r' : 'l';
+    const toX = ptRoomCatSide === 'l' ? RM_CAT_WINDOW : RM_CAT_HOME;
+    const dir = toX < fromX ? -1 : 1; // Kopf zeigt immer in Laufrichtung
     cat.dataset.walking = '1';
+    cat.classList.remove('rm-sleep');
     cat.classList.add('rm-walk');
     cat.style.display = '';
+    if (reduce) { // kein Lauf bei „Bewegung reduzieren“: direkt auf der anderen Seite weiterschlafen
+      cat.dataset.walking = '0'; cat.dataset.pos = ''; cat.classList.remove('rm-walk');
+      ptRoomCatSet(); return;
+    }
+    cat.classList.remove('rm-stretch'); void cat.getBoundingClientRect(); cat.classList.add('rm-stretch');
+    setTimeout(() => cat.classList.remove('rm-stretch'), 1200);
     cat.style.transition = 'none';
-    cat.style.transform = 'translate(' + from + 'px,0px) scaleX(' + dir + ')';
+    cat.style.transform = 'translate(' + fromX + 'px,0px) scaleX(' + dir + ')';
     void cat.getBoundingClientRect();
-    cat.style.transition = 'transform 11s linear';
-    cat.style.transform = 'translate(' + to + 'px,0px) scaleX(' + dir + ')';
-    setTimeout(() => { cat.dataset.walking = '0'; cat.dataset.pos = ''; cat.style.transition = 'none'; cat.classList.remove('rm-walk'); ptRoomCatSet(); }, 11500);
+    cat.style.transition = 'transform 8s linear';
+    cat.style.transform = 'translate(' + toX + 'px,0px) scaleX(' + dir + ')';
+    setTimeout(() => {
+      cat.dataset.walking = '0';
+      cat.style.transition = 'none';
+      cat.style.transform = 'translate(' + toX + 'px,0px)';
+      cat.dataset.pos = String(toX);
+      cat.classList.remove('rm-walk');
+      ptRoomCatSet();
+    }, 8300);
   }
   const PT_ROOM_BAR_KEY = 'guitartrainer_ptroombar';
   let ptRoomBarEdit = false;
@@ -14331,7 +14404,7 @@
     if (lw) lw.setAttribute('opacity', (0.05 + 0.3 * Math.min(1, el / 3600000)).toFixed(3));
     // Pause dimmt den Raum sanft; abends/nachts ist es ohnehin gemütlicher
     const ov = document.getElementById('rmOverlay');
-    if (ov) { const base = tod === 'night' ? 0.26 : tod === 'evening' ? 0.11 : 0; ov.style.opacity = String(Math.min(0.55, base + (r && pt.paused ? 0.18 : 0))); }
+    if (ov) { const base = tod === 'night' ? 0.26 : tod === 'evening' ? 0.11 : 0; ov.style.opacity = String(Math.min(0.55, base + (r && pt.paused ? 0.08 : 0))); }
     // Katze: Platz wählen (Sessel oder Fenster), Bücher & Blätter aktuell halten
     ptRoomCatSet();
     ptRoomRenderBooks(); ptRoomRenderLeaves();
@@ -15226,7 +15299,7 @@
       <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip chg-grip" data-chgdrag="${i}" title="Gedrückt halten und ziehen zum Umsortieren" aria-label="Akkord ${i + 1} verschieben">⠿</button><input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
         ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
       <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 ⠿ gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>
-      ${(() => { const P = chgParsed(); const c = P && P[0]; const kd = P ? progFindKey(P.map(x => ({ root: x[0], type: x[1] }))) : null; const sugg = kd ? scaleKeySugg(kd) : (c ? scaleChordSugg(c[0], c[1]).concat(P && P[1] ? scaleChordSugg(P[1][0], P[1][1]) : []).filter((v, i, a) => a.findIndex(x => x.root === v.root && x.type === v.type) === i).slice(0, 6) : []); return scalePanelHtml('chg', c ? c[0] : 0, c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta', sugg); })()}
+      ${scaleFretHtml('chg')}${(() => { const P = chgParsed(); const c = P && P[0]; const kd = P ? progFindKey(P.map(x => ({ root: x[0], type: x[1] }))) : null; const sugg = kd ? scaleKeySugg(kd) : (c ? scaleChordSugg(c[0], c[1]).concat(P && P[1] ? scaleChordSugg(P[1][0], P[1][1]) : []).filter((v, i, a) => a.findIndex(x => x.root === v.root && x.type === v.type) === i).slice(0, 6) : []); return scalePanelHtml('chg', c ? c[0] : 0, c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta', sugg); })()}
       <div class="chg-strip" id="chgStrip">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip" data-chgjump="${i}">${homeEsc(c)}</button>`).join('')}</div>
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="font-weight:600;">Schläge pro Akkord:</label>
@@ -15969,7 +16042,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-07-6';
+  const APP_VERSION = '2026-11-08-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16192,5 +16265,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5745d16eaf7d389',t:'MTc5NDEzODY2Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5745d16eaf7d389',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57663fdcd31dca4',t:'MTc5NDE1OTkxNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57663fdcd31dca4',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
