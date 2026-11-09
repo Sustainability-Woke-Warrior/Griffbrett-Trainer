@@ -1502,7 +1502,7 @@
       #rmClkS.rm-sweep { transform-box: view-box; transform-origin: 460px 105px; animation: rmSweep 60s linear infinite; }
       #rmCat.rm-purr #rmCatTail { animation: rmWag .45s ease-in-out 3 alternate; }
       #rmCat.rm-purr #rmCatNote { animation: rmNoteUp 1.6s ease-out; }
-      #rmCat.rm-sleep #rmCatZ { animation: rmZzz 3.4s ease-in-out infinite; }
+      #rmCat.rm-sleep #rmCatZ { animation: rmZzz 4.8s ease-in-out infinite; }
       #rmCat.rm-sleep .rm-ears { animation: rmEar 9s ease-in-out infinite; }
       .rm-catcurl { animation: rmBreathe 3.6s ease-in-out infinite alternate; }
       #rmCat.rm-stretch .rm-catbody, #rmCat.rm-stretch .rm-catcurl { animation: rmStretch 1.1s ease-out; }
@@ -2329,7 +2329,6 @@
       <p>Baue dir einen mehrteiligen Schlagzeug-, Bass- und Pad-Loop über 4 bis 64 Takte und improvisiere live dazu, z.B. mit den Pentatonik-Positionen aus dem Modul „Tonleitern“.</p>
       <ul>
         <li><strong>Oben:</strong> Start/Stop, Tempo, Taktart, Rhythmus-Stil und Loop-Bereich. Die weiteren Funktionen stecken in einklappbaren Bereichen (▸ antippen).</li>
-        <li><strong>✏️ Griff eintragen:</strong> Tippe Punkte in das Griffbild – der Akkordname erscheint sofort (auch Umkehrungen wie „D/F♯“). Über den Saiten stellst du ○ (leer) oder ✕ (nicht spielen) ein, mit ▲/▼ verschiebst du das Griffbild bis Bund 12. „In Takt übernehmen“ setzt den Akkord in den gewählten Takt, „Akkord aus Takt laden“ holt ihn zum Verändern ins Griffbild.</li>
         <li><strong>Leistung:</strong> Unter „🎚️ Lautstärke &amp; Klangfarbe“. „Automatisch“ rechnet auf Handys sparsamer, damit es nicht knackst oder aussetzt. Du kannst jederzeit von Hand „Sparsam“ oder „Hohe Qualität“ wählen – die Einstellung gilt nur für dieses Gerät.</li>
         <li><strong>Es stockt?</strong> Wenn der Beat hakt oder aussetzt, liegt das fast immer an der Leistung des Handys/Tablets – nicht an einem Fehler in der App. Häufige Ursachen: Energiesparmodus, viele offene Apps/Tabs, lange Laufzeit ohne Neustart. Gegenmittel: Energiesparmodus für den Browser ausschalten, andere Apps schließen, Gerät oder Browser neu starten – und bei „Leistung“ auf „Sparsam“ stellen.</li>
         <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie im Modul „Tonleitern“.</li>
@@ -5975,16 +5974,17 @@
       <label><input type="checkbox" id="progPlayLoop" ${po.loop ? 'checked' : ''}> Wiederholen</label>
       <button type="button" class="btn btn-secondary" data-act="drums" id="progDrumsBtn" style="${po.style.startsWith('pat:') ? '' : 'display:none;'}">🥁 Mit Schlagzeug anhören</button>
     </div>`;
-    if (progState.saved.length) {
-      const selI = progSelIdx !== null && progState.saved[progSelIdx] ? progSelIdx : progState.saved.findIndex(p => p.name === (dr.name || '').trim());
-      h += `<div class="prog-row"><label>Gespeichert: <select id="progSavedSel">${progSavedOptsHtml(progState.saved, selI)}</select></label>
-        <button type="button" class="btn btn-secondary" data-act="open">📂 Öffnen</button>
-        <button type="button" class="btn btn-secondary" data-act="del">🗑️ Löschen</button>
-        <button type="button" class="btn btn-secondary" data-act="renfolder">✏️ Ordner</button></div>`;
-      if (progRenFolder) {
-        h += `<div class="prog-row" style="flex-wrap:wrap;">` + fldGroups(progState.saved).map(([f]) => f === progRenFolder ? `<input type="text" id="progRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" placeholder="Neuer Ordnername" maxlength="24" style="flex:1; min-width:130px;"><button type="button" class="btn" data-act="renfolderok">✔</button>` : `<button type="button" class="theory-chip" data-act="renfolderpick" data-f="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="btn btn-secondary" data-act="renfolderend">Fertig</button></div>`;
-      }
+    h += `<div style="border:1px solid var(--card-border); border-radius:12px; padding:10px 12px; margin:12px 0;">
+      <div class="prog-row" style="margin:0;"><strong>💾 Meine Akkordfolgen</strong><span style="flex:1;"></span><button type="button" class="btn btn-secondary" data-act="renfolder" style="padding:4px 10px; font-size:.8rem;">✏️ Ordner</button></div>`;
+    if (progRenFolder) {
+      h += `<div class="prog-row" style="flex-wrap:wrap; margin-top:8px;">` + fldGroups(progState.saved).map(([f]) => f === progRenFolder ? `<input type="text" id="progRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" placeholder="Neuer Ordnername" maxlength="24" style="flex:1; min-width:130px;"><button type="button" class="btn" data-act="renfolderok">✔</button>` : `<button type="button" class="theory-chip" data-act="renfolderpick" data-f="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="btn btn-secondary" data-act="renfolderend">Fertig</button></div>`;
     }
+    if (!progState.saved.length) {
+      h += `<div style="font-size:.85rem; color:var(--text-muted); margin-top:4px;">Noch keine gespeicherten Folgen – oben Name (und Ordner) eintragen und 💾 Speichern tippen.</div>`;
+    } else {
+      h += fldGroups(progState.saved.map((p, i) => ({ folder: p.folder, i }))).map(([f, arr]) => `<div style="font-weight:700; font-size:.9rem; margin:10px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div><div style="display:flex; gap:8px; flex-wrap:wrap;">` + arr.map(x => { const p = progState.saved[x.i]; const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' '); return `<span style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;"><button type="button" data-act="openchip" data-i="${x.i}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(p.name || 'Ohne Namen')} <small style="color:var(--text-muted);">${homeEsc(names)}</small></button><button type="button" class="btn btn-secondary" data-act="delchip" data-i="${x.i}" title="Folge löschen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✕</button></span>`; }).join('') + `</div>`).join('');
+    }
+    h += `</div>`;
     h += `<div class="prog-cards">`;
     dr.chords.forEach((c, ci) => {
       const d = ds[ci];
@@ -6598,12 +6598,12 @@
         progSelIdx = i >= 0 ? i : progState.saved.length - 1;
         showToast(`„${name}“ gespeichert ✔`);
       }
-      else if (act === 'open') {
-        const i = parseInt(document.getElementById('progSavedSel').value, 10);
+      else if (act === 'openchip') {
+        const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
         if (progState.saved[i]) { progSelIdx = i; progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
       }
-      else if (act === 'del') {
-        const i = parseInt(document.getElementById('progSavedSel').value, 10);
+      else if (act === 'delchip') {
+        const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
         const p = progState.saved[i];
         if (p && confirm(`„${p.name}“ wirklich löschen?`)) { progState.saved.splice(i, 1); progSelIdx = null; }
       }
@@ -6633,7 +6633,6 @@
       progSave(); progRender();
     }
     else if (e.target.id === 'progNotesTog') { progState.notes = e.target.checked; progSave(); progRender(); }
-    else if (e.target.id === 'progSavedSel') { progSelIdx = parseInt(e.target.value, 10); }
     else if (e.target.id === 'progPlayStyle') {
       const o = progPlayOpts(); o.style = e.target.value;
       const p = o.style.startsWith('pat:') ? progPatById(o.style.slice(4)) : null;
@@ -7072,86 +7071,18 @@
     });
     html += `</div>`;
 
-    html += `<details class="jam-section" data-sec="parts" ${ui.parts ? 'open' : ''}><summary>🧩 Song-Teile${(jam.parts || []).length ? ` (${jam.parts.length})` : ''}</summary><div id="jamPartsBody">${renderJamPartsBody()}</div></details>`;
-
-    // ---- Einklappbare Bereiche (standardmäßig zu, damit es übersichtlich bleibt) ----
-    jamGtrCache = null;
-    html += jamGtrHtml(jam, ui, sel);
-    html += `<details class="jam-section" data-sec="improv" ${ui.improv ? 'open' : ''}><summary>🎸 Improvisieren</summary>
-      <div id="jamImprovBody"></div></details>`;
-    html += `<details class="jam-section" data-sec="paint" ${ui.paint ? 'open' : ''}><summary>✏️ Griff eintragen</summary>
-      <div id="jamPaintBody"></div></details>`;
-    html += `<details class="jam-section" data-sec="timing" ${ui.timing ? 'open' : ''}><summary>⏱️ Timing &amp; Feeling</summary>
-      <div class="row" style="flex-wrap:wrap; gap:14px;">
-        <div class="toggle-group"><label style="font-weight:600;">Swing:</label>
-          <input type="range" id="jamSwingRange" min="0" max="100" step="5" value="${Math.round((jam.swing || 0) * 100)}" style="width:110px;">
-          <span id="jamSwingLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:44px;">${Math.round((jam.swing || 0) * 100)} %</span></div>
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
-          <input type="checkbox" id="jamCountInCheckbox" ${jam.countIn ? 'checked' : ''}> Einzählen (1 Takt Klicks vor dem Start)</label>
-        ${visLagSelectHtml('background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;')}
-        <button class="btn btn-secondary" id="jamTapBtn" type="button">👆 Tap-Tempo</button>
-        <div class="toggle-group"><label style="font-weight:600;">Humanize:</label>
-          <input type="range" id="jamHumanizeRange" min="0" max="100" step="5" value="${Math.round((jam.humanize || 0) * 100)}" style="width:110px;">
-          <span id="jamHumanizeLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:44px;">${Math.round((jam.humanize || 0) * 100)} %</span></div>
+        html += `<div style="border:1px solid var(--card-border); border-radius:12px; padding:12px 14px; margin-top:14px;">
+      <div style="font-weight:800; font-size:1rem;">💾 Meine Beats</div>
+      <div class="row" style="gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
+        <input type="text" id="jamSaveNameInput" placeholder="Name für diesen Beat" style="flex:1 1 180px; min-width:150px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:6px 10px;">
+        <input type="text" id="jamSaveFolderInput" list="jamFolderList" placeholder="Ordner (optional)" maxlength="24" style="flex:0 1 170px; min-width:120px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:6px 10px;">${folderDatalist('jamFolderList')}
+        <button class="btn" id="jamSaveBtn">Speichern</button>
+        <button type="button" class="btn btn-secondary" id="jamRenFolderBtn" style="padding:6px 12px;">✏️ Ordner</button>
       </div>
-      <div class="jam-subbox">
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700;">
-          <input type="checkbox" id="jamTrainerCheckbox" ${jam.trainerOn ? 'checked' : ''}> 📈 Tempo-Trainer</label>
-        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:6px; font-size:0.85rem;">
-          <span>alle</span>
-          <select id="jamTrainerEvery" style="${sel}">${[1,2,3,4].map(n => `<option value="${n}" ${n === (jam.trainerEvery || 2) ? 'selected' : ''}>${n}</option>`).join('')}</select>
-          <span>Loop-Durchläufe um</span>
-          <select id="jamTrainerStep" style="${sel}">${[1,2,3,4,5,10].map(n => `<option value="${n}" ${n === (jam.trainerStep || 2) ? 'selected' : ''}>+${n}</option>`).join('')}</select>
-          <span>BPM, bis</span>
-          <input type="text" inputmode="numeric" autocomplete="off" id="jamTrainerTarget" min="60" max="160" value="${jam.trainerTarget || 120}" style="width:58px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
-          <span>BPM</span>
-        </div>
-        <div class="jam-hint" id="jamTrainerStatus">${jam.trainerOn ? `Aktuell ${jam.bpm} BPM, Ziel ${jam.trainerTarget} BPM` : 'Aus'}</div>
-      </div>
-      <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; margin-top:10px;">
-        <input type="checkbox" id="jamHintsCheckbox" ${jamHintsOn() ? 'checked' : ''}> 💬 Freundliche Hinweise (z. B. Pausen-Tipp nach längerem Spielen)</label>
-      <div class="jam-hint">Swing 0 % = gerade, 100 % = Triolen-Shuffle (Blues/Jazz). Tap-Tempo: mindestens 2-mal im Takt tippen. Humanize: kleine Schwankungen, damit der Beat weniger nach Maschine klingt.</div>
-    </details>`;
-    html += `<details class="jam-section" data-sec="tools" ${ui.tools ? 'open' : ''}><summary>🛠️ Werkzeuge</summary>
-      <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
-        <span style="font-size:0.85rem;">Takt ${jam.activeBar + 1} kopieren:</span>
-        <button class="btn btn-secondary" id="jamCopyNextBtn" type="button">→ nächster Takt</button>
-        <button class="btn btn-secondary" id="jamCopyAllBtn" type="button">→ alle anderen Takte</button>
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
-          <input type="checkbox" id="jamCopyChordCheckbox"> Akkord mitkopieren</label>
-      </div>
-      <div class="jam-hint" id="jamCopyMsg">Kopiert das Rhythmus-Muster des gerade gewählten Takts.</div>
-      <div class="jam-subbox">
-        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
-          <span style="font-weight:700; font-size:0.85rem;">🎵 Song-Preset:</span>
-          <select id="jamPresetSelect" style="${sel}">${[...new Set(JAM_SONG_PRESETS.map(p => p.group))].map(g => `<optgroup label="${g}">${JAM_SONG_PRESETS.filter(p => p.group === g).map(p => `<option value="${p.id}">${p.label}</option>`).join('')}</optgroup>`).join('')}</select>
-          <button class="btn btn-secondary" id="jamPresetBtn" type="button">Laden</button>
-        </div>
-        <div class="jam-hint">Setzt Stil, Tempo, Swing, Taktanzahl und Akkorde. Dein aktueller Stand wird dabei überschrieben (vorher ggf. unter 💾 speichern).</div>
-      </div>
-      <div class="jam-subbox">
-        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
-          <button class="btn btn-secondary" id="jamRandomBtn" type="button">🎲 Zufällige Akkordfolge</button>
-          <span class="jam-hint" style="margin:0;">${jam.chordMode === 'diatonic' ? `passend zu ${jamRootName(jam.diatonicRoot, jam.diatonicType === 'moll' ? 'moll' : 'dur')}-${jam.diatonicType === 'moll' ? 'Moll' : 'Dur'}` : 'Tonart = Akkord von Takt 1'}</span>
-        </div>
-      </div>
-      <div class="jam-subbox">
-        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
-          <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700;">
-            <input type="checkbox" id="jamFillCheckbox" ${jam.fillOn ? 'checked' : ''}> 🥁 Fill-in im letzten Loop-Takt</label>
-          <select id="jamFillEvery" style="${sel}">
-            <option value="1" ${(jam.fillEvery || 1) === 1 ? 'selected' : ''}>jeder Durchlauf</option>
-            <option value="2" ${jam.fillEvery === 2 ? 'selected' : ''}>jeder 2. Durchlauf</option>
-          </select>
-        </div>
-        <div class="jam-hint">Die letzte Zählzeit wird zum Schlagzeug-Übergang, danach ein Crash auf der Eins.</div>
-      </div>
-      <div class="jam-hint" id="jamToolsMsg" style="font-size:0.82rem; color:var(--text-color);">${jamToolsMsg}</div>
-    </details>`;
-
-
-
-    html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}><summary>🎚️ Lautstärke &amp; Klangfarbe</summary>
+      <div id="jamRenFolderRow" style="display:none; flex-wrap:wrap; gap:6px; margin-top:8px; align-items:center;"></div>
+      <div id="jamSavedList" style="margin-top:6px;"></div>
+    </div>`;
+html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}><summary>🎚️ Lautstärke &amp; Klangfarbe</summary>
       <div class="row" style="flex-wrap:wrap; gap:14px; margin-bottom:10px; align-items:center;">
         <div class="toggle-group" style=""><label style="font-weight:600;">Hall:</label>
           <input type="range" id="jamReverbRange" min="0" max="100" step="5" value="${Math.round((jam.reverb ?? 0.25) * 100)}" style="width:110px;">
@@ -7228,29 +7159,93 @@
       </div>`;
     });
     html += `</div></div></details>`;
+    html += `<details class="jam-section" data-sec="parts" ${ui.parts ? 'open' : ''}><summary>🧩 Song-Teile${(jam.parts || []).length ? ` (${jam.parts.length})` : ''}</summary><div id="jamPartsBody">${renderJamPartsBody()}</div></details>`;
+
+    // ---- Einklappbare Bereiche (standardmäßig zu, damit es übersichtlich bleibt) ----
+    jamGtrCache = null;
+    html += jamGtrHtml(jam, ui, sel);
+    html += `<details class="jam-section" data-sec="improv" ${ui.improv ? 'open' : ''}><summary>🎸 Improvisieren</summary>
+      <div id="jamImprovBody"></div></details>`;
+    html += `<details class="jam-section" data-sec="timing" ${ui.timing ? 'open' : ''}><summary>⏱️ Timing &amp; Feeling</summary>
+      <div class="row" style="flex-wrap:wrap; gap:14px;">
+        <div class="toggle-group"><label style="font-weight:600;">Swing:</label>
+          <input type="range" id="jamSwingRange" min="0" max="100" step="5" value="${Math.round((jam.swing || 0) * 100)}" style="width:110px;">
+          <span id="jamSwingLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:44px;">${Math.round((jam.swing || 0) * 100)} %</span></div>
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
+          <input type="checkbox" id="jamCountInCheckbox" ${jam.countIn ? 'checked' : ''}> Einzählen (1 Takt Klicks vor dem Start)</label>
+        ${visLagSelectHtml('background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;')}
+        <button class="btn btn-secondary" id="jamTapBtn" type="button">👆 Tap-Tempo</button>
+        <div class="toggle-group"><label style="font-weight:600;">Humanize:</label>
+          <input type="range" id="jamHumanizeRange" min="0" max="100" step="5" value="${Math.round((jam.humanize || 0) * 100)}" style="width:110px;">
+          <span id="jamHumanizeLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:44px;">${Math.round((jam.humanize || 0) * 100)} %</span></div>
+      </div>
+      <div class="jam-subbox">
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700;">
+          <input type="checkbox" id="jamTrainerCheckbox" ${jam.trainerOn ? 'checked' : ''}> 📈 Tempo-Trainer</label>
+        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:6px; font-size:0.85rem;">
+          <span>alle</span>
+          <select id="jamTrainerEvery" style="${sel}">${[1,2,3,4].map(n => `<option value="${n}" ${n === (jam.trainerEvery || 2) ? 'selected' : ''}>${n}</option>`).join('')}</select>
+          <span>Loop-Durchläufe um</span>
+          <select id="jamTrainerStep" style="${sel}">${[1,2,3,4,5,10].map(n => `<option value="${n}" ${n === (jam.trainerStep || 2) ? 'selected' : ''}>+${n}</option>`).join('')}</select>
+          <span>BPM, bis</span>
+          <input type="text" inputmode="numeric" autocomplete="off" id="jamTrainerTarget" min="60" max="160" value="${jam.trainerTarget || 120}" style="width:58px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
+          <span>BPM</span>
+        </div>
+        <div class="jam-hint" id="jamTrainerStatus">${jam.trainerOn ? `Aktuell ${jam.bpm} BPM, Ziel ${jam.trainerTarget} BPM` : 'Aus'}</div>
+      </div>
+      <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; margin-top:10px;">
+        <input type="checkbox" id="jamHintsCheckbox" ${jamHintsOn() ? 'checked' : ''}> 💬 Freundliche Hinweise (z. B. Pausen-Tipp nach längerem Spielen)</label>
+      <div class="jam-hint">Swing 0 % = gerade, 100 % = Triolen-Shuffle (Blues/Jazz). Tap-Tempo: mindestens 2-mal im Takt tippen. Humanize: kleine Schwankungen, damit der Beat weniger nach Maschine klingt.</div>
+    </details>`;
+    html += `<details class="jam-section" data-sec="tools" ${ui.tools ? 'open' : ''}><summary>🛠️ Werkzeuge</summary>
+      <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
+        <span style="font-size:0.85rem;">Takt ${jam.activeBar + 1} kopieren:</span>
+        <button class="btn btn-secondary" id="jamCopyNextBtn" type="button">→ nächster Takt</button>
+        <button class="btn btn-secondary" id="jamCopyAllBtn" type="button">→ alle anderen Takte</button>
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
+          <input type="checkbox" id="jamCopyChordCheckbox"> Akkord mitkopieren</label>
+      </div>
+      <div class="jam-hint" id="jamCopyMsg">Kopiert das Rhythmus-Muster des gerade gewählten Takts.</div>
+      <div class="jam-subbox">
+        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
+          <span style="font-weight:700; font-size:0.85rem;">🎵 Song-Preset:</span>
+          <select id="jamPresetSelect" style="${sel}">${[...new Set(JAM_SONG_PRESETS.map(p => p.group))].map(g => `<optgroup label="${g}">${JAM_SONG_PRESETS.filter(p => p.group === g).map(p => `<option value="${p.id}">${p.label}</option>`).join('')}</optgroup>`).join('')}</select>
+          <button class="btn btn-secondary" id="jamPresetBtn" type="button">Laden</button>
+        </div>
+        <div class="jam-hint">Setzt Stil, Tempo, Swing, Taktanzahl und Akkorde. Dein aktueller Stand wird dabei überschrieben (vorher ggf. unter 💾 speichern).</div>
+      </div>
+      <div class="jam-subbox">
+        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
+          <button class="btn btn-secondary" id="jamRandomBtn" type="button">🎲 Zufällige Akkordfolge</button>
+          <span class="jam-hint" style="margin:0;">${jam.chordMode === 'diatonic' ? `passend zu ${jamRootName(jam.diatonicRoot, jam.diatonicType === 'moll' ? 'moll' : 'dur')}-${jam.diatonicType === 'moll' ? 'Moll' : 'Dur'}` : 'Tonart = Akkord von Takt 1'}</span>
+        </div>
+      </div>
+      <div class="jam-subbox">
+        <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer; font-weight:700;">
+            <input type="checkbox" id="jamFillCheckbox" ${jam.fillOn ? 'checked' : ''}> 🥁 Fill-in im letzten Loop-Takt</label>
+          <select id="jamFillEvery" style="${sel}">
+            <option value="1" ${(jam.fillEvery || 1) === 1 ? 'selected' : ''}>jeder Durchlauf</option>
+            <option value="2" ${jam.fillEvery === 2 ? 'selected' : ''}>jeder 2. Durchlauf</option>
+          </select>
+        </div>
+        <div class="jam-hint">Die letzte Zählzeit wird zum Schlagzeug-Übergang, danach ein Crash auf der Eins.</div>
+      </div>
+      <div class="jam-hint" id="jamToolsMsg" style="font-size:0.82rem; color:var(--text-color);">${jamToolsMsg}</div>
+    </details>`;
+
+
+
+    
 
     // Speichern & Export zusammen in einem Bereich
-    html += `<details class="jam-section" data-sec="save" ${ui.save ? 'open' : ''}><summary>💾 Speichern / Export</summary>`;
+    html += `<details class="jam-section" data-sec="save" ${ui.save ? 'open' : ''}><summary>🎧 Export (WAV / MIDI / Datei)</summary>`;
     html += `<div class="row" style="flex-wrap:wrap; gap:10px; align-items:center;">
       <label style="font-weight:600; font-size:0.85rem;">Wiederholungen:</label>
       <input type="text" inputmode="numeric" autocomplete="off" id="jamExportRepeats" min="1" max="8" value="2" style="width:48px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px;">
       <button class="btn btn-secondary" id="jamExportBtn">🎵 Als WAV exportieren</button>
-      <button class="btn btn-secondary" id="jamExportMidiBtn">🎹 Als MIDI exportieren</button></div>`;
-    html += `<div id="jamSaveLoadPanel" style="display:block; margin-top:12px; padding:14px; border:1px solid var(--card-border); border-radius:10px;">
-      <div class="row" style="gap:8px;">
-        <input type="text" id="jamSaveNameInput" placeholder="Name für dieses Pattern" style="flex:1; min-width:160px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:6px 10px;">
-        <button class="btn" id="jamSaveBtn">Speichern</button>
-      </div>
-      <div id="jamSavedList" style="margin-top:12px; display:flex; flex-direction:column; gap:6px;"></div>
-      <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--card-border);">
-        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Als Datei sichern oder von einem anderen Gerät laden:</div>
-        <div class="row" style="gap:8px;">
-          <button class="btn btn-secondary" id="jamExportJsonBtn">📄 Als JSON exportieren</button>
-          <button class="btn btn-secondary" id="jamImportJsonBtn">📂 JSON importieren</button>
-          <input type="file" id="jamImportJsonInput" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none;">
-        </div>
-      </div>
-    </div></details>`;
+      <button class="btn btn-secondary" id="jamExportMidiBtn">🎹 Als MIDI exportieren</button></div>`; html += `<div class="row" style="gap:8px; margin-top:10px; flex-wrap:wrap;"><button class="btn btn-secondary" id="jamExportJsonBtn">📄 Als JSON exportieren</button> <button class="btn btn-secondary" id="jamImportJsonBtn">📂 JSON importieren</button> <input type="file" id="jamImportJsonInput" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none;"></div>`;
+    html += `</details>`;
 
     { const twc = twColsLoad(); const cl = clipGet();
       html += '<details class="jam-section"><summary>📥 Folgen übernehmen (Zwischenablage & Werkstatt-Sammlungen)</summary><div class="row" style="flex-wrap:wrap; gap:8px; padding:10px 4px;">' +
@@ -7815,10 +7810,15 @@
       const nameInput = document.getElementById('jamSaveNameInput');
       const name = nameInput.value.trim();
       if (!name) { nameInput.focus(); return; }
-      saveJamPattern(name);
-      nameInput.value = '';
+      const folderInp = document.getElementById('jamSaveFolderInput');
+      const data = getJamExportData(); data.folder = fldNorm(folderInp ? folderInp.value : '');
+      saveJamPattern(name, data);
+      nameInput.value = ''; if (folderInp) folderInp.value = '';
+      showToast(`💾 „${name}“ gespeichert.`);
       renderJamSavedList();
     });
+    const jamRenBtn2 = document.getElementById('jamRenFolderBtn');
+    if (jamRenBtn2) jamRenBtn2.addEventListener('click', () => { jamRenFolder = jamRenFolder ? null : '__pick'; renderJamSavedList(); });
 
     document.getElementById('jamExportJsonBtn').addEventListener('click', exportJamAsJsonFile);
 
@@ -9427,25 +9427,46 @@
     const listEl = document.getElementById('jamSavedList');
     if (!listEl) return;
     const all = getSavedJamPatterns();
-    const names = Object.keys(all);
-    if (!names.length) {
-      listEl.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted);">Noch keine gespeicherten Patterns.</div>`;
+    const entries = Object.keys(all).map(name => ({ name, folder: fldNorm(all[name] && all[name].folder), pat: all[name] || {} }));
+    const renRow = document.getElementById('jamRenFolderRow');
+    if (renRow) {
+      if (jamRenFolder === '__pick') {
+        renRow.style.display = 'flex';
+        renRow.innerHTML = fldGroups(entries).map(([f]) => `<button type="button" class="theory-chip" data-jamrenpick="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="theory-chip" data-jamrenend="1">Fertig</button>`;
+      } else if (jamRenFolder) {
+        renRow.style.display = 'flex';
+        renRow.innerHTML = `<input type="text" id="jamRenIn" value="${homeEsc(jamRenFolder === 'Ohne Ordner' ? '' : jamRenFolder)}" placeholder="Neuer Ordnername" maxlength="24" style="flex:1; min-width:130px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 8px;"><button type="button" class="btn" data-jamrenok="1" style="padding:4px 12px;">✔</button><button type="button" class="theory-chip" data-jamrenend="1">Fertig</button>`;
+      } else { renRow.style.display = 'none'; renRow.innerHTML = ''; }
+      renRow.querySelectorAll('[data-jamrenpick]').forEach(b => b.addEventListener('click', () => { jamRenFolder = b.dataset.jamrenpick; renderJamSavedList(); }));
+      renRow.querySelectorAll('[data-jamrenend]').forEach(b => b.addEventListener('click', () => { jamRenFolder = null; renderJamSavedList(); }));
+      const okBtn = renRow.querySelector('[data-jamrenok]');
+      if (okBtn) okBtn.addEventListener('click', () => {
+        const inp = document.getElementById('jamRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = jamRenFolder;
+        if (nn && old) {
+          const all2 = getSavedJamPatterns();
+          Object.keys(all2).forEach(nm => { if ((fldNorm(all2[nm] && all2[nm].folder) || 'Ohne Ordner') === old) all2[nm].folder = nn; });
+          try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all2)); } catch (e) {}
+          showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.');
+        }
+        jamRenFolder = null; renderJamSavedList();
+      });
+    }
+    if (!entries.length) {
+      listEl.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Noch keine gespeicherten Beats – oben Name (und Ordner) eintragen und „Speichern“ tippen.</div>`;
       return;
     }
-    listEl.innerHTML = names.map(name => `
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel-overlay); padding:6px 10px; border-radius:6px;">
-        <span style="font-size:0.85rem;">${name}</span>
-        <div style="display:flex; gap:6px;">
-          <button type="button" class="btn btn-secondary jam-load-btn" data-name="${name}" style="padding:2px 10px; font-size:0.75rem;">Laden</button>
-          <button type="button" class="btn btn-secondary jam-delete-btn" data-name="${name}" style="padding:2px 10px; font-size:0.75rem;">Löschen</button>
-        </div>
-      </div>`).join('');
-
+    listEl.innerHTML = fldGroups(entries).map(([f, arr]) => `
+      <div style="font-weight:700; font-size:.9rem; margin:12px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">${arr.map(e => `
+        <span style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;">
+          <button type="button" class="jam-load-btn" data-name="${homeEsc(e.name)}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(e.name)} <small style="color:var(--text-muted);">${(e.pat.bars || []).length} Takte · ${Math.round(e.pat.bpm || 0)} BPM</small></button>
+          <button type="button" class="jam-delete-btn" data-name="${homeEsc(e.name)}" title="Beat löschen" style="background:var(--card-border); border:none; color:var(--text-color); width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:.72rem; line-height:1;">✕</button>
+        </span>`).join('')}</div>`).join('');
     listEl.querySelectorAll('.jam-load-btn').forEach(btn => {
       btn.addEventListener('click', () => loadJamPattern(btn.dataset.name));
     });
     listEl.querySelectorAll('.jam-delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteJamPattern(btn.dataset.name));
+      btn.addEventListener('click', () => { if (confirm(`„${btn.dataset.name}“ wirklich löschen?`)) deleteJamPattern(btn.dataset.name); });
     });
   }
 
@@ -10203,7 +10224,7 @@
   const TUNER_TUNING_LABELS = { standard: 'Standard (E A D G H e)', dropD: 'Drop D (D A D G H e)', dadgad: 'DADGAD', openG: 'Open G (D G D G H D)' };
   const tuner = {
     running: false, stream: null, source: null, analyser: null, timer: null, buf: null,
-    a4: 440, tuningKey: null, target: 'auto', history: [], lastPitch: null, lastSeen: 0, tunedStrings: {}, stableSince: 0
+    a4: 440, tuningKey: null, target: 'auto', free: false, history: [], lastPitch: null, lastSeen: 0, tunedStrings: {}, stableSince: 0
   };
   try { const a = parseFloat(localStorage.getItem('guitartrainer_tuner_a4')); if (a >= 425 && a <= 455) tuner.a4 = a; } catch (e) {}
 
@@ -10277,6 +10298,10 @@
         <button type="button" class="tuner-str ${tuner.target === 'auto' ? 'active' : ''}" data-t="auto">Auto<small>erkennen</small></button>
         ${strs.map(st => `<button type="button" class="tuner-str ${tuner.target === st.idx ? 'active' : ''} ${tuner.tunedStrings[st.idx] ? 'tuned' : ''}" data-t="${st.idx}">${st.name}<small>${6 - st.idx}. Saite</small></button>`).join('')}
       </div>
+      <div class="tuner-row" style="margin:8px 0;">
+        <button type="button" class="btn ${tuner.free ? '' : 'btn-secondary'}" id="tunerFreeBtn" style="padding:6px 12px; font-size:.85rem;">🎧 Jeden Ton erkennen: ${tuner.free ? 'An' : 'Aus'}</button>
+        <span style="font-size:.78rem; color:var(--text-muted);">Erkennt jeden Ton – auch gegriffene Töne, Flageolett und andere Instrumente.</span>
+      </div>
       <div id="tunerMeterZone" style="cursor:pointer;">
       <svg class="tuner-svg" viewBox="0 0 300 170" aria-hidden="true">
         <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="rgba(127,127,127,0.35)" stroke-width="10" stroke-linecap="round"/>
@@ -10299,7 +10324,8 @@
         <button type="button" class="btn btn-secondary" id="tunerRefBtn" ${tuner.target === 'auto' ? 'disabled' : ''}>🔊 Referenzton</button>
       </div>
       <div class="tuner-hint" id="tunerHint">${tuner.running ? 'Zupfe eine einzelne Saite und lass sie klingen.' : 'Beim ersten Start fragt der Browser, ob die App das Mikrofon benutzen darf – bitte „Zulassen“ wählen. Es wird nichts aufgenommen oder gespeichert.'}</div>
-    </div>`;
+    </div>
+    <div class="tuner-card" id="tunerIntoCard" style="margin-top:12px;"><div id="tunerIntoBody"></div></div>`;
 
     document.getElementById('tunerStartBtn').addEventListener('click', () => { tuner.running ? stopTuner(true) : startTuner(); });
     document.getElementById('tunerTuningSelect').addEventListener('change', (e) => { tuner.tuningKey = e.target.value; tuner.target = 'auto'; tuner.tunedStrings = {}; renderTuner(); });
@@ -10315,7 +10341,90 @@
       if (tuner.target !== 'auto') tunerPlayRef();
     }));
     document.getElementById('tunerRefBtn').addEventListener('click', tunerPlayRef);
+    const tunerFreeBtn2 = document.getElementById('tunerFreeBtn');
+    if (tunerFreeBtn2) tunerFreeBtn2.addEventListener('click', () => { tuner.free = !tuner.free; tuner.history = []; renderTuner(); });
+    try { tunerIntoRender(); } catch (e) {}
     try { strTunerRefresh(); } catch (e) {}
+  }
+
+  // 🎯 Bundreinheit prüfen: leere Saite (Maßstab) gegen gegriffenen 12. Bund messen
+  const tunerInto = { str: null, step: 0, samples: [], refFreq: 0, harm: null, results: {} };
+  function tunerIntoBaseFreq() {
+    if (tunerInto.str === null) return 0;
+    const st = tunerStrings()[tunerInto.str]; if (!st) return 0;
+    return tunerMidiToFreq(st.pitch);
+  }
+  function tunerIntoSample(f) {
+    if (tunerInto.str === null || !tunerInto.step || tunerInto.step > 3) return;
+    const live = document.getElementById('tunerIntoLive'); if (!live) return;
+    tunerInto.samples.push(f);
+    if (tunerInto.samples.length > 16) tunerInto.samples.shift();
+    const arr = tunerInto.samples.slice().sort((a, b) => a - b);
+    const med = arr[Math.floor(arr.length / 2)];
+    const base = tunerInto.step === 1 ? tunerIntoBaseFreq() : (tunerInto.refFreq ? tunerInto.refFreq * 2 : tunerIntoBaseFreq() * 2);
+    if (!base) return;
+    let cents = 1200 * Math.log2(med / base);
+    if (tunerInto.step === 1) { while (cents > 600) cents -= 1200; while (cents < -600) cents += 1200; }
+    const spread = arr.length > 1 ? 1200 * Math.log2(arr[arr.length - 1] / arr[0]) : 99;
+    const stable = arr.length >= 9 && spread <= 9 && Math.abs(cents) <= 60;
+    const richtung = cents < -2 ? 'zu tief' : cents > 2 ? 'zu hoch' : 'genau richtig';
+    if (!stable) {
+      live.innerHTML = `<strong style="font-size:1.1rem;">${cents > 0 ? '+' : ''}${Math.round(cents)} Cent</strong> <span style="color:var(--text-muted);">${Math.abs(cents) <= 60 ? richtung + ' · Ton bitte klingen lassen …' : 'bitte den Ton aus der Anleitung spielen …'}</span>`;
+      return;
+    }
+    tunerInto.samples = [];
+    if (tunerInto.step === 1) {
+      if (Math.abs(cents) <= 5) { tunerInto.refFreq = base * Math.pow(2, cents / 1200); tunerInto.step = 2; tunerIntoRender(); }
+      else live.innerHTML = `<strong style="font-size:1.1rem;">${cents > 0 ? '+' : ''}${Math.round(cents)} Cent</strong> <span style="color:var(--text-muted);">stabil gemessen – bitte die leere Saite erst sauber stimmen (Ziel: −5 bis +5 Cent), dann übernimmt sie die App automatisch.</span>`;
+    } else if (tunerInto.step === 2) { tunerInto.harm = cents; tunerInto.step = 3; tunerIntoRender(); }
+    else if (tunerInto.step === 3) { tunerInto.results[tunerInto.str] = cents; tunerInto.step = 4; tunerIntoRender(); }
+  }
+  function tunerIntoVerdict(dev) {
+    if (Math.abs(dev) <= 3) return '✔ bundrein';
+    if (dev > 0) return `${Math.round(dev)} Cent zu hoch → Saite am Steg etwas länger stellen (Saitenreiter ein wenig vom Hals weg bewegen), dann neu stimmen und nachmessen.`;
+    return `${Math.round(-dev)} Cent zu tief → Saite am Steg etwas kürzer stellen (Saitenreiter ein wenig zum Hals hin bewegen), dann neu stimmen und nachmessen.`;
+  }
+  function tunerIntoRender() {
+    const box = document.getElementById('tunerIntoBody'); if (!box) return;
+    const strs = tunerStrings();
+    const I = tunerInto;
+    let h = `<div style="font-weight:800; font-size:1rem; margin-bottom:2px;">🎯 Bundreinheit prüfen</div>
+    <div style="font-size:.82rem; color:var(--text-muted); margin-bottom:8px;">Bundrein heißt: Der gegriffene Ton am 12. Bund ist genau die Oktave zur leeren Saite. Ich messe beide Töne und vergleiche sie für dich – Saite für Saite.${tuner.running ? '' : ' Dafür muss das Mikrofon an sein.'}</div>`;
+    if (!tuner.running) h += `<button type="button" class="btn" id="tunerIntoMic" style="padding:6px 14px;">🎤 Mikrofon starten</button>`;
+    h += `<div class="tuner-strings" style="margin:8px 0;">` + strs.map(st => {
+      const r = I.results[st.idx];
+      const mark = r === undefined ? '' : (Math.abs(r) <= 3 ? ' ✓' : (r > 0 ? ' +' + Math.round(r) : ' ' + Math.round(r)));
+      return `<button type="button" class="tuner-str ${I.str === st.idx ? 'active' : ''}" data-into="${st.idx}">${st.name}${mark}<small>${6 - st.idx}. Saite</small></button>`;
+    }).join('') + `</div>`;
+    if (I.str === null) {
+      h += `<div style="font-size:.88rem;">Tippe oben eine Saite an – ich führe dich Schritt für Schritt durch die Prüfung.</div>`;
+    } else {
+      const st = strs[I.str];
+      const steps = ['Leere ' + st.name + '-Saite spielen und sauber stimmen – ich merke sie mir als Maßstab.', 'Flageolett am 12. Bund: Die Saite direkt über dem 12. Bund nur leicht berühren und anzupfen (Gegenprobe – darfst du auch überspringen).', 'Jetzt den 12. Bund normal herunterdrücken und die Saite anschlagen.', 'Ergebnis'];
+      h += `<div style="font-size:.9rem; margin:6px 0;"><strong>Schritt ${Math.min(I.step, 3)} von 3:</strong> ${steps[I.step - 1]}</div>`;
+      if (I.step >= 1 && I.step <= 3) h += `<div id="tunerIntoLive" style="min-height:26px; font-size:.95rem;">… spiele den Ton, ich höre zu …</div>`;
+      if (I.step === 1) h += `<div style="font-size:.8rem; color:var(--text-muted);">Oben an der großen Nadel siehst du live, wo du stehst. Ziel: −5 bis +5 Cent.</div>`;
+      if (I.step === 2) h += `<button type="button" class="btn btn-secondary" id="tunerIntoSkip" style="padding:5px 12px; margin-top:6px;">Überspringen ›</button>`;
+      if (I.step === 3 && I.harm !== null) h += `<div style="font-size:.8rem; color:var(--text-muted);">Dein Flageolett lag bei ${I.harm > 0 ? '+' : ''}${Math.round(I.harm)} Cent zur Oktave – nur eine Kontrolle.</div>`;
+      if (I.step === 4) {
+        h += `<div style="font-size:.95rem; margin:6px 0;"><strong>${st.name}-Saite:</strong> ${tunerIntoVerdict(I.results[I.str])}</div>
+        <button type="button" class="btn" id="tunerIntoNext" style="padding:6px 14px;">Nächste Saite ›</button>
+        <button type="button" class="btn btn-secondary" id="tunerIntoRedo" style="padding:6px 14px;">↺ Diese Saite noch einmal</button>`;
+      }
+      h += `<div style="margin-top:6px;"><button type="button" class="btn btn-secondary" id="tunerIntoAbort" style="padding:4px 10px; font-size:.8rem;">✕ Abbrechen</button></div>`;
+    }
+    const doneKeys = Object.keys(I.results);
+    if (doneKeys.length) {
+      h += `<div style="margin-top:10px; font-size:.86rem;"><strong>Ergebnisse (${doneKeys.length} von 6):</strong><br>` + strs.filter(st => I.results[st.idx] !== undefined).map(st => `${st.name}: ${tunerIntoVerdict(I.results[st.idx])}`).join('<br>') + `</div>`;
+      if (doneKeys.length >= 6) h += `<div style="font-size:.82rem; color:var(--text-muted); margin-top:6px;">Alle sechs geprüft 🎉 Abweichungen bis ±3 Cent sind völlig normal. Und wenn du dich ans Verstellen der Saitenreiter nicht traust: Jedes Musikgeschäft macht das gern für dich.</div>`;
+    }
+    box.innerHTML = h;
+    const mic = document.getElementById('tunerIntoMic'); if (mic) mic.addEventListener('click', () => { startTuner(); });
+    box.querySelectorAll('[data-into]').forEach(b => b.addEventListener('click', () => { I.str = +b.dataset.into; I.step = 1; I.samples = []; I.refFreq = 0; I.harm = null; tunerIntoRender(); }));
+    const skip = document.getElementById('tunerIntoSkip'); if (skip) skip.addEventListener('click', () => { I.step = 3; I.samples = []; tunerIntoRender(); });
+    const next = document.getElementById('tunerIntoNext'); if (next) next.addEventListener('click', () => { const n = strs.find(x => I.results[x.idx] === undefined); if (n) { I.str = n.idx; I.step = 1; I.samples = []; I.refFreq = 0; I.harm = null; } tunerIntoRender(); });
+    const redo = document.getElementById('tunerIntoRedo'); if (redo) redo.addEventListener('click', () => { delete I.results[I.str]; I.step = 1; I.samples = []; I.refFreq = 0; I.harm = null; tunerIntoRender(); });
+    const ab = document.getElementById('tunerIntoAbort'); if (ab) ab.addEventListener('click', () => { I.str = null; I.step = 0; I.samples = []; tunerIntoRender(); });
   }
 
   function tunerPlayRef() {
@@ -10394,6 +10503,7 @@
       return;
     }
     tuner.lastSeen = now;
+    try { tunerIntoSample(freq); } catch (e) {}
     tuner.history.push(freq);
     if (tuner.history.length > 5) tuner.history.shift();
     const sorted = tuner.history.slice().sort((a, b) => a - b);
@@ -10416,7 +10526,10 @@
     const strs = tunerStrings();
     let targetMidi, label, strIdx = null;
     const midi = tunerFreqToMidi(f);
-    if (tuner.target === 'auto') {
+    if (tuner.free) {
+      // 🎧 Jeden Ton erkennen: Maßstab ist immer der nächste Halbton, egal welcher Ton klingt
+      targetMidi = Math.round(midi); strIdx = null;
+    } else if (tuner.target === 'auto') {
       // nächstgelegene Saite der gewählten Stimmung, wenn nah genug – sonst nächster Halbton
       let best = null;
       strs.forEach(st => { const dd = Math.abs(midi - st.pitch); if (!best || dd < best.d) best = { d: dd, st }; });
@@ -10441,7 +10554,7 @@
     needle.style.opacity = '1';
     needle.style.transform = `rotate(${(clamped / 50 * 72).toFixed(1)}deg)`; // gleiche Skala wie die Striche (±72°)
     if (Math.abs(cents) <= 5) {
-      msgEl.textContent = '✔ Gestimmt!'; msgEl.className = 'tuner-msg ok';
+      msgEl.textContent = tuner.free ? '✔ Genau dieser Ton!' : '✔ Gestimmt!'; msgEl.className = 'tuner-msg ok';
       if (!tuner.stableSince) tuner.stableSince = performance.now();
       if (strIdx !== null && performance.now() - tuner.stableSince > 600 && !tuner.tunedStrings[strIdx]) {
         tuner.tunedStrings[strIdx] = true;
@@ -10449,10 +10562,10 @@
         if (b) b.classList.add('tuned');
       }
     } else if (cents < 0) {
-      msgEl.textContent = cents < -30 ? '⬆ Viel zu tief – Saite spannen' : '⬆ Etwas zu tief – leicht spannen'; msgEl.className = 'tuner-msg low';
+      msgEl.textContent = tuner.free ? (cents < -30 ? '⬆ Viel zu tief' : '⬆ Etwas zu tief') : (cents < -30 ? '⬆ Viel zu tief – Saite spannen' : '⬆ Etwas zu tief – leicht spannen'); msgEl.className = 'tuner-msg low';
       tuner.stableSince = 0;
     } else {
-      msgEl.textContent = cents > 30 ? '⬇ Viel zu hoch – Saite lockern' : '⬇ Etwas zu hoch – leicht lockern'; msgEl.className = 'tuner-msg high';
+      msgEl.textContent = tuner.free ? (cents > 30 ? '⬇ Viel zu hoch' : '⬇ Etwas zu hoch') : (cents > 30 ? '⬇ Viel zu hoch – Saite lockern' : '⬇ Etwas zu hoch – leicht lockern'); msgEl.className = 'tuner-msg high';
       tuner.stableSince = 0;
     }
     if (tuner.target === 'auto' && strIdx !== null) {
@@ -13968,10 +14081,10 @@
     <g clip-path="url(#rmWinClip)">
       <circle id="rmSunGlow" cx="112" cy="102" r="40" fill="url(#rmGlow)"/>
       <circle id="rmSun" cx="112" cy="102" r="24" fill="#fff3c4"/>
+      <rect id="rmNightVeil" x="64" y="64" width="172" height="142" fill="#0b1a3a" opacity="0"/>
       <g id="rmStars" opacity="0"><circle class="rm-star" cx="88" cy="86" r="1.6" fill="#fff7e0"/><circle class="rm-star" style="animation-delay:-1.1s" cx="150" cy="78" r="1.3" fill="#fff7e0"/><circle class="rm-star" style="animation-delay:-2.2s" cx="205" cy="96" r="1.5" fill="#fff7e0"/><circle class="rm-star" style="animation-delay:-.6s" cx="170" cy="122" r="1.1" fill="#fff7e0"/></g>
       <circle id="rmMoonGlow" cx="196" cy="92" r="30" fill="url(#rmGlow)" opacity="0"/>
       <circle id="rmMoon" cx="196" cy="92" r="15" fill="#f2ecda" opacity="0"/>
-      <rect id="rmNightVeil" x="64" y="64" width="172" height="142" fill="#0b1a3a" opacity="0"/>
     </g>
     <line x1="150" y1="64" x2="150" y2="206" stroke="#7a3b22" stroke-width="6"/>
     <line x1="64" y1="135" x2="236" y2="135" stroke="#7a3b22" stroke-width="6"/>
@@ -14102,7 +14215,7 @@
   </g>
   <g id="rmCat" style="display:none">
     <text id="rmCatNote" x="10" y="456" font-size="16" fill="#fff7e0">♪</text>
-    <text id="rmCatZ" x="24" y="462" font-size="13" font-weight="700" fill="#fff7e0">z z z</text>
+    <text id="rmCatZ" x="24" y="462" font-size="10.5" font-weight="700" fill="#fff7e0" fill-opacity=".6">z z z</text>
     <g id="rmCatCurl" class="rm-catcurl">
       <ellipse cx="0" cy="487" rx="23" ry="12" fill="#4a2113"/>
       <path d="M-22 492 q20 10 44 0 q-4 6 -22 6 q-18 0 -22 -6 Z" fill="#4a2113"/>
@@ -15664,7 +15777,7 @@
 
   // =================== Modul-übergreifend: Zwischenablage, Ordner, Umwandlungen ===================
   const CLIP_KEY = 'guitartrainer_clip';
-  let progRenFolder = null, strumRenFolder = null;
+  let progRenFolder = null, strumRenFolder = null, jamRenFolder = null;
   function clipSet(chords, label) {
     try {
       sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: chords.map(c => [c.root.pc, c.type, c.name || '']), label: label || '', ts: Date.now() }));
@@ -15690,6 +15803,7 @@
     try { twColsLoad().forEach(c => { if (fldNorm(c.folder)) s.add(fldNorm(c.folder)); }); } catch (e) {}
     try { (progLoad().saved || []).forEach(p => { if (fldNorm(p.folder)) s.add(fldNorm(p.folder)); }); } catch (e) {}
     try { strumCustomList().forEach(p => { if (fldNorm(p.folder)) s.add(fldNorm(p.folder)); }); } catch (e) {}
+    try { const jp = JSON.parse(localStorage.getItem('guitartrainer_jam_patterns') || '{}'); Object.keys(jp).forEach(k => { if (jp[k] && fldNorm(jp[k].folder)) s.add(fldNorm(jp[k].folder)); }); } catch (e) {}
     return [...s].sort((a, b) => a.localeCompare(b, 'de'));
   }
   function folderDatalist(id) { return '<datalist id="' + id + '">' + allFolderNames().map(f => '<option value="' + homeEsc(f) + '"></option>').join('') + '</datalist>'; }
@@ -16042,7 +16156,7 @@
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-08-2';
+  const APP_VERSION = '2026-11-09-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16265,5 +16379,5 @@
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57663fdcd31dca4',t:'MTc5NDE1OTkxNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57663fdcd31dca4',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57e6eccfa19e85a',t:'MTc5NDI0NDI0Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57e6eccfa19e85a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
