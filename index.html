@@ -2333,7 +2333,7 @@
         <li><strong>Es stockt?</strong> Wenn der Beat hakt oder aussetzt, liegt das fast immer an der Leistung des Handys/Tablets – nicht an einem Fehler in der App. Häufige Ursachen: Energiesparmodus, viele offene Apps/Tabs, lange Laufzeit ohne Neustart. Gegenmittel: Energiesparmodus für den Browser ausschalten, andere Apps schließen, Gerät oder Browser neu starten – und bei „Leistung“ auf „Sparsam“ stellen.</li>
         <li><strong>🎸 Improvisieren:</strong> zeigt den gerade laufenden Akkord groß mit Griffbild und Akkordtönen, den nächsten Akkord und passende Tonleitern. Ein Tipp auf eine Tonleiter öffnet sie im Modul „Tonleitern“.</li>
         <li><strong>🎸 Griffe zeigen:</strong> Unter den Takt-Knöpfen stehen alle Griffe des Songs nebeneinander, jeder Akkord einmal. Beim Abspielen leuchtet der aktuelle Griff, der nächste ist gestrichelt umrandet. Antippen: Akkord anhören. Kannst du die Griffe auswendig, nimm einfach das Häkchen weg.</li>
-        <li><strong>🎸 Gitarre spielt mit:</strong> Die App spielt ein Muster aus „Anschlag &amp; Zupfen“ (auch deine eigenen) mit den Akkorden der Takte und deinen ✏️-Griffen. Haken bei „Gitarre an“ setzen und ein Muster wählen. Zur Auswahl stehen die Muster, die zur Taktart des Beats passen. Lautstärke, Stumm (M) und Solo (S) unter „🎚️ Lautstärke &amp; Klangfarbe“. Die Gitarre wird mit dem Beat gespeichert und kommt beim WAV- und MIDI-Export mit.</li>
+        <li><strong>🎸 Gitarre spielt mit:</strong> Die App spielt ein Muster aus „Anschlag &amp; Zupfen“ (auch deine eigenen) mit den Akkorden der Takte und deinen ✏️-Griffen. Haken bei „Gitarre an“ setzen und ein Muster wählen. Zur Auswahl stehen die Muster, die zur Taktart des Beats passen. Lautstärke direkt am Regler darunter (derselbe Wert wie im „🎚️ Lautstärke &amp; Klangfarbe“-Mischpult), Stumm (M) und Solo (S) im Mischpult. Die Gitarre wird mit dem Beat gespeichert und kommt beim WAV- und MIDI-Export mit.</li>
         <li><strong>⏱️ Timing &amp; Feeling:</strong> Swing (bis Triolen-Shuffle), Einzähler, Tap-Tempo, Humanize und der Tempo-Trainer (wird nach einstellbar vielen Durchläufen automatisch schneller, bis zum Zieltempo).</li>
         <li><strong>🛠️ Werkzeuge:</strong> Takt kopieren, 25 Song-Presets mit 4, 8 oder 12 Takten (z.B. 12-Takt-Blues, Kanon-Folge, Jazz ii–V–I, Bossa, Funk, House), zufällige Akkordfolge passend zur Tonart und automatisches Fill-in im letzten Loop-Takt.</li>
         <li><strong>M / S</strong> an jeder Instrumentenzeile: Stumm bzw. Solo.</li>
@@ -7251,7 +7251,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       html += '<details class="jam-section"><summary>📥 Folgen übernehmen (Zwischenablage & Werkstatt-Sammlungen)</summary><div class="row" style="flex-wrap:wrap; gap:8px; padding:10px 4px;">' +
         '<button type="button" class="btn btn-secondary" id="jamClipIn"' + (cl ? '' : ' disabled') + '>📎 Zwischenablage' + (cl ? ': ' + homeEsc((cl.label || cl.chords.map(c => c.name).join(' – ')).slice(0, 40)) : ' leer') + '</button>' +
         (twc.length ? twc.map(c => '<button type="button" class="theory-chip" data-jamcol="' + c.id + '">🥁 ' + homeEsc((fldNorm(c.folder) ? fldNorm(c.folder) + ' / ' : '') + c.name) + '</button>').join('') : '<span style="opacity:.75;">Noch keine Werkstatt-Sammlungen gespeichert.</span>') +
-        '</div><div style="font-size:.78rem; opacity:.8; padding:2px 4px 8px;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner.</div></details>'; }
+        '</div><div style="font-size:.78rem; opacity:.8; padding:2px 4px 8px;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner. Pad, Bass und Arp spielen deine Akkordfolge mit (Pad pro Takt an/aus).</div></details>'; }
     html += `<div style="margin-top:12px; font-size:.8rem; color:var(--text-muted);">💡 Stockt der Beat, liegt es fast immer an der Geräte-Leistung (Energiesparmodus, viele offene Apps, langes Laufen ohne Neustart) – nicht an einem Fehler der App. Abhilfe: Energiesparmodus aus, andere Apps schließen, Browser neu starten, ggf. „Sparsam“ wählen.</div>`;
     jamModuleRoot.innerHTML = html;
     bindScalePanel(jamModuleRoot);
@@ -7795,6 +7795,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         const key = e.target.dataset.key;
         jam.volumes[key] = parseInt(e.target.value, 10) / 100;
         if (key === 'pad') updateJamLivePadGain();
+        if (key === 'gtr') { const gv2 = document.getElementById('jamGtrVolRange'); if (gv2) gv2.value = e.target.value; const lb2 = document.getElementById('jamGtrVolLabel'); if (lb2) lb2.textContent = e.target.value + ' %'; }
         scheduleJamAutosave();
       });
     });
@@ -8594,7 +8595,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
 
   // ---------- Gitarre: Muster aus „Anschlag & Zupfen“ ----------
   let jamGtrCache = null;
-  let GTR_MIX = 4.0; // Lautstärke der Gitarre im Verhältnis zur Band
+  let GTR_MIX = 2.0; // Lautstärke der Gitarre im Verhältnis zur Band (war 4.0 – viel zu laut)
   function jamGtrPatternRaw() {
     const jam = state.jam; if (!jam || !jam.gtrPattern) return null;
     let p = null; try { p = strumAllPatterns().find(x => x.id === jam.gtrPattern) || null; } catch (e) {}
@@ -8618,13 +8619,18 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     let hint;
     if (!gp) hint = `Wähle ein Muster aus „Anschlag &amp; Zupfen“ – auch deine eigenen. Die Gitarre spielt es mit den Akkorden der Takte, auch mit deinen ✏️-Griffen.`;
     else if (!fit) hint = `⚠️ „${homeEsc(gp.name)}“ ist im ${gp.sig}-Takt, der Beat im ${jam.timeSig}-Takt. So spielt die Gitarre nicht mit – wähle ein anderes Muster oder stell die Taktart um.`;
-    else hint = `${gp.kind === 'pick' ? '✋ Zupfen' : '↕ Anschlag'} · ${homeEsc(gp.tip || '')} · Lautstärke unter „🎚️ Lautstärke &amp; Klangfarbe“.`;
+    else hint = `${gp.kind === 'pick' ? '✋ Zupfen' : '↕ Anschlag'} · ${homeEsc(gp.tip || '')}.`;
     return `<details class="jam-section" data-sec="gtr" ${ui.gtr ? 'open' : ''}><summary>🎸 Gitarre spielt mit${jam.gtrOn && fit ? ' <span style="font-weight:400; opacity:.8;">– an</span>' : ''}</summary>
       <div class="row" style="flex-wrap:wrap; gap:12px; align-items:center;">
         <label style="display:flex; gap:6px; align-items:center; font-weight:600;"><input type="checkbox" id="jamGtrOn" ${jam.gtrOn ? 'checked' : ''}> Gitarre an</label>
         <select id="jamGtrSel" style="${sel} max-width:100%;"><option value="">– Muster wählen –</option>${!gp || fit ? '' : `<option value="${gp.id}" selected disabled>${homeEsc(gp.name)} (${gp.sig})</option>`}
           ${grp('★ Favoriten', ok.filter(x => strumIsFav(x.id)))}${fldGroups(ok.filter(x => x.custom)).map(([f, arr]) => grp(f === 'Ohne Ordner' ? '✏️ Meine Muster' : '✏️ Meine Muster · ' + homeEsc(f), arr)).join('')}${grp('↕ Anschlag', ok.filter(x => !x.custom && x.kind === 'strum'))}${grp('✋ Zupfen', ok.filter(x => !x.custom && x.kind === 'pick'))}
         </select></div>
+      <div class="row" style="flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px;">
+        <label for="jamGtrVolRange" style="font-weight:600;">🔊 Lautstärke Gitarre:</label>
+        <input type="range" id="jamGtrVolRange" min="0" max="100" step="1" value="${Math.round((jam.volumes.gtr ?? 0.7) * 100)}" style="width:150px; max-width:45vw;">
+        <span id="jamGtrVolLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:42px;">${Math.round((jam.volumes.gtr ?? 0.7) * 100)} %</span>
+      </div>
       <div class="jam-hint" style="color:var(--text-color);">${hint}</div>
       <div class="jam-hint">Hier stehen nur Muster im ${jam.timeSig}-Takt${nOther ? ` (${nOther} weitere Muster haben eine andere Taktart)` : ''}.</div></details>`;
   }
@@ -8641,6 +8647,13 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       jam.gtrPattern = p ? p.id : null; jam.gtrPatCopy = p && p.custom ? JSON.parse(JSON.stringify(p)) : null; jamGtrCache = null;
       if (p) jam.gtrOn = true;
       scheduleJamAutosave(); renderJamModule();
+    });
+    const gv = document.getElementById('jamGtrVolRange');
+    if (gv) gv.addEventListener('input', () => {
+      jam.volumes.gtr = +gv.value / 100;
+      const lb = document.getElementById('jamGtrVolLabel'); if (lb) lb.textContent = gv.value + ' %';
+      const mx = document.querySelector('.jam-volume-range[data-key="gtr"]'); if (mx) mx.value = gv.value;
+      scheduleJamAutosave();
     });
   }
   // Töne eines Muster-Schritts (für den MIDI-Export; gleiche Regeln wie strumPlayStep)
@@ -16156,7 +16169,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-09-2';
+  const APP_VERSION = '2026-11-09-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16379,5 +16392,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57e6eccfa19e85a',t:'MTc5NDI0NDI0Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57e6eccfa19e85a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57ebeaebf3336e0',t:'MTc5NDI0NzUxOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57ebeaebf3336e0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
