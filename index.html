@@ -1192,6 +1192,10 @@
     .jam-bar-tab.drag-src { opacity: .45; outline: 2px dashed var(--accent-color); }
     .jam-bar-tab.drag-over { box-shadow: 0 0 0 3px #22d3ee inset; }
     .hdrag-src { opacity: .45; outline: 2px dashed var(--accent-color); }
+    .fld-drop { border-radius: 8px; padding: 2px 6px; margin-left: -6px; margin-right: -6px; }
+    .fld-drop.drag-over { background: rgba(245,158,11,.28); outline: 2px dashed #f59e0b; }
+    .fld-drop-new { border: 1.5px dashed var(--card-border); border-radius: 10px; padding: 8px 10px; margin-top: 12px; font-size: .85rem; color: var(--text-muted); text-align: center; }
+    .fld-drop-new.drag-over { background: rgba(245,158,11,.28); outline: 2px dashed #f59e0b; color: var(--text-color); }
     .hdrag-over { box-shadow: 0 0 0 3px #22d3ee inset; }
     .prog-card { user-select: none; -webkit-user-select: none; }
     .prog-cname { user-select: text; -webkit-user-select: text; }
@@ -5982,8 +5986,10 @@
     if (!progState.saved.length) {
       h += `<div style="font-size:.85rem; color:var(--text-muted); margin-top:4px;">Noch keine gespeicherten Folgen – oben Name (und Ordner) eintragen und 💾 Speichern tippen.</div>`;
     } else {
-      h += fldGroups(progState.saved.map((p, i) => ({ folder: p.folder, i }))).map(([f, arr]) => `<div style="font-weight:700; font-size:.9rem; margin:10px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div><div style="display:flex; gap:8px; flex-wrap:wrap;">` + arr.map(x => { const p = progState.saved[x.i]; const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' '); return `<span style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;"><button type="button" data-act="openchip" data-i="${x.i}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(p.name || 'Ohne Namen')} <small style="color:var(--text-muted);">${homeEsc(names)}</small></button><button type="button" class="btn btn-secondary" data-act="delchip" data-i="${x.i}" title="Folge löschen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✕</button></span>`; }).join('') + `</div>`).join('');
+      h += fldGroups(progState.saved.map((p, i) => ({ folder: p.folder, i }))).map(([f, arr]) => `<div class="fld-drop" data-folder="${homeEsc(f)}" style="font-weight:700; font-size:.9rem; margin:10px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div><div style="display:flex; gap:8px; flex-wrap:wrap;">` + arr.map(x => { const p = progState.saved[x.i]; const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' '); return `<span class="prog-chip" data-i="${x.i}" style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;"><button type="button" data-act="openchip" data-i="${x.i}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(p.name || 'Ohne Namen')} <small style="color:var(--text-muted);">${homeEsc(names)}</small></button><button type="button" class="btn btn-secondary" data-act="delchip" data-i="${x.i}" title="Folge löschen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✕</button></span>`; }).join('') + `</div>`).join('');
     }
+    if (progState.saved.length && progNewFolderIdx === null) h += `<div class="fld-drop-new">＋ Neuer Ordner – Folge hierher ziehen</div>`;
+    if (progNewFolderIdx !== null && progState.saved[progNewFolderIdx]) h += `<div class="prog-row" style="margin-top:8px; gap:8px;"><input type="text" id="progNewFolderIn" placeholder="Name für den neuen Ordner" maxlength="24" style="flex:1; min-width:140px;"><button type="button" class="btn" data-act="newfolderok">✔ Anlegen &amp; verschieben</button><button type="button" class="btn btn-secondary" data-act="newfoldercancel">Abbrechen</button></div>`;
     h += `</div>`;
     h += `<div class="prog-cards">`;
     dr.chords.forEach((c, ci) => {
@@ -6059,6 +6065,10 @@
     body.innerHTML = h;
     bindScalePanel(body);
     holdDragBind(body.querySelector('.prog-cards'), '.prog-card', el => Array.prototype.indexOf.call(el.parentElement.children, el), progReorder, 'input, select, textarea');
+    chipDragBind(body, '.prog-chip', '.fld-drop', '.fld-drop-new',
+      (chip, zone) => { const i = +chip.dataset.i; const p = progState.saved[i]; if (!p) return; const f = zone.dataset.folder; if ((fldNorm(p.folder) || 'Ohne Ordner') === f) return; p.folder = f === 'Ohne Ordner' ? '' : fldNorm(f); progSave(); progRender(); showToast(`🗂 „${p.name}“ ist jetzt in „${f}“.`); },
+      chip => { progNewFolderIdx = +chip.dataset.i; progRender(); const inp = document.getElementById('progNewFolderIn'); if (inp) inp.focus(); },
+      '[data-act="delchip"]');
     progMarkPlaying();
   }
   // ---------- Kurze Notenzeile unter jedem Akkordbild ----------
@@ -6600,8 +6610,14 @@
       }
       else if (act === 'openchip') {
         const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
-        if (progState.saved[i]) { progSelIdx = i; progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
+        if (Date.now() - chipDragEndAt >= 500 && progState.saved[i]) { progSelIdx = i; progState.draft = JSON.parse(JSON.stringify(progState.saved[i])); showToast(`„${progState.draft.name}“ geöffnet`); }
       }
+      else if (act === 'newfolderok') {
+        const inp = document.getElementById('progNewFolderIn'); const nn = fldNorm(inp ? inp.value : '');
+        if (nn && progState.saved[progNewFolderIdx]) { progState.saved[progNewFolderIdx].folder = nn; showToast(`🗂 Neuer Ordner „${nn}“ – Folge ist drin.`); }
+        progNewFolderIdx = null;
+      }
+      else if (act === 'newfoldercancel') { progNewFolderIdx = null; }
       else if (act === 'delchip') {
         const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
         const p = progState.saved[i];
@@ -6818,6 +6834,46 @@
     });
     box.addEventListener('contextmenu', e => { if (holdDrag && holdDrag.active) e.preventDefault(); });
   }
+  // 🗂 Kärtchen in Ordner ziehen (Akkordfolgen + Beats): gedrückt halten, auf Ordner-Überschrift ziehen, loslassen
+  let chipDrag = null, chipDragEndAt = 0;
+  function chipDragBind(box, chipSel, zoneSel, newSel, onMove, onNew, excludeSel) {
+    if (!box || box.dataset.chipBound) return;
+    box.dataset.chipBound = '1';
+    box.addEventListener('pointerdown', e => {
+      const chip = e.target.closest(chipSel); if (!chip || !box.contains(chip) || chipDrag) return;
+      if (excludeSel && e.target.closest(excludeSel)) return;
+      chipDrag = { chip, zoneSel, newSel, onMove, onNew, active: e.pointerType === 'mouse', moved: false, sx: e.clientX, sy: e.clientY, over: null, isNew: false, timer: null };
+      if (chipDrag.active) chip.classList.add('hdrag-src');
+      else chipDrag.timer = setTimeout(() => { if (chipDrag) { chipDrag.active = true; chip.classList.add('hdrag-src'); } }, 400);
+    });
+    box.addEventListener('contextmenu', e => { if (chipDrag && chipDrag.active) e.preventDefault(); });
+  }
+  document.addEventListener('pointermove', e => {
+    if (!chipDrag || !chipDrag.active) return;
+    if (Math.abs(e.clientX - chipDrag.sx) + Math.abs(e.clientY - chipDrag.sy) > 8) chipDrag.moved = true;
+    if (chipDrag.moved) { if (e.clientY < 70) window.scrollBy(0, -16); else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 16); }
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const zone = el && el.closest ? el.closest(chipDrag.zoneSel) : null;
+    const nw = el && el.closest ? el.closest(chipDrag.newSel) : null;
+    document.querySelectorAll('.fld-drop.drag-over, .fld-drop-new.drag-over').forEach(x => { if (x !== zone && x !== nw) x.classList.remove('drag-over'); });
+    if (zone) zone.classList.add('drag-over');
+    if (nw) nw.classList.add('drag-over');
+    chipDrag.over = zone; chipDrag.isNew = !!nw;
+  }, { passive: true });
+  document.addEventListener('touchmove', e => { if (chipDrag && chipDrag.active) e.preventDefault(); }, { passive: false });
+  function chipDragFinish(commit) {
+    if (!chipDrag) return;
+    const d = chipDrag; chipDrag = null;
+    if (d.timer) clearTimeout(d.timer);
+    d.chip.classList.remove('hdrag-src');
+    document.querySelectorAll('.fld-drop.drag-over, .fld-drop-new.drag-over').forEach(x => x.classList.remove('drag-over'));
+    if (!commit || !d.active || !d.moved) return;
+    chipDragEndAt = Date.now();
+    if (d.isNew) d.onNew(d.chip);
+    else if (d.over) d.onMove(d.chip, d.over);
+  }
+  document.addEventListener('pointerup', () => chipDragFinish(true));
+  document.addEventListener('pointercancel', () => chipDragFinish(false));
   // ↔ Takte umsortieren: Takt-Knopf gedrückt halten, ziehen, loslassen
   let jamTabDrag = null, jamDragEndAt = 0, jamDragScrollTimer = null;
   function jamTabDragCleanup() {
@@ -9469,14 +9525,31 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       return;
     }
     listEl.innerHTML = fldGroups(entries).map(([f, arr]) => `
-      <div style="font-weight:700; font-size:.9rem; margin:12px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div>
+      <div class="fld-drop" data-folder="${homeEsc(f)}" style="font-weight:700; font-size:.9rem; margin:12px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">${arr.map(e => `
-        <span style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;">
+        <span class="jam-chip" data-name="${homeEsc(e.name)}" style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;">
           <button type="button" class="jam-load-btn" data-name="${homeEsc(e.name)}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(e.name)} <small style="color:var(--text-muted);">${(e.pat.bars || []).length} Takte · ${Math.round(e.pat.bpm || 0)} BPM</small></button>
           <button type="button" class="jam-delete-btn" data-name="${homeEsc(e.name)}" title="Beat löschen" style="background:var(--card-border); border:none; color:var(--text-color); width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:.72rem; line-height:1;">✕</button>
         </span>`).join('')}</div>`).join('');
+    if (entries.length && jamNewFolderName === null) listEl.innerHTML += `<div class="fld-drop-new">＋ Neuer Ordner – Beat hierher ziehen</div>`;
+    if (jamNewFolderName !== null && all[jamNewFolderName]) {
+      listEl.innerHTML += `<div class="row" style="gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="jamNewFolderIn" placeholder="Name für den neuen Ordner" maxlength="24" style="flex:1; min-width:140px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:5px 8px;"><button type="button" class="btn" data-jamnewok="1" style="padding:5px 12px;">✔ Anlegen &amp; verschieben</button><button type="button" class="btn btn-secondary" data-jamnewcancel="1" style="padding:5px 12px;">Abbrechen</button></div>`;
+      const okN = listEl.querySelector('[data-jamnewok]');
+      if (okN) okN.addEventListener('click', () => {
+        const inp = document.getElementById('jamNewFolderIn'); const nn = fldNorm(inp ? inp.value : '');
+        const all3 = getSavedJamPatterns();
+        if (nn && all3[jamNewFolderName]) { all3[jamNewFolderName].folder = nn; try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all3)); } catch (e) {} showToast(`🗂 Neuer Ordner „${nn}“ – Beat ist drin.`); }
+        jamNewFolderName = null; renderJamSavedList();
+      });
+      const ccN = listEl.querySelector('[data-jamnewcancel]');
+      if (ccN) ccN.addEventListener('click', () => { jamNewFolderName = null; renderJamSavedList(); });
+    }
+    chipDragBind(listEl, '.jam-chip', '.fld-drop', '.fld-drop-new',
+      (chip, zone) => { const nm = chip.dataset.name; const all4 = getSavedJamPatterns(); if (!all4[nm]) return; const f = zone.dataset.folder; if ((fldNorm(all4[nm].folder) || 'Ohne Ordner') === f) return; all4[nm].folder = f === 'Ohne Ordner' ? '' : fldNorm(f); try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all4)); } catch (e) {} renderJamSavedList(); showToast(`🗂 „${nm}“ ist jetzt in „${f}“.`); },
+      chip => { jamNewFolderName = chip.dataset.name; renderJamSavedList(); const inp = document.getElementById('jamNewFolderIn'); if (inp) inp.focus(); },
+      '.jam-delete-btn');
     listEl.querySelectorAll('.jam-load-btn').forEach(btn => {
-      btn.addEventListener('click', () => loadJamPattern(btn.dataset.name));
+      btn.addEventListener('click', () => { if (Date.now() - chipDragEndAt < 500) return; loadJamPattern(btn.dataset.name); });
     });
     listEl.querySelectorAll('.jam-delete-btn').forEach(btn => {
       btn.addEventListener('click', () => { if (confirm(`„${btn.dataset.name}“ wirklich löschen?`)) deleteJamPattern(btn.dataset.name); });
@@ -15791,6 +15864,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   // =================== Modul-übergreifend: Zwischenablage, Ordner, Umwandlungen ===================
   const CLIP_KEY = 'guitartrainer_clip';
   let progRenFolder = null, strumRenFolder = null, jamRenFolder = null;
+  let progNewFolderIdx = null, jamNewFolderName = null;
   function clipSet(chords, label) {
     try {
       sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: chords.map(c => [c.root.pc, c.type, c.name || '']), label: label || '', ts: Date.now() }));
@@ -16169,7 +16243,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-09-3';
+  const APP_VERSION = '2026-11-09-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16392,5 +16466,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57ebeaebf3336e0',t:'MTc5NDI0NzUxOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57ebeaebf3336e0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57f4f54f98a1391',t:'MTc5NDI1MzQ0Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57f4f54f98a1391',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
