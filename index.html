@@ -11268,7 +11268,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       if (cur && Array.isArray(cur.bars) && cur.bars.length) out.push({ label: 'Aktueller Beat', cur: true, data: cur });
     } catch (e) {}
     const saved = getSavedJamPatterns();
-    Object.keys(saved).sort((a, b) => a.localeCompare(b, 'de')).forEach(n => { const d = saved[n]; if (d && Array.isArray(d.bars) && d.bars.length) out.push({ label: n, data: d }); });
+    Object.keys(saved).sort((a, b) => a.localeCompare(b, 'de')).forEach(n => { const d = saved[n]; if (d && Array.isArray(d.bars) && d.bars.length) out.push({ label: n, data: d, folder: fldNorm(d.folder) }); });
     return out;
   }
   function jamSongChords(d) {
@@ -11284,7 +11284,11 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   function impBeatOptionsHtml() {
     let src = []; try { src = jamSongSources(); } catch (e) {}
     if (!src.length) return '';
-    return `<optgroup label="🥁 Meine Beats">${src.map((x, i) => `<option value="jb:${i}">${x.cur ? '🥁 Aktueller Beat' : homeEsc(x.label)} (${x.data.bars.length} Takte)</option>`).join('')}</optgroup>`;
+    let h = '';
+    src.forEach((x, i) => { if (x.cur) h += `<optgroup label="🥁 Meine Beats"><option value="jb:${i}">🥁 Aktueller Beat (${x.data.bars.length} Takte)</option></optgroup>`; });
+    const items = src.map((x, i) => ({ x, i })).filter(o => !o.x.cur).map(o => ({ folder: o.x.folder, i: o.i, x: o.x }));
+    h += fldGroups(items).map(([f, arr]) => `<optgroup label="🥁 ${f === 'Ohne Ordner' ? 'Meine Beats' : 'Beats · ' + homeEsc(f)}">${arr.map(o => `<option value="jb:${o.i}">${homeEsc(o.x.label)} (${o.x.data.bars.length} Takte)</option>`).join('')}</optgroup>`).join('');
+    return h;
   }
   function jamSrcName(src) { return src.cur ? 'Dein aktueller Beat' : '„' + src.label + '“'; }
   function strumImportJam(src) {
@@ -12097,7 +12101,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       <label style="font-size:0.88rem;">Takte pro Akkord:</label>
       <select id="strumBpc" style="${sel}">${[1, 2, 4].map(n => `<option value="${n}" ${n === (strumState.bpc || 1) ? 'selected' : ''}>${n}</option>`).join('')}</select>
     </div>
-    ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((q, i) => `<option value="${i}">${homeEsc(q.name || 'Ohne Namen')} (${q.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
+    ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.length ? progSavedOptsHtml(progState.saved, -1) : ''}${jb}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
     h += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + `<div style="flex:1 1 320px; min-width:260px;">` + gripStripShellHtml('strum') + scaleFretHtml('strum') + `</div><div style="flex:0 1 250px; min-width:225px;">` + scalePanelHtml('strum', (() => { const c = (strumChords() || [])[0]; return c ? c[0] : 0; })(), (() => { const c = (strumChords() || [])[0]; return c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta'; })(), (() => { const cs = (strumChords() || []).map(c => ({ root: c[0], type: c[1] })); const kd = cs.length ? progFindKey(cs) : null; if (kd) return scaleKeySugg(kd); return cs.length ? scaleChordSugg(cs[0].root, cs[0].type) : []; })()) + `</div></div>`;
     h += `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">💡 Diagramm gedrückt halten, ziehen, loslassen = Akkord umsortieren</div>`;
@@ -15514,7 +15518,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const n = chgState.chords.length, bpm = chgBpm();
     let h = `<div class="chg-card"><h3>🔁 Akkordwechsel-Trainer</h3>
       <div class="jam-hint" style="margin:0 0 6px;">Übe den Wechsel zwischen zwei bis 16 Akkorden im Takt.</div>
-      ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.filter(c => progDetect(c)).length >= 2, jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin:0 0 6px;"><select id="chgImport" style="${sel}"><option value="">📂 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft || progState.saved.length ? `<optgroup label="✍️ Meine Akkordfolgen">` : ''}${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.map((p, i) => `<option value="${i}">${homeEsc(p.name || 'Ohne Namen')} (${p.chords.length})</option>`).join('')}${hasDraft || progState.saved.length ? '</optgroup>' : ''}${jb}</select></div>`; })()}
+      ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.filter(c => progDetect(c)).length >= 2, jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin:0 0 6px;"><select id="chgImport" style="${sel}"><option value="">📂 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.length ? progSavedOptsHtml(progState.saved, -1) : ''}${jb}</select></div>`; })()}
       <div class="row" style="flex-wrap:wrap; gap:6px;">${CHG_QUICK.map(q => `<button type="button" class="strum-chip" data-chgq="${q}">${q.split(' ').join(q.split(' ').length === 2 ? ' ↔ ' : ' → ')}</button>`).join('')}</div>
       <div class="chg-chords ${n > 6 ? 'many' : ''}">${chgState.chords.map((c, i) => `<button type="button" class="strum-chip chg-grip" data-chgdrag="${i}" title="Gedrückt halten und ziehen zum Umsortieren" aria-label="Akkord ${i + 1} verschieben">⠿</button><input type="text" data-chgi="${i}" value="${homeEsc(c)}" aria-label="Akkord ${i + 1}">${n > 2 ? `<button type="button" class="strum-chip" data-chgdel="${i}" title="Akkord entfernen">✕</button>` : ''}${i < n - 1 ? '<span>→</span>' : ''}`).join('')}
         ${n < 16 ? `<button type="button" class="strum-chip" id="chgAdd">＋ Akkord</button>` : ''}</div>
@@ -15943,7 +15947,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   function progSavedOptsHtml(saved, selI) {
     const idx = saved.map((p, i) => i);
     return fldGroups(idx.map(i => ({ folder: saved[i].folder, i })))
-      .map(([f, arr]) => '<optgroup label="' + homeEsc(f) + '">' + arr.map(x => '<option value="' + x.i + '"' + (x.i === selI ? ' selected' : '') + '>' + homeEsc(saved[x.i].name || 'Ohne Namen') + ' (' + saved[x.i].chords.length + ')</option>').join('') + '</optgroup>').join('');
+      .map(([f, arr]) => '<optgroup label="✍️ ' + (f === 'Ohne Ordner' ? 'Meine Akkordfolgen' : 'Meine Akkordfolgen · ' + homeEsc(f)) + '">' + arr.map(x => '<option value="' + x.i + '"' + (x.i === selI ? ' selected' : '') + '>' + homeEsc(saved[x.i].name || 'Ohne Namen') + ' (' + saved[x.i].chords.length + ')</option>').join('') + '</optgroup>').join('');
   }
   function strumMineOptgroups(list, curId) {
     let mine = list.filter(x => x.level === 0);
@@ -16281,7 +16285,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-10-1';
+  const APP_VERSION = '2026-11-10-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16504,5 +16508,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5864d718c943a73',t:'MTc5NDMyNjc2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5864d718c943a73',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a586798bbd71cbe0',t:'MTc5NDMyODU3Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a586798bbd71cbe0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
