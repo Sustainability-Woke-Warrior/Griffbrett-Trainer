@@ -5986,7 +5986,10 @@
     if (!progState.saved.length) {
       h += `<div style="font-size:.85rem; color:var(--text-muted); margin-top:4px;">Noch keine gespeicherten Folgen – oben Name (und Ordner) eintragen und 💾 Speichern tippen.</div>`;
     } else {
-      h += fldGroups(progState.saved.map((p, i) => ({ folder: p.folder, i }))).map(([f, arr]) => `<div class="fld-drop" data-folder="${homeEsc(f)}" style="font-weight:700; font-size:.9rem; margin:10px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div><div style="display:flex; gap:8px; flex-wrap:wrap;">` + arr.map(x => { const p = progState.saved[x.i]; const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' '); return `<span class="prog-chip" data-i="${x.i}" style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;"><button type="button" data-act="openchip" data-i="${x.i}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(p.name || 'Ohne Namen')} <small style="color:var(--text-muted);">${homeEsc(names)}</small></button><button type="button" class="btn btn-secondary" data-act="delchip" data-i="${x.i}" title="Folge löschen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✕</button></span>`; }).join('') + `</div>`).join('');
+      const pf = fldFilterGroups(progState.saved.map((p, i) => ({ folder: p.folder, i })), progFolderFilter); progFolderFilter = pf.cur;
+      h += `<div class="prog-row" style="margin-top:8px;">${fldSelectHtml('progFolderSel', pf.all, pf.cur)}</div>`;
+      if (progRenameIdx !== null && progState.saved[progRenameIdx]) h += `<div class="prog-row" style="margin-top:8px; gap:8px;"><input type="text" id="progRenameIn" value="${homeEsc(progState.saved[progRenameIdx].name || '')}" placeholder="Neuer Name" maxlength="40" style="flex:1; min-width:140px;"><button type="button" class="btn" data-act="renameok">✔ Umbenennen</button><button type="button" class="btn btn-secondary" data-act="renamecancel">Abbrechen</button></div>`;
+      h += pf.groups.map(([f, arr]) => `<div class="fld-drop" data-folder="${homeEsc(f)}" style="font-weight:700; font-size:.9rem; margin:10px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div><div style="display:flex; gap:8px; flex-wrap:wrap;">` + arr.map(x => { const p = progState.saved[x.i]; const names = p.chords.map(c => { const d = progDetect(c); return d ? progChordShort(d) : ''; }).filter(Boolean).join(' '); return `<span class="prog-chip" data-i="${x.i}" style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;"><button type="button" data-act="openchip" data-i="${x.i}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(p.name || 'Ohne Namen')} <small style="color:var(--text-muted);">${homeEsc(names)}</small></button><button type="button" class="btn btn-secondary" data-act="renchip" data-i="${x.i}" title="Folge umbenennen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✏️</button><button type="button" class="btn btn-secondary" data-act="delchip" data-i="${x.i}" title="Folge löschen" style="padding:2px 8px; font-size:.75rem; border-radius:999px;">✕</button></span>`; }).join('') + `</div>`).join('');
     }
     if (progState.saved.length && progNewFolderIdx === null) h += `<div class="fld-drop-new">＋ Neuer Ordner – Folge hierher ziehen</div>`;
     if (progNewFolderIdx !== null && progState.saved[progNewFolderIdx]) h += `<div class="prog-row" style="margin-top:8px; gap:8px;"><input type="text" id="progNewFolderIn" placeholder="Name für den neuen Ordner" maxlength="24" style="flex:1; min-width:140px;"><button type="button" class="btn" data-act="newfolderok">✔ Anlegen &amp; verschieben</button><button type="button" class="btn btn-secondary" data-act="newfoldercancel">Abbrechen</button></div>`;
@@ -6060,7 +6063,7 @@
     { const cl = clipGet(); const twc = twColsLoad();
       h += '<div class="prog-row" style="margin-top:12px;"><strong>📥 Übernehmen aus anderen Modulen</strong></div>' +
         '<div class="prog-row"><button type="button" class="btn btn-secondary" data-act="clipin"' + (cl ? '' : ' disabled') + '>📎 Aus Zwischenablage' + (cl ? ': ' + homeEsc((cl.label || '').slice(0, 30)) : '') + '</button></div><div style="font-size:.8rem; opacity:.8;">📎 = kurz gemerkt, solange die App offen ist · 💾 = dauerhaft gespeichert mit Name und Ordner.</div>';
-      if (twc.length) h += fldGroups(twc).map(([f, arr]) => '<div class="prog-row" style="font-size:.85rem; opacity:.9; margin-top:6px;">🗂 ' + homeEsc(f) + '</div>' + arr.map(c => '<div class="prog-row"><span style="flex:1;">' + homeEsc(c.name) + ' (' + (c.chords || []).length + ')</span><button type="button" class="btn btn-secondary" data-act="twcolin" data-id="' + c.id + '">📥 In den Entwurf</button></div>').join('')).join('');
+      if (twc.length) { const twf = fldFilterGroups(twc, twFolderFilter); twFolderFilter = twf.cur; h += '<div class="prog-row" style="margin-top:6px;">' + fldSelectHtml('progTwFolderSel', twf.all, twf.cur) + '</div>'; h += twf.groups.map(([f, arr]) => '<div class="prog-row" style="font-size:.85rem; opacity:.9; margin-top:6px;">🗂 ' + homeEsc(f) + '</div>' + arr.map(c => '<div class="prog-row"><span style="flex:1;">' + homeEsc(c.name) + ' (' + (c.chords || []).length + ')</span><button type="button" class="btn btn-secondary" data-act="twcolin" data-id="' + c.id + '">📥 In den Entwurf</button></div>').join('')).join(''); }
     }
     body.innerHTML = h;
     bindScalePanel(body);
@@ -6068,7 +6071,7 @@
     chipDragBind(body, '.prog-chip', '.fld-drop', '.fld-drop-new',
       (chip, zone) => { const i = +chip.dataset.i; const p = progState.saved[i]; if (!p) return; const f = zone.dataset.folder; if ((fldNorm(p.folder) || 'Ohne Ordner') === f) return; p.folder = f === 'Ohne Ordner' ? '' : fldNorm(f); progSave(); progRender(); showToast(`🗂 „${p.name}“ ist jetzt in „${f}“.`); },
       chip => { progNewFolderIdx = +chip.dataset.i; progRender(); const inp = document.getElementById('progNewFolderIn'); if (inp) inp.focus(); },
-      '[data-act="delchip"]');
+      '[data-act="delchip"], [data-act="renchip"]');
     progMarkPlaying();
   }
   // ---------- Kurze Notenzeile unter jedem Akkordbild ----------
@@ -6618,6 +6621,9 @@
         progNewFolderIdx = null;
       }
       else if (act === 'newfoldercancel') { progNewFolderIdx = null; }
+      else if (act === 'renchip') { const hb = e.target.closest('[data-i]'); progRenameIdx = hb ? +hb.dataset.i : null; setTimeout(() => { const ri = document.getElementById('progRenameIn'); if (ri) { ri.focus(); ri.select(); } }, 60); }
+      else if (act === 'renameok') { const inp = document.getElementById('progRenameIn'); const nn = inp ? inp.value.trim().slice(0, 40) : ''; if (nn && progState.saved[progRenameIdx]) { progState.saved[progRenameIdx].name = nn; if (progSelIdx === progRenameIdx) progState.draft.name = nn; showToast(`✏️ Folge heißt jetzt „${nn}“.`); } progRenameIdx = null; }
+      else if (act === 'renamecancel') { progRenameIdx = null; }
       else if (act === 'delchip') {
         const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
         const p = progState.saved[i];
@@ -6641,7 +6647,9 @@
   });
   document.addEventListener('change', e => {
     if (!e.target || !progState) return;
-    if (e.target.id === 'progCount') {
+    if (e.target.id === 'progFolderSel') { progFolderFilter = e.target.value; progRender(); }
+    else if (e.target.id === 'progTwFolderSel') { twFolderFilter = e.target.value; progRender(); }
+    else if (e.target.id === 'progCount') {
       const n = parseInt(e.target.value, 10) || 4;
       const ch = progState.draft.chords;
       while (ch.length < n) ch.push(progEmptyChord());
@@ -9524,32 +9532,42 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       listEl.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Noch keine gespeicherten Beats – oben Name (und Ordner) eintragen und „Speichern“ tippen.</div>`;
       return;
     }
-    listEl.innerHTML = fldGroups(entries).map(([f, arr]) => `
-      <div class="fld-drop" data-folder="${homeEsc(f)}" style="font-weight:700; font-size:.9rem; margin:12px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div>
+    const jf = fldFilterGroups(entries, jamFolderFilter); jamFolderFilter = jf.cur;
+    listEl.innerHTML = `<div class="row" style="gap:8px; align-items:center; margin-top:8px;">${fldSelectHtml('jamFolderSel', jf.all, jf.cur)}</div>` +
+      (jamRenameName !== null && all[jamRenameName] ? `<div class="row" style="gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="jamRenameIn" value="${homeEsc(jamRenameName)}" placeholder="Neuer Name" maxlength="60" style="flex:1; min-width:140px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:5px 8px;"><button type="button" class="btn" data-jamrenameok="1" style="padding:5px 12px;">✔ Umbenennen</button><button type="button" class="btn btn-secondary" data-jamrenamecancel="1" style="padding:5px 12px;">Abbrechen</button></div>` : '') +
+      jf.groups.map(([f, arr]) => `
+      <div style="font-weight:700; font-size:.9rem; margin:12px 0 6px;">${f === 'Ohne Ordner' ? '📄' : '🗂'} ${homeEsc(f)}</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">${arr.map(e => `
         <span class="jam-chip" data-name="${homeEsc(e.name)}" style="display:inline-flex; align-items:center; gap:8px; background:var(--panel-overlay); border:1px solid var(--card-border); border-radius:999px; padding:6px 6px 6px 14px;">
           <button type="button" class="jam-load-btn" data-name="${homeEsc(e.name)}" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0; text-align:left;">${homeEsc(e.name)} <small style="color:var(--text-muted);">${(e.pat.bars || []).length} Takte · ${Math.round(e.pat.bpm || 0)} BPM</small></button>
+          <button type="button" class="jam-rename-btn" data-name="${homeEsc(e.name)}" title="Beat umbenennen" style="background:var(--card-border); border:none; color:var(--text-color); width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:.72rem; line-height:1;">✏️</button>
           <button type="button" class="jam-delete-btn" data-name="${homeEsc(e.name)}" title="Beat löschen" style="background:var(--card-border); border:none; color:var(--text-color); width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:.72rem; line-height:1;">✕</button>
         </span>`).join('')}</div>`).join('');
-    if (entries.length && jamNewFolderName === null) listEl.innerHTML += `<div class="fld-drop-new">＋ Neuer Ordner – Beat hierher ziehen</div>`;
-    if (jamNewFolderName !== null && all[jamNewFolderName]) {
-      listEl.innerHTML += `<div class="row" style="gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="jamNewFolderIn" placeholder="Name für den neuen Ordner" maxlength="24" style="flex:1; min-width:140px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:5px 8px;"><button type="button" class="btn" data-jamnewok="1" style="padding:5px 12px;">✔ Anlegen &amp; verschieben</button><button type="button" class="btn btn-secondary" data-jamnewcancel="1" style="padding:5px 12px;">Abbrechen</button></div>`;
-      const okN = listEl.querySelector('[data-jamnewok]');
-      if (okN) okN.addEventListener('click', () => {
-        const inp = document.getElementById('jamNewFolderIn'); const nn = fldNorm(inp ? inp.value : '');
-        const all3 = getSavedJamPatterns();
-        if (nn && all3[jamNewFolderName]) { all3[jamNewFolderName].folder = nn; try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all3)); } catch (e) {} showToast(`🗂 Neuer Ordner „${nn}“ – Beat ist drin.`); }
-        jamNewFolderName = null; renderJamSavedList();
-      });
-      const ccN = listEl.querySelector('[data-jamnewcancel]');
-      if (ccN) ccN.addEventListener('click', () => { jamNewFolderName = null; renderJamSavedList(); });
-    }
-    chipDragBind(listEl, '.jam-chip', '.fld-drop', '.fld-drop-new',
-      (chip, zone) => { const nm = chip.dataset.name; const all4 = getSavedJamPatterns(); if (!all4[nm]) return; const f = zone.dataset.folder; if ((fldNorm(all4[nm].folder) || 'Ohne Ordner') === f) return; all4[nm].folder = f === 'Ohne Ordner' ? '' : fldNorm(f); try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all4)); } catch (e) {} renderJamSavedList(); showToast(`🗂 „${nm}“ ist jetzt in „${f}“.`); },
-      chip => { jamNewFolderName = chip.dataset.name; renderJamSavedList(); const inp = document.getElementById('jamNewFolderIn'); if (inp) inp.focus(); },
-      '.jam-delete-btn');
+    const fSel = document.getElementById('jamFolderSel');
+    if (fSel) fSel.addEventListener('change', () => { jamFolderFilter = fSel.value; jamRenameName = null; renderJamSavedList(); });
+    const rnOk = listEl.querySelector('[data-jamrenameok]');
+    if (rnOk) rnOk.addEventListener('click', () => {
+      const inp = document.getElementById('jamRenameIn'); const nn = inp ? inp.value.trim().slice(0, 60) : ''; const old = jamRenameName;
+      if (!old) return;
+      if (!nn) { showToast('Bitte einen Namen eintragen.'); return; }
+      if (nn !== old) {
+        const all5 = getSavedJamPatterns();
+        if (!all5[old]) { jamRenameName = null; renderJamSavedList(); return; }
+        if (all5[nn]) { showToast('⚠️ Einen Beat mit diesem Namen gibt es schon.'); return; }
+        all5[nn] = all5[old]; delete all5[old];
+        try { localStorage.setItem(JAM_STORAGE_KEY, JSON.stringify(all5)); } catch (e) {}
+        const ni = document.getElementById('jamSaveNameInput'); if (ni && ni.value.trim() === old) ni.value = nn;
+        showToast(`✏️ Beat heißt jetzt „${nn}“.`);
+      }
+      jamRenameName = null; renderJamSavedList();
+    });
+    const rnCc = listEl.querySelector('[data-jamrenamecancel]');
+    if (rnCc) rnCc.addEventListener('click', () => { jamRenameName = null; renderJamSavedList(); });
+    listEl.querySelectorAll('.jam-rename-btn').forEach(btn => {
+      btn.addEventListener('click', () => { jamRenameName = btn.dataset.name; renderJamSavedList(); const inp = document.getElementById('jamRenameIn'); if (inp) { inp.focus(); inp.select(); } });
+    });
     listEl.querySelectorAll('.jam-load-btn').forEach(btn => {
-      btn.addEventListener('click', () => { if (Date.now() - chipDragEndAt < 500) return; loadJamPattern(btn.dataset.name); });
+      btn.addEventListener('click', () => loadJamPattern(btn.dataset.name));
     });
     listEl.querySelectorAll('.jam-delete-btn').forEach(btn => {
       btn.addEventListener('click', () => { if (confirm(`„${btn.dataset.name}“ wirklich löschen?`)) deleteJamPattern(btn.dataset.name); });
@@ -12037,6 +12055,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         ${[1, 2, 3].map(l => `<optgroup label="${stars(l)} ${['', 'Einfach', 'Mittel', 'Fortgeschritten'][l]}">${list.filter(x => x.level === l).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${x.name} (${x.sig})</option>`).join('')}</optgroup>`).join('')}
         ${list.some(x => x.level === 4) ? `<optgroup label="🎵 Stile mit Akkordfolgen">${list.filter(x => x.level === 4).map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${homeEsc(x.name)} (${x.sig})</option>`).join('')}</optgroup>` : ''}
       </select>
+      ${(() => { const mine = list.filter(x => x.level === 0); if (!mine.length) return ''; const sf = fldFilterGroups(mine, strumFolderFilter); strumFolderFilter = sf.cur; return fldSelectHtml('strumFolderSel', sf.all, sf.cur); })()}
       ${strumEdit || !list.some(x => x.level === 0) ? '' : `<button type="button" class="strum-chip" id="strumRenFldBtn" title="Ordner umbenennen">🗂 Ordner</button>`}
       ${!strumEdit && strumRenFolder && list.some(x => x.level === 0) ? fldGroups(strumCustomList()).map(([f]) => f === strumRenFolder ? `<input type="text" id="strumRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" maxlength="24" style="width:110px; ${sel}"><button type="button" class="strum-chip" id="strumRenOk">✔</button>` : `<button type="button" class="strum-chip" data-srenf="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="strum-chip" id="strumRenEnd">Fertig</button>` : ''}
       ${strumEdit ? '' : `<button type="button" class="strum-chip" id="strumFavBtn" title="Als Favorit merken" style="font-size:1.1rem;">${strumIsFav(p.id) ? '★' : '☆'}</button>
@@ -12110,6 +12129,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   function bindStrumEvents() {
     const root = document.getElementById('strumRoot');
     const restart = () => { if (strumPlaying) { stopStrum(); startStrum(); } };
+    const fsSel = document.getElementById('strumFolderSel');
+    if (fsSel) fsSel.addEventListener('change', () => { strumFolderFilter = fsSel.value; renderStrum(); });
     root.querySelectorAll('[data-skind]').forEach(b => b.addEventListener('click', () => {
       stopStrum();
       strumEdit = null;
@@ -15865,6 +15886,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   const CLIP_KEY = 'guitartrainer_clip';
   let progRenFolder = null, strumRenFolder = null, jamRenFolder = null;
   let progNewFolderIdx = null, jamNewFolderName = null;
+  let progFolderFilter = '__all__', progRenameIdx = null, jamFolderFilter = '__all__', jamRenameName = null, twFolderFilter = '__all__', twProgFolderFilter = '__all__', strumFolderFilter = '__all__';
   function clipSet(chords, label) {
     try {
       sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: chords.map(c => [c.root.pc, c.type, c.name || '']), label: label || '', ts: Date.now() }));
@@ -15884,6 +15906,14 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const m = new Map();
     items.forEach(it => { const f = fldNorm(it.folder) || 'Ohne Ordner'; if (!m.has(f)) m.set(f, []); m.get(f).push(it); });
     return [...m.entries()].sort((a, b) => a[0] === 'Ohne Ordner' ? 1 : b[0] === 'Ohne Ordner' ? -1 : a[0].localeCompare(b[0], 'de'));
+  }
+  function fldFilterGroups(items, cur) {
+    const gs = fldGroups(items);
+    if (cur !== '__all__' && !gs.some(([f]) => f === cur)) cur = '__all__';
+    return { cur, all: gs, groups: cur === '__all__' ? gs : gs.filter(([f]) => f === cur) };
+  }
+  function fldSelectHtml(id, groups, cur) {
+    return '<label style="display:inline-flex; gap:6px; align-items:center; font-size:.85rem; font-weight:600;">Ordner zeigen: <select id="' + id + '" style="background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:4px 6px; font-size:.85rem; max-width:60vw;"><option value="__all__"' + (cur === '__all__' ? ' selected' : '') + '>Alle Ordner</option>' + groups.map(([f]) => '<option value="' + homeEsc(f) + '"' + (cur === f ? ' selected' : '') + '>' + homeEsc(f) + '</option>').join('') + '</select></label>';
   }
   function allFolderNames() {
     const s = new Set();
@@ -15916,7 +15946,9 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       .map(([f, arr]) => '<optgroup label="' + homeEsc(f) + '">' + arr.map(x => '<option value="' + x.i + '"' + (x.i === selI ? ' selected' : '') + '>' + homeEsc(saved[x.i].name || 'Ohne Namen') + ' (' + saved[x.i].chords.length + ')</option>').join('') + '</optgroup>').join('');
   }
   function strumMineOptgroups(list, curId) {
-    const mine = list.filter(x => x.level === 0);
+    let mine = list.filter(x => x.level === 0);
+    if (!mine.length) return '';
+    if (typeof strumFolderFilter !== 'undefined' && strumFolderFilter !== '__all__') mine = mine.filter(x => (fldNorm(x.folder) || 'Ohne Ordner') === strumFolderFilter);
     if (!mine.length) return '';
     return fldGroups(mine).map(([f, items]) => '<optgroup label="✏️ ' + (f === 'Ohne Ordner' ? 'Meine Muster' : 'Meine Muster · ' + homeEsc(f)) + '">' + items.map(x => '<option value="' + x.id + '"' + (x.id === curId ? ' selected' : '') + '>' + homeEsc(x.name) + ' (' + x.sig + ')</option>').join('') + '</optgroup>').join('');
   }
@@ -16138,7 +16170,9 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const cols = twColsLoad();
     if (cols.length) {
       h += '<details class="theory-card tw-fold" id="twFoldCols"' + (twFoldCols ? ' open' : '') + '><summary>📚 Gespeicherte Sammlungen<span class="tw-fold-cnt">' + cols.length + (cols.length === 1 ? ' Eintrag' : ' Einträge') + ' · antippen</span></summary>';
-      fldGroups(cols).forEach(([f, arr]) => {
+      const tf = fldFilterGroups(cols, twFolderFilter); twFolderFilter = tf.cur;
+      h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 2px;">' + fldSelectHtml('twFolderSel', tf.all, tf.cur) + '</div>';
+      tf.groups.forEach(([f, arr]) => {
         h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 4px;"><strong style="font-size:.85rem;">🗂 ' + homeEsc(f) + '</strong>' +
           (twRenFolder === f
             ? '<input type="text" id="twRenIn" value="' + homeEsc(f === 'Ohne Ordner' ? '' : f) + '" placeholder="Neuer Name" maxlength="24" style="flex:1; min-width:110px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:8px; padding:6px;"><button type="button" class="theory-chip" data-twrenok="1">✔</button><button type="button" class="theory-chip" data-twrenc="1">✕</button>'
@@ -16160,7 +16194,9 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       const ps = progLoad();
       if (ps.saved && ps.saved.length) {
         h += '<details class="theory-card tw-fold" id="twFoldProg"' + (twFoldProg ? ' open' : '') + '><summary>📥 Deine Akkordfolgen aus dem Folgen-Modul<span class="tw-fold-cnt">' + ps.saved.length + (ps.saved.length === 1 ? ' Folge' : ' Folgen') + ' · antippen</span></summary>';
-        fldGroups(ps.saved).forEach(([f, arr]) => {
+        const tf2 = fldFilterGroups(ps.saved, twProgFolderFilter); twProgFolderFilter = tf2.cur;
+        h += '<div class="row" style="gap:6px; align-items:center; margin:8px 0 2px;">' + fldSelectHtml('twProgFolderSel', tf2.all, tf2.cur) + '</div>';
+        tf2.groups.forEach(([f, arr]) => {
           h += '<div style="font-size:.85rem; margin:8px 0 4px;"><strong>🗂 ' + homeEsc(f) + '</strong></div>';
           arr.forEach(p => {
             h += '<div class="th-prog-row"><div><strong>' + homeEsc(p.name || 'Ohne Namen') + '</strong><br><span>' + p.chords.length + ' Akkorde</span></div>' +
@@ -16204,6 +16240,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       c.chords.forEach(ch => { const m = fam2.find(f => f.root.pc === ch.root.pc && f.type === ch.type); if (m) twPick.add(m.i); });
       renderTwModule(); showToast('📥 Zwischenablage in die Sammlung geholt (passende Akkorde der Tonart).');
     });
+    on('twFolderSel', e => { twFolderFilter = e.target.value; renderTwModule(); }, 'change');
+    on('twProgFolderSel', e => { twProgFolderFilter = e.target.value; renderTwModule(); }, 'change');
     root.querySelectorAll('[data-twrenf]').forEach(b => b.addEventListener('click', () => { twRenFolder = b.dataset.twrenf; renderTwModule(); }));
     root.querySelectorAll('[data-twrenc]').forEach(b => b.addEventListener('click', () => { twRenFolder = null; renderTwModule(); }));
     root.querySelectorAll('[data-twrenok]').forEach(b => b.addEventListener('click', () => {
@@ -16243,7 +16281,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-09-4';
+  const APP_VERSION = '2026-11-10-1';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16466,5 +16504,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a57f4f54f98a1391',t:'MTc5NDI1MzQ0Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a57f4f54f98a1391',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5864d718c943a73',t:'MTc5NDMyNjc2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5864d718c943a73',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
