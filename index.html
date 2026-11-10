@@ -1475,6 +1475,8 @@
     .pt-room { position: fixed; inset: 0; z-index: 3050; display: none; background: #e5533d; }
     .pt-room.open { display: block; }
     .pt-room svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #ptChip { position: fixed; z-index: 900; display: none; align-items: center; gap: 8px; background: rgba(30,20,40,.85); color: #fff7e0; border: 1px solid rgba(255,247,224,.35); border-radius: 999px; padding: 8px 12px; font-weight: 700; font-size: .95rem; box-shadow: 0 4px 14px rgba(0,0,0,.35); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+    #ptChip button { background: #fff7e0; color: #5b2410; border: none; border-radius: 999px; width: 30px; height: 30px; font-size: .85rem; cursor: pointer; flex: none; }
     .pt-room-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; padding: 12px 10px calc(12px + env(safe-area-inset-bottom, 0px)); background: rgba(60,20,10,.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: transform .25s ease, opacity .25s ease; }
     .pt-room-bar.hide { transform: translateY(110%); opacity: 0; }
     .pt-room-bar button { font: inherit; font-weight: 700; font-size: 1rem; color: #5b2410; background: #fff7e0; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(40,10,5,.25); }
@@ -7023,6 +7025,10 @@
     // Obere Zeile: nur das Wichtigste (Start, Tempo, Taktart, Stil, Loop)
     html += `<div class="row" style="flex-wrap:wrap; gap:14px;">`;
     html += `<button class="btn" id="jamPlayBtn">${jam.playing ? '⏸️ Stop' : '▶️ Start'}</button>`;
+    html += `<div class="toggle-group"><label style="font-weight:600;">Kit:</label>
+      <select id="jamKitSelectTop" style="${sel}">
+        ${JAM_KITS.map(([v, l]) => `<option value="${v}" ${(jam.kit || 'standard') === v ? 'selected' : ''}>${l}</option>`).join('')}
+      </select></div>`;
     html += `<div class="toggle-group"><label style="font-weight:600;">Tempo:</label>
       <input type="range" id="jamTempoRange" min="60" max="160" step="1" value="${jam.bpm}" style="width:120px;">
       <span id="jamTempoLabel" style="font-size:0.8rem; color:var(--text-muted); min-width:60px;">${jam.bpm} BPM</span></div>`;
@@ -7584,6 +7590,13 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
     const kitSel = document.getElementById('jamKitSelect');
     if (kitSel) kitSel.addEventListener('change', (e) => {
+      jam.kit = jamValidKit(e.target.value);
+      updateJamKitLive();
+      scheduleJamAutosave();
+      renderJamModule();
+    });
+    const kitTop = document.getElementById('jamKitSelectTop');
+    if (kitTop) kitTop.addEventListener('change', (e) => {
       jam.kit = jamValidKit(e.target.value);
       updateJamKitLive();
       scheduleJamAutosave();
@@ -11771,6 +11784,49 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     for (let i = 0; i < b.length - 1; i++) out.push([b[i], b[i + 1]]);
     return out;
   }
+  // 🎼 Notenschrift zum Anschlag: Akkord steht als Noten-Block im Violinschlüssel, Hals zeigt die Schlagrichtung
+  function renderStrumNotation(chord, p, a, b) {
+    const steps = strumSteps(p), labels = strumCountLabels(p), frets = strumFingering(chord);
+    const rootName = jamRootName(chord[0], chord[1]);
+    const useFlats = rootName.includes('♭') || (chord[0] === 5 && !/^m|moll|dim/.test(chord[1]));
+    const LET_S = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6], ACC_S = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
+    const LET_F = [0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6], ACC_F = [0, -1, 0, -1, 0, 0, -1, 0, -1, 0, -1, 0];
+    const s16 = p.unit === 4 ? 1 : 2;
+    const L = 92, colW = 38, m = b - a, W = L + m * colW + 26, st0 = 34, gap = 10, yBot = st0 + 4 * gap, H = yBot + 36;
+    const x = j => L + (j - a) * colW + colW / 2;
+    const noteY = midi => { const w = midi + 12, pc = w % 12, oct = Math.floor(w / 12) - 1; const li = useFlats ? LET_F[pc] : LET_S[pc], acc = useFlats ? ACC_F[pc] : ACC_S[pc]; const di = oct * 7 + li; return { y: yBot - (di - 30) * (gap / 2), di, acc }; };
+    let g = '';
+    for (let i = a; i < b; i++) g += `<rect class="strum-col" data-sstep="${i}" x="${L + (i - a) * colW + 1}" y="4" width="${colW - 2}" height="${H - 8}" rx="6"></rect>`;
+    for (let k = 0; k < 5; k++) g += `<line x1="8" x2="${W - 8}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="sn-line"/>`;
+    const cy0 = st0, gl = st0 + 3 * gap;
+    g += `<path class="sn-clef-p" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
+    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="sn-fill"/><path class="sn-clef-p" d="M25 ${yBot + 19} C27 ${yBot + 22}, 29 ${yBot + 22}, 29 ${yBot + 20}"/>`;
+    const [num, den] = p.sig.split('/');
+    g += `<text x="68" y="${st0 + 18}" class="sn-ts">${num}</text><text x="68" y="${st0 + 38}" class="sn-ts">${den}</text>`;
+    for (let i = a; i < b; i++) {
+      const t = steps[i], cx = x(i);
+      if (t === '-') { g += `<path d="M${cx - 2} ${st0 + 4} l6 7 l-5 6 l6 7 c-5 -2 -9 1 -4 6 c-8 -3 -6 -10 1 -7 l-6 -7 l5 -5 z" class="sn-fill"/>`; continue; }
+      let pitches = [];
+      if (t === 'D' || t === 'd' || t === 'U' || t === 'u' || t === 'x') pitches = frets.map((f, si) => f >= 0 ? STRUM_OPEN[si] + f : null).filter(v => v !== null);
+      else if (t === 'b' || t === 'B') { const si = t === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets); if (si >= 0 && frets[si] >= 0) pitches = [STRUM_OPEN[si] + frets[si]]; }
+      if (!pitches.length) continue;
+      const heads = pitches.map(midi => ({ midi, ...noteY(midi) })).sort((u, v) => u.di - v.di);
+      heads.forEach(h => {
+        for (let ly = yBot + gap; ly <= h.y + 0.1; ly += gap) g += `<line x1="${cx - 9}" x2="${cx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
+        for (let ly = st0 - gap; ly >= h.y - 0.1; ly -= gap) g += `<line x1="${cx - 9}" x2="${cx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
+        if (t === 'x') g += `<path d="M${cx - 5} ${h.y - 4} L${cx + 5} ${h.y + 4} M${cx + 5} ${h.y - 4} L${cx - 5} ${h.y + 4}" class="sn-stroke"/>`;
+        else g += `<ellipse cx="${cx}" cy="${h.y}" rx="6" ry="4.3" transform="rotate(-20 ${cx} ${h.y})" class="sn-fill"/>`;
+        if (h.acc) g += `<text x="${cx - 19}" y="${h.y + 5}" class="sn-acc">${h.acc > 0 ? '♯' : '♭'}</text>`;
+      });
+      const top = Math.min(...heads.map(h => h.y)), bot = Math.max(...heads.map(h => h.y));
+      const up = (t === 'D' || t === 'd' || t === 'b' || t === 'B');
+      if (up) { const sx = cx + 5.5; g += `<line x1="${sx}" y1="${top}" x2="${sx}" y2="${top - 30}" class="sn-stroke"/>`; if (s16 < 4) g += `<path d="M${sx} ${top - 30} q9 3 7 13 q-1 -7 -7 -8" class="sn-fill"/>`; if (s16 <= 1) g += `<path d="M${sx} ${top - 21} q9 3 7 13 q-1 -7 -7 -8" class="sn-fill"/>`; }
+      else { const sx = cx - 5.5; g += `<line x1="${sx}" y1="${bot}" x2="${sx}" y2="${bot + 30}" class="sn-stroke"/>`; if (s16 < 4) g += `<path d="M${sx} ${bot + 30} q9 -3 7 -13 q-1 7 -7 8" class="sn-fill"/>`; if (s16 <= 1) g += `<path d="M${sx} ${bot + 21} q9 -3 7 -13 q-1 7 -7 8" class="sn-fill"/>`; }
+      if (t === 'D' || t === 'U') g += `<text x="${cx}" y="${st0 - 14}" class="sn-acc" text-anchor="middle" style="font-size:13px;">&gt;</text>`;
+      g += `<text x="${cx}" y="${H - 8}" class="sn-fing" text-anchor="middle">${labels[i] || ''}</text>`;
+    }
+    return `<svg class="strum-notation" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:${W}px; height:auto; display:block;" role="img" aria-label="Notenschrift des Anschlagmusters">${g}</svg>`;
+  }
   function renderStrumGrid(chord, nxt) {
     const p = strumPattern(), steps = strumSteps(p), labels = strumCountLabels(p);
     if (p.kind === 'pick') {
@@ -11792,6 +11848,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     let h = compact ? '<div class="strum-compact">' : '';
     ranges.forEach(([a, b], ri) => {
     const m = b - a;
+    if (p.kind === 'strum') h += renderStrumNotation(chord, p, a, b);
     h += `<div class="strum-grid" ${ri === 0 ? 'id="strumGrid"' : ''} style="grid-template-columns: ${lw}px repeat(${m}, minmax(${cellMin}px, 1fr));${compact ? ' min-width:0;' : ''}">`;
     h += `<div class="strum-cell lbl"></div>`;
     labels.slice(a, b).forEach((l, j) => { const i = a + j; h += `<div class="strum-cell cnt ${strumIsBeat(p, i) ? 'beat' : ''}">${l}</div>`; });
@@ -11868,7 +11925,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     if (!kd || kd.root == null) return [];
     const moll = kd.mode === 'moll';
     const rel = (kd.root + (moll ? 3 : 9)) % 12;
-    return [{ root: kd.root, type: moll ? 'moll' : 'dur' }, { root: kd.root, type: moll ? 'mollPenta' : 'durPenta' }, { root: rel, type: moll ? 'dur' : 'moll' }, { root: rel, type: moll ? 'durPenta' : 'mollPenta' }];
+    return [{ root: kd.root, type: moll ? 'moll' : 'dur' }, { root: kd.root, type: moll ? 'mollPenta' : 'durPenta' }, { root: rel, type: moll ? 'dur' : 'moll', par: true }, { root: rel, type: moll ? 'durPenta' : 'mollPenta', par: true }];
   }
   function scaleChordSugg(root, type) {
     const s = getJamScaleSuggestions(root, type) || [];
@@ -11880,23 +11937,27 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
   // 🎼 Sichtbare Skala mit Vorauswahl (Akkordfolgen, Akkordwechsel, Beat & Jam)
   const SCALE_PANEL_KEY = 'guitartrainer_scalepanel';
+  let chgSpOpen = false; // Wechsel-Trainer: Skala startet immer eingeklappt (erst Antippen öffnet sie)
   function scalePanelSaved() { try { return JSON.parse(localStorage.getItem(SCALE_PANEL_KEY) || '{}') || {}; } catch (e) { return {}; } }
   function scalePanelHtml(mod, defRoot, defType, sugg) {
     const sv = scalePanelSaved()[mod] || {};
     const ctlOpen = sv.ctl ? ' open' : '';
-    const r = sv.root != null ? sv.root : defRoot;
-    const t = SCALE_VIEW_TYPES[sv.type] ? sv.type : defType;
+    const auto = sv.auto !== false;
+    const r = auto ? defRoot : (sv.root != null ? sv.root : defRoot);
+    const t = auto ? (SCALE_VIEW_TYPES[defType] ? defType : 'durPenta') : (SCALE_VIEW_TYPES[sv.type] ? sv.type : defType);
+    const panelOpen = mod === 'chg' ? chgSpOpen : sv.open !== false;
     const selStyle = 'background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; padding:4px 6px;';
-    return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${sv.open === false ? '' : ' open'}><summary class="sum-head">🎼 Skala dazu anzeigen</summary>
+    return `<details class="scale-panel" id="sp_${mod}" style="margin-top:10px;"${panelOpen ? ' open' : ''}><summary class="sum-head">🎼 Skala dazu anzeigen</summary>
       <div style="margin-top:8px;">
-        <details id="spCtl_${mod}"${ctlOpen}><summary class="sum-head">🎛 Auswahl & Vorschläge</summary>
+        <div class="jam-improv-label">Passt zur Tonart – antippen zum Auswählen:</div>
+        <div id="spSugg_${mod}" style="margin:2px 0 6px;">${(sugg || []).map(sg => `<button type="button" class="theory-chip sp-sugg" data-root="${sg.root}" data-type="${sg.type}">${homeEsc(scaleSuggLabel(sg.root, sg.type))}${sg.par ? ' (Paralleltonart)' : ''}</button>`).join(' ')}</div>
+        <div style="margin:0 0 8px;"><button type="button" class="theory-chip" id="spAuto_${mod}">${auto ? '🎯 Auto: an – folgt der Tonart' : '🎯 Auto: aus – hier tippen zum Folgen der Tonart'}</button></div>
+        <details id="spCtl_${mod}"${ctlOpen}><summary class="sum-head">🎛 Eigene Auswahl (Grundton & Tonleiter)</summary>
         <div class="row" style="gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px;">
           <label style="font-size:.85rem; font-weight:600;">Grundton: <select id="spRoot_${mod}" style="${selStyle}">${SCALE_VIEW_ROOTS.map((n, i) => `<option value="${i}" ${i === r ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
           <label style="font-size:.85rem; font-weight:600;">Tonleiter: <select id="spType_${mod}" style="${selStyle}">${Object.keys(SCALE_VIEW_TYPES).map(k => `<option value="${k}" ${k === t ? 'selected' : ''}>${SCALE_VIEW_TYPES[k].label}</option>`).join('')}</select></label>
           <button type="button" class="btn btn-secondary" id="spOpen_${mod}" style="padding:6px 10px; font-size:.8rem;">Im Modul „Tonleitern“ öffnen</button>
         </div>
-        <div class="jam-improv-label" style="margin-top:8px;">Passt dazu – antippen zum Auswählen:</div>
-        <div id="spSugg_${mod}" style="margin:2px 0 8px;">${(sugg || []).map(sg => `<button type="button" class="theory-chip sp-sugg" data-root="${sg.root}" data-type="${sg.type}">${homeEsc(scaleSuggLabel(sg.root, sg.type))}</button>`).join(' ')}</div>
         </details>
         <div id="spBoard_${mod}" style="margin-top:8px; overflow-x:auto;"></div>
         <div class="jam-improv-label" id="spName_${mod}" style="margin-top:4px;"></div>
@@ -11999,14 +12060,18 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       const det = box.querySelector('#sp_' + mod); if (!det) return;
       const ctlDet = box.querySelector('#spCtl_' + mod);
       const r = box.querySelector('#spRoot_' + mod), t = box.querySelector('#spType_' + mod);
-      const save = () => { const all = scalePanelSaved(); const prev = all[mod] || {}; all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open, pos: Number.isInteger(prev.pos) ? prev.pos : 0, fret: !!prev.fret }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      let spAuto = (scalePanelSaved()[mod] || {}).auto !== false;
+      const autoBtn = box.querySelector('#spAuto_' + mod);
+      const autoLbl = () => { if (autoBtn) autoBtn.textContent = spAuto ? '🎯 Auto: an – folgt der Tonart' : '🎯 Auto: aus – hier tippen zum Folgen der Tonart'; };
+      const save = () => { const all = scalePanelSaved(); const prev = all[mod] || {}; all[mod] = { root: r ? +r.value : 0, type: t ? t.value : 'durPenta', open: det.open, ctl: !!ctlDet && ctlDet.open, pos: Number.isInteger(prev.pos) ? prev.pos : 0, fret: !!prev.fret, auto: spAuto }; try { localStorage.setItem(SCALE_PANEL_KEY, JSON.stringify(all)); } catch (e) {} };
+      if (autoBtn) autoBtn.onclick = () => { spAuto = !spAuto; save(); autoLbl(); if (spAuto) { showToast('🎯 Auto an – die Skala folgt jetzt der Tonart.'); try { updateModule(); } catch (e) {} } else showToast('🎯 Auto aus – deine Auswahl bleibt stehen.'); };
       const fretDet = box.querySelector('#spFret_' + mod);
       if (fretDet) fretDet.ontoggle = () => { save(); if (fretDet.open) scalePanelFret(mod); };
       if (ctlDet) ctlDet.ontoggle = () => save();
-      if (r) r.onchange = () => { save(); scalePanelBoard(mod); };
-      box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; save(); scalePanelBoard(mod); });
-      if (t) t.onchange = () => { save(); scalePanelBoard(mod); };
-      det.ontoggle = () => { save(); if (det.open) scalePanelBoard(mod); };
+      if (r) r.onchange = () => { spAuto = false; autoLbl(); save(); scalePanelBoard(mod); };
+      box.querySelectorAll('#spSugg_' + mod + ' .sp-sugg').forEach(b => b.onclick = () => { if (r) r.value = b.dataset.root; if (t) t.value = b.dataset.type; spAuto = false; autoLbl(); save(); scalePanelBoard(mod); });
+      if (t) t.onchange = () => { spAuto = false; autoLbl(); save(); scalePanelBoard(mod); };
+      det.ontoggle = () => { if (mod === 'chg') chgSpOpen = det.open; save(); if (det.open) scalePanelBoard(mod); };
       const op = box.querySelector('#spOpen_' + mod);
       if (op) op.onclick = () => { save(); state.scaleViewRoot = r ? +r.value : 0; state.scaleViewType = t ? t.value : 'durPenta'; const idx = MODULES.findIndex(m => m.type === 'scaleview'); if (idx >= 0) { moduleSelectEl.value = String(idx); updateModule(); window.scrollTo(0, 0); } };
       if (det.open) scalePanelBoard(mod);
@@ -12078,7 +12143,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
       h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
     }
-    h += `<div class="jam-hint">${p.kind === 'strum' ? '↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
+    h += `<div class="jam-hint">${p.kind === 'strum' ? '🎼 Oben die Notenschrift (Violinschlüssel): Hals nach oben = Abschlag, nach unten = Aufschlag, &gt; = betont. Darunter die Pfeile: ↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
       <button type="button" class="btn" id="strumPlayBtn">${strumPlaying ? '⏸ Stop' : '▶ Abspielen'}</button>
       <div class="toggle-group"><label style="font-weight:600;">Tempo:</label>
@@ -14452,6 +14517,43 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     cat.classList.remove('rm-purr'); void cat.getBoundingClientRect(); cat.classList.add('rm-purr');
     setTimeout(() => cat.classList.remove('rm-purr'), 1700);
   }
+  const PT_CHIP_KEY = 'guitartrainer_ptchip';
+  let ptChipDrag = null;
+  function ptChipRender() {
+    const chip = document.getElementById('ptChip'); if (!chip) return;
+    const rm = document.getElementById('ptRoom'), ov = document.getElementById('ptOverlay');
+    const show = pt.running && !(rm && rm.classList.contains('open')) && !(ov && ov.classList.contains('open'));
+    chip.style.display = show ? 'flex' : 'none';
+    if (!show) return;
+    const txt = document.getElementById('ptChipTxt'); if (txt) txt.textContent = (pt.paused ? '⏸ ' : '⏱ ') + ptHeaderText();
+    const pb = document.getElementById('ptChipPause'); if (pb) pb.textContent = pt.paused ? '▶' : '⏸';
+  }
+  function ptChipInit(chip) {
+    try { const p = JSON.parse(localStorage.getItem(PT_CHIP_KEY) || 'null'); if (p && p.x != null) { chip.style.left = Math.min(window.innerWidth - 70, Math.max(4, p.x)) + 'px'; chip.style.top = Math.min(window.innerHeight - 60, Math.max(4, p.y)) + 'px'; } else { chip.style.right = '14px'; chip.style.bottom = '92px'; } } catch (e) { chip.style.right = '14px'; chip.style.bottom = '92px'; }
+    chip.addEventListener('pointerdown', e => {
+      if (e.target.closest('#ptChipPause')) return;
+      const r = chip.getBoundingClientRect();
+      ptChipDrag = { dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false };
+      if (chip.setPointerCapture && e.pointerId != null) { try { chip.setPointerCapture(e.pointerId); } catch (err) {} }
+    });
+    chip.addEventListener('pointermove', e => {
+      if (!ptChipDrag) return;
+      if (Math.abs(e.clientX - ptChipDrag.sx) + Math.abs(e.clientY - ptChipDrag.sy) > 6) ptChipDrag.moved = true;
+      if (!ptChipDrag.moved) return;
+      chip.style.left = Math.min(window.innerWidth - 60, Math.max(4, e.clientX - ptChipDrag.dx)) + 'px';
+      chip.style.top = Math.min(window.innerHeight - 54, Math.max(4, e.clientY - ptChipDrag.dy)) + 'px';
+      chip.style.right = 'auto'; chip.style.bottom = 'auto';
+    });
+    chip.addEventListener('pointerup', () => {
+      if (!ptChipDrag) return;
+      const d = ptChipDrag; ptChipDrag = null;
+      if (d.moved) { const r = chip.getBoundingClientRect(); try { localStorage.setItem(PT_CHIP_KEY, JSON.stringify({ x: Math.round(r.left), y: Math.round(r.top) })); } catch (e) {} }
+      else ptRoomOpen();
+    });
+    chip.addEventListener('pointercancel', () => { ptChipDrag = null; });
+    const pb = chip.querySelector('#ptChipPause');
+    if (pb) pb.addEventListener('click', e => { e.stopPropagation(); if (!pt.running) return; if (pt.paused) ptResume(); else ptPause(); ptChipRender(); });
+  }
   function ptRoomOpen() {
     const r = document.getElementById('ptRoom'); if (!r) return;
     ptRoomEndGlow = false; ptRoomWasRunning = pt.running; ptRoomBarKey = '';
@@ -14538,6 +14640,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
     if (!ptRoomListOn()) h += '<button type="button" class="sec" id="rmListShow" title="Zeitliste einblenden">📋</button>';
     h += '<button type="button" class="sec" id="rmBack">↩ Zurück</button>';
+    h += '<select id="rmModSel" title="Direkt in ein Modul springen" style="font:inherit; font-weight:700; font-size:.95rem; color:#5b2410; background:#fff7e0; border:none; border-radius:999px; padding:10px 12px; cursor:pointer; max-width:52vw;"><option value="">🧭 Modul wechseln…</option>' + MODULES.map((m, i) => '<option value="' + i + '">' + (i + 1) + '. ' + homeEsc(m.name) + '</option>').join('') + '</select>';
     bar.innerHTML = h;
     const on = (id, f) => { const el = document.getElementById(id); if (el) el.addEventListener('click', f); };
     on('rmMain', () => { if (!pt.running) ptStart(); else if (pt.paused) ptResume(); else ptPause(); ptRoomBarRender(); ptRoomTick(); });
@@ -14550,6 +14653,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     on('rmMode', () => { pt.mode = pt.mode === 'down' ? 'up' : pt.mode === 'up' ? 'sec' : 'down'; ptData.set.mode = pt.mode; ptSave(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmBack', () => { ptRoomClose(); ptOpen(); });
+    { const ms = document.getElementById('rmModSel'); if (ms) ms.addEventListener('change', () => { if (ms.value !== '') ptGoModule(+ms.value); }); }
     on('rmStat', ptRoomStatToggle);
     on('rmListShow', () => ptRoomListSet(true));
     on('rmBarTgt', () => { ptRoomBarEdit = true; ptRoomBarRender(); const inp = document.getElementById('rmBarInp'); if (inp) { inp.focus(); try { if (window.matchMedia && matchMedia('(pointer:fine)').matches) inp.select(); } catch (e) {} } });
@@ -14559,6 +14663,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     ptRoomBarKey = ptRoomBarKeyOf();
   }
   function ptRoomTick() {
+    ptChipRender();
     const rm = document.getElementById('ptRoom');
     if (!rm || !rm.classList.contains('open')) return;
     const glowBefore = ptRoomEndGlow;
@@ -14716,6 +14821,10 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const rmDiv = document.createElement('div'); rmDiv.id = 'ptRoom'; rmDiv.className = 'pt-room';
     rmDiv.innerHTML = ptRoomHtml();
     document.body.appendChild(rmDiv);
+    const chip = document.createElement('div'); chip.id = 'ptChip';
+    chip.innerHTML = '<span id="ptChipTxt">⏱ 0:00</span><button type="button" id="ptChipPause" title="Pause / Weiter">⏸</button>';
+    document.body.appendChild(chip);
+    ptChipInit(chip);
     const gtr = rmDiv.querySelector('#rmGuitar');
     if (gtr) gtr.addEventListener('click', e => { e.stopPropagation(); ptRoomClose(); ptClose(); try { hideHome(); switchToModule(11); window.scrollTo(0, 0); } catch (err) {} });
     const rsvg = rmDiv.querySelector('#ptRoomSvg');
@@ -16285,7 +16394,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-10-2';
+  const APP_VERSION = '2026-11-10-3';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16508,5 +16617,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a586798bbd71cbe0',t:'MTc5NDMyODU3Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a586798bbd71cbe0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5876c96682bd35d',t:'MTc5NDMzODUyNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5876c96682bd35d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
