@@ -1477,6 +1477,8 @@
     .pt-room svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
     #ptChip { position: fixed; z-index: 900; display: none; align-items: center; gap: 8px; background: rgba(30,20,40,.85); color: #fff7e0; border: 1px solid rgba(255,247,224,.35); border-radius: 999px; padding: 8px 12px; font-weight: 700; font-size: .95rem; box-shadow: 0 4px 14px rgba(0,0,0,.35); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
     #ptChip button { background: #fff7e0; color: #5b2410; border: none; border-radius: 999px; width: 30px; height: 30px; font-size: .85rem; cursor: pointer; flex: none; }
+    #ptRoomModMenu { position: absolute; left: 50%; transform: translateX(-50%); bottom: 84px; z-index: 6; width: min(92vw, 540px); max-height: 52vh; overflow-y: auto; background: rgba(43,20,12,.94); border: 1px solid rgba(255,247,224,.35); border-radius: 14px; padding: 10px; display: none; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    #ptRoomModMenu button { font: inherit; font-weight: 700; font-size: .85rem; color: #5b2410; background: #fff7e0; border: none; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
     .pt-room-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; padding: 12px 10px calc(12px + env(safe-area-inset-bottom, 0px)); background: rgba(60,20,10,.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: transform .25s ease, opacity .25s ease; }
     .pt-room-bar.hide { transform: translateY(110%); opacity: 0; }
     .pt-room-bar button { font: inherit; font-weight: 700; font-size: 1rem; color: #5b2410; background: #fff7e0; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(40,10,5,.25); }
@@ -11784,48 +11786,49 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     for (let i = 0; i < b.length - 1; i++) out.push([b[i], b[i + 1]]);
     return out;
   }
-  // 🎼 Notenschrift zum Anschlag: Akkord steht als Noten-Block im Violinschlüssel, Hals zeigt die Schlagrichtung
+  // 🎼 Rhythmus-Notation wie im Lehrbuch: eine Linie, Notenwerte mit Balken, Ab-/Aufschlag-Zeichen darüber, Zählzeiten darunter
   function renderStrumNotation(chord, p, a, b) {
-    const steps = strumSteps(p), labels = strumCountLabels(p), frets = strumFingering(chord);
-    const rootName = jamRootName(chord[0], chord[1]);
-    const useFlats = rootName.includes('♭') || (chord[0] === 5 && !/^m|moll|dim/.test(chord[1]));
-    const LET_S = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6], ACC_S = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
-    const LET_F = [0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6], ACC_F = [0, -1, 0, -1, 0, 0, -1, 0, -1, 0, -1, 0];
+    const steps = strumSteps(p), labels = strumCountLabels(p);
     const s16 = p.unit === 4 ? 1 : 2;
-    const L = 92, colW = 38, m = b - a, W = L + m * colW + 26, st0 = 34, gap = 10, yBot = st0 + 4 * gap, H = yBot + 36;
+    const L = 70, colW = 38, W = L + (b - a) * colW + 20, lineY = 64, H = 98, beamY = 36;
     const x = j => L + (j - a) * colW + colW / 2;
-    const noteY = midi => { const w = midi + 12, pc = w % 12, oct = Math.floor(w / 12) - 1; const li = useFlats ? LET_F[pc] : LET_S[pc], acc = useFlats ? ACC_F[pc] : ACC_S[pc]; const di = oct * 7 + li; return { y: yBot - (di - 30) * (gap / 2), di, acc }; };
     let g = '';
     for (let i = a; i < b; i++) g += `<rect class="strum-col" data-sstep="${i}" x="${L + (i - a) * colW + 1}" y="4" width="${colW - 2}" height="${H - 8}" rx="6"></rect>`;
-    for (let k = 0; k < 5; k++) g += `<line x1="8" x2="${W - 8}" y1="${st0 + k * gap}" y2="${st0 + k * gap}" class="sn-line"/>`;
-    const cy0 = st0, gl = st0 + 3 * gap;
-    g += `<path class="sn-clef-p" d="M29 ${yBot + 20} C31 ${yBot + 8}, 35 ${cy0 + 2}, 34 ${cy0 - 9} C33 ${cy0 - 17}, 25 ${cy0 - 13}, 26 ${cy0 - 3} C27 ${cy0 + 8}, 42 ${cy0 + 15}, 42 ${gl - 2} C42 ${gl + 9}, 20 ${gl + 11}, 20 ${gl - 1} C20 ${gl - 9}, 33 ${gl - 10}, 34 ${gl - 2} C35 ${gl + 3}, 29 ${gl + 5}, 27 ${gl + 1}"/>`;
-    g += `<circle cx="25" cy="${yBot + 19}" r="3.6" class="sn-fill"/><path class="sn-clef-p" d="M25 ${yBot + 19} C27 ${yBot + 22}, 29 ${yBot + 22}, 29 ${yBot + 20}"/>`;
     const [num, den] = p.sig.split('/');
-    g += `<text x="68" y="${st0 + 18}" class="sn-ts">${num}</text><text x="68" y="${st0 + 38}" class="sn-ts">${den}</text>`;
-    for (let i = a; i < b; i++) {
-      const t = steps[i], cx = x(i);
-      if (t === '-') { g += `<path d="M${cx - 2} ${st0 + 4} l6 7 l-5 6 l6 7 c-5 -2 -9 1 -4 6 c-8 -3 -6 -10 1 -7 l-6 -7 l5 -5 z" class="sn-fill"/>`; continue; }
-      let pitches = [];
-      if (t === 'D' || t === 'd' || t === 'U' || t === 'u' || t === 'x') pitches = frets.map((f, si) => f >= 0 ? STRUM_OPEN[si] + f : null).filter(v => v !== null);
-      else if (t === 'b' || t === 'B') { const si = t === 'b' ? strumBassIdx(frets) : strumAltBassIdx(frets); if (si >= 0 && frets[si] >= 0) pitches = [STRUM_OPEN[si] + frets[si]]; }
-      if (!pitches.length) continue;
-      const heads = pitches.map(midi => ({ midi, ...noteY(midi) })).sort((u, v) => u.di - v.di);
-      heads.forEach(h => {
-        for (let ly = yBot + gap; ly <= h.y + 0.1; ly += gap) g += `<line x1="${cx - 9}" x2="${cx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
-        for (let ly = st0 - gap; ly >= h.y - 0.1; ly -= gap) g += `<line x1="${cx - 9}" x2="${cx + 9}" y1="${ly}" y2="${ly}" class="sn-line"/>`;
-        if (t === 'x') g += `<path d="M${cx - 5} ${h.y - 4} L${cx + 5} ${h.y + 4} M${cx + 5} ${h.y - 4} L${cx - 5} ${h.y + 4}" class="sn-stroke"/>`;
-        else g += `<ellipse cx="${cx}" cy="${h.y}" rx="6" ry="4.3" transform="rotate(-20 ${cx} ${h.y})" class="sn-fill"/>`;
-        if (h.acc) g += `<text x="${cx - 19}" y="${h.y + 5}" class="sn-acc">${h.acc > 0 ? '♯' : '♭'}</text>`;
+    g += `<text x="32" y="${lineY - 6}" class="sn-ts" text-anchor="middle">${num}</text><text x="32" y="${lineY + 18}" class="sn-ts" text-anchor="middle">${den}</text>`;
+    g += `<line x1="${L - 20}" x2="${W - 6}" y1="${lineY}" y2="${lineY}" class="sn-line"/>`;
+    g += `<line x1="${L - 20}" y1="${lineY - 9}" x2="${L - 20}" y2="${lineY + 9}" class="sn-line"/><line x1="${W - 6}" y1="${lineY - 9}" x2="${W - 6}" y2="${lineY + 9}" class="sn-line"/>`;
+    const rest = cx => `<path d="M${cx - 2} ${lineY - 16} l6 7 l-5 6 l6 7 c-5 -2 -9 1 -4 6 c-8 -3 -6 -10 1 -7 l-6 -7 l5 -5 z" class="sn-fill"/>`;
+    // Zählzeit-Gruppen
+    const starts = []; for (let i = a; i < b; i++) if (strumIsBeat(p, i) || i === a) starts.push(i);
+    const groups = starts.map((st, k) => [st, k + 1 < starts.length ? starts[k + 1] : b]);
+    groups.forEach(([ga, gb]) => {
+      const hits = []; for (let i = ga; i < gb; i++) if (steps[i] !== '-') hits.push(i);
+      if (!hits.length) { g += rest(x(ga)); return; }
+      if (hits[0] > ga) g += rest(x(ga));
+      const notes = hits.map((hi, k) => ({ i: hi, t: steps[hi], len: ((k + 1 < hits.length ? hits[k + 1] : gb) - hi) * s16 }));
+      // Balken je Zählzeit
+      const beamable = notes.filter(nt => nt.len < 4);
+      if (beamable.length >= 2) {
+        const x1 = x(beamable[0].i) + 6, x2 = x(beamable[beamable.length - 1].i) + 6;
+        g += `<rect class="sn-beam sn-fill" x="${x1}" y="${beamY}" width="${x2 - x1}" height="5"></rect>`;
+        beamable.forEach((nt, k) => { if (nt.len <= 1) { const bx = x(nt.i) + 6; const nx = k + 1 < beamable.length ? x(beamable[k + 1].i) + 6 : bx + 12; g += `<rect class="sn-beam sn-fill" x="${bx}" y="${beamY + 9}" width="${Math.max(6, Math.min(nx - bx, colW - 8))}" height="4"></rect>`; } });
+      }
+      notes.forEach(nt => {
+        const cx = x(nt.i), sx = cx + 6, bass = nt.t === 'b' || nt.t === 'B', hy = bass ? lineY + 14 : lineY;
+        g += `<line x1="${sx}" y1="${hy - 2}" x2="${sx}" y2="${beamY + 2}" class="sn-stroke"/>`;
+        if (nt.t === 'x') g += `<path d="M${cx - 6} ${hy - 5} L${cx + 6} ${hy + 5} M${cx + 6} ${hy - 5} L${cx - 6} ${hy + 5}" class="sn-stroke"/>`;
+        else if (nt.len >= 8) g += `<ellipse cx="${cx}" cy="${hy}" rx="6.4" ry="4.4" transform="rotate(-20 ${cx} ${hy})" class="sn-open"/>`;
+        else if (bass) g += `<ellipse cx="${cx}" cy="${hy}" rx="6" ry="4.3" transform="rotate(-20 ${cx} ${hy})" class="sn-fill"/>`;
+        else g += `<path d="M${cx - 7} ${hy + 3} L${cx - 1} ${hy - 4} L${cx + 7} ${hy - 4} L${cx + 1} ${hy + 3} Z" class="sn-fill"/>`;
+        if (beamable.length < 2 && nt.len >= 1 && nt.len < 4) g += `<path d="M${sx} ${beamY + 2} q9 3 7 13 q-1 -7 -7 -8" class="sn-fill"/>`;
+        if (nt.t === 'D' || nt.t === 'd' || bass) g += `<path class="sn-dn sn-stroke" d="M${cx - 5} 22 L${cx - 5} 11 L${cx + 5} 11 L${cx + 5} 22"/>`;
+        if (nt.t === 'U' || nt.t === 'u') g += `<path class="sn-up sn-stroke" d="M${cx - 5} 11 L${cx} 22 L${cx + 5} 11"/>`;
+        if (nt.t === 'D' || nt.t === 'U') g += `<text x="${cx}" y="8" class="sn-acc" text-anchor="middle" style="font-size:12px;">&gt;</text>`;
       });
-      const top = Math.min(...heads.map(h => h.y)), bot = Math.max(...heads.map(h => h.y));
-      const up = (t === 'D' || t === 'd' || t === 'b' || t === 'B');
-      if (up) { const sx = cx + 5.5; g += `<line x1="${sx}" y1="${top}" x2="${sx}" y2="${top - 30}" class="sn-stroke"/>`; if (s16 < 4) g += `<path d="M${sx} ${top - 30} q9 3 7 13 q-1 -7 -7 -8" class="sn-fill"/>`; if (s16 <= 1) g += `<path d="M${sx} ${top - 21} q9 3 7 13 q-1 -7 -7 -8" class="sn-fill"/>`; }
-      else { const sx = cx - 5.5; g += `<line x1="${sx}" y1="${bot}" x2="${sx}" y2="${bot + 30}" class="sn-stroke"/>`; if (s16 < 4) g += `<path d="M${sx} ${bot + 30} q9 -3 7 -13 q-1 7 -7 8" class="sn-fill"/>`; if (s16 <= 1) g += `<path d="M${sx} ${bot + 21} q9 -3 7 -13 q-1 7 -7 8" class="sn-fill"/>`; }
-      if (t === 'D' || t === 'U') g += `<text x="${cx}" y="${st0 - 14}" class="sn-acc" text-anchor="middle" style="font-size:13px;">&gt;</text>`;
-      g += `<text x="${cx}" y="${H - 8}" class="sn-fing" text-anchor="middle">${labels[i] || ''}</text>`;
-    }
-    return `<svg class="strum-notation" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:${W}px; height:auto; display:block;" role="img" aria-label="Notenschrift des Anschlagmusters">${g}</svg>`;
+    });
+    for (let i = a; i < b; i++) if (labels[i]) g += `<text x="${x(i)}" y="92" class="sn-fing" text-anchor="middle">${labels[i]}</text>`;
+    return `<svg class="strum-notation" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:${W}px; height:auto; display:block;" role="img" aria-label="Rhythmus-Notation des Anschlagmusters">${g}</svg>`;
   }
   function renderStrumGrid(chord, nxt) {
     const p = strumPattern(), steps = strumSteps(p), labels = strumCountLabels(p);
@@ -12143,7 +12146,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
       h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
     }
-    h += `<div class="jam-hint">${p.kind === 'strum' ? '🎼 Oben die Notenschrift (Violinschlüssel): Hals nach oben = Abschlag, nach unten = Aufschlag, &gt; = betont. Darunter die Pfeile: ↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
+    h += `<div class="jam-hint">${p.kind === 'strum' ? '🎼 Oben die Rhythmus-Notation wie im Lehrbuch: ⊓ = Abschlag, V = Aufschlag, &gt; = betont, Balken verbinden die kurzen Noten. Darunter die Pfeile: ↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
       <button type="button" class="btn" id="strumPlayBtn">${strumPlaying ? '⏸ Stop' : '▶ Abspielen'}</button>
       <div class="toggle-group"><label style="font-weight:600;">Tempo:</label>
@@ -14425,7 +14428,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
 </svg>
 <div id="rmOverlay"></div><div id="rmPulse"></div>
 <div id="ptRoomList" style="position:absolute; top:10px; right:10px; max-width:min(46vw,320px); background:rgba(60,20,10,.5); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-radius:12px; padding:8px 12px; color:#fff7e0; font-size:.8rem; line-height:1.45;"></div>
-<div class="pt-room-bar" id="ptRoomBar"></div>`;
+<div class="pt-room-bar" id="ptRoomBar"></div><div id="ptRoomModMenu"></div>`;
   }
   const RM_CAT_HOME = 852, RM_CAT_WINDOW = 150; // rechte Ecke neben der Stehlampe; Pause = Fenster
   function ptRoomDayBounds(d) {
@@ -14576,6 +14579,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
   function ptRoomClose() {
     const r = document.getElementById('ptRoom'); if (r) r.classList.remove('open');
+    const mm = document.getElementById('ptRoomModMenu'); if (mm) mm.style.display = 'none';
     const cat = document.getElementById('rmCat'); if (cat) { cat.style.display = 'none'; cat.style.transition = 'none'; cat.dataset.pos = ''; cat.classList.remove('rm-sleep', 'rm-stretch', 'rm-purr'); }
   }
   let ptRoomCatMile = 0;
@@ -14622,6 +14626,18 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const showPlus = (r && pt.mode !== 'up') || (!r && pt.mode === 'down');
     return [r, paused, pt.mode, showPlus, ptRoomStatOn()].join('|');
   }
+  function ptRoomModMenuRender() {
+    const menu = document.getElementById('ptRoomModMenu'); if (!menu) return;
+    const items = [];
+    HOME_GROUPS.forEach(gr => gr.items.forEach(it => items.push(it)));
+    menu.innerHTML = '<div style="width:100%; text-align:center; color:#fff7e0; font-weight:800; margin-bottom:2px;">🧭 Wohin möchtest du?</div>' + items.map(it => { const no = homeModuleNo(it[0]); const icon = it[1] === 'GTR' ? '🎸' : it[1]; return '<button type="button" data-rmmod="' + it[0] + '">' + (no ? no + '. ' : '') + icon + ' ' + homeEsc(it[2]) + '</button>'; }).join('') + '<button type="button" data-rmmod="x" style="background:rgba(255,247,224,.25); color:#fff7e0;">✕ Schließen</button>';
+    menu.querySelectorAll('[data-rmmod]').forEach(btn => btn.addEventListener('click', () => { const v = btn.dataset.rmmod; menu.style.display = 'none'; if (v !== 'x') ptGoModule(+v); }));
+  }
+  function ptRoomModMenuToggle() {
+    const menu = document.getElementById('ptRoomModMenu'); if (!menu) return;
+    if (menu.style.display === 'flex') { menu.style.display = 'none'; return; }
+    ptRoomModMenuRender(); menu.style.display = 'flex';
+  }
   function ptRoomBarRender() {
     const bar = document.getElementById('ptRoomBar'); if (!bar) return;
     // Solange im 🎯-Feld getippt wird, darf kein Umbau das Feld unterm Finger wegtauschen
@@ -14640,7 +14656,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     h += '<button type="button" class="' + (ptRoomStatOn() ? '' : 'sec') + '" id="rmStat">📊 Übungszeit</button>';
     if (!ptRoomListOn()) h += '<button type="button" class="sec" id="rmListShow" title="Zeitliste einblenden">📋</button>';
     h += '<button type="button" class="sec" id="rmBack">↩ Zurück</button>';
-    h += '<select id="rmModSel" title="Direkt in ein Modul springen" style="font:inherit; font-weight:700; font-size:.95rem; color:#5b2410; background:#fff7e0; border:none; border-radius:999px; padding:10px 12px; cursor:pointer; max-width:52vw;"><option value="">🧭 Modul wechseln…</option>' + MODULES.map((m, i) => '<option value="' + i + '">' + (i + 1) + '. ' + homeEsc(m.name) + '</option>').join('') + '</select>';
+    h += '<button type="button" class="sec" id="rmModBtn" title="Direkt in ein Modul springen">🧭 Module</button>';
     bar.innerHTML = h;
     const on = (id, f) => { const el = document.getElementById(id); if (el) el.addEventListener('click', f); };
     on('rmMain', () => { if (!pt.running) ptStart(); else if (pt.paused) ptResume(); else ptPause(); ptRoomBarRender(); ptRoomTick(); });
@@ -14653,7 +14669,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     on('rmMode', () => { pt.mode = pt.mode === 'down' ? 'up' : pt.mode === 'up' ? 'sec' : 'down'; ptData.set.mode = pt.mode; ptSave(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmSkip', () => { pt.accum = ptCurTarget(); pt.startedAt = Date.now(); ptTick(); ptRender(); ptRoomBarRender(); ptRoomTick(); });
     on('rmBack', () => { ptRoomClose(); ptOpen(); });
-    { const ms = document.getElementById('rmModSel'); if (ms) ms.addEventListener('change', () => { if (ms.value !== '') ptGoModule(+ms.value); }); }
+    on('rmModBtn', () => ptRoomModMenuToggle());
     on('rmStat', ptRoomStatToggle);
     on('rmListShow', () => ptRoomListSet(true));
     on('rmBarTgt', () => { ptRoomBarEdit = true; ptRoomBarRender(); const inp = document.getElementById('rmBarInp'); if (inp) { inp.focus(); try { if (window.matchMedia && matchMedia('(pointer:fine)').matches) inp.select(); } catch (e) {} } });
@@ -16394,7 +16410,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-10-3';
+  const APP_VERSION = '2026-11-10-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16617,5 +16633,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5876c96682bd35d',t:'MTc5NDMzODUyNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5876c96682bd35d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
