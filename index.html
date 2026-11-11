@@ -1213,6 +1213,9 @@
     .strum-cell.rest { color:var(--text-muted); font-weight:400; }
     .strum-cell.small { font-size:0.85rem; }
     .strum-cell.pick { height:30px; font-size:0.95rem; }
+    .strum-cell.stroke { font-size:1.8rem; font-weight:900; color:#ffffff; background:rgba(56,189,248,.16); border-color:rgba(56,189,248,.55); text-shadow:0 0 6px rgba(56,189,248,.6); line-height:1; }
+    .strum-cell.stroke.acc { color:var(--accent-color); font-size:1.95rem; }
+    .strum-cell.stroke.small { font-size:1.05rem; }
     .strum-cell.pick.hit { background:var(--accent-color); color:#fff; border-color:var(--accent-color); }
     .strum-cell.beatstart { border-left:2px solid var(--text-muted); }
     .strum-grid + .strum-grid, .strum-notation + .strum-notation { margin-top:10px; }
@@ -6211,10 +6214,8 @@
         if (!down) strs = strs.filter(i2 => i2 >= 2).reverse();
         strs.forEach((si, k) => ev.push({ beat, si, vel, sus: 1.5, k }));
       } else {
-        strumParsePick(tok).forEach(hh => {
-          const si = strumResolveString(hh.s, frets);
-          if (si < 0 || !(frets[si] >= 0)) return;
-          ev.push({ beat, si, vel: (hh.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1), sus: 2.0 });
+        strumResolvePickToken(tok, frets).forEach(hh => {
+          ev.push({ beat, si: hh.si, vel: (hh.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1), sus: 2.0 });
         });
       }
     });
@@ -8746,7 +8747,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       if (!down) strs = strs.filter(i => i >= 2).reverse();
       strs.forEach((si, k) => out.push({ k, pitch: pitch(si), vel }));
     } else {
-      strumParsePick(tok).forEach(h => { const si = strumResolveString(h.s, frets); if (si >= 0) out.push({ k: 0, pitch: pitch(si), vel: (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1) }); });
+      strumResolvePickToken(tok, frets).forEach(h => { out.push({ k: 0, pitch: pitch(h.si), vel: (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1) }); });
     }
     return out;
   }
@@ -11373,6 +11374,27 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     if (!tok || tok === '-') return [];
     return tok.split('+').map(x => { const [f, s] = x.split(':'); return { f, s }; });
   }
+  // Ganzer Zupf-Schritt: Daumen zuerst, dann bekommt jeder Finger eine eigene klingende Saite.
+  // Ist die Ziel-Saite im Griff stumm, weicht der Finger auf die nächste klingende Saite aus –
+  // so klappt das Muster mit jedem Griff, nicht nur mit C.
+  function strumResolvePickToken(tok, frets) {
+    const hits = strumParsePick(tok); if (!hits.length) return [];
+    const used = new Set(), out = [];
+    const ordered = [...hits.filter(h => h.f === 'p'), ...hits.filter(h => h.f !== 'p')];
+    ordered.forEach(h => {
+      let si = -1;
+      if (h.s === 'B') si = strumBassIdx(frets);
+      else if (h.s === 'B2') si = strumAltBassIdx(frets);
+      else {
+        const idx = 6 - parseInt(h.s, 10);
+        for (const c of [idx, idx + 1, idx - 1, idx + 2, idx - 2, idx + 3, idx - 3, idx + 4, idx - 4, idx + 5, idx - 5]) {
+          if (c >= 0 && c <= 5 && frets[c] >= 0 && !used.has(c)) { si = c; break; }
+        }
+      }
+      if (si >= 0 && frets[si] >= 0 && !used.has(si)) { used.add(si); out.push({ f: h.f, s: h.s, si }); }
+    });
+    return out;
+  }
   let strumPreview = false;
   function strumIsFav(id) { return !!(strumState && strumState.favs && strumState.favs.includes(id)); }
   function on2(id, fn) { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
@@ -11525,9 +11547,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       const gap = jamLowPerf() ? 0.016 : 0.011;
       strs.forEach((si, k) => { strumDamp(ctx, t + k * gap, si); strumPluck(ctx, pitch(si), t + k * gap, vel * (down ? 1 : 0.85), si, 1.5); });
     } else {
-      strumParsePick(tok).forEach(h => {
-        const si = strumResolveString(h.s, frets);
-        if (si < 0) return;
+      strumResolvePickToken(tok, frets).forEach(h => {
+        const si = h.si;
         strumDamp(ctx, t, si);
         strumPluck(ctx, pitch(si), t, (h.f === 'p' ? 0.95 : 0.75) * (first ? 1.05 : 1) * g, si, 2.0);
       });
@@ -11642,7 +11663,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     // Ereignisse je Schritt
     const ev = steps.map(tok => {
       const hits = [];
-      strumParsePick(tok).forEach(h => { const si = strumResolveString(h.s, frets); if (si >= 0 && !hits.some(x => x.si === si)) hits.push({ si, f: h.f, fret: frets[si], midi: STRUM_OPEN[si] + frets[si] }); });
+      strumResolvePickToken(tok, frets).forEach(h => { hits.push({ si: h.si, f: h.f, fret: frets[h.si], midi: STRUM_OPEN[h.si] + frets[h.si] }); });
       return hits;
     });
     // Gruppen (Zählzeiten) für Balken
@@ -11861,11 +11882,11 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         const sym = { D: '↓', d: '↓', U: '↑', u: '↑', x: '✕', b: 'B¹', B: 'B²', '-': '·' }[t] || '·';
         const cls = (t === 'D' || t === 'U') ? 'acc' : (t === '-' ? 'rest' : (t === 'b' || t === 'B' ? 'small' : ''));
         const title = { D: 'Abschlag (betont)', d: 'Abschlag', U: 'Aufschlag (betont)', u: 'Aufschlag', x: 'gedämpfter Schlag', b: 'Basston (Grundton)', B: 'Wechselbass', '-': 'Pause – Hand bewegt sich weiter' }[t] || '';
-        h += `<div class="strum-cell ${cls} ${beatStart(i) && i !== a ? 'beatstart' : ''}" data-sstep="${i}" title="${title}">${sym}</div>`;
+        h += `<div class="strum-cell ${t !== '-' ? 'stroke' : ''} ${cls} ${beatStart(i) && i !== a ? 'beatstart' : ''}" data-sstep="${i}" title="${title}">${sym}</div>`;
       });
     } else {
       const frets = strumFingering(chord);
-      const map = steps.slice(a, b).map(tok => { const m = {}; strumParsePick(tok).forEach(hh => { const si = strumResolveString(hh.s, frets); if (si >= 0) m[si] = hh.f; }); return m; });
+      const map = steps.slice(a, b).map(tok => { const m = {}; strumResolvePickToken(tok, frets).forEach(hh => { m[hh.si] = hh.f; }); return m; });
       for (let si = 5; si >= 0; si--) {
         h += `<div class="strum-cell lbl">${STRUM_STRINGS[si]}${frets[si] < 0 ? ' ✕' : ''}</div>`;
         map.forEach((m, j) => { const i = a + j; h += `<div class="strum-cell pick ${m[si] ? 'hit' : ''} ${beatStart(i) && i !== a ? 'beatstart' : ''}" data-sstep="${i}">${m[si] || ''}</div>`; });
@@ -16410,7 +16431,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-10-4';
+  const APP_VERSION = '2026-11-11-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16633,5 +16654,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58ed9c0ee7c1e4d',t:'MTc5NDQxNjM5OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58ed9c0ee7c1e4d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
