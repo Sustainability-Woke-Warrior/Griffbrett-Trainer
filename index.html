@@ -5986,7 +5986,8 @@
       <button type="button" class="btn btn-secondary" data-act="drums" id="progDrumsBtn" style="${po.style.startsWith('pat:') ? '' : 'display:none;'}">🥁 Mit Schlagzeug anhören</button>
     </div>`;
     h += `<div style="border:1px solid var(--card-border); border-radius:12px; padding:10px 12px; margin:12px 0;">
-      <div class="prog-row" style="margin:0;"><strong>💾 Meine Akkordfolgen</strong><span style="flex:1;"></span><button type="button" class="btn btn-secondary" data-act="renfolder" style="padding:4px 10px; font-size:.8rem;">✏️ Ordner</button></div>`;
+      <div class="prog-row" style="margin:0;"><strong>💾 Meine Akkordfolgen${progState.saved.length ? ' (' + progState.saved.length + ')' : ''}</strong><span style="flex:1;"></span><button type="button" class="btn btn-secondary" data-act="savedtoggle" style="padding:4px 10px; font-size:.8rem;">${progState.savedOpen === false ? '▶ Aufklappen' : '▼ Zuklappen'}</button><button type="button" class="btn btn-secondary" data-act="renfolder" style="padding:4px 10px; font-size:.8rem;">✏️ Ordner</button></div>`;
+    if (progState.savedOpen !== false) {
     if (progRenFolder) {
       h += `<div class="prog-row" style="flex-wrap:wrap; margin-top:8px;">` + fldGroups(progState.saved).map(([f]) => f === progRenFolder ? `<input type="text" id="progRenIn" value="${homeEsc(f === 'Ohne Ordner' ? '' : f)}" placeholder="Neuer Ordnername" maxlength="24" style="flex:1; min-width:130px;"><button type="button" class="btn" data-act="renfolderok">✔</button>` : `<button type="button" class="theory-chip" data-act="renfolderpick" data-f="${homeEsc(f)}">✏️ ${homeEsc(f)}</button>`).join('') + `<button type="button" class="btn btn-secondary" data-act="renfolderend">Fertig</button></div>`;
     }
@@ -6000,6 +6001,7 @@
     }
     if (progState.saved.length && progNewFolderIdx === null) h += `<div class="fld-drop-new">＋ Neuer Ordner – Folge hierher ziehen</div>`;
     if (progNewFolderIdx !== null && progState.saved[progNewFolderIdx]) h += `<div class="prog-row" style="margin-top:8px; gap:8px;"><input type="text" id="progNewFolderIn" placeholder="Name für den neuen Ordner" maxlength="24" style="flex:1; min-width:140px;"><button type="button" class="btn" data-act="newfolderok">✔ Anlegen &amp; verschieben</button><button type="button" class="btn btn-secondary" data-act="newfoldercancel">Abbrechen</button></div>`;
+    }
     h += `</div>`;
     h += `<div class="prog-cards">`;
     dr.chords.forEach((c, ci) => {
@@ -6603,7 +6605,7 @@
       }
       else if (act === 'clipin') { const cl = clipGet(); if (!cl) { showToast('📎 Die Zwischenablage ist leer.'); return; } dr.name = (cl.label || dr.name || '').slice(0, 60); dr.chords = chordsToFrets(cl.chords); if (!dr.chords.length) dr.chords = [progEmptyChord()]; progSave(); progRender(); showToast('📎 Zwischenablage in den Entwurf übernommen.'); }
       else if (act === 'twcolin') { const host = e.target.closest('[data-act="twcolin"]'); const col = twColsLoad().find(x => String(x.id) === (host ? host.dataset.id : '')); if (!col) return; dr.name = (col.name || '').slice(0, 60); dr.chords = chordsToFrets(twColChords(col)); if (!dr.chords.length) dr.chords = [progEmptyChord()]; progSave(); progRender(); showToast('📥 „' + col.name + '“ in den Entwurf übernommen.'); }
-      else if (act === 'renfolder') { progRenFolder = progRenFolder ? null : '__pick'; progRender(); }
+      else if (act === 'renfolder') { progState.savedOpen = true; progRenFolder = progRenFolder ? null : '__pick'; progRender(); }
       else if (act === 'renfolderpick') { const hb = e.target.closest('[data-f]'); progRenFolder = hb ? hb.dataset.f : null; progRender(); }
       else if (act === 'renfolderok') { const inp = document.getElementById('progRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = progRenFolder; if (nn && old) { progState.saved.forEach(p => { if ((fldNorm(p.folder) || 'Ohne Ordner') === old) p.folder = nn; }); progSave(); showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.'); } progRenFolder = null; progRender(); }
       else if (act === 'renfolderend') { progRenFolder = null; progRender(); }
@@ -6629,6 +6631,7 @@
       else if (act === 'renchip') { const hb = e.target.closest('[data-i]'); progRenameIdx = hb ? +hb.dataset.i : null; setTimeout(() => { const ri = document.getElementById('progRenameIn'); if (ri) { ri.focus(); ri.select(); } }, 60); }
       else if (act === 'renameok') { const inp = document.getElementById('progRenameIn'); const nn = inp ? inp.value.trim().slice(0, 40) : ''; if (nn && progState.saved[progRenameIdx]) { progState.saved[progRenameIdx].name = nn; if (progSelIdx === progRenameIdx) progState.draft.name = nn; showToast(`✏️ Folge heißt jetzt „${nn}“.`); } progRenameIdx = null; }
       else if (act === 'renamecancel') { progRenameIdx = null; }
+      else if (act === 'savedtoggle') { progState.savedOpen = progState.savedOpen === false ? true : false; showToast(progState.savedOpen ? '💾 Gespeicherte Folgen eingeblendet.' : '💾 Gespeicherte Folgen zugeklappt.'); }
       else if (act === 'delchip') {
         const hb = e.target.closest('[data-i]'); const i = hb ? +hb.dataset.i : -1;
         const p = progState.saved[i];
@@ -7144,8 +7147,10 @@
     });
     html += `</div>`;
 
+    const jamSavedCount = Object.keys(getSavedJamPatterns()).length;
         html += `<div style="border:1px solid var(--card-border); border-radius:12px; padding:12px 14px; margin-top:14px;">
-      <div style="font-weight:800; font-size:1rem;">💾 Meine Beats</div>
+      <div class="row" style="gap:8px; align-items:center;"><span style="font-weight:800; font-size:1rem;">💾 Meine Beats${jamSavedCount ? ' (' + jamSavedCount + ')' : ''}</span><span style="flex:1;"></span><button type="button" class="btn btn-secondary" id="jamSavedToggleBtn" style="padding:4px 10px; font-size:.8rem;">${ui.savedOpen === false ? '▶ Aufklappen' : '▼ Zuklappen'}</button></div>
+      <div id="jamSavedBody" style="display:${ui.savedOpen === false ? 'none' : 'block'};">
       <div class="row" style="gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
         <input type="text" id="jamSaveNameInput" placeholder="Name für diesen Beat" style="flex:1 1 180px; min-width:150px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:6px 10px;">
         <input type="text" id="jamSaveFolderInput" list="jamFolderList" placeholder="Ordner (optional)" maxlength="24" style="flex:0 1 170px; min-width:120px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--card-border); border-radius:6px; padding:6px 10px;">${folderDatalist('jamFolderList')}
@@ -7154,6 +7159,7 @@
       </div>
       <div id="jamRenFolderRow" style="display:none; flex-wrap:wrap; gap:6px; margin-top:8px; align-items:center;"></div>
       <div id="jamSavedList" style="margin-top:6px;"></div>
+      </div>
     </div>`;
 html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}><summary>🎚️ Lautstärke &amp; Klangfarbe</summary>
       <div class="row" style="flex-wrap:wrap; gap:14px; margin-bottom:10px; align-items:center;">
@@ -7900,6 +7906,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
     const jamRenBtn2 = document.getElementById('jamRenFolderBtn');
     if (jamRenBtn2) jamRenBtn2.addEventListener('click', () => { jamRenFolder = jamRenFolder ? null : '__pick'; renderJamSavedList(); });
+    const jamSvTgl = document.getElementById('jamSavedToggleBtn');
+    if (jamSvTgl) jamSvTgl.addEventListener('click', () => { const ui2 = getJamUiOpen(); setJamUiOpen('savedOpen', ui2.savedOpen === false ? true : false); renderJamModule(); showToast(ui2.savedOpen === false ? '💾 Gespeicherte Beats eingeblendet.' : '💾 Gespeicherte Beats zugeklappt.'); });
 
     document.getElementById('jamExportJsonBtn').addEventListener('click', exportJamAsJsonFile);
 
@@ -11398,7 +11406,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   let strumPreview = false;
   function strumIsFav(id) { return !!(strumState && strumState.favs && strumState.favs.includes(id)); }
   function on2(id, fn) { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
-  function strumChordAt(chords, bar) { return chords[Math.floor(bar / (strumState.bpc || 1)) % chords.length]; }
+  function strumChordAt(chords, bar) { const li = strumState && typeof strumState.loopChord === 'number' ? strumState.loopChord : null; if (li !== null && chords[li]) return chords[li]; return chords[Math.floor(bar / (strumState.bpc || 1)) % chords.length]; }
+  function strumLoopIdx(cs) { const v = strumState ? strumState.loopChord : null; return typeof v === 'number' && cs && cs[v] ? v : null; }
 
   // ---------- Klang ----------
   // Im Beat-Modul läuft die Gitarre über den Ausgang der Band (Begrenzer, Hall) – so übersteuert nichts
@@ -11920,8 +11929,13 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     try {
       if (!chords) gripStripUpdate('strum', [], -1, -1);
       else {
-        const k = Math.floor(Math.max(0, bar) / (strumState.bpc || 1)) % chords.length;
-        gripStripUpdate('strum', chords.map((c, i) => ({ k: i + ':' + strumChordName(c), name: strumChordName(c), frets: strumFingering(c) })), k, strumPlaying && chords.length > 1 ? (k + 1) % chords.length : -1);
+        const li = strumLoopIdx(chords);
+        if (li !== null) {
+          gripStripUpdate('strum', [{ k: 'loop:' + li + ':' + strumChordName(chords[li]), name: '🔁 ' + strumChordName(chords[li]), frets: strumFingering(chords[li]) }], 0, -1);
+        } else {
+          const k = Math.floor(Math.max(0, bar) / (strumState.bpc || 1)) % chords.length;
+          gripStripUpdate('strum', chords.map((c, i) => ({ k: i + ':' + strumChordName(c), name: strumChordName(c), frets: strumFingering(c) })), k, strumPlaying && chords.length > 1 ? (k + 1) % chords.length : -1);
+        }
       }
     } catch (e) {}
     if (!chords) { box.innerHTML = '<div class="jam-hint">Akkorde nicht erkannt. Beispiel: „Am F C G“ (Leerzeichen dazwischen; B oder H = H, Bb = B♭).</div>'; return; }
@@ -12165,7 +12179,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         ${p.custom ? `<button type="button" class="btn btn-secondary" id="strumEditBtn">✎ Bearbeiten</button><button type="button" class="btn btn-secondary" id="strumDelBtn">🗑 Löschen</button>` : ''}
       </div>`;
       h += `<div class="jam-hint" style="font-size:0.88rem; color:var(--text-color);">${p.custom ? '✏️ Eigenes Muster' : (p.level === 4 ? '🎵 Stil' : stars(p.level))} · Taktart ${p.sig} · ${homeEsc(p.tip)}</div>`;
-      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid((strumChords() || [[0, 'dur']])[0])}</div>`;
+      h += `<div class="strum-grid-wrap" id="strumGridWrap">${p.kind === 'pick' ? strumGridAt(0) : renderStrumGrid(strumChordAt(strumChords() || [[0, 'dur']], 0))}</div>`;
     }
     h += `<div class="jam-hint">${p.kind === 'strum' ? '🎼 Oben die Rhythmus-Notation wie im Lehrbuch: ⊓ = Abschlag, V = Aufschlag, &gt; = betont, Balken verbinden die kurzen Noten. Darunter die Pfeile: ↓ ab · ↑ auf · <b style="color:var(--accent-color);">fett</b> = betont · ✕ gedämpft · B¹ Basston · B² Wechselbass · · Pause (Hand pendelt weiter)' : 'Oben Noten (Violinschlüssel, Gitarre klingt eine Oktave tiefer), darunter Tabulatur: die Linien sind die Saiten (oben hohe e), die Zahlen die Bünde. Finger: p = Daumen · i = Zeigefinger · m = Mittelfinger · a = Ringfinger. Noten und Bünde passen sich dem Akkord an.'}</div>`;
     h += `<div class="row" style="flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;">
@@ -12174,6 +12188,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         <input type="range" id="strumTempo" min="30" max="180" step="1" value="${strumBpm()}" style="width:130px;">
         <span id="strumTempoLabel" style="font-size:0.85rem; min-width:62px;">${strumBpm()} BPM</span>
         <button type="button" class="strum-chip" id="strumTempoReset" title="Zurück auf das normale Tempo (${p.bpm} BPM)" style="visibility:${!strumEdit && strumBpm() !== p.bpm ? 'visible' : 'hidden'};">↺</button></div>
+      <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem; font-weight:600;"><input type="checkbox" id="strumDrumOn" ${strumState.drum && strumState.drum !== 'off' ? 'checked' : ''}> 🥁 Schlagzeug</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumClick" ${strumState.click ? 'checked' : ''}> Metronom-Klick</label>
       <label style="display:flex; gap:6px; align-items:center; font-size:0.88rem;"><input type="checkbox" id="strumCountIn" ${strumState.countIn ? 'checked' : ''}> Einzählen</label>
       <details id="strumBegDetails" ${strumState.begOpen ? 'open' : ''} style="display:inline-block;">
@@ -12190,6 +12205,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       <label style="font-size:0.88rem;">Takte pro Akkord:</label>
       <select id="strumBpc" style="${sel}">${[1, 2, 4].map(n => `<option value="${n}" ${n === (strumState.bpc || 1) ? 'selected' : ''}>${n}</option>`).join('')}</select>
     </div>
+    ${(() => { const cs = strumChords(); if (!cs || cs.length < 2) return ''; const li = strumLoopIdx(cs); return `<div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px; align-items:center;"><span style="font-size:.85rem; font-weight:600;">🔁 Akkord loopen:</span>${cs.map((c, i) => `<button type="button" class="strum-chip" data-sloop="${i}" style="${li === i ? 'background:var(--accent-color); color:#fff; font-weight:800;' : ''}">${li === i ? '🔁 ' : ''}${homeEsc(strumChordName(c))}</button>`).join('')}${li !== null && li !== undefined ? `<button type="button" class="strum-chip" id="strumLoopPrev" title="Voriger Akkord">◀</button><button type="button" class="strum-chip" id="strumLoopNext" title="Nächster Akkord">▶</button><button type="button" class="strum-chip" id="strumLoopOff">✕ Loop aus</button>` : '<span style="font-size:.8rem; color:var(--text-muted);">Akkord antippen = nur dieser läuft in der Schleife, bis du ihn wieder antippst</span>'}</div>`; })()}
     ${(() => { if (!progState) progState = progLoad(); const dr = progState.draft, hasDraft = dr.chords.some(c => progDetect(c)), jb = impBeatOptionsHtml(); if (!hasDraft && !progState.saved.length && !jb) return ''; return `<div class="row" style="margin-top:8px;"><select id="strumImport" style="${sel} max-width:100%;"><option value="">📥 Aus meinen Akkordfolgen${jb ? ' oder Beats' : ''} …</option>${hasDraft ? `<option value="draft">✏️ Aktuelle Folge${(dr.name || '').trim() ? ': ' + homeEsc(dr.name.trim()) : ''}</option>` : ''}${progState.saved.length ? progSavedOptsHtml(progState.saved, -1) : ''}${jb}</select></div>`; })()}
     <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">${STRUM_CHORD_SUGGESTIONS.map(c => `<button type="button" class="strum-chip" data-schords="${c}">${c}</button>`).join('')}</div>`;
     h += `<div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start;">` + `<div style="flex:1 1 320px; min-width:260px;">` + gripStripShellHtml('strum') + scaleFretHtml('strum') + `</div><div style="flex:0 1 250px; min-width:225px;">` + scalePanelHtml('strum', (() => { const c = (strumChords() || [])[0]; return c ? c[0] : 0; })(), (() => { const c = (strumChords() || [])[0]; return c && /moll/.test(c[1]) ? 'mollPenta' : 'durPenta'; })(), (() => { const cs = (strumChords() || []).map(c => ({ root: c[0], type: c[1] })); const kd = cs.length ? progFindKey(cs) : null; if (kd) return scaleKeySugg(kd); return cs.length ? scaleChordSugg(cs[0].root, cs[0].type) : []; })()) + `</div></div>`;
@@ -12217,6 +12233,10 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       on('strumRenEnd', () => { strumRenFolder = null; renderStrum(); });
       on('strumRenOk', () => { const inp = document.getElementById('strumRenIn'); const nn = fldNorm(inp ? inp.value : ''); const old = strumRenFolder; if (nn && old) { const ls = strumCustomList(); ls.forEach(pt => { if ((fldNorm(pt.folder) || 'Ohne Ordner') === old) pt.folder = nn; }); strumSaveCustomList(ls); showToast('🗂 Ordner „' + old + '“ heißt jetzt „' + nn + '“.'); } strumRenFolder = null; renderStrum(); });
       document.querySelectorAll('[data-srenf]').forEach(el => el.addEventListener('click', () => { strumRenFolder = el.dataset.srenf; renderStrum(); }));
+      document.querySelectorAll('[data-sloop]').forEach(el => el.addEventListener('click', () => { const i = +el.dataset.sloop; strumState.loopChord = strumState.loopChord === i ? null : i; saveStrumState(); renderStrum(); showToast(strumState.loopChord === null ? '🔁 Loop aus – die Folge läuft wieder durch.' : '🔁 Nur dieser Akkord läuft jetzt in der Schleife.'); }));
+      on('strumLoopOff', () => { strumState.loopChord = null; saveStrumState(); renderStrum(); });
+      on('strumLoopPrev', () => { const cs = strumChords() || []; if (cs.length) { strumState.loopChord = ((strumState.loopChord || 0) - 1 + cs.length) % cs.length; saveStrumState(); renderStrum(); } });
+      on('strumLoopNext', () => { const cs = strumChords() || []; if (cs.length) { strumState.loopChord = ((strumState.loopChord || 0) + 1) % cs.length; saveStrumState(); renderStrum(); } });
     }
   }
   function bindStrumEvents() {
@@ -12250,7 +12270,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
     document.getElementById('strumClick').addEventListener('change', e => { strumState.click = e.target.checked; saveStrumState(); });
     document.getElementById('strumCountIn').addEventListener('change', e => { strumState.countIn = e.target.checked; saveStrumState(); });
-    document.getElementById('strumDrum').addEventListener('change', e => { strumState.drum = e.target.value; saveStrumState(); });
+    document.getElementById('strumDrum').addEventListener('change', e => { strumState.drum = e.target.value; saveStrumState(); renderStrum(); });
+    { const don = document.getElementById('strumDrumOn'); if (don) don.addEventListener('change', () => { strumState.drum = don.checked ? (strumState.drum && strumState.drum !== 'off' ? strumState.drum : 'default') : 'off'; saveStrumState(); renderStrum(); showToast(don.checked ? '🥁 Schlagzeug spielt mit.' : '🥁 Schlagzeug aus.'); }); }
     const ci = document.getElementById('strumChordsInput');
     const applyChords = () => { strumState.chords = ci.value; saveStrumState(); renderStrumNow(0); if (strumPattern().kind === 'pick' && !strumPlaying) { const c = strumChords(); if (c) document.getElementById('strumGridWrap').innerHTML = strumGridAt(0); } restart(); };
     ci.addEventListener('change', applyChords);
@@ -16431,7 +16452,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-11-2';
+  const APP_VERSION = '2026-11-19-2';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -16654,5 +16675,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58ed9c0ee7c1e4d',t:'MTc5NDQxNjM5OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58ed9c0ee7c1e4d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5d14bf86d7c39c1',t:'MTc5NTExMzEzNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5d14bf86d7c39c1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
