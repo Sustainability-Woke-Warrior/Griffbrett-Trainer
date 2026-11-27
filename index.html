@@ -1214,6 +1214,7 @@
     #flamRoot .flam-beats b { display:inline-block; min-width:18px; color:var(--accent-color); }
     #flamRoot .flam-grid { display:grid; gap:5px; margin:9px 0 6px; }
     #flamRoot .flam-cell { border:1px solid var(--card-border); border-radius:8px; padding:5px 2px 4px; text-align:center; background:rgba(128,128,128,.07); min-width:0; }
+    #flamRoot .flam-cell .c { display:block; font-size:.62rem; font-weight:800; opacity:.6; line-height:1.1; }
     #flamRoot .flam-cell .s { display:block; font-size:1.15rem; line-height:1.15; }
     #flamRoot .flam-cell .f { display:block; font-size:.6rem; opacity:.72; letter-spacing:.2px; }
     #flamRoot .flam-cell.now { background:var(--accent-color); color:#fff; }
@@ -1223,6 +1224,22 @@
     #flamRoot .flam-chord { border:1px solid var(--card-border); border-radius:10px; padding:7px 2px 4px; text-align:center; background:rgba(128,128,128,.07); cursor:pointer; color:inherit; font:inherit; }
     #flamRoot .flam-chord .nm { font-weight:800; font-size:.85rem; color:var(--accent-color); }
     #flamRoot .flam-riff { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:.95rem; font-weight:700; }
+    #flamRoot .flam-seq { align-items:stretch; margin:8px 0 4px; }
+    #flamRoot .flam-abar { border:1px solid var(--card-border); border-radius:10px; background:rgba(128,128,128,.07); padding:6px 8px 5px; min-width:98px; text-align:center; }
+    #flamRoot .flam-abar .nm { background:none; border:none; padding:0; cursor:pointer; font-family:inherit; font-weight:800; font-size:.92rem; color:var(--accent-color); }
+    #flamRoot .flam-abar .rep { display:flex; align-items:center; justify-content:center; gap:4px; margin-top:4px; font-size:.74rem; color:var(--text-muted); }
+    #flamRoot .flam-abar .rep b { color:var(--text-color); min-width:20px; }
+    #flamRoot .flam-abar .rep button { width:19px; height:19px; line-height:1; font-size:.78rem; border:1px solid var(--card-border); border-radius:6px; background:var(--card-bg); color:var(--text-color); cursor:pointer; padding:0; }
+    #flamRoot .flam-abar .rep .x { border:none; background:none; width:auto; color:var(--text-faint); }
+    #flamRoot .flam-abar .rep .x:hover, #flamRoot .flam-abar .rep button:hover { color:var(--accent-color); }
+    #flamRoot .flam-abar.hot, #flamRoot [data-flamriff].hot { border-color:var(--accent-color); background:rgba(6,182,212,.16); }
+    #flamRoot .flam-abar.flash, #flamRoot [data-flamriff].flash { animation:flamFlash .5s ease-out 1; }
+    @keyframes flamFlash { 0% { box-shadow:0 0 0 0 rgba(6,182,212,.55); } 100% { box-shadow:0 0 0 10px rgba(6,182,212,0); } }
+    #flamRoot .flam-seq .arr { align-self:center; opacity:.55; }
+    #flamRoot .flam-seq .noflam { align-self:center; font-size:.82rem; opacity:.75; }
+    #flamRoot .flam-add { align-self:center; border:1px dashed var(--accent-color); background:none; color:var(--accent-color); border-radius:10px; padding:6px 11px; font-size:.84rem; font-weight:700; cursor:pointer; }
+    #flamRoot .flam-add:hover { background:rgba(6,182,212,.12); }
+    #flamRoot .strum-chip.on { background:var(--accent-color); color:#fff; border-color:var(--accent-color); font-weight:700; }
     .strum-grid-wrap { overflow-x:auto; margin:14px 0 6px; padding-bottom:4px; }
     .strum-grid { display:grid; gap:3px; min-width:max-content; }
     .strum-cell { min-width:34px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:7px; border:1px solid var(--card-border); font-weight:700; font-size:1.25rem; background:var(--card-bg); color:var(--text-color); transition:background .06s; }
@@ -11013,20 +11030,20 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   // =================== 🔥 Flamenco für Anfänger ===================
   const FLAM_KEY = 'guitartrainer_flam';
   const FLAM_VID = 'https://www.youtube.com/watch?v=';
-  // Griffe (Bünde je Saite, E A D G H e; -1 = stumm, 0 = leer)
+  // Griffe (Bünde je Saite, tief -> hoch: E A D G H e; -1 = stumm, 0 = leer)
   const FLAM_CH = {
-    Em:  { name: 'Em',     frets: [0, 2, 2, 0, 0, 0],  how: 'Der Anker für Lektion 1 und 3 – ganz normal greifen.' },
-    A:   { name: 'A',      frets: [-1, 0, 2, 2, 2, -1], how: '6. Saite stumm, 5. Saite leer, drei Finger im 2. Bund.' },
-    B:   { name: 'B',      frets: [-1, 0, 3, 3, 3, -1], how: 'Wie A – nur einen Bund höher gerutscht.' },
-    Ab9: { name: 'A(b9)',  frets: [-1, 0, 2, 3, 2, -1], how: 'Der kleine Finger hämmert die b9 auf der 3. Saite, 3. Bund.' },
-    B11: { name: 'B#11',   frets: [-1, 1, 3, 3, 3, 0],  how: 'Die leere e-Saite oben drüber ist die #11.' },
-    C9:  { name: 'C9',     frets: [-1, 3, 2, 0, 0, 0],  how: 'Zwei Finger greifen, die übrigen Saiten bleiben leer.' },
-    B7F: { name: 'B7/F#',  frets: [2, 0, 0, 2, 0, 1],  how: '2. Finger 6. Saite 2. Bund, 1. Finger 1. Saite 1. Bund, 3. Finger 3. Saite 2. Bund.' }
+    Em:  { q: 'Em', name: 'Em',     frets: [0, 2, 2, 0, 0, 0],   how: 'Zeigefinger 5. Saite 2. Bund, Mittelfinger 4. Saite 2. Bund – alle anderen Saiten klingen leer.' },
+    A:   { q: 'A', name: 'A',      frets: [-1, 0, 2, 2, 2, -1], how: '6. Saite stumm, 5. Saite leer, drei Finger im 2. Bund.' },
+    B:   { q: 'H', name: 'B',      frets: [-1, 0, 3, 3, 3, -1], how: 'Wie A – nur dieselben Finger einen Bund höher gerutscht.' },
+    Ab9: { q: 'A', name: 'A(b9)',  frets: [-1, 0, 2, 3, 2, -1], how: 'Der kleine Finger hämmert die b9 auf der 3. Saite im 3. Bund.' },
+    B11: { q: 'H', name: 'B#11',   frets: [-1, 1, 3, 3, 3, 0],  how: 'Zeigefinger 1. Bund 5. Saite, die anderen im 3. Bund – die leere e-Saite ist die #11.' },
+    C9:  { q: 'C9', name: 'C9',     frets: [-1, 3, 2, 0, 0, 0],  how: 'Mittelfinger 5. Saite 3. Bund, Zeigefinger 4. Saite 2. Bund, der Rest bleibt leer.' },
+    H7F: { q: 'H7', name: 'H7/F#',  frets: [2, 0, 1, 2, 0, 0],   how: 'Mittelfinger 6. Saite 2. Bund (= F# im Bass), Zeigefinger 4. Saite 1. Bund, Ringfinger 3. Saite 2. Bund.' }
   };
-  const FLAM_ORDER = ['A', 'B', 'Ab9', 'B11', 'C9', 'Em'];
-  // Anschlag-Kürzel: Symbol + „wo wird angeschlagen?“
+  const FLAM_ORDER = ['A', 'B', 'Ab9', 'B11', 'C9', 'Em', 'H7F'];
+  // Anschlag-Kürzel: Symbol + „wo wird angeschlagen?“ + PIMA-Kurzlabel
   const FLAM_TOK = {
-    m: ['🖐', 'Mano / Golpe – Flachhand auf die Decke (hier als Snare-Klang), der Daumen bleibt an der tiefen E-Saite als Anker', 'mano'],
+    m: ['🖐', 'Mano / Golpe – Flachhand auf die Decke, der Daumen bleibt an der tiefen E-Saite als Anker. Klang: Snare (hell) oder Tom (dumpf, wie aufs Holz) – unten umschalten', 'mano'],
     M: ['🖐', 'Mano betont – gleiche Bewegung, etwas fester (Snare-Klang)', 'mano'],
     v: ['↓', 'Daumen ab (P) – liegt auf der 6. Saite und gleitet durch alle Saiten', 'P ↓'],
     V: ['↓', 'Daumen ab (P), betont', 'P ↓'],
@@ -11042,36 +11059,53 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     U: ['↑', 'Zeigefinger auf (i), betont', 'i ↑'],
     '-': ['·', 'Pause – die Hand pendelt in Ruhe weiter', '']
   };
-  const FLAM_PAT = {
-    rumba1: '----mudu',                    // Stufe 1: nur die zweite Vierergruppe
-    rumba2: 'mfrgmudu',                    // Stufe 2: der volle Acht-Schläge-Rumba
-    part1:  'vgrg----',                    // Rumba-Muster Teil 1 (Daumen + Finger)
-    part2:  '----mudu',                    // Rumba-Muster Teil 2 (Slap + Zeigefinger)
-    part3:  'vgrgmudu'                     // Teil 3: alles zusammen
-  };
+  // Halbe Takte werden eigenständig geübt – ohne Pause davor
+  const FLAM_RUMBA8 = 'mfrgmudu';
   const FLAM_LESSONS = [
     {
       id: 'l1', nr: 1, title: 'Das Gefühl', vid: '_leQPbCtUSo', vlabel: 'Video – 7 Min.', vstart: 0,
+      playLabel: '▶ Anhören & mitspielen', chgBase: 'Em', chgOther: 'H7F',
       tip: 'Die kleinstmögliche Bewegung ist die ganze Kunst: keine Kraft, die Hand bleibt schwer und locker. '
         + 'Nach dem 4. Schlag die Hand kurz von den Saiten nehmen, damit sie zurückschwingen kann. '
-        + 'Wo du schlägst, klingt unterschiedlich: hinten am Steg dumpf, weiter vorne heller.',
+        + 'Wo du schlägst, klingt unterschiedlich: hinten am Steg dumpfer, weiter zur Mitte heller.',
       parts: [
-        { id: 's1', label: 'Stufe 1', steps: FLAM_PAT.rumba1, chord: 'Em',
-          head: 'Stufe 1 – die zweite Vierergruppe (Schläge 5–8), Akkord Em',
+        { id: 'p2', label: 'Zuerst: die zweite Hälfte (5–8)', head: 'Zuerst die zweite Vierergruppe – die übst du zuerst (Schläge 5–8)',
+          steps: 'mudu', count: ['5', '6', '7', '8'],
           lines: [[5, 'Mano – Flachhand auf die Decke, der Daumen landet auf der tiefen E-Saite als Anker'],
                   [6, 'Zeigefinger rauf'], [7, 'Zeigefinger runter'], [8, 'Zeigefinger rauf']],
-          note: 'Diese vier Schläge kann jeder – sie sind schon die halbe Rumba.' },
-        { id: 's2', label: 'Stufe 2', steps: FLAM_PAT.rumba2, chord: 'Em',
-          head: 'Stufe 2 – der volle Rumba-Anschlag (8 Schläge), Akkord Em',
-          lines: [[1, 'Mano'], [2, 'alle Finger rauf'], [3, 'alle Finger runter (i · m · a)'], [4, 'Daumen rauf'],
-                  [5, 'Mano'], [6, 'Zeigefinger rauf'], [7, 'Zeigefinger runter'], [8, 'Zeigefinger rauf']],
-          note: 'Stufe 1 ist die zweite Hälfte davon – deshalb sitzt sie schon, wenn du weitermachst.' }
+          note: 'Vier Schläge direkt hintereinander und immer wieder – ohne den ersten Teil davor. Das ist schon die halbe Rumba.' },
+        { id: 'p1', label: 'Dann: die erste Hälfte (1–4)', head: 'Dann die erste Vierergruppe (Schläge 1–4)',
+          steps: 'mfrg', count: ['1', '2', '3', '4'],
+          lines: [[1, 'Mano'], [2, 'alle Finger rauf'], [3, 'alle Finger runter (i · m · a)'], [4, 'Daumen rauf']],
+          note: 'Erst wenn die zweite Hälfte sitzt: dazu die erste Hälfte allein üben.' }
       ],
-      modes: [{ label: 'Stufe 1', take: ['s1'] }, { label: 'Stufe 2', take: ['s2'] }, { label: 'Beide nacheinander', take: ['s1', 's2'] }],
+      modes: [{ label: '1) Zuerst: Schläge 5–8', take: ['p2'] }, { label: '2) Dann: Schläge 1–4', take: ['p1'] }, { label: '3) Beide zusammen: volle Acht', take: ['p1', 'p2'] }],
       extra: 'Extra: den Mano variieren – näher am Steg klingt dumpfer, näher zur Mitte heller.'
     },
     {
-      id: 'l2', nr: 2, title: 'Die Akkorde', vid: 'PyVM_B5wPh8', vlabel: 'Video – Akkorde', vstart: 38,
+      id: 'l3', nr: 2, title: 'Das Rumba-Muster', vid: 'EFx3_TeQgUA', vlabel: 'Video – 5 Min.', vstart: 22,
+      playLabel: '▶ Anhören & mitspielen', chgBase: 'Em', chgOther: 'H7F',
+      tip: 'Der Daumen bleibt gestreckt und gleitet durch die Saiten, das Handgelenk dreht mit, die Hand ist schwer und locker. '
+        + 'Übe jeden Teil ganz langsam allein auf Em, bis du jeden einzelnen Schlag bewusst spielst.',
+      chapters: [[22, 'Anschlagtechnik'], [103, 'Teil 1'], [121, 'Teil 2'], [254, 'Teil 3']],
+      parts: [
+        { id: 't2', label: 'Zuerst: Teil 2 (5–8)', head: 'Zuerst Teil 2 – Schläge 5–8 auf Em (der Teil mit dem Slap)',
+          steps: 'mudu', count: ['5', '6', '7', '8'],
+          lines: [[5, 'Slap – Flachhand auf die Decke oder die Seite'], [6, 'Zeigefinger rauf, der Daumen liegt auf der E-Saite als Halt'],
+                  [7, 'Zeigefinger ab'], [8, 'Zeigefinger rauf']],
+          note: 'Dieser Teil sitzt schneller, weil er dem Gefühl aus Lektion 1 fast gleich ist.' },
+        { id: 't1', label: 'Dann: Teil 1 (1–4)', head: 'Dann Teil 1 – Schläge 1–4 auf Em',
+          steps: 'vgrg', count: ['1', '2', '3', '4'],
+          lines: [[1, 'Daumen ab – er liegt auf der tiefen E-Saite und gleitet durch alle Saiten'], [2, 'Daumen rauf'],
+                  [3, 'Zeige- und Mittelfinger ab (mit den Nägeln)'], [4, 'Daumen rauf – die Hand öffnet sich']],
+          note: 'Teil 1 ist das Neue – deshalb danach einzeln und langsam üben.' }
+      ],
+      modes: [{ label: '1) Zuerst: Teil 2 (5–8)', take: ['t2'] }, { label: '2) Dann: Teil 1 (1–4)', take: ['t1'] }, { label: '3) Alles zusammen (1–8)', take: ['t1', 't2'] }],
+      outro: 'Zum Abschluss der Akkordwechsel Em ↔ H7/F# – erst einzeln üben, bis er sitzt, dann unter dem laufenden Muster.'
+    },
+    {
+      id: 'l2', nr: 3, title: 'Die Akkorde', vid: 'PyVM_B5wPh8', vlabel: 'Video – Akkorde', vstart: 38,
+      playLabel: '▶ Riff spielen',
       tip: 'Für den spanischen Klang sorgt die phrygische Tonart: der Halbton direkt über dem Grundton. '
         + 'Hier zählt nicht Kraft, sondern saubere, gleichmäßige Fingerbewegung – lieber langsam und treu als schnell und ungenau.',
       chapters: [[38, 'Leichte Griffe'], [149, 'Mittel'], [209, 'Sicher'], [277, 'Folge üben']],
@@ -11082,63 +11116,38 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         ['B#11', 'Zeigefinger 1. Bund auf der 5. Saite, die anderen Finger im 3. Bund, die hohe e-Saite bleibt leer – diese leere Saite ist die #11.'],
         ['C9', 'Aus B#11: Mittelfinger auf die 5. Saite in den 3. Bund, Zeigefinger auf die 4. Saite in den 2. Bund, die hohe e-Saite bleibt leer. Zwei Finger wandern, einer bleibt stehen.']
       ],
-      pat: FLAM_PAT.rumba2,
+      diag: ['A', 'B', 'Ab9', 'B11', 'C9'],
       modes: [{ label: 'Zuerst: A → B#11', seq: ['A', 'B11'] }, { label: 'Dann: + C9', seq: ['A', 'B11', 'C9'] }],
       note: 'Nur diese drei Akkorde – und es klingt nach Flamenco. Übe zuerst den Wechsel A → B#11, '
-        + 'erst wenn der sitzt, kommt C9 dazu. Tippe unten einen Akkord an, um ihn zu tauschen.'
-    },
-    {
-      id: 'l3', nr: 3, title: 'Das Rumba-Muster', vid: 'EFx3_TeQgUA', vlabel: 'Video – 5 Min.', vstart: 22,
-      tip: 'Der Daumen bleibt gestreckt und gleitet durch die Saiten, das Handgelenk dreht mit, die Hand ist schwer und locker. '
-        + 'Übe Teil 1 zuerst ganz langsam allein auf Em, bis du jeden einzelnen Schlag bewusst spielst.',
-      chapters: [[22, 'Anschlagtechnik'], [103, 'Teil 1'], [121, 'Teil 2'], [254, 'Teil 3']],
-      parts: [
-        { id: 't1', label: 'Teil 1', steps: FLAM_PAT.part1, chord: 'Em',
-          head: 'Teil 1 – Schläge 1–4 auf Em',
-          lines: [[1, 'Daumen ab – er liegt auf der tiefen E-Saite und gleitet durch alle Saiten'], [2, 'Daumen rauf'],
-                  [3, 'Zeige- und Mittelfinger ab (mit den Nägeln)'], [4, 'Daumen rauf – die Hand öffnet sich']] },
-        { id: 't2', label: 'Teil 2', steps: FLAM_PAT.part2, chord: 'Em',
-          head: 'Teil 2 – Schläge 5–8 auf Em',
-          lines: [[5, 'Slap – Flachhand auf die Decke oder die Seite'], [6, 'Zeigefinger rauf, der Daumen liegt auf der E-Saite als Halt'],
-                  [7, 'Zeigefinger ab'], [8, 'Zeigefinger rauf']] },
-        { id: 't3', label: 'Teil 3 · alles zusammen', steps: FLAM_PAT.part3, chord: 'Em',
-          head: 'Teil 3 – alle 8 Schläge auf Em',
-          lines: [[1, 'Der Daumen liegt schon bereit für den ersten Schlag'], [2, 'Danach einfach weiterschwingen lassen']],
-          note: 'Erst wenn Teil 1 und 2 sicher sind, zusammenfügen.' }
-      ],
-      modes: [{ label: 'Teil 1', take: ['t1'] }, { label: 'Teil 2', take: ['t2'] }, { label: 'Teil 3 · alles', take: ['t3'] }],
-      outro: { label: 'Zum Abschluss: Akkordwechsel Em ↔ B7/F#', chord: 'B7F',
-        text: 'Erst den Wechsel allein üben, bis er sitzt – dann mit dem Rumba-Muster kombinieren.' }
+        + 'erst wenn der sitzt, kommt C9 dazu. Tippe einen Akkord im Riff an, um ihn zu tauschen. '
+        + 'Das Riff spielt mit der vollen Acht aus Lektion 1 (Stufe „Beide zusammen").'
     }
   ];
   let flamState = null;
   let flamPlaying = false, flamTimer = null, flamNext = 0, flamIdx = 0, flamBar = 0, flamLesson = 'l1';
   function loadFlamState() {
-    const d = { temps: {}, mode: { l1: 0, l3: 0 }, drum: true, loop: true, done: {}, load: {}, riff: null, riffMode: 0, outro: false, closed: {} };
+    const d = { temps: {}, mode: { l1: 0, l3: 0 }, drum: true, loop: true, done: {}, load: {}, riff: null, riffMode: 0, chg: {}, closed: {}, seq: {}, off: {}, pal: '', klang: 'snare' };
     try { Object.assign(d, JSON.parse(localStorage.getItem(FLAM_KEY) || '{}')); } catch (e) {}
     if (!d.mode) d.mode = { l1: 0, l3: 0 };
+    if (!d.temps) d.temps = {};
+    if (!d.chg) d.chg = {};
+    if (!d.closed) d.closed = {};
     return d;
   }
   function saveFlam() { try { localStorage.setItem(FLAM_KEY, JSON.stringify(flamState)); } catch (e) {} }
-  function flamRootPc(nm) {
-    const m = String(nm).match(/^([A-H])([#\u266fb\u266d]?)/); if (!m) return 0;
-    const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, H: 11 }[m[1]];
-    return ((base || 0) + (m[2] === '#' || m[2] === '\u266f' ? 1 : m[2] === 'b' || m[2] === '\u266d' ? -1 : 0) + 12) % 12;
-  }
-  // Akkord einmal als Rumba anspringen lassen (zum Reinhören in die Griffe)
-  function flamAudition(key) {
-    initAudio(); if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') { try { audioCtx.resume(); } catch (e) {} }
-    const t = audioCtx.currentTime + 0.06, frets = FLAM_CH[key].frets;
-    flamStepsOf(FLAM_PAT.rumba2).slice(0, 4).forEach((tk, i) => flamPlayTok(audioCtx, tk, frets, t + i * 0.24, i === 0));
-    showToast('🎸 ' + FLAM_CH[key].name + ' – ' + FLAM_CH[key].how);
+  function flamChordType(nm) {
+    const suf = String(nm).replace(/^[A-H][#b\u266f\u266d]?/, '').replace(/\/.*$/, '');
+    if (/^m(?!aj)/.test(suf)) return /7/.test(suf) ? 'min7' : 'moll';
+    if (/11/.test(suf)) return 'dom11'; if (/13/.test(suf)) return 'dom13';
+    if (/9/.test(suf)) return 'dom9'; if (/7/.test(suf)) return 'dom7'; if (/6/.test(suf)) return 'maj6';
+    return 'dur';
   }
   function flamSvg(frets) {
     const xs = [8, 16, 24, 32, 40, 48], ys = [4, 16, 28, 40];
     let s = `<svg width="46" height="52" viewBox="0 -11 56 60" role="img" aria-label="Griffbild">`;
     s += `<g stroke="var(--card-border, #8a7355)" stroke-width="1.4">`;
     xs.forEach(x => { s += `<line x1="${x}" y1="4" x2="${x}" y2="40"/>`; });
-    [4, 16, 28, 40].forEach(y => { s += `<line x1="6" x2="50" y1="${y}" y2="${y}"/>`; });
+    ys.forEach(y => { s += `<line x1="6" x2="50" y1="${y}" y2="${y}"/>`; });
     s += `</g><line x1="6" x2="50" y1="4" y2="4" stroke="var(--text-color,#e8dcc4)" stroke-width="2.2"/>`;
     frets.forEach((f, i) => {
       const x = xs[i];
@@ -11148,42 +11157,148 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
     return s + `</svg>`;
   }
+  function flamRootPc(nm) {
+    const m = String(nm).match(/^([A-H])([#\u266fb\u266d]?)/); if (!m) return 0;
+    const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, H: 11, B: 11 }[m[1]] || 0;
+    return (base + (m[2] === '#' || m[2] === '\u266f' ? 1 : m[2] === 'b' || m[2] === '\u266d' ? -1 : 0) + 12) % 12;
+  }
+  // Akkord kurz als Rumba anspielen (zum Reinhören in den Griff)
+  function flamAudition(key) {
+    initAudio(); if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') { try { audioCtx.resume(); } catch (e) {} }
+    const t = audioCtx.currentTime + 0.06, frets = FLAM_CH[key].frets;
+    'mfrg'.split('').forEach((tk, i) => flamPlayTok(audioCtx, tk, frets, t + i * 0.26, i === 0));
+    showToast('🎸 ' + FLAM_CH[key].name + ' – ' + FLAM_CH[key].how);
+  }
   function flamTokHtml(t) {
     const d = FLAM_TOK[t] || ['·', '', ''];
     return `<span class="s">${d[0]}</span>` + (d[2] ? `<span class="f">${d[2]}</span>` : '');
   }
-  function flamStepsOf(patId) { return (FLAM_PAT[patId] || '').split(''); }
-  // Muster + Akkorde, die gerade in einer Lektion klingen
+  // Was gerade zu sehen und zu hören ist
+  // ---- Akkord-Folge: welcher Griff, und wie lange er hält (1 Runde = ein Durchgang des Musters) ----
+  function flamRep(v) { return Math.max(1, Math.min(8, v | 0)); }
+  function flamSeqOf(lesson) {
+    const L = FLAM_LESSONS.find(x => x.id === lesson); if (!L) return [];
+    if (L.steps) {   // Akkorde-Lektion: das Riff ist schon eine solche Folge (je 1 Runde)
+      const raw = (flamState.riff && flamState.riff.length ? flamState.riff : (((L.modes[flamState.riffMode || 0] || L.modes[0]) || {}).seq)) || [];
+      return raw.slice(0, 8).filter(k => FLAM_CH[k]).map(k => ({ k, r: 1 }));
+    }
+    if (!L.chgBase) return [];
+    if (flamState.off && flamState.off[lesson]) return [];
+    const s = (flamState.seq || {})[lesson];
+    if (Array.isArray(s)) return s.filter(x => x && FLAM_CH[x.k]).map(x => ({ k: x.k, r: flamRep(x.r) }));
+    return flamState.chg[lesson] && L.chgOther ? [{ k: L.chgBase, r: 1 }, { k: L.chgOther, r: 1 }] : [{ k: L.chgBase, r: 1 }];
+  }
+  function flamSeqNorm(sq) { return (sq || []).filter(x => x && FLAM_CH[x.k]).map(x => ({ k: x.k, r: flamRep(x.r) })); }
+  function flamSeqSet(lesson, sq) {
+    if (!flamState.seq) flamState.seq = {};
+    flamState.off = flamState.off || {};
+    const n = flamSeqNorm(sq).slice(0, 8);
+    if (n.length) { flamState.seq[lesson] = n; delete flamState.off[lesson]; }
+    else { delete flamState.seq[lesson]; flamState.off[lesson] = 1; }
+    saveFlam();
+  }
+  // Die Akkorde taktfür Takt (pro Runde), so wie die Wiedergabe sie braucht
+  function flamChordBars(lesson) {
+    const out = [];
+    flamSeqOf(lesson).forEach(x => { for (let i = 0; i < x.r; i++) out.push(x.k); });
+    if (!out.length) { const L = FLAM_LESSONS.find(x => x.id === lesson); out.push((L && L.chgBase) || 'Em'); }
+    return out;
+  }
+  function flamBarToChip(lesson, bar) {
+    const sq = flamSeqOf(lesson), total = sq.reduce((acc, x) => acc + x.r, 0);
+    if (!total) return -1;
+    let b = ((bar % total) + total) % total, acc2 = 0;
+    for (let k = 0; k < sq.length; k++) { if (b < acc2 + sq[k].r) return k; acc2 += sq[k].r; }
+    return sq.length - 1;
+  }
+  function flamBarEls(lesson) {
+    const card = document.querySelector('#flamRoot [data-flamcard="' + (lesson || flamLesson) + '"]');
+    return card ? [...card.querySelectorAll('.flam-abar, [data-flamriff]')] : [];
+  }
+  function flamHotChip(i, lesson) { flamBarEls(lesson).forEach((e, k) => e.classList.toggle('hot', k === i)); }
+  function flamFlashNext(i, lesson) {
+    const els = flamBarEls(lesson); if (els.length < 2) return;
+    const e = els[(((i + 1) % els.length) + els.length) % els.length];
+    if (e) { e.classList.remove('flash'); void e.offsetWidth; e.classList.add('flash'); }
+  }
+  function flamClearChips() {
+    document.querySelectorAll('#flamRoot .flam-abar.hot, #flamRoot .flam-abar.flash, #flamRoot [data-flamriff].hot, #flamRoot [data-flamriff].flash')
+      .forEach(el => el.classList.remove('hot', 'flash'));
+  }
+  // Dumpfer Schlag auf den Korpus (Golpe de tambora): Holz-Anschlag + tiefer Korb-Klang.
+  // Läuft über denselben Bus wie die Trommeln (jamOut) – sonst liegt er hinter der 0,55-Daempfung
+  // des Gitarren-Ausgangs und klingt viel zu leise.
+  function flamPlayTom(t, vol = 1, ctx0 = null) {
+    const ctx = ctx0 || audioCtx; if (!ctx) return;
+    const out = (() => { try { return jamOut(ctx, 0.16, -0.06); } catch (e) { return strumGetOut(ctx); } })();
+    const v = Math.max(0.3, Math.min(1.25, vol));
+    // Korb: tiefer Ton, der in gut 0,1 s in die Tiefe ruebt
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(205 + 30 * v, t);
+    o.frequency.exponentialRampToValueAtTime(78, t + 0.1);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(1.2 * v, t + 0.0025);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t + 0.3);
+    // Fellton: gibt dem Schlag den Koerper, damit er nicht duenn wirkt
+    const o2 = ctx.createOscillator(), g2 = ctx.createGain();
+    o2.type = 'triangle';
+    o2.frequency.setValueAtTime(310 + 40 * v, t);
+    o2.frequency.exponentialRampToValueAtTime(150, t + 0.07);
+    g2.gain.setValueAtTime(0.0001, t);
+    g2.gain.linearRampToValueAtTime(0.44 * v, t + 0.002);
+    g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+    o2.connect(g2); g2.connect(out); o2.start(t); o2.stop(t + 0.14);
+    // Anschlag: die flache Hand auf dem Holz
+    try { jamPlayNoise(t, 0.032, 760, 'bandpass', 0.62 * v, ctx); } catch (e) {}
+  }
+  function flamKlang() { return flamState && flamState.klang === 'tom' ? 'tom' : 'snare'; }
+  function flamPatternChords(cp) {
+    if (!cp) return [];
+    if (Array.isArray(cp.flamKeys) && cp.flamKeys.length) return cp.flamKeys.filter(k => FLAM_CH[k]);
+    return String(cp.chords || '').trim().split(/\s+/).map(nm => Object.keys(FLAM_CH).find(k => FLAM_CH[k].name === nm || (FLAM_CH[k].q || '') === nm)).filter(Boolean);
+  }
   function flamActive(lesson) {
     const L = FLAM_LESSONS.find(x => x.id === lesson) || FLAM_LESSONS[0];
     const ov = flamState.load && flamState.load[lesson];
     if (ov) {
       const cp = strumCustomList().find(x => x.id === ov && x.kind === 'strum');
       if (cp) {
-        const chords = (String(cp.chords || 'Em').trim().split(/\s+/) || []).map(nm => Object.keys(FLAM_CH).find(k => FLAM_CH[k].name === nm)).filter(Boolean);
-        return { steps: String(cp.steps).split(''), chords: chords.length ? chords : ['Em'], bpm: cp.bpm || 80, name: cp.name };
+        const stp = String(cp.steps).split('');
+        let cnt = Array.isArray(cp.count) && cp.count.length === stp.length ? cp.count : null;
+        if (!cnt && L.parts) {   // kein Zählzeit gespeichert: übernehmen, wenn die Schläge genau einer Hälfte entsprechen
+          const mt = L.parts.find(pt => pt.steps === stp.join(''));
+          if (mt) cnt = mt.count || null;
+        }
+        return { steps: stp, count: cnt, unit: cp.unit || 2, chords: flamChordBars(lesson), bpm: cp.bpm || 80, name: cp.name };
       }
       if (flamState.load) { delete flamState.load[lesson]; saveFlam(); }
     }
-    if (lesson === 'l2') {
-      const seq = (flamState.riff && flamState.riff.length ? flamState.riff : (L.modes[flamState.riffMode || 0] || L.modes[0]).seq).slice(0, 8);
-      return { steps: flamStepsOf(L.pat), chords: seq, bpm: 76, name: 'Riff · Rumba' };
+    if (L.steps) {   // Akkorde-Lektion: Riff mit der vollen Acht
+      return { steps: FLAM_RUMBA8.split(''), count: ['1', '2', '3', '4', '5', '6', '7', '8'], unit: 2, chords: flamChordBars(L.id), bpm: 76, name: 'Riff · volle Acht' };
     }
     const mi = Math.min(L.modes.length - 1, Math.max(0, (flamState.mode && flamState.mode[lesson]) | 0));
     const take = L.modes[mi].take.map(pid => L.parts.find(p => p.id === pid)).filter(Boolean);
     const steps = take.map(p => p.steps).join('').split('');
-    const chord = take[0] ? take[0].chord : 'Em';
-    const chords = lesson === 'l3' && flamState.outro ? [chord, 'B7F'] : [chord];
-    return { steps, chords, bpm: lesson === 'l3' ? 76 : 84, name: L.modes[mi].label };
+    const count = take.map(p => p.count).reduce((acc, c) => acc.concat(c || []), []);
+    const chords = flamChordBars(lesson);
+    return { steps, count: count.length === steps.length ? count : null, unit: 2, chords, bpm: lesson === 'l3' ? 76 : 84, name: L.modes[mi].label, parts: take };
   }
   function flamBpm(lesson) { const L = lesson || flamLesson; const t = (flamState.temps || {})[L]; return t || flamActive(L).bpm || 80; }
-  function flamPlayTok(ctx, tok, frets, t, first) {
+  function flamPlayTok(ctx, tok, frets, t, first, g = 1) {
     const pitch = i => STRUM_OPEN[i] + frets[i];
     const ringing = () => [0, 1, 2, 3, 4, 5].filter(i => frets[i] >= 0);
     const hi = () => ringing().filter(i => i >= 2).reverse();
     const gap = jamLowPerf() ? 0.017 : 0.011;
-    const w = first ? 1.06 : 1;
-    if (tok === 'm' || tok === 'M') { strumDamp(ctx, t); try { jamPlaySnare(t, (tok === 'M' ? 0.8 : 0.66) * w, 0.5, ctx, 0.12); } catch (e) {} return; }
+    const w = (first ? 1.06 : 1) * g;
+    if (tok === 'm' || tok === 'M') {
+      strumDamp(ctx, t);
+      const v = (tok === 'M' ? 0.8 : 0.66) * w;
+      try { if (flamKlang() === 'tom') flamPlayTom(t, (tok === 'M' ? 0.85 : 1) * v, ctx); else jamPlaySnare(t, v, 0.5, ctx, 0.12); } catch (e) {}
+      return;
+    }
     if (tok === 'v' || tok === 'V') { const v = (tok === 'V' ? 1 : 0.86) * w; ringing().forEach((si, k) => { strumDamp(ctx, t + k * gap, si); strumPluck(ctx, pitch(si), t + k * gap, v * 0.95, si, 1.6); }); return; }
     if (tok === 'g' || tok === 'G') { const v = (tok === 'G' ? 0.92 : 0.72) * w; hi().forEach((si, k) => strumPluck(ctx, pitch(si), t + k * gap, v, si, 1.4)); return; }
     if (tok === 'r' || tok === 'R' || tok === 'f' || tok === 'F') {
@@ -11200,7 +11315,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
   function flamTick() {
     if (!flamPlaying || !audioCtx) return;
-    const a = flamActive(flamLesson), steps = a.steps, sd = 60 / flamBpm(flamLesson) / 2;
+    const a = flamActive(flamLesson), steps = a.steps, unit = a.unit || 2, sd = 60 / flamBpm(flamLesson) / unit;
     if (!steps.length) { flamStop(); return; }
     if (flamIdx >= steps.length) flamIdx = 0;
     if (flamNext < audioCtx.currentTime - 0.05) {
@@ -11210,11 +11325,14 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     const look = jamLowPerf() ? 0.25 : 0.12;
     while (flamNext < audioCtx.currentTime + look) {
       if (!flamState.loop && flamBar >= 1) { const left = Math.max(0, (flamNext - audioCtx.currentTime) * 1000); setTimeout(() => { if (flamPlaying) flamStop(); }, left + 400); return; }
-      const ck = FLAM_CH[a.chords[flamBar % a.chords.length]] ? a.chords[flamBar % a.chords.length] : 'Em';
+      const kc = a.chords[flamBar % a.chords.length];
+      const chip = flamBarToChip(flamLesson, flamBar);
+      const ck = FLAM_CH[kc] ? kc : 'Em';
       flamPlayTok(audioCtx, steps[flamIdx], FLAM_CH[ck].frets, flamNext, flamIdx === 0);
-      if (flamState.drum && flamIdx % 2 === 0) { try { strumClick(audioCtx, flamNext, flamIdx === 0); } catch (e) {} }
+      if (flamState.drum && flamIdx % unit === 0) { try { strumClick(audioCtx, flamNext, flamIdx === 0); } catch (e) {} }
       const st = flamIdx, delay = Math.max(0, (flamNext - audioCtx.currentTime) * 1000 + audioLagMs());
-      setTimeout(() => { if (flamPlaying) flamShowStep(st); }, delay);
+      const last = st === steps.length - 1;
+      setTimeout(() => { if (!flamPlaying) return; flamShowStep(st); flamHotChip(chip); if (last) flamFlashNext(chip); }, delay);
       flamNext += sd; flamIdx++;
       if (flamIdx >= steps.length) { flamIdx = 0; flamBar++; }
     }
@@ -11222,7 +11340,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
   function flamShowStep(i) {
     document.querySelectorAll('#flamRoot .flam-cell.now').forEach(el => el.classList.remove('now'));
-    const el = document.querySelector(`#flamRoot .flam-cell[data-fcell="${i}"]`);
+    // nur in der Karte markieren, die gerade spielt (sonst trifft data-fcell=0 die erste Karte)
+    const el = document.querySelector(`#flamRoot [data-flamcard="${flamLesson}"] .flam-cell[data-fcell="${i}"]`);
     if (el) el.classList.add('now');
   }
   function flamStart() {
@@ -11236,13 +11355,18 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     flamPlaying = false;
     if (flamTimer) { clearTimeout(flamTimer); flamTimer = null; }
     document.querySelectorAll('#flamRoot .flam-cell.now').forEach(el => el.classList.remove('now'));
+    flamClearChips();
   }
   function flamMarkDone(id) { flamState.done = flamState.done || {}; flamState.done[id] = !flamState.done[id]; saveFlam(); renderFlam(); }
-  // Muster + Akkord in „Anschlag & Zupfen“ übernehmen (Ordner „Flamenco“)
   function flamSave(lesson) {
     const L = FLAM_LESSONS.find(x => x.id === lesson), a = flamActive(lesson);
     const id = 'flam_' + lesson;
-    const entry = { id, kind: 'strum', name: `Flamenco · ${L.title}`, sig: '4/4', unit: 2, bpm: flamBpm(lesson), steps: a.steps.join(''), chords: a.chords.map(k => FLAM_CH[k].name).join(' '), folder: 'Flamenco', tip: 'Aus dem Flamenco-Modul: ' + a.name };
+    const sq = flamSeqOf(lesson);
+    const names = (sq.length ? sq.map(x => x.k) : a.chords).map(k => FLAM_CH[k].q || FLAM_CH[k].name);
+    const entry = { id, kind: 'strum', name: `Flamenco · ${L.title}`, sig: '4/4', unit: a.unit || 2, bpm: flamBpm(lesson), steps: a.steps.join(''),
+      count: a.count || undefined, chords: names.join(' '), flam: true, folder: 'Flamenco',
+      flamSeq: sq.map(x => ({ k: x.k, r: x.r })), flamKeys: sq.map(x => x.k),
+      tip: 'Aus dem Flamenco-Modul: ' + a.name + (sq.length > 1 ? ' · Akkorde: ' + sq.map(x => FLAM_CH[x.k].name + ' ×' + x.r).join(' → ') : '') };
     try {
       const ls = strumCustomList(); const i = ls.findIndex(x => x.id === id);
       if (i >= 0) ls[i] = entry; else ls.push(entry);
@@ -11251,15 +11375,17 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       renderFlam();
     } catch (e) { showToast('Speichern gerade nicht möglich.'); }
   }
+  // Muster + Akkorde in „Anschlag & Zupfen“ übernehmen (Griffbilder bleiben exakt erhalten)
   function flamTransfer() {
     const L = FLAM_LESSONS.find(x => x.id === flamLesson), a = flamActive(flamLesson);
     flamSave(flamLesson);
-    const names = a.chords.map(k => FLAM_CH[k].name).join(' ');
+    const names = a.chords.map(k => FLAM_CH[k].q || FLAM_CH[k].name).join(' ');
     if (!strumState) strumState = loadStrumState();
     strumState.kind = 'strum'; strumState.id = 'flam_' + flamLesson; strumState.bpm = null; strumState.chords = names;
+    strumState.imp = { text: names, chords: a.chords.map(k => [flamRootPc(FLAM_CH[k].name), flamChordType(FLAM_CH[k].name), FLAM_CH[k].frets.slice(), FLAM_CH[k].name]) };
     saveStrumState();
     try {
-      sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: a.chords.map(k => [flamRootPc(FLAM_CH[k].name), /m(?!aj)/.test(String(FLAM_CH[k].name).replace(/^[A-G][#b]?/, '')) ? 'moll' : 'dur', FLAM_CH[k].name]), label: 'Flamenco: ' + L.title, ts: Date.now() }));
+      sessionStorage.setItem(CLIP_KEY, JSON.stringify({ chords: a.chords.map(k => [flamRootPc(FLAM_CH[k].name), flamChordType(FLAM_CH[k].name), FLAM_CH[k].name]), label: 'Flamenco: ' + L.title, ts: Date.now() }));
     } catch (e) {}
     flamStop();
     switchToModule(12); window.scrollTo(0, 0);
@@ -11281,11 +11407,12 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     </div>
     <div class="flam-tips" style="margin:10px 0;"><b>💡 So nutzt du das Modul</b><br>
       Am sinnvollsten ist es, dir <b>zuerst das Video</b> der Lektion anzusehen – hier übst du dann
-      mit Tempo, Beat und Griffbildern nach. Alles Wichtige steht auch hier, das Video ist eine Ergänzung.</div>`;
+      mit Tempo, Beat und Griffbildern nach. Alles Wichtige steht auch hier, das Video ist eine Ergänzung.
+      Und: <b>zuerst der leichtere Teil</b>, dann der neue, dann beides zusammen.</div>`;
     FLAM_LESSONS.forEach(L => {
       if (!flamState.closed) flamState.closed = {};
       const open = !flamState.closed[L.id];
-      h += `<div class="flam-card">
+      h += `<div class="flam-card" data-flamcard="${L.id}">
         <div class="flam-hd"><span class="flam-nr">${L.nr}</span><span>${L.title}</span>
           <button type="button" class="strum-chip" data-flamfold="${L.id}" style="margin-left:auto;" title="${open ? 'zugeben' : 'wieder aufklappen'}">${open ? '▾' : '▸'}</button>
           ${done[L.id] ? '<span style="font-size:.75rem; color:var(--accent-color);">✓ geübt</span>' : ''}</div>
@@ -11300,30 +11427,63 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
             + P.lines.map(([n, tx]) => `<b>${n}:</b> ${tx}`).join('<br>')
             + (P.note ? `<br><span style="opacity:.8;">${P.note}</span>` : '') + `</div>`;
         });
+        if (L.extra) h += `<div class="flam-beats" style="margin-top:6px;">${L.extra}</div>`;
         if (L.steps) h += `<ol class="flam-beats" style="padding-left:20px; margin:8px 0;">`
           + L.steps.map(([t2, tx]) => `<li style="margin:5px 0;"><b style="color:var(--accent-color);">${t2}:</b> ${tx}</li>`).join('') + `</ol>`;
-        if (L.extra) h += `<div class="flam-beats" style="margin-top:6px;">${L.extra}</div>`;
-        if (L.id === 'l2') {
-          const a = flamActive('l2');
-          h += `<div class="flam-diag">${FLAM_ORDER.map(k => `<button type="button" class="flam-chord" data-flamtap="${k}">
+        const a = flamActive(L.id);
+        // Akkorde dieser Lektion (Em + H7/F# bei den Muster-Lektionen, Griffe bei den Akkorden)
+        const keys = L.diag ? L.diag : (L.chgOther ? [L.chgBase, L.chgOther] : []);
+        if (keys.length) {
+          h += `<div class="flam-diag">${keys.map(k => `<button type="button" class="flam-chord" data-flamtap="${k}">
               <div class="nm">${FLAM_CH[k].name}</div>${flamSvg(FLAM_CH[k].frets)}
               <div style="font-size:.62rem; opacity:.75; line-height:1.3;">${FLAM_CH[k].how}</div></button>`).join('')}</div>`;
-          h += `<div class="flam-stage">🔁 Das Riff – spielt sich immer wieder</div><div class="flam-chips">`
-            + L.modes.map((m, i) => `<button type="button" class="strum-chip" data-flammode="${i}" ${flamState.riffMode === i ? 'data-on="1"' : ''} style="${flamState.riffMode === i ? 'background:var(--accent-color); color:#fff; border-color:var(--accent-color);' : ''}">${m.label}</button>`).join('') + `</div>`;
-          h += `<div class="flam-riff">${a.chords.map((k, i) => `<button type="button" class="strum-chip" data-flamriff="${i}" style="padding:7px 12px; font-weight:700;">${FLAM_CH[k].name}</button>`).join('<span style="opacity:.6;">→</span>')}<span style="opacity:.6;">↺</span></div>`;
-          h += `<div class="flam-beats" style="font-size:.8rem; opacity:.85;">${L.note} Ein Akkord im Riff = ein Takt. Tippe einen Akkord oben an, um ihn zu tauschen.</div>`;
         }
-        const a = flamActive(L.id);
-        if (L.modes && L.id !== 'l2') h += `<div class="flam-chips">${L.modes.map((m, i) => `<button type="button" class="strum-chip" data-flammode="${i}" style="${(flamState.mode[L.id] | 0) === i ? 'background:var(--accent-color); color:#fff; border-color:var(--accent-color);' : ''}">${m.label}</button>`).join('')}</div>`;
-        const cells = a.steps.map((t3, i) => `<div class="flam-cell" data-fcell="${i}" title="${(FLAM_TOK[t3] || ['', ''])[1]}">${flamTokHtml(t3)}</div>`).join('');
-        h += `<div class="flam-grid" style="grid-template-columns:repeat(${Math.min(a.steps.length, 8)},1fr);">${cells}</div>`;
-        h += `<div style="font-size:.72rem; opacity:.8; line-height:1.5;"><b>Wo schlägst du an?</b> ${a.steps.map((t4, i) => `<span style="white-space:nowrap;">${i + 1}: ${(FLAM_TOK[t4] || ['', ''])[1]}</span>`).join(' · ')}</div>`;
-        if (L.outro && L.id === 'l3') h += `<div style="margin-top:8px;"><button type="button" class="strum-chip" data-flamoutro="1" style="${flamState.outro ? 'background:var(--accent-color); color:#fff; border-color:var(--accent-color);' : ''}">🎸 ${L.outro.label}</button>
-          <div style="font-size:.75rem; opacity:.8; margin-top:4px;">${L.outro.text} ${flamSvg(FLAM_CH.B7F.frets)}</div></div>`;
+        if (L.chgBase) {
+          const sq = flamSeqOf(L.id), short = a.steps.length <= 4;
+          h += `<div class="flam-stage">🎸 Deine Akkord-Folge — ein Feld = eine Runde, ×N = wie oft</div>`;
+          h += `<div class="flam-riff flam-seq">`
+            + (sq.length ? sq.map((x, i) => {
+              const hot = flamPlaying && flamLesson === L.id && flamBarToChip(L.id, Math.floor(flamBar + flamIdx / a.steps.length)) === i;
+              return `<div class="flam-abar${hot ? ' hot' : ''}">
+                <button type="button" class="nm" data-flamcyc="${i}" title="Antippen = nächster Griff zum Üben">${FLAM_CH[x.k].name}</button>
+                <div class="rep"><button type="button" data-flamrep="${i}" data-dir="-1" title="eine Runde kürzer">−</button><b>×${x.r}</b><button type="button" data-flamrep="${i}" data-dir="1" title="eine Runde länger">+</button><button type="button" class="x" data-flamdel="${i}" title="Akkord rausnehmen">✕</button></div>
+              </div>`;
+            }).join('<span class="arr">→</span>') : `<span class="noflam">🤫 keine Akkorde – nur die rechte Hand</span>`)
+            + `<button type="button" class="flam-add" data-flampal="${L.id}" title="Akkord dazusetzen">＋ Akkord</button></div>`;
+          if (flamState.pal === L.id) {
+            h += `<div class="flam-chips"><span style="font-size:.76rem; opacity:.8; align-self:center;">Dazusetzen:</span>`
+              + FLAM_ORDER.map(k => `<button type="button" class="strum-chip" data-flamadd="${L.id}:${k}" title="${FLAM_CH[k].how}">${FLAM_CH[k].name}</button>`).join('') + `</div>`;
+          }
+          const cur = !sq.length ? 3 : sq.length === 1 && sq[0].k === L.chgBase && sq[0].r === 1 ? 0
+            : sq.length === 2 && sq[0].r === 1 && sq[1].r === 1 ? 1
+              : sq.length === 2 && sq[0].r === 2 && sq[1].r === 2 ? 2 : -1;
+          const P0 = FLAM_CH[L.chgBase].name, P1 = FLAM_CH[L.chgOther].name;
+          h += `<div class="flam-chips">` + [[0, `Nur ${P0}`], [1, `${P0} ↔ ${P1} (je 1×)`], [2, `${P0} ↔ ${P1} (je 2×)`], [3, '🤫 Ohne Akkorde']].map(([i, t]) =>
+            `<button type="button" class="strum-chip${cur === i ? ' on' : ''}" data-flampreset="${L.id}:${i}">${t}</button>`).join('') + `</div>`;
+          h += `<div class="flam-beats" style="font-size:.76rem; opacity:.85; line-height:1.45;">${short
+            ? 'Hier übst du eine <b>halbe Taktlänge</b>: ×2 heißt zwei Runden – zusammen ein voller Takt pro Akkord.'
+            : 'Eine Runde ist hier ein <b>ganzer Takt</b> (acht Schläge): ×1 = ein Takt, ×4 = vier Takte.'}
+            Der Wechsel kommt erst, wenn die Runde durch ist – und alles läuft im Loop. Beim letzten Schlag leuchtet der nächste Akkord kurz auf.</div>`;
+        }
+        if (L.steps) {
+          h += `<div class="flam-stage">🔁 Das Riff – spielt sich immer wieder</div><div class="flam-chips">`
+            + L.modes.map((m, i) => `<button type="button" class="strum-chip" data-flammode="${i}" style="${flamState.riffMode === i ? 'background:var(--accent-color); color:#fff; border-color:var(--accent-color);' : ''}">${m.label}</button>`).join('') + `</div>`;
+          h += `<div class="flam-riff">${a.chords.map((k, i) => `<button type="button" class="strum-chip" data-flamriff="${i}" style="padding:7px 12px; font-weight:700;">${FLAM_CH[k].name}</button>`).join('<span style="opacity:.6;">→</span>')}<span style="opacity:.6;">↺</span></div>`;
+          h += `<div class="flam-beats" style="font-size:.8rem; opacity:.85;">${L.note} Ein Akkord im Riff = ein Takt.</div>`;
+        }
+        if (L.modes && !L.steps) h += `<div class="flam-stage">Was du gerade übst</div><div class="flam-chips">`
+          + L.modes.map((m, i) => `<button type="button" class="strum-chip" data-flammode="${i}" style="${(flamState.mode[L.id] | 0) === i ? 'background:var(--accent-color); color:#fff; border-color:var(--accent-color);' : ''}">${m.label}</button>`).join('') + `</div>`;
+        const cells = a.steps.map((t3, i) => `<div class="flam-cell" data-fcell="${i}" title="${(FLAM_TOK[t3] || ['', ''])[1]}">
+          ${a.count ? `<span class="c">${a.count[i]}</span>` : ''}${flamTokHtml(t3)}</div>`).join('');
+        h += `<div class="flam-grid" style="grid-template-columns:repeat(${a.steps.length},1fr);">${cells}</div>`;
+        h += `<div style="font-size:.72rem; opacity:.8; line-height:1.5;"><b>Wo schlägst du an?</b> `
+          + a.steps.map((t4, i) => `<span style="white-space:nowrap;">${a.count ? a.count[i] : i + 1}: ${(FLAM_TOK[t4] || ['', ''])[1]}</span>`).join(' · ') + `</div>`;
+        if (L.outro) h += `<div class="flam-beats" style="margin-top:8px; font-size:.8rem;">${L.outro}</div>`;
         h += `<div class="row" style="gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center;">
-          <button type="button" class="btn" data-flamplay="${L.id}">${flamPlaying && flamLesson === L.id ? '⏸ Stopp' : '▶ Anhören & mitspielen'}</button>
+          <button type="button" class="btn" data-flamplay="${L.id}">${flamPlaying && flamLesson === L.id ? '⏸ Stopp' : L.playLabel}</button>
           <button type="button" class="btn btn-secondary" data-flamdrum="1" ${flamState.drum ? '' : 'style="opacity:.6;"'}>🥁 Beat: ${flamState.drum ? 'an' : 'aus'}</button>
           <button type="button" class="btn btn-secondary" data-flamloop="1" ${flamState.loop ? '' : 'style="opacity:.6;"'}>🔁 Loop: ${flamState.loop ? 'an' : 'aus'}</button>
+          <button type="button" class="btn btn-secondary" data-flamklang="1" ${flamKlang() === 'tom' ? '' : 'style="opacity:.72;"'} title="Klang für den Schlag auf den Korpus (Golpe)">${flamKlang() === 'tom' ? '🔊 Tom – dumpf (Korpus)' : '🥁 Golpe – Snare-Klang'}</button>
         </div>
         <div class="row" style="gap:8px; flex-wrap:wrap; align-items:center;">
           <label style="font-weight:600; font-size:.85rem;">Tempo:</label>
@@ -11339,8 +11499,8 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
         <div class="row" style="gap:8px; align-items:center; margin-top:6px;">
           <label style="font-size:.8rem;">📂 Geladenes Muster:</label>
           <select data-flamload="${L.id}" style="${sel} max-width:60%;">
-            <option value="">— Modul-Vorlage (${L.id === 'l2' ? 'Rumba-Anschlag' : 'Stufe/Teil'}) —</option>
-            ${strumCustomList().filter(x => x.kind === 'strum' && fldNorm(x.folder) === 'Flamenco').map(x => `<option value="${x.id}" ${flamState.load && flamState.load[L.id] === x.id ? 'selected' : ''}>${homeEsc(x.name)}</option>`).join('')}
+            <option value="">— Modul-Vorlage (${L.steps ? 'volle Acht' : 'aktuelle Auswahl'}) —</option>
+            ${strumCustomList().filter(x => x.kind === 'strum' && fldNorm(x.folder) === 'Flamenco').map(x => `<option value="${x.id}" ${flamState.load && flamState.load[L.id] === x.id ? 'selected' : ''}>${homeEsc(x.name)}${(x.flamKeys && x.flamKeys.length) || x.flamSeq ? ' · + Akkorde' : ' · ohne Akkorde'}</option>`).join('')}
           </select>
         </div>`;
       }
@@ -11366,6 +11526,40 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       renderFlam();
     });
     on('[data-flamtap]', e => { flamAudition(e.currentTarget.dataset.flamtap); });
+    on('[data-flampal]', e => { const id = e.currentTarget.dataset.flampal; flamState.pal = flamState.pal === id ? '' : id; renderFlam(); });
+    on('[data-flamadd]', e => {
+      const p = e.currentTarget.dataset.flamadd.split(':'), id = p[0], k = p[1];
+      const sq = flamSeqOf(id);
+      if (sq.length >= 8) { showToast('Bei acht Akkorden ist Schluss – sonst kommst du beim Greifen nicht hinterher.'); return; }
+      sq.push({ k, r: 1 }); flamState.pal = ''; flamSeqSet(id, sq); renderFlam();
+    });
+    on('[data-flamcyc]', e => {
+      const id = e.currentTarget.closest('[data-flamcard]').dataset.flamcard, i = +e.currentTarget.dataset.flamcyc;
+      const sq = flamSeqOf(id); if (!sq[i]) return;
+      sq[i] = { k: FLAM_ORDER[(FLAM_ORDER.indexOf(sq[i].k) + 1) % FLAM_ORDER.length], r: sq[i].r };
+      flamSeqSet(id, sq); renderFlam();
+    });
+    on('[data-flamrep]', e => {
+      const id = e.currentTarget.closest('[data-flamcard]').dataset.flamcard, i = +e.currentTarget.dataset.flamrep, d = +e.currentTarget.dataset.dir;
+      const sq = flamSeqOf(id); if (!sq[i]) return;
+      sq[i] = { k: sq[i].k, r: flamRep(sq[i].r + d) };
+      flamSeqSet(id, sq); renderFlam();
+    });
+    on('[data-flamdel]', e => {
+      const id = e.currentTarget.closest('[data-flamcard]').dataset.flamcard, i = +e.currentTarget.dataset.flamdel;
+      const sq = flamSeqOf(id); sq.splice(i, 1);
+      flamSeqSet(id, sq); renderFlam();
+      if (!sq.length) showToast('🤫 Ohne Akkorde – die rechte Hand übt allein.');
+    });
+    on('[data-flampreset]', e => {
+      const p = e.currentTarget.dataset.flampreset.split(':'), id = p[0], i = +p[1];
+      const L = FLAM_LESSONS.find(x => x.id === id); if (!L) return;
+      const sq = i === 0 ? [{ k: L.chgBase, r: 1 }] : i === 1 ? [{ k: L.chgBase, r: 1 }, { k: L.chgOther, r: 1 }]
+        : i === 2 ? [{ k: L.chgBase, r: 2 }, { k: L.chgOther, r: 2 }] : [];
+      flamSeqSet(id, sq); if (flamPlaying && flamLesson === id) { flamIdx = 0; flamBar = 0; }
+      renderFlam();
+    });
+    on('[data-flamklang]', () => { flamState.klang = flamKlang() === 'tom' ? 'snare' : 'tom'; saveFlam(); renderFlam(); });
     on('[data-flamriff]', e => {
       const a = flamActive('l2'), i = +e.currentTarget.dataset.flamriff;
       const seq = a.chords.slice(); seq[i] = FLAM_ORDER[(FLAM_ORDER.indexOf(seq[i]) + 1) % FLAM_ORDER.length];
@@ -11373,7 +11567,6 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
     on('[data-flamdrum]', () => { flamState.drum = !flamState.drum; saveFlam(); renderFlam(); });
     on('[data-flamloop]', () => { flamState.loop = !flamState.loop; saveFlam(); renderFlam(); });
-    on('[data-flamoutro]', () => { flamState.outro = !flamState.outro; saveFlam(); renderFlam(); });
     on('[data-flamdone]', e => { flamLesson = e.currentTarget.dataset.flamdone; flamMarkDone(flamLesson); });
     on('[data-flamplay]', e => { const id = e.currentTarget.dataset.flamplay; if (flamPlaying && flamLesson === id) { flamStop(); renderFlam(); return; } flamLesson = id; flamStart(); });
     on('[data-flamtransfer]', e => { flamLesson = e.currentTarget.dataset.flamtransfer; flamTransfer(); });
@@ -11383,11 +11576,21 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
       const id = e.target.dataset.flamtempo; flamState.temps[id] = +e.target.value; saveFlam();
       const lb = root.querySelector(`[data-flamtlabel="${id}"]`);
       if (lb) lb.textContent = `${flamState.temps[id]} BPM ${flamState.temps[id] < 70 ? '· Zeitlupe' : ''}`;
-      if (flamPlaying && flamLesson === id) { clearTimeout(flamTimer); flamNext = audioCtx ? audioCtx.currentTime : 0; flamTick(); }
+      restart(id);
     }));
     root.querySelectorAll('[data-flamload]').forEach(el => el.addEventListener('change', e => {
       const id = e.target.dataset.flamload;
-      if (e.target.value) flamState.load[id] = e.target.value; else delete flamState.load[id];
+      if (e.target.value) {
+        flamState.load[id] = e.target.value;
+        const cp = strumCustomList().find(x => x.id === e.target.value);
+        const sq = cp && Array.isArray(cp.flamSeq) && cp.flamSeq.length ? cp.flamSeq
+          : (flamPatternChords(cp) || []).map(k => ({ k, r: 1 }));
+        if (sq.length) {
+          if (id === 'l2') { flamState.riff = sq.slice(0, 8).map(x => x.k); flamState.riffMode = 0; }
+          else flamSeqSet(id, sq);
+          showToast('📂 Muster und Akkorde geladen: ' + cp.name);
+        } else showToast('📂 Muster geladen – ohne Akkorde, deine Folge bleibt stehen.');
+      } else delete flamState.load[id];
       saveFlam(); if (flamPlaying && flamLesson === id) { flamIdx = 0; flamBar = 0; }
       renderFlam();
     }));
@@ -11414,12 +11617,12 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     { id:'s_54', kind:'strum', level:3, name:'5/4 („Take Five“-Gefühl)', sig:'5/4', unit:2, bpm:90, steps:'D-duD-D-u-', tip:'Fünf Schläge, gefühlt als 3 + 2: EINS zwei drei VIER fünf.' },
     { id:'s_78', kind:'strum', level:3, name:'7/8 (2 + 2 + 3)', sig:'7/8', unit:2, bpm:90, steps:'D-D-D-u', count:['1','2','1','2','1','2','3'], tip:'Gezählt: 1 2 – 1 2 – 1 2 3. Die letzte Gruppe ist eine Achtel länger. Typisch für Balkan-Musik.' },
     // ---- Flamenco (Anschlagsymbole: 🖐 Mano · ≡ Fächer ab · ≈ Fächer auf · ↓↑ Daumen/Zeigefinger) ----
-    { id:'f_stufe1', kind:'strum', flam:true, level:1, name:'Flamenco · Stufe 1 (Mano + Zeigefinger)', sig:'4/4', unit:2, bpm:84, steps:'----mudu', chords:'Em', tip:'Nur die zweite Vierergruppe des Rumba: erst die Flachhand auf die Decke, dann Zeigefinger rauf – runter – rauf. Der Daumen bleibt als Anker an der tiefen E-Saite.' },
-    { id:'f_rumba', kind:'strum', flam:true, level:2, name:'Flamenco · Rumba (volle Acht)', sig:'4/4', unit:2, bpm:84, steps:'mfrgmudu', chords:'Em', tip:'Mano – Finger rauf – Finger runter (i·m·a) – Daumen rauf, danach noch einmal Mano und dreimal der Zeigefinger. Klein bewegen, nicht drücken.' },
-    { id:'f_rumba14', kind:'strum', flam:true, level:2, name:'Flamenco · Rumba Teil 1 (Daumen + Finger)', sig:'4/4', unit:2, bpm:76, steps:'vgrg----', chords:'Em', tip:'Daumen durch die Saiten, Daumen zurück, Zeige- und Mittelfinger mit den Nägeln, Daumen zurück. Erst ganz langsam, Schlag für Schlag.' },
-    { id:'f_rumba58', kind:'strum', flam:true, level:2, name:'Flamenco · Rumba Teil 2 (Slap + Zeigefinger)', sig:'4/4', unit:2, bpm:76, steps:'----mudu', chords:'Em', tip:'Slap mit der Flachhand, dann Zeigefinger rauf – runter – rauf. Der Daumen liegt auf der E-Saite als Halt.' },
-    { id:'f_rumba_full', kind:'strum', flam:true, level:3, name:'Flamenco · Rumba komplett (8 Schläge)', sig:'4/4', unit:2, bpm:76, steps:'vgrgmudu', chords:'Em', tip:'Beide Hälften zusammen – der Daumen liegt schon bereit für den ersten Schlag. Wer mag, wechselt pro Takt den Akkord.' },
-    // ---- Zupfen ----
+    { id:'f_anfang', kind:'strum', flam:true, level:1, name:'Flamenco · Zuerst: Schläge 5–8', sig:'4/4', unit:2, bpm:84, steps:'mudu', count:['5','6','7','8'], chords:'Em', tip:'Die zweite Vierergruppe direkt hintereinander – ohne Pause davor: Flachhand auf die Decke, dann Zeigefinger rauf – runter – rauf. Der Daumen bleibt als Anker an der tiefen E-Saite.' },
+    { id:'f_erste', kind:'strum', flam:true, level:2, name:'Flamenco · Dann: Schläge 1–4', sig:'4/4', unit:2, bpm:84, steps:'mfrg', count:['1','2','3','4'], chords:'Em', tip:'Der erste Teil allein: Mano – alle Finger rauf – alle Finger runter (i·m·a) – Daumen rauf. Klein bewegen, nicht drücken.' },
+    { id:'f_rumba', kind:'strum', flam:true, level:2, name:'Flamenco · Volle Acht (beide Teile)', sig:'4/4', unit:2, bpm:84, steps:'mfrgmudu', chords:'Em', tip:'Beide Vierergruppen hintereinander. Im Flamenco-Modul stellt du auf „🎸 Em ↔ H7/F#“ um – dann wechselt die Begleitung pro Takt.' },
+    { id:'f_rumba_t2', kind:'strum', flam:true, level:1, name:'Flamenco · Rumba-Muster: Teil 2 (5–8)', sig:'4/4', unit:2, bpm:76, steps:'mudu', count:['5','6','7','8'], chords:'Em', tip:'Zuerst üben: Slap mit der Flachhand, dann Zeigefinger rauf – runter – rauf. Der Daumen liegt auf der E-Saite als Halt.' },
+    { id:'f_rumba_t1', kind:'strum', flam:true, level:2, name:'Flamenco · Rumba-Muster: Teil 1 (1–4)', sig:'4/4', unit:2, bpm:76, steps:'vgrg', count:['1','2','3','4'], chords:'Em', tip:'Dann der neue Teil: Daumen durch die Saiten, Daumen zurück, Zeige- und Mittelfinger mit den Nägeln, Daumen zurück. Ganz langsam, Schlag für Schlag.' },
+    { id:'f_rumba_full', kind:'strum', flam:true, level:3, name:'Flamenco · Rumba-Muster komplett (1–8)', sig:'4/4', unit:2, bpm:76, steps:'vgrgmudu', chords:'Em', tip:'Alles zusammen – der Daumen liegt schon bereit für den ersten Schlag.' },    // ---- Zupfen ----
     { id:'p_arp', kind:'pick', level:1, name:'Arpeggio aufwärts (p i m a)', sig:'4/4', unit:2, bpm:70, steps:['p:B','i:3','m:2','a:1','m:2','i:3','m:2','i:3'], tip:'Daumen auf den Basston, dann Zeige-, Mittel- und Ringfinger nacheinander auf G-, H- und e-Saite.' },
     { id:'p_thumb', kind:'pick', level:1, name:'Daumen-Wechselbass', sig:'4/4', unit:2, bpm:70, steps:['p:B+i:3+m:2+a:1','-','p:B2','-','p:B+i:3+m:2+a:1','-','p:B2','-'], tip:'Auf 1 und 3 Daumen und drei Finger gleichzeitig („zupfen wie greifen“), auf 2 und 4 nur der Daumen auf dem Wechselbass.' },
     { id:'p_waltz', kind:'pick', level:1, name:'Walzer gezupft', sig:'3/4', unit:2, bpm:80, steps:['p:B','-','i:3+m:2+a:1','-','i:3+m:2+a:1','-'], tip:'Bass – Akkord – Akkord. Die drei Finger zupfen gleichzeitig.' },
@@ -16961,7 +17164,7 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
   }
 
   // =================== Update-Hinweis: neue Version auf GitHub? ===================
-  const APP_VERSION = '2026-11-26-1';
+  const APP_VERSION = '2026-11-27-4';
   let appUpdLastCheck = 0, appUpdDismissed = '';
   function appCheckUpdate(force) {
     if (!location.protocol.startsWith('http') || !window.fetch) return;
@@ -17184,5 +17387,5 @@ html += `<details class="jam-section" data-sec="mixer" ${ui.mixer ? 'open' : ''}
     });
   }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a60c2a3cd9b6bb9b',t:'MTc5NTczMDQxNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a60c2a3cd9b6bb9b',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a61326ddd9bf1e5e',t:'MTc5NTgwMzY3OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a61326ddd9bf1e5e',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
